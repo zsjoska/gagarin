@@ -1,38 +1,28 @@
 package org.csovessoft.contabil;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import static org.junit.Assert.assertNotNull;
+
+import org.csovessoft.contabil.user.User;
+import org.csovessoft.contabil.user.UserManager;
+import org.csovessoft.contabil.ws.Authentication;
+import org.junit.Test;
 
 /**
  * Unit test for simple App.
  */
-public class AppTest 
-    extends TestCase
-{
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public AppTest( String testName )
-    {
-        super( testName );
-    }
+public class AppTest {
 
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite()
-    {
-        return new TestSuite( AppTest.class );
-    }
+	@Test
+	public void testLogin() {
 
-    /**
-     * Rigourous Test :-)
-     */
-    public void testApp()
-    {
-        assertTrue( true );
-    }
+		UserManager userManager = ModelFactory.getUserManager();
+
+		User user = new User();
+		userManager.createUser(user);
+
+		Authentication authentication = new Authentication();
+		String session = authentication.login(user.getUsername(), user
+				.getPassword(), null);
+		assertNotNull(session);
+	}
 }

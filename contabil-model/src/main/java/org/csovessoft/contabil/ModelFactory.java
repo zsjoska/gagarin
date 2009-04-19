@@ -1,18 +1,20 @@
 package org.csovessoft.contabil;
 
+import org.csovessoft.contabil.session.DummySessionManager;
 import org.csovessoft.contabil.session.SessionManager;
+import org.csovessoft.contabil.user.DefaultUserManager;
 import org.csovessoft.contabil.user.UserManager;
 
 public class ModelFactory {
 
 	public static SessionManager getSessionManager() {
-		return null;
+		return DummySessionManager.getInstance();
 		// TODO Auto-generated method stub
 		
 	}
 
 	public static UserManager getUserManager() {
-		return null;
+		return DefaultUserManager.getInstance();
 		// TODO Auto-generated method stub
 		
 	}

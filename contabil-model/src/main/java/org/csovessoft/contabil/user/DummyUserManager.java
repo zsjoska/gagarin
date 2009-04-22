@@ -2,7 +2,7 @@ package org.csovessoft.contabil.user;
 
 import java.util.HashMap;
 
-import org.csovessoft.contabil.results.MResult;
+import org.csovessoft.contabil.exceptions.UserNotFoundException;
 
 public class DummyUserManager implements UserManager {
 
@@ -19,14 +19,15 @@ public class DummyUserManager implements UserManager {
 	}
 
 	@Override
-	public MResult login(String username, String password) {
+	public User userLogin(String username, String password)
+			throws UserNotFoundException {
 		for (User user : users.values()) {
 			if (user.getUsername().equals(username)
 					&& user.getPassword().equals(password)) {
-				return new MResult(true);
+				return user;
 			}
 		}
-		return new MResult(false);
+		throw new UserNotFoundException();
 	}
 
 	@Override

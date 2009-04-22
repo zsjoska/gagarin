@@ -41,12 +41,13 @@ public class Authentication {
 
 	@WebMethod
 	public boolean login(String sessionID, String username, String password, String[] extra)
-			throws UserNotFoundException, SessionNotFoundException {
+			throws SessionNotFoundException, UserNotFoundException {
 
 		UserManager userManager = ModelFactory.getUserManager();
 		SessionManager sessionManager = ModelFactory.getSessionManager();
 		User user = userManager.userLogin(username, password);
 		Session session = sessionManager.getSessionByID(sessionID);
+
 		session.setUser(user);
 		return true;
 	}

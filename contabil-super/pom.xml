@@ -8,9 +8,8 @@
   <name>contabil</name>
   <url>http://maven.apache.org</url>
   <modules>
-    <module>contabil.ws</module>
-    <module>wsclient</module>
-    <module>contabil-model</module>
+    <module>../contabil.ws</module>
+    <module>../contabil-model</module>
   </modules>
   <build>
 	<plugins>

@@ -5,8 +5,8 @@ import java.util.HashMap;
 
 import org.csovessoft.contabil.ModelFactory;
 import org.csovessoft.contabil.SessionManager;
-import org.csovessoft.contabil.SettingsChangeObserver;
 import org.csovessoft.contabil.config.Config;
+import org.csovessoft.contabil.config.SettingsChangeObserver;
 
 public class DummySessionManager implements SessionManager, SettingsChangeObserver {
 

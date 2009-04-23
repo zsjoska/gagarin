@@ -1,6 +1,5 @@
-package org.csovessoft.contabil;
+package org.csovessoft.contabil.config;
 
-import org.csovessoft.contabil.config.Config;
 
 public interface SettingsChangeObserver {
 	void configChanged(Config config, String value);

@@ -1,6 +1,7 @@
 package org.csovessoft.contabil;
 
 import org.csovessoft.contabil.config.Config;
+import org.csovessoft.contabil.config.SettingsChangeObserver;
 
 public interface ConfigurationManager {
 

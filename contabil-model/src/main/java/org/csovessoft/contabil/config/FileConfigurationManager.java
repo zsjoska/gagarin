@@ -3,7 +3,6 @@ package org.csovessoft.contabil.config;
 import java.util.ArrayList;
 
 import org.csovessoft.contabil.ConfigurationManager;
-import org.csovessoft.contabil.SettingsChangeObserver;
 
 public class FileConfigurationManager implements ConfigurationManager {
 

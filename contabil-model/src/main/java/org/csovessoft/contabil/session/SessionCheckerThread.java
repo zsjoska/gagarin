@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 import org.csovessoft.contabil.ModelFactory;
 import org.csovessoft.contabil.SessionManager;
-import org.csovessoft.contabil.SettingsChangeObserver;
 import org.csovessoft.contabil.config.Config;
+import org.csovessoft.contabil.config.SettingsChangeObserver;
 
 public class SessionCheckerThread extends Thread implements SettingsChangeObserver {
 

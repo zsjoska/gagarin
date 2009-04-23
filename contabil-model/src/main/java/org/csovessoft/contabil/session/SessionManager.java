@@ -1,13 +1,17 @@
 package org.csovessoft.contabil.session;
 
-import org.csovessoft.contabil.exceptions.SessionNotFoundException;
+import java.util.ArrayList;
 
 public interface SessionManager {
 
 	Session createSession(String language, String reason);
 
-	Session getSessionByID(String sessionID) throws SessionNotFoundException;
+	Session getSessionByID(String sessionID);
 
 	void logout(String id);
+
+	ArrayList<Session> getExpiredSessions();
+
+	void destroySession(Session session);
 
 }

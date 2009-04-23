@@ -36,10 +36,14 @@ public class Authentication {
 	public boolean login(String sessionID, String username, String password, String[] extra)
 			throws SessionNotFoundException, UserNotFoundException {
 
-		UserManager userManager = ModelFactory.getUserManager();
 		SessionManager sessionManager = ModelFactory.getSessionManager();
-		User user = userManager.userLogin(username, password);
 		Session session = sessionManager.getSessionByID(sessionID);
+		if (session == null)
+			throw new SessionNotFoundException(sessionID);
+
+		UserManager userManager = ModelFactory.getUserManager();
+		User user = userManager.userLogin(username, password);
+
 		session.setUser(user);
 		return true;
 	}

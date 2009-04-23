@@ -1,6 +1,6 @@
 package org.csovessoft.contabil.exceptions;
 
-public class SessionNotFoundException extends Exception {
+public class SessionNotFoundException extends ExceptionBase {
 
 	/**
 	 * 
@@ -9,6 +9,7 @@ public class SessionNotFoundException extends Exception {
 	private final String sessionID;
 
 	public SessionNotFoundException(String sessionID) {
+		super(ErrorCodes.SESSION_NOT_FOUND);
 		this.sessionID = sessionID;
 	}
 

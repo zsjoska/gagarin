@@ -1,5 +1,6 @@
 package org.csovessoft.contabil;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
@@ -33,7 +34,6 @@ public class SessionTest {
 		authentication.login(session.getId(), "user1", "password1", null);
 
 		authentication.logout(session.getId());
-
 	}
 
 	@Test
@@ -61,5 +61,29 @@ public class SessionTest {
 		} catch (UserNotFoundException e) {
 			// the exception was expected
 		}
+	}
+
+	@Test
+	public void testSessionDeletion() throws UserNotFoundException {
+
+		UserManager userManager = ModelFactory.getUserManager();
+
+		User user = new User();
+		user.setUsername("user1");
+		user.setPassword("password1");
+		userManager.createUser(user);
+
+		Session session = authentication.createSession(null, null);
+		assertNotNull(session);
+
+		authentication.logout(session.getId());
+		try {
+			authentication.login(session.getId(), "user1", "password1", null);
+			fail("The login must fail since the session was deleted");
+		} catch (SessionNotFoundException e) {
+			assertEquals("Wrong session ID returned by the exception", e.getSessionID(), session
+					.getId());
+		}
+
 	}
 }

@@ -33,8 +33,13 @@ public class DummySessionManager implements SessionManager {
 	@Override
 	public Session getSessionByID(String sessionID) {
 		Session session = this.sessions.get(sessionID);
+
+		if (session == null)
+			return null;
+
 		if (session.isExpired())
 			return null;
+
 		session.setExpires(System.currentTimeMillis() + session.getSessionTimeout());
 		return session;
 	}

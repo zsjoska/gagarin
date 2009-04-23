@@ -3,8 +3,6 @@
  */
 package org.csovessoft.contabil.ws;
 
-import java.util.Date;
-
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 
@@ -22,11 +20,6 @@ import org.csovessoft.contabil.user.UserManager;
  */
 @WebService
 public class Authentication {
-
-	@WebMethod
-	public String testMethod() {
-		return "testMethod " + new Date();
-	}
 
 	@WebMethod
 	public Session createSession(String language, String reason) {
@@ -47,7 +40,6 @@ public class Authentication {
 		SessionManager sessionManager = ModelFactory.getSessionManager();
 		User user = userManager.userLogin(username, password);
 		Session session = sessionManager.getSessionByID(sessionID);
-
 		session.setUser(user);
 		return true;
 	}

@@ -31,8 +31,8 @@ public class DummySessionManager implements SessionManager {
 	}
 
 	@Override
-	public Session getSessionByID(String sessionID) {
-		Session session = this.sessions.get(sessionID);
+	public Session getSessionById(String sessionId) {
+		Session session = this.sessions.get(sessionId);
 
 		if (session == null)
 			return null;

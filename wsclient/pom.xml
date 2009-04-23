@@ -57,7 +57,9 @@
 						</goals>
 						<configuration>
 							<wsdlUrls>
-								<wsdlUrl> http://localhost:8080/contabil.ws/ws/Auth?wsdl 
+								<wsdlUrl> http://localhost:8080/contabil.ws/ws/AuthService?wsdl 
+								</wsdlUrl>
+								<wsdlUrl> http://localhost:8080/contabil.ws/ws/UserService?wsdl 
 								</wsdlUrl>
 							</wsdlUrls>
 							<packageName>org.csovessoft.wsclient 

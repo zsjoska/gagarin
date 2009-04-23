@@ -2,5 +2,7 @@
 <endpoints xmlns="http://java.sun.com/xml/ns/jax-ws/ri/runtime"
 	version="2.0">
 	<endpoint name="AuthenticationService" implementation="org.csovessoft.contabil.ws.Authentication"
-		url-pattern="/ws/Auth" />
+		url-pattern="/ws/AuthService" />
+	<endpoint name="AuthenticationService" implementation="org.csovessoft.contabil.ws.UserService"
+		url-pattern="/ws/UserService" />
 </endpoints>

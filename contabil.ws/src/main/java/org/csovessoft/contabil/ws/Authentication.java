@@ -37,7 +37,7 @@ public class Authentication {
 			throws SessionNotFoundException, UserNotFoundException {
 
 		SessionManager sessionManager = ModelFactory.getSessionManager();
-		Session session = sessionManager.getSessionByID(sessionID);
+		Session session = sessionManager.getSessionById(sessionID);
 		if (session == null)
 			throw new SessionNotFoundException(sessionID);
 

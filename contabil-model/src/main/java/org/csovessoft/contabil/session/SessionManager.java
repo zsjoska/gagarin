@@ -6,7 +6,7 @@ public interface SessionManager {
 
 	Session createSession(String language, String reason);
 
-	Session getSessionByID(String sessionID);
+	Session getSessionById(String sessionId);
 
 	void logout(String id);
 

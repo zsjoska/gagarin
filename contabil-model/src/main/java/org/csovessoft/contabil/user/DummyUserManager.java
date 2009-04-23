@@ -2,6 +2,7 @@ package org.csovessoft.contabil.user;
 
 import java.util.HashMap;
 
+import org.csovessoft.contabil.exceptions.ExceptionBase;
 import org.csovessoft.contabil.exceptions.FieldRequiredException;
 import org.csovessoft.contabil.exceptions.UserAlreadyExistsException;
 import org.csovessoft.contabil.exceptions.UserNotFoundException;
@@ -15,6 +16,15 @@ public class DummyUserManager implements UserManager {
 
 	private DummyUserManager() {
 
+		User user = new User();
+		user.setUsername("admin");
+		user.setPassword("test");
+		try {
+			createUser(user);
+		} catch (ExceptionBase e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public static UserManager getInstance() {

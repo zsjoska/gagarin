@@ -1,8 +1,9 @@
-package org.csovessoft.contabil.user;
+package org.csovessoft.contabil;
 
 import org.csovessoft.contabil.exceptions.FieldRequiredException;
 import org.csovessoft.contabil.exceptions.UserAlreadyExistsException;
 import org.csovessoft.contabil.exceptions.UserNotFoundException;
+import org.csovessoft.contabil.user.User;
 
 public interface UserManager {
 

@@ -2,15 +2,16 @@ package org.csovessoft.contabil;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
+import org.csovessoft.contabil.config.Config;
 import org.csovessoft.contabil.exceptions.FieldRequiredException;
 import org.csovessoft.contabil.exceptions.SessionNotFoundException;
 import org.csovessoft.contabil.exceptions.UserAlreadyExistsException;
 import org.csovessoft.contabil.exceptions.UserNotFoundException;
 import org.csovessoft.contabil.session.Session;
 import org.csovessoft.contabil.user.User;
-import org.csovessoft.contabil.user.UserManager;
 import org.csovessoft.contabil.ws.Authentication;
 import org.junit.Test;
 
@@ -90,5 +91,23 @@ public class SessionTest {
 					.getId());
 		}
 
+	}
+
+	@Test
+	public void testSessionExpiration() throws InterruptedException {
+
+		ModelFactory.getConfigurationManager().setConfigValue(Config.USER_SESSION_TIMEOUT, "100");
+
+		SessionManager sessionManager = ModelFactory.getSessionManager();
+		Session session = sessionManager.createSession(null, null);
+		assertNotNull(session);
+		assertEquals("We just set the timeout to 100", session.getSessionTimeout(), 100);
+
+		session = sessionManager.getSessionById(session.getId());
+		assertNotNull(session);
+
+		Thread.sleep(101);
+		session = sessionManager.getSessionById(session.getId());
+		assertNull("The session must be expired at this time", session);
 	}
 }

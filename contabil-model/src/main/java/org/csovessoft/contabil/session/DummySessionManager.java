@@ -3,15 +3,24 @@ package org.csovessoft.contabil.session;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class DummySessionManager implements SessionManager {
+import org.csovessoft.contabil.ModelFactory;
+import org.csovessoft.contabil.SessionManager;
+import org.csovessoft.contabil.SettingsChangeObserver;
+import org.csovessoft.contabil.config.Config;
+
+public class DummySessionManager implements SessionManager, SettingsChangeObserver {
 
 	private static final DummySessionManager INSTANCE = new DummySessionManager();
+
+	private long USER_SESSION_TIMEOUT = ModelFactory.getConfigurationManager().getLong(
+			Config.USER_SESSION_TIMEOUT);
 
 	private final HashMap<String, Session> sessions = new HashMap<String, Session>();
 
 	private SessionCheckerThread chkSession = new SessionCheckerThread(INSTANCE);
 
 	private DummySessionManager() {
+		ModelFactory.getConfigurationManager().registerForChange(this);
 		chkSession.start();
 	}
 
@@ -21,7 +30,7 @@ public class DummySessionManager implements SessionManager {
 
 	@Override
 	public Session createSession(String language, String reason) {
-		Session session = new Session();
+		Session session = new Session(USER_SESSION_TIMEOUT);
 		session.setId(String.valueOf(System.currentTimeMillis()));
 		session.setLanguage(language);
 		session.setReason(reason);
@@ -63,5 +72,14 @@ public class DummySessionManager implements SessionManager {
 	@Override
 	public void destroySession(Session session) {
 		this.sessions.remove(session.getId());
+	}
+
+	@Override
+	public void configChanged(Config config, String value) {
+		switch (config) {
+		case USER_SESSION_TIMEOUT:
+			USER_SESSION_TIMEOUT = Long.valueOf(value);
+			break;
+		}
 	}
 }

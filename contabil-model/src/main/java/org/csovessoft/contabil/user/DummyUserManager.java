@@ -2,6 +2,7 @@ package org.csovessoft.contabil.user;
 
 import java.util.HashMap;
 
+import org.csovessoft.contabil.UserManager;
 import org.csovessoft.contabil.exceptions.ExceptionBase;
 import org.csovessoft.contabil.exceptions.FieldRequiredException;
 import org.csovessoft.contabil.exceptions.UserAlreadyExistsException;

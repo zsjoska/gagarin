@@ -7,12 +7,12 @@ import javax.jws.WebMethod;
 import javax.jws.WebService;
 
 import org.csovessoft.contabil.ModelFactory;
+import org.csovessoft.contabil.SessionManager;
+import org.csovessoft.contabil.UserManager;
 import org.csovessoft.contabil.exceptions.SessionNotFoundException;
 import org.csovessoft.contabil.exceptions.UserNotFoundException;
 import org.csovessoft.contabil.session.Session;
-import org.csovessoft.contabil.session.SessionManager;
 import org.csovessoft.contabil.user.User;
-import org.csovessoft.contabil.user.UserManager;
 
 /**
  * @author zsjoska

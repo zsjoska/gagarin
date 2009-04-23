@@ -4,11 +4,15 @@ import org.csovessoft.contabil.user.Entity;
 import org.csovessoft.contabil.user.User;
 
 public class Session extends Entity {
-	private long sessiontimeout = 5000;
+	private long sessionTimeout = 0;
 	private long expires;
 	private String language;
 	private String reason;
 	private User user;
+
+	public Session(long sessionTimeout) {
+		this.sessionTimeout = sessionTimeout;
+	}
 
 	public void setLanguage(String language) {
 		this.language = language;
@@ -47,11 +51,11 @@ public class Session extends Entity {
 	}
 
 	public void setSessiontimeout(long sessiontimeout) {
-		this.sessiontimeout = sessiontimeout;
+		this.sessionTimeout = sessiontimeout;
 	}
 
 	public long getSessionTimeout() {
-		return sessiontimeout;
+		return sessionTimeout;
 	}
 
 }

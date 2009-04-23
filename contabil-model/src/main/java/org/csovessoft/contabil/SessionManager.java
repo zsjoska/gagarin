@@ -1,6 +1,8 @@
-package org.csovessoft.contabil.session;
+package org.csovessoft.contabil;
 
 import java.util.ArrayList;
+
+import org.csovessoft.contabil.session.Session;
 
 public interface SessionManager {
 

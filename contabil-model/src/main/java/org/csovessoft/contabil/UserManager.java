@@ -9,7 +9,7 @@ public interface UserManager {
 
 	User userLogin(String username, String password) throws UserNotFoundException;
 
-	void createUser(User user) throws FieldRequiredException, UserAlreadyExistsException;
+	String createUser(User user) throws FieldRequiredException, UserAlreadyExistsException;
 
 	User getUserByUsername(String username);
 

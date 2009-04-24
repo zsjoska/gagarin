@@ -3,12 +3,15 @@ package org.csovessoft.contabil.session;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.apache.log4j.Logger;
 import org.csovessoft.contabil.ModelFactory;
 import org.csovessoft.contabil.SessionManager;
 import org.csovessoft.contabil.config.Config;
 import org.csovessoft.contabil.config.SettingsChangeObserver;
 
 public class DummySessionManager implements SessionManager, SettingsChangeObserver {
+
+	private static final transient Logger LOG = Logger.getLogger(DummySessionManager.class);
 
 	private static final DummySessionManager INSTANCE = new DummySessionManager();
 
@@ -31,11 +34,12 @@ public class DummySessionManager implements SessionManager, SettingsChangeObserv
 	@Override
 	public Session createSession(String language, String reason) {
 		Session session = new Session(USER_SESSION_TIMEOUT);
-		session.setId(String.valueOf(System.currentTimeMillis()));
+		session.setId(System.currentTimeMillis() + "-" + System.nanoTime());
 		session.setLanguage(language);
 		session.setReason(reason);
 		session.setExpires(System.currentTimeMillis() + session.getSessionTimeout());
 		this.sessions.put(session.getId(), session);
+		LOG.info("Created Session " + session.getId());
 		return session;
 	}
 
@@ -43,11 +47,15 @@ public class DummySessionManager implements SessionManager, SettingsChangeObserv
 	public Session getSessionById(String sessionId) {
 		Session session = this.sessions.get(sessionId);
 
-		if (session == null)
+		if (session == null) {
+			LOG.debug("The requested session was not found:" + sessionId);
 			return null;
+		}
 
-		if (session.isExpired())
+		if (session.isExpired()) {
+			LOG.debug("The requested session expired:" + sessionId);
 			return null;
+		}
 
 		session.setExpires(System.currentTimeMillis() + session.getSessionTimeout());
 		return session;
@@ -55,7 +63,9 @@ public class DummySessionManager implements SessionManager, SettingsChangeObserv
 
 	@Override
 	public void logout(String id) {
-		this.sessions.remove(id);
+		Session session = this.sessions.get(id);
+		if (session != null)
+			destroySession(session);
 	}
 
 	@Override
@@ -71,6 +81,7 @@ public class DummySessionManager implements SessionManager, SettingsChangeObserv
 
 	@Override
 	public void destroySession(Session session) {
+		LOG.info("Destroy session " + session.getId());
 		this.sessions.remove(session.getId());
 	}
 

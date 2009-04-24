@@ -2,6 +2,7 @@ package org.csovessoft.contabil.user;
 
 import java.util.HashMap;
 
+import org.apache.log4j.Logger;
 import org.csovessoft.contabil.UserManager;
 import org.csovessoft.contabil.exceptions.ExceptionBase;
 import org.csovessoft.contabil.exceptions.FieldRequiredException;
@@ -9,6 +10,8 @@ import org.csovessoft.contabil.exceptions.UserAlreadyExistsException;
 import org.csovessoft.contabil.exceptions.UserNotFoundException;
 
 public class DummyUserManager implements UserManager {
+
+	private static final transient Logger LOG = Logger.getLogger(DummyUserManager.class);
 
 	private static final DummyUserManager INSTANCE = new DummyUserManager();
 
@@ -22,9 +25,9 @@ public class DummyUserManager implements UserManager {
 		user.setPassword("test");
 		try {
 			createUser(user);
+			LOG.info("User admin created with password test");
 		} catch (ExceptionBase e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOG.error("Exception creating admin user", e);
 		}
 	}
 
@@ -35,28 +38,32 @@ public class DummyUserManager implements UserManager {
 	@Override
 	public User userLogin(String username, String password) throws UserNotFoundException {
 		User user = this.users_userName.get(username);
-		if (user != null && user.getPassword().equals(password))
+		if (user != null && user.getPassword().equals(password)) {
 			return user;
-		throw new UserNotFoundException();
+		}
+		LOG.info("User " + username + " was not authenticated");
+		throw new UserNotFoundException(username);
 	}
 
 	@Override
-	public void createUser(User user) throws FieldRequiredException, UserAlreadyExistsException {
+	public String createUser(User user) throws FieldRequiredException, UserAlreadyExistsException {
 
 		requireStringField(user.getUsername(), "username");
 
 		User user2 = this.users_userName.get(user.getUsername());
 		if (user2 != null)
-			throw new UserAlreadyExistsException(user.getUsername());
+			throw new UserAlreadyExistsException("username", user.getUsername());
 
 		user.setId(String.valueOf(System.nanoTime()));
 		users_id.put(user.getId(), user);
 		users_userName.put(user.getUsername(), user);
+		LOG.info("Created user:" + user.getUsername() + "; id:" + user.getId());
+		return user.getId();
 	}
 
 	private void requireStringField(String value, String fieldname) throws FieldRequiredException {
 		if (value == null || value.length() == 0)
-			throw new FieldRequiredException(fieldname);
+			throw new FieldRequiredException(fieldname, User.class);
 	}
 
 	@Override
@@ -69,6 +76,7 @@ public class DummyUserManager implements UserManager {
 		User user = this.users_id.get(id);
 		if (user == null)
 			return;
+		LOG.info("Delete user:" + user.getUsername() + "; id:" + user.getId());
 		this.users_id.remove(id);
 		this.users_userName.remove(user.getUsername());
 	}

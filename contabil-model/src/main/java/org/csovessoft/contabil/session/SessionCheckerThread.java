@@ -2,12 +2,15 @@ package org.csovessoft.contabil.session;
 
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
 import org.csovessoft.contabil.ModelFactory;
 import org.csovessoft.contabil.SessionManager;
 import org.csovessoft.contabil.config.Config;
 import org.csovessoft.contabil.config.SettingsChangeObserver;
 
 public class SessionCheckerThread extends Thread implements SettingsChangeObserver {
+
+	private static final transient Logger LOG = Logger.getLogger(SessionCheckerThread.class);
 
 	private long SESSION_CHECK_PERIOD = ModelFactory.getConfigurationManager().getLong(
 			Config.SESSION_CHECK_PERIOD);
@@ -18,6 +21,7 @@ public class SessionCheckerThread extends Thread implements SettingsChangeObserv
 		this.sessionManager = sessionManager;
 		this.setDaemon(true);
 		ModelFactory.getConfigurationManager().registerForChange(this);
+		LOG.info("Session checker initialized with " + SESSION_CHECK_PERIOD + "ms period");
 	}
 
 	@Override
@@ -26,15 +30,17 @@ public class SessionCheckerThread extends Thread implements SettingsChangeObserv
 			while (!this.terminate) {
 				synchronized (this) {
 					this.wait(SESSION_CHECK_PERIOD);
+					LOG.debug("SessionCheck looking for expired sessions");
 					ArrayList<Session> expiredSessions = this.sessionManager.getExpiredSessions();
+					LOG.debug("SessionCheck found" + expiredSessions.size() + " expired sessions");
 					for (Session session : expiredSessions) {
+						LOG.debug("Terminating expired session " + session.getId());
 						this.sessionManager.destroySession(session);
 					}
 				}
 			}
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			LOG.error("The session checker thread was interrupted", e);
 		}
 	}
 

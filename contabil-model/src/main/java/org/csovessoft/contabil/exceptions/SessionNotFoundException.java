@@ -1,6 +1,10 @@
 package org.csovessoft.contabil.exceptions;
 
+import org.apache.log4j.Logger;
+
 public class SessionNotFoundException extends ExceptionBase {
+
+	private static final transient Logger LOG = Logger.getLogger(UserNotFoundException.class);
 
 	/**
 	 * 
@@ -11,6 +15,7 @@ public class SessionNotFoundException extends ExceptionBase {
 	public SessionNotFoundException(String sessionID) {
 		super(ErrorCodes.SESSION_NOT_FOUND);
 		this.sessionID = sessionID;
+		LOG.error("Session was not found: " + sessionID);
 	}
 
 	public String getSessionID() {

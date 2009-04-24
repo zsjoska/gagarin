@@ -2,9 +2,12 @@ package org.csovessoft.contabil.config;
 
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
 import org.csovessoft.contabil.ConfigurationManager;
 
 public class FileConfigurationManager implements ConfigurationManager {
+
+	private static final transient Logger LOG = Logger.getLogger(FileConfigurationManager.class);
 
 	private static final ConfigurationManager INSTANCE = new FileConfigurationManager();
 
@@ -23,15 +26,21 @@ public class FileConfigurationManager implements ConfigurationManager {
 
 	@Override
 	public long getLong(Config config) {
-		String object = null;
+		String strValue = null;
 		if (this.configuration.size() > config.ordinal()) {
-			object = this.configuration.get(config.ordinal());
+			strValue = this.configuration.get(config.ordinal());
 		}
-		if (object == null) {
-			object = DefaultConfiguration.getValue(config);
+		if (strValue == null) {
+			LOG.warn(config.name() + " config value was not found, getting the default value");
+			strValue = DefaultConfiguration.getValue(config);
 		}
-		long value = Long.valueOf(object);
-		return value;
+		try {
+			long value = Long.valueOf(strValue);
+			return value;
+		} catch (NumberFormatException e) {
+			LOG.error(config.name() + "=" + strValue + " is invalid", e);
+			throw e;
+		}
 	}
 
 	@Override
@@ -42,8 +51,14 @@ public class FileConfigurationManager implements ConfigurationManager {
 	@Override
 	public void setConfigValue(Config config, String value) {
 		configuration.add(config.ordinal(), value);
+		LOG.info("Config Change:" + config.name() + "=" + value + "; propagating...");
 		for (SettingsChangeObserver observer : changeObservers) {
-			observer.configChanged(config, value);
+			try {
+				observer.configChanged(config, value);
+			} catch (Exception e) {
+				LOG.error("Config " + config.name() + "=" + value + " could not be applied by "
+						+ observer.getClass().getName(), e);
+			}
 		}
 	}
 

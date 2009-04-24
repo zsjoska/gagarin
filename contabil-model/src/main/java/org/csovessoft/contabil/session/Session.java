@@ -4,6 +4,7 @@ import org.csovessoft.contabil.user.Entity;
 import org.csovessoft.contabil.user.User;
 
 public class Session extends Entity {
+
 	private long sessionTimeout = 0;
 	private long expires;
 	private String language;

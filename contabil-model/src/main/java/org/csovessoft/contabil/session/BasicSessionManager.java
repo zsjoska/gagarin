@@ -9,11 +9,11 @@ import org.csovessoft.contabil.SessionManager;
 import org.csovessoft.contabil.config.Config;
 import org.csovessoft.contabil.config.SettingsChangeObserver;
 
-public class DummySessionManager implements SessionManager, SettingsChangeObserver {
+public class BasicSessionManager implements SessionManager, SettingsChangeObserver {
 
-	private static final transient Logger LOG = Logger.getLogger(DummySessionManager.class);
+	private static final transient Logger LOG = Logger.getLogger(BasicSessionManager.class);
 
-	private static final DummySessionManager INSTANCE = new DummySessionManager();
+	private static final BasicSessionManager INSTANCE = new BasicSessionManager();
 
 	private long USER_SESSION_TIMEOUT = ModelFactory.getConfigurationManager().getLong(
 			Config.USER_SESSION_TIMEOUT);
@@ -22,7 +22,7 @@ public class DummySessionManager implements SessionManager, SettingsChangeObserv
 
 	private SessionCheckerThread chkSession = new SessionCheckerThread(INSTANCE);
 
-	private DummySessionManager() {
+	private BasicSessionManager() {
 		ModelFactory.getConfigurationManager().registerForChange(this);
 		chkSession.start();
 	}
@@ -86,11 +86,12 @@ public class DummySessionManager implements SessionManager, SettingsChangeObserv
 	}
 
 	@Override
-	public void configChanged(Config config, String value) {
+	public boolean configChanged(Config config, String value) {
 		switch (config) {
 		case USER_SESSION_TIMEOUT:
 			USER_SESSION_TIMEOUT = Long.valueOf(value);
-			break;
+			return true;
 		}
+		return false;
 	}
 }

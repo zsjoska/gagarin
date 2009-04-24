@@ -49,12 +49,13 @@ public class SessionCheckerThread extends Thread implements SettingsChangeObserv
 	}
 
 	@Override
-	public void configChanged(Config config, String value) {
+	public boolean configChanged(Config config, String value) {
 		switch (config) {
 		case SESSION_CHECK_PERIOD:
 			SESSION_CHECK_PERIOD = Long.valueOf(value);
-			break;
+			return true;
 		}
+		return false;
 	}
 
 }

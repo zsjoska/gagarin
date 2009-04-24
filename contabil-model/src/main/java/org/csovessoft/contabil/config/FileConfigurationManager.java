@@ -20,6 +20,7 @@ public class FileConfigurationManager implements ConfigurationManager {
 	ArrayList<String> configuration = new ArrayList<String>();
 
 	private FileConfigurationManager() {
+		// TODO: load from file
 		configuration.add(Config.USER_SESSION_TIMEOUT.ordinal(), "5000");
 		configuration.add(Config.SESSION_CHECK_PERIOD.ordinal(), "3000");
 	}

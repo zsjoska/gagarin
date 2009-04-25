@@ -1,9 +1,9 @@
 package org.csovessoft.contabil.session;
 
-import org.csovessoft.contabil.user.Entity;
+import org.csovessoft.contabil.user.BaseEntity;
 import org.csovessoft.contabil.user.User;
 
-public class Session extends Entity {
+public class Session extends BaseEntity {
 
 	private long sessionTimeout = 0;
 	private long expires;

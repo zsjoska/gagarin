@@ -1,9 +1,11 @@
 package org.csovessoft.contabil.user;
 
-public class Entity {
+import java.io.Serializable;
+
+public class BaseEntity implements Serializable {
 
 	private String id;
-	
+
 	private boolean fromDB = false;
 
 	public void setFromDB(boolean fromDB) {

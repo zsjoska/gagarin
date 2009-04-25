@@ -23,6 +23,7 @@ public class DummyUserManager implements UserManager {
 		User user = new User();
 		user.setUsername("admin");
 		user.setPassword("test");
+
 		try {
 			createUser(user);
 			LOG.info("User admin created with password test");

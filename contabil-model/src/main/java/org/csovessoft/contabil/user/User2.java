@@ -1,9 +1,18 @@
 package org.csovessoft.contabil.user;
 
+import java.io.Serializable;
 
-public class User extends BaseEntity {
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-	private String id;
+import com.sun.istack.internal.NotNull;
+
+@Entity
+@Table(name = "USER2")
+public class User2 implements Serializable {
+
+	private Long id;
 	private String username;
 	private String password;
 	private String name;
@@ -32,8 +41,14 @@ public class User extends BaseEntity {
 		return name;
 	}
 
-	public String getId() {
+	@Id
+	@NotNull
+	public Long getId() {
 		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 }

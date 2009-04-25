@@ -39,6 +39,64 @@
 		<appender-ref ref="MAIN-CONSOLE" />
 	</logger>
 
+	<logger name="org.hibernate" additivity="false">
+		<level value="info" />
+		<appender-ref ref="MAIN" />
+		<appender-ref ref="MAIN-CONSOLE" />
+	</logger>
+
+	<logger name="org.hibernate.hql.ast.AST" additivity="false">
+		<level value="debug" />
+		<appender-ref ref="MAIN" />
+		<appender-ref ref="MAIN-CONSOLE" />
+	</logger>
+
+	<logger name="org.hibernate.SQL" additivity="false">
+		<level value="info" />
+		<appender-ref ref="DEBUG" />
+		<appender-ref ref="MAIN-CONSOLE" />
+	</logger>
+
+	<logger name="org.hibernate.type" additivity="false">
+		<level value="info" />
+		<appender-ref ref="MAIN" />
+		<appender-ref ref="MAIN-CONSOLE" />
+	</logger>
+
+	<logger name="org.hibernate.tool.hbm2ddl" additivity="false">
+		<level value="info" />
+		<appender-ref ref="MAIN" />
+		<appender-ref ref="MAIN-CONSOLE" />
+	</logger>
+
+	<logger name="org.hibernate.hql" additivity="false">
+		<level value="info" />
+		<appender-ref ref="MAIN" />
+		<appender-ref ref="MAIN-CONSOLE" />
+	</logger>
+	
+	<logger name="org.hibernate.cache" additivity="false">
+		<level value="info" />
+		<appender-ref ref="MAIN" />
+		<appender-ref ref="MAIN-CONSOLE" />
+	</logger>
+
+	<logger name="org.hibernate.transaction" additivity="false">
+		<level value="debug" />
+		<appender-ref ref="MAIN" />
+		<appender-ref ref="MAIN-CONSOLE" />
+	</logger>
+
+	<logger name="org.hibernate.jdbc" additivity="false">
+		<level value="debug" />
+		<appender-ref ref="MAIN" />
+		<appender-ref ref="MAIN-CONSOLE" />
+	</logger>
+	<!--
+		### enable the following line if you want to track down connection ###
+		### leakages when using DriverManagerConnectionProvider ###
+		#log4j.logger.org.hibernate.connection.DriverManagerConnectionProvider=trace
+	-->
 	<root>
 		<level value="trace" />
 		<appender-ref ref="ALL" />

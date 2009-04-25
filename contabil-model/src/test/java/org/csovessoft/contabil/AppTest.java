@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 
 import org.csovessoft.contabil.user.User2;
 import org.junit.Test;
@@ -15,50 +16,36 @@ import org.junit.Test;
 public class AppTest {
 
 	@Test
-	public void testApp() {
-		User2 user = new User2();
-		user.setName("Alma");
-		user.setPassword("kukac");
-		createHoney(user);
-		assertNotNull("persistent user id should not be null", user.getId());
-		System.out.println("ok");
-	}
+	public void testCreate() {
 
-	private void createHoney(User2 user) {
-		user.setId(System.currentTimeMillis());
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("contabil");
 		EntityManager em = emf.createEntityManager();
+
+		User2 user = new User2();
+		user.setName("Alma");
+		user.setUsername("Alma");
+		user.setPassword("kukac");
+		user.setId(System.currentTimeMillis());
+
 		em.getTransaction().begin();
 		em.persist(user);
 		em.getTransaction().commit();
 
-		// Transaction tx = null;
-		// Session session =
-		// SessionFactoryUtil.getInstance().getCurrentSession();
-		// try {
-		// tx = session.beginTransaction();
-		// session.save(user);
-		// tx.commit();
-		// } catch (RuntimeException e) {
-		// if (tx != null && tx.isActive()) {
-		// try {
-		// // Second try catch as the rollback could fail as well
-		// tx.rollback();
-		// } catch (HibernateException e1) {
-		// logger.debug("Error rolling back transaction");
-		// }
-		// // throw again the first exception
-		// throw e;
-		// }
-		// }
+		assertNotNull("persistent user id should not be null", user.getId());
+		System.out.println("ok");
 	}
 
-	// public static void main(String[] args) {
-	// User user = new User();
-	// user.setName("Alma");
-	// user.setPassword("kukac");
-	// createHoney(user);
-	// assertNotNull("persistent user id should not be null", user.getId());
-	// System.out.println("ok");
-	// }
+	@Test
+	public void testGet() {
+
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("contabil");
+		EntityManager em = emf.createEntityManager();
+
+		Query query = em.createQuery("select u from User2 u where u.username=:username");
+		query.setParameter("username", "Alma");
+		User2 user = (User2) query.getSingleResult();
+
+		assertNotNull("persistent user id should not be null", user.getId());
+		System.out.println("ok");
+	}
 }

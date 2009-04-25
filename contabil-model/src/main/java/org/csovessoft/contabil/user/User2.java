@@ -12,6 +12,10 @@ import com.sun.istack.internal.NotNull;
 @Table(name = "USER2")
 public class User2 implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8039646572811039255L;
 	private Long id;
 	private String username;
 	private String password;

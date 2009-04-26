@@ -73,7 +73,7 @@ public class DummyUserManager implements UserManager {
 	}
 
 	@Override
-	public void deleteUserById(String id) {
+	public void deleteUserById(long id) {
 		User user = this.users_id.get(id);
 		if (user == null)
 			return;

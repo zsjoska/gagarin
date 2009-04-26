@@ -57,12 +57,6 @@ public class HibernateUserManager implements UserManager {
 			LOG.info("User " + username + " was not authenticated");
 			throw new UserNotFoundException(username);
 		}
-
-		// User user = this.users_userName.get(username);
-		// if (user != null && user.getPassword().equals(password)) {
-		// return user;
-		// }
-		// throw new UserNotFoundException(username);
 	}
 
 	@Override
@@ -80,18 +74,7 @@ public class HibernateUserManager implements UserManager {
 		} catch (ConstraintViolationException e) {
 			throw new UserAlreadyExistsException("username", user.getUsername());
 		}
-		// em.getTransaction().commit();
-
-		// User user2 = this.users_userName.get(user.getUsername());
-		// if (user2 != null)
-		// throw new UserAlreadyExistsException("username", user.getUsername());
-		//
-		// user.setId(String.valueOf(System.nanoTime()));
-		// users_id.put(user.getId(), user);
-		// users_userName.put(user.getUsername(), user);
-		// LOG.info("Created user:" + user.getUsername() + "; id:" +
-		// user.getId());
-		// return user.getId();
+		LOG.info("Created user:" + user.getUsername() + "; id:" + user.getId());
 		return user.getId();
 	}
 
@@ -127,7 +110,7 @@ public class HibernateUserManager implements UserManager {
 	}
 
 	@Override
-	public void deleteUserById(String id) {
+	public void deleteUserById(long id) {
 
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
@@ -142,10 +125,6 @@ public class HibernateUserManager implements UserManager {
 
 		em.remove(user);
 		em.getTransaction().commit();
-
-		// User user = this.users_id.get(id);
-		// this.users_id.remove(id);
-		// this.users_userName.remove(user.getUsername());
 	}
 
 }

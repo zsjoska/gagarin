@@ -55,5 +55,5 @@ public interface UserManager {
 	 * @param id
 	 *            the ID of the user to be deleted
 	 */
-	void deleteUserById(String id);
+	void deleteUserById(long id);
 }

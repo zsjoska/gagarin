@@ -2,9 +2,12 @@ package org.csovessoft.contabil.user;
 
 import java.io.Serializable;
 
+@SuppressWarnings("serial")
 public class BaseEntity implements Serializable {
 
-	private String id;
+	private static long nextId = System.currentTimeMillis();
+
+	private long id;
 
 	private boolean fromDB = false;
 
@@ -16,11 +19,19 @@ public class BaseEntity implements Serializable {
 		return fromDB;
 	}
 
-	public void setId(String id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
-	public String getId() {
+	public long getId() {
 		return id;
+	}
+
+	public void generateId() {
+		this.id = BaseEntity.getNextId();
+	}
+
+	private static synchronized long getNextId() {
+		return ++nextId;
 	}
 }

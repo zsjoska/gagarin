@@ -5,6 +5,10 @@ import org.csovessoft.contabil.user.User;
 
 public class Session extends BaseEntity {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3676125918206947624L;
 	private long sessionTimeout = 0;
 	private long expires;
 	private String language;

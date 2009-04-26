@@ -17,7 +17,7 @@ public class UserService {
 	private static final transient Logger LOG = Logger.getLogger(UserService.class);
 
 	@WebMethod
-	public String createUser(String sessionId, User user) throws SessionNotFoundException,
+	public long createUser(Long sessionId, User user) throws SessionNotFoundException,
 			FieldRequiredException, UserAlreadyExistsException {
 		LOG.info("createUser " + user.getUsername());
 		Session session = ModelFactory.getSessionManager().getSessionById(sessionId);
@@ -26,7 +26,7 @@ public class UserService {
 
 		// TODO: permission check
 
-		String userId = ModelFactory.getUserManager().createUser(user);
+		long userId = ModelFactory.getUserManager().createUser(user);
 		LOG.info("Created User" + user.getId() + ":" + user.getUsername() + "; session:"
 				+ sessionId);
 		return userId;

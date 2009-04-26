@@ -35,7 +35,7 @@ public interface SessionManager {
 	 * @return the session or <code>null</code> if the session was not found or
 	 *         it was expired
 	 */
-	Session getSessionById(String sessionId);
+	Session getSessionById(long sessionId);
 
 	/**
 	 * Destroys the session.
@@ -43,7 +43,7 @@ public interface SessionManager {
 	 * @param id
 	 *            the ID of the session to be destroyed
 	 */
-	void logout(String id);
+	void logout(long id);
 
 	/**
 	 * Returns a list with sessions that expired. These sessions will be

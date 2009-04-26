@@ -42,7 +42,7 @@ public class HibernateUserManager implements UserManager {
 	}
 
 	@Override
-	public String createUser(User user) throws FieldRequiredException, UserAlreadyExistsException {
+	public long createUser(User user) throws FieldRequiredException, UserAlreadyExistsException {
 
 		// requireStringField(user.getUsername(), "username");
 		//
@@ -56,7 +56,7 @@ public class HibernateUserManager implements UserManager {
 		// LOG.info("Created user:" + user.getUsername() + "; id:" +
 		// user.getId());
 		// return user.getId();
-		return null;
+		return 0;
 	}
 
 	private void requireStringField(String value, String fieldname) throws FieldRequiredException {

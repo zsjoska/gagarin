@@ -1,9 +1,20 @@
 package org.csovessoft.contabil.user;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
+import com.sun.istack.internal.NotNull;
+
+@Entity
+@Table(name = "USERS")
 public class User extends BaseEntity {
 
-	private String id;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4384614532696714328L;
+
 	private String username;
 	private String password;
 	private String name;
@@ -32,8 +43,9 @@ public class User extends BaseEntity {
 		return name;
 	}
 
-	public String getId() {
-		return id;
+	@Id
+	@NotNull
+	public long getId() {
+		return super.getId();
 	}
-
 }

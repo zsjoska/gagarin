@@ -9,6 +9,9 @@ public class DefaultConfiguration {
 	static {
 		addValue(Config.USER_SESSION_TIMEOUT, "" + 1000 * 60 * 5);
 		addValue(Config.SESSION_CHECK_PERIOD, "" + 1000 * 30);
+		addValue(Config.ADMIN_ROLE_NAME, "ADMIN_ROLE");
+		addValue(Config.ADMIN_USER_NAME, "admin");
+		addValue(Config.ADMIN_PASSWORD, "password");
 	}
 
 	private static void addValue(Config config, String object) {

@@ -1,9 +1,12 @@
 package org.csovessoft.contabil;
 
+import java.util.List;
+
 import org.csovessoft.contabil.exceptions.FieldRequiredException;
 import org.csovessoft.contabil.exceptions.UserAlreadyExistsException;
 import org.csovessoft.contabil.exceptions.UserNotFoundException;
 import org.csovessoft.contabil.user.User;
+import org.csovessoft.contabil.user.UserRole;
 
 /**
  * Base interface to handle the operations related to the users of the system.
@@ -56,4 +59,6 @@ public interface UserManager {
 	 *            the ID of the user to be deleted
 	 */
 	void deleteUserById(long id);
+
+	List<User> getUsersWithRole(UserRole role);
 }

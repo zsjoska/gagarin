@@ -1,8 +1,9 @@
 package org.csovessoft.contabil;
 
 import org.csovessoft.contabil.config.FileConfigurationManager;
+import org.csovessoft.contabil.hibernate.HibernateRoleManager;
+import org.csovessoft.contabil.hibernate.HibernateUserManager;
 import org.csovessoft.contabil.session.BasicSessionManager;
-import org.csovessoft.contabil.user.HibernateUserManager;
 
 /**
  * Factory class for business-logic implementation. All main sections of the
@@ -14,6 +15,16 @@ import org.csovessoft.contabil.user.HibernateUserManager;
  */
 public class ModelFactory {
 
+	static {
+		try {
+			ApplicationInitializer.init();
+		} catch (RuntimeException e) {
+			e.printStackTrace();
+			throw e;
+		}
+
+	}
+
 	/**
 	 * This method returns the {@link SessionManager} implementation selected.
 	 * 
@@ -21,6 +32,10 @@ public class ModelFactory {
 	 */
 	public static SessionManager getSessionManager() {
 		return BasicSessionManager.getInstance();
+	}
+
+	public static RoleManager getRoleManager() {
+		return HibernateRoleManager.getInstance();
 	}
 
 	/**

@@ -1,4 +1,6 @@
-package org.csovessoft.contabil.user;
+package org.csovessoft.contabil.hibernate;
+
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -12,6 +14,8 @@ import org.csovessoft.contabil.UserManager;
 import org.csovessoft.contabil.exceptions.FieldRequiredException;
 import org.csovessoft.contabil.exceptions.UserAlreadyExistsException;
 import org.csovessoft.contabil.exceptions.UserNotFoundException;
+import org.csovessoft.contabil.user.User;
+import org.csovessoft.contabil.user.UserRole;
 import org.hibernate.exception.ConstraintViolationException;
 
 public class HibernateUserManager implements UserManager {
@@ -24,6 +28,7 @@ public class HibernateUserManager implements UserManager {
 
 	private HibernateUserManager() {
 
+		// TODO: create admin user if does not exists
 		// User user = new User();
 		// user.setUsername("admin");
 		// user.setPassword("test");
@@ -127,4 +132,22 @@ public class HibernateUserManager implements UserManager {
 		em.getTransaction().commit();
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<User> getUsersWithRole(UserRole role) {
+		EntityManager em = emf.createEntityManager();
+
+		Query query = em.createQuery("select u from User u where u.role=:role");
+		query.setParameter("role", role);
+		try {
+			List result = query.getResultList();
+			// if (result == null) {
+			// return null;
+			// }
+			return result;
+
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
 }

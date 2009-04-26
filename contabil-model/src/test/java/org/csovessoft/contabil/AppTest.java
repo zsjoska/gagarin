@@ -7,7 +7,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 
-import org.csovessoft.contabil.user.User2;
+import org.csovessoft.contabil.user.User;
 import org.junit.Test;
 
 /**
@@ -21,7 +21,7 @@ public class AppTest {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("contabil");
 		EntityManager em = emf.createEntityManager();
 
-		User2 user = new User2();
+		User user = new User();
 		user.setName("Alma");
 		user.setUsername("Alma");
 		user.setPassword("kukac");
@@ -41,11 +41,26 @@ public class AppTest {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("contabil");
 		EntityManager em = emf.createEntityManager();
 
-		Query query = em.createQuery("select u from User2 u where u.username=:username");
+		Query query = em.createQuery("select u from User u where u.username=:username");
 		query.setParameter("username", "Alma");
-		User2 user = (User2) query.getSingleResult();
+		User user = (User) query.getSingleResult();
 
 		assertNotNull("persistent user id should not be null", user.getId());
 		System.out.println("ok");
+	}
+
+	@Test
+	public void testDelete() {
+
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("contabil");
+		EntityManager em = emf.createEntityManager();
+		em.getTransaction().begin();
+
+		Query query = em.createQuery("select u from User u where u.username=:username");
+		query.setParameter("username", "Alma");
+		User user = (User) query.getSingleResult();
+
+		em.remove(user);
+		em.getTransaction().commit();
 	}
 }

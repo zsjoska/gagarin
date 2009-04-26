@@ -33,7 +33,8 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
 
 	@Override
 	public Session createSession(String language, String reason) {
-		Session session = new Session(USER_SESSION_TIMEOUT);
+		Session session = new Session();
+		session.setSessiontimeout(USER_SESSION_TIMEOUT);
 		session.setId(System.currentTimeMillis() + "-" + System.nanoTime());
 		session.setLanguage(language);
 		session.setReason(reason);

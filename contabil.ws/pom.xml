@@ -61,7 +61,7 @@
 			<artifactId>log4j</artifactId>
 			<version>1.2.12</version>
 			<scope>compile</scope>
-		</dependency>		
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
@@ -70,6 +70,7 @@
 				<artifactId>jaxws-maven-plugin</artifactId>
 				<executions>
 					<execution>
+						<id>Services</id>
 						<goals>
 							<goal>wsgen</goal>
 						</goals>
@@ -80,6 +81,8 @@
 							</sei>
 							<genWsdl>true</genWsdl>
 							<keep>true</keep>
+							<verbose>true</verbose>
+							<target>2.1</target>
 						</configuration>
 					</execution>
 				</executions>

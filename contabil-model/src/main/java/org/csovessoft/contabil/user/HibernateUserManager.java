@@ -118,9 +118,12 @@ public class HibernateUserManager implements UserManager {
 
 		Query query = em.createQuery("select u from User u where u.username=:username");
 		query.setParameter("username", username);
-		User user = (User) query.getSingleResult();
-		// return this.users_userName.get(username);
-		return user;
+		try {
+			User user = (User) query.getSingleResult();
+			return user;
+		} catch (NoResultException e) {
+			return null;
+		}
 	}
 
 	@Override

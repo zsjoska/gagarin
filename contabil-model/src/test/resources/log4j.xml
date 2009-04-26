@@ -27,6 +27,27 @@
 		</layout>
 	</appender>
 
+	<appender name="SCHEMA" class="org.apache.log4j.RollingFileAppender">
+		<param name="Append" value="true" />
+		<param name="ImmediateFlush" value="true" />
+		<param name="File" value="./target/schema.log" />
+		<param name="MaxBackupIndex" value="5" />
+		<param name="MaxFileSize" value="128MB" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="[%x]%-5p [%d{ISO8601} - %t]%l - %m%n" />
+		</layout>
+	</appender>
+	<appender name="HIBERNATE" class="org.apache.log4j.RollingFileAppender">
+		<param name="Append" value="true" />
+		<param name="ImmediateFlush" value="true" />
+		<param name="File" value="./target/hibernate.log" />
+		<param name="MaxBackupIndex" value="5" />
+		<param name="MaxFileSize" value="128MB" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="[%x]%-5p [%d{ISO8601} - %t]%l - %m%n" />
+		</layout>
+	</appender>
+
 	<appender name="MAIN-CONSOLE" class="org.apache.log4j.ConsoleAppender">
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern" value="[%x]%-5p [%d{ISO8601} - %t]%l - %m%n" />
@@ -41,56 +62,50 @@
 
 	<logger name="org.hibernate" additivity="false">
 		<level value="info" />
-		<appender-ref ref="MAIN" />
-		<appender-ref ref="MAIN-CONSOLE" />
+		<appender-ref ref="HIBERNATE" />
 	</logger>
 
 	<logger name="org.hibernate.hql.ast.AST" additivity="false">
 		<level value="debug" />
-		<appender-ref ref="MAIN" />
-		<appender-ref ref="MAIN-CONSOLE" />
+		<appender-ref ref="HIBERNATE" />
 	</logger>
 
 	<logger name="org.hibernate.SQL" additivity="false">
 		<level value="info" />
-		<appender-ref ref="DEBUG" />
-		<appender-ref ref="MAIN-CONSOLE" />
+		<appender-ref ref="HIBERNATE" />
+		<appender-ref ref="MAIN" />
 	</logger>
 
 	<logger name="org.hibernate.type" additivity="false">
 		<level value="info" />
-		<appender-ref ref="MAIN" />
-		<appender-ref ref="MAIN-CONSOLE" />
+		<appender-ref ref="HIBERNATE" />
 	</logger>
 
 	<logger name="org.hibernate.tool.hbm2ddl" additivity="false">
-		<level value="info" />
+		<level value="debug" />
 		<appender-ref ref="MAIN" />
-		<appender-ref ref="MAIN-CONSOLE" />
+		<appender-ref ref="SCHEMA" />
+		<appender-ref ref="HIBERNATE" />
 	</logger>
 
 	<logger name="org.hibernate.hql" additivity="false">
 		<level value="info" />
-		<appender-ref ref="MAIN" />
-		<appender-ref ref="MAIN-CONSOLE" />
+		<appender-ref ref="HIBERNATE" />
 	</logger>
 	
 	<logger name="org.hibernate.cache" additivity="false">
 		<level value="info" />
-		<appender-ref ref="MAIN" />
-		<appender-ref ref="MAIN-CONSOLE" />
+		<appender-ref ref="HIBERNATE" />
 	</logger>
 
 	<logger name="org.hibernate.transaction" additivity="false">
 		<level value="debug" />
-		<appender-ref ref="MAIN" />
-		<appender-ref ref="MAIN-CONSOLE" />
+		<appender-ref ref="HIBERNATE" />
 	</logger>
 
 	<logger name="org.hibernate.jdbc" additivity="false">
 		<level value="debug" />
-		<appender-ref ref="MAIN" />
-		<appender-ref ref="MAIN-CONSOLE" />
+		<appender-ref ref="HIBERNATE" />
 	</logger>
 	<!--
 		### enable the following line if you want to track down connection ###

@@ -11,9 +11,6 @@ import com.sun.istack.internal.NotNull;
 @Table(name = "USERS")
 public class User extends BaseEntity {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 4384614532696714328L;
 
 	private String username;

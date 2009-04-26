@@ -70,13 +70,25 @@
 				<artifactId>jaxws-maven-plugin</artifactId>
 				<executions>
 					<execution>
-						<id>Services</id>
+						<id>AuthService</id>
 						<goals>
 							<goal>wsgen</goal>
 						</goals>
 						<configuration>
 							<sei>org.csovessoft.contabil.ws.Authentication 
 							</sei>
+							<genWsdl>true</genWsdl>
+							<keep>true</keep>
+							<verbose>true</verbose>
+							<target>2.1</target>
+						</configuration>
+					</execution>
+					<execution>
+						<id>UserService</id>
+						<goals>
+							<goal>wsgen</goal>
+						</goals>
+						<configuration>
 							<sei>org.csovessoft.contabil.ws.UserService 
 							</sei>
 							<genWsdl>true</genWsdl>

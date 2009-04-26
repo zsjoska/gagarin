@@ -11,8 +11,7 @@ public class Session extends Entity {
 	private String reason;
 	private User user;
 
-	public Session(long sessionTimeout) {
-		this.sessionTimeout = sessionTimeout;
+	public Session() {
 	}
 
 	public void setLanguage(String language) {

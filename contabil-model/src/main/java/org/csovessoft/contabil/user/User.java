@@ -1,6 +1,8 @@
 package org.csovessoft.contabil.user;
 
-public class User extends Entity {
+public class User extends BaseEntity {
+
+	private static final long serialVersionUID = 4384614532696714328L;
 
 	private String username;
 	private String password;

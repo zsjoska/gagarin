@@ -15,7 +15,7 @@ public class DummyUserManager implements UserManager {
 
 	private static final DummyUserManager INSTANCE = new DummyUserManager();
 
-	private HashMap<String, User> users_id = new HashMap<String, User>();
+	private HashMap<Long, User> users_id = new HashMap<Long, User>();
 	private HashMap<String, User> users_userName = new HashMap<String, User>();
 
 	private DummyUserManager() {
@@ -23,6 +23,7 @@ public class DummyUserManager implements UserManager {
 		User user = new User();
 		user.setUsername("admin");
 		user.setPassword("test");
+
 		try {
 			createUser(user);
 			LOG.info("User admin created with password test");
@@ -46,7 +47,7 @@ public class DummyUserManager implements UserManager {
 	}
 
 	@Override
-	public String createUser(User user) throws FieldRequiredException, UserAlreadyExistsException {
+	public long createUser(User user) throws FieldRequiredException, UserAlreadyExistsException {
 
 		requireStringField(user.getUsername(), "username");
 
@@ -54,7 +55,7 @@ public class DummyUserManager implements UserManager {
 		if (user2 != null)
 			throw new UserAlreadyExistsException("username", user.getUsername());
 
-		user.setId(String.valueOf(System.nanoTime()));
+		user.generateId();
 		users_id.put(user.getId(), user);
 		users_userName.put(user.getUsername(), user);
 		LOG.info("Created user:" + user.getUsername() + "; id:" + user.getId());
@@ -72,7 +73,7 @@ public class DummyUserManager implements UserManager {
 	}
 
 	@Override
-	public void deleteUserById(String id) {
+	public void deleteUserById(long id) {
 		User user = this.users_id.get(id);
 		if (user == null)
 			return;

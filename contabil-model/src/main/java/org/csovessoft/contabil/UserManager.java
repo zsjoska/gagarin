@@ -38,7 +38,7 @@ public interface UserManager {
 	 * @throws UserAlreadyExistsException
 	 *             the user or a key-field like username or email already exists
 	 */
-	String createUser(User user) throws FieldRequiredException, UserAlreadyExistsException;
+	long createUser(User user) throws FieldRequiredException, UserAlreadyExistsException;
 
 	/**
 	 * Returns the user with the specified username
@@ -55,5 +55,5 @@ public interface UserManager {
 	 * @param id
 	 *            the ID of the user to be deleted
 	 */
-	void deleteUserById(String id);
+	void deleteUserById(long id);
 }

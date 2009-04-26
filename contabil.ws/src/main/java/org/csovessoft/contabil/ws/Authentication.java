@@ -40,7 +40,7 @@ public class Authentication {
 	}
 
 	@WebMethod
-	public boolean login(String sessionID, String username, String password, String[] extra)
+	public boolean login(long sessionID, String username, String password, String[] extra)
 			throws SessionNotFoundException, UserNotFoundException {
 
 		LOG.info("Login User " + username + "; extra:" + Arrays.toString(extra));
@@ -60,7 +60,7 @@ public class Authentication {
 	}
 
 	@WebMethod
-	public void logout(String sessionId) {
+	public void logout(Long sessionId) {
 		LOG.info("Session logout " + sessionId);
 		SessionManager sessionManager = ModelFactory.getSessionManager();
 		sessionManager.logout(sessionId);

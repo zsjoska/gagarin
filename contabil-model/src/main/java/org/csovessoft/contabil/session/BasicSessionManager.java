@@ -18,7 +18,7 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
 	private long USER_SESSION_TIMEOUT = ModelFactory.getConfigurationManager().getLong(
 			Config.USER_SESSION_TIMEOUT);
 
-	private final HashMap<String, Session> sessions = new HashMap<String, Session>();
+	private final HashMap<Long, Session> sessions = new HashMap<Long, Session>();
 
 	private SessionCheckerThread chkSession = new SessionCheckerThread(INSTANCE);
 
@@ -35,7 +35,7 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
 	public Session createSession(String language, String reason) {
 		Session session = new Session();
 		session.setSessiontimeout(USER_SESSION_TIMEOUT);
-		session.setId(System.currentTimeMillis() + "-" + System.nanoTime());
+		session.generateId();
 		session.setLanguage(language);
 		session.setReason(reason);
 		session.setExpires(System.currentTimeMillis() + session.getSessionTimeout());
@@ -45,7 +45,7 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
 	}
 
 	@Override
-	public Session getSessionById(String sessionId) {
+	public Session getSessionById(long sessionId) {
 		Session session = this.sessions.get(sessionId);
 
 		if (session == null) {
@@ -63,7 +63,7 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
 	}
 
 	@Override
-	public void logout(String id) {
+	public void logout(long id) {
 		Session session = this.sessions.get(id);
 		if (session != null)
 			destroySession(session);

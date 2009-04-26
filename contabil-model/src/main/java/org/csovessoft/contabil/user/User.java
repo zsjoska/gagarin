@@ -1,5 +1,6 @@
 package org.csovessoft.contabil.user;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -23,6 +24,7 @@ public class User extends BaseEntity {
 		this.username = username;
 	}
 
+	@Column(nullable = false, unique = true)
 	public String getUsername() {
 		return username;
 	}

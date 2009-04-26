@@ -19,7 +19,8 @@ import org.junit.Test;
  * Unit test for simple App.
  */
 public class SessionTest {
-	Authentication authentication = new Authentication();
+	private Authentication authentication = new Authentication();
+	private String username = "_User_" + System.currentTimeMillis();
 
 	@Test
 	public void testSuccessLogin() throws UserNotFoundException, SessionNotFoundException,
@@ -28,14 +29,14 @@ public class SessionTest {
 		UserManager userManager = ModelFactory.getUserManager();
 
 		User user = new User();
-		user.setUsername("user1");
+		user.setUsername("1" + username);
 		user.setPassword("password1");
 		userManager.createUser(user);
 
 		Session session = authentication.createSession(null, null);
 		assertNotNull(session);
 
-		authentication.login(session.getId(), "user1", "password1", null);
+		authentication.login(session.getId(), "1" + username, "password1", null);
 
 		authentication.logout(session.getId());
 	}
@@ -47,7 +48,7 @@ public class SessionTest {
 		UserManager userManager = ModelFactory.getUserManager();
 
 		User user = new User();
-		user.setUsername("user2");
+		user.setUsername("2" + username);
 		user.setPassword("password2");
 		userManager.createUser(user);
 
@@ -75,7 +76,7 @@ public class SessionTest {
 		UserManager userManager = ModelFactory.getUserManager();
 
 		User user = new User();
-		user.setUsername("user3");
+		user.setUsername("3" + username);
 		user.setPassword("password3");
 		userManager.createUser(user);
 
@@ -84,7 +85,7 @@ public class SessionTest {
 
 		authentication.logout(session.getId());
 		try {
-			authentication.login(session.getId(), "user3", "password3", null);
+			authentication.login(session.getId(), "3" + username, "password3", null);
 			fail("The login must fail since the session was deleted");
 		} catch (SessionNotFoundException e) {
 			assertEquals("Wrong session ID returned by the exception", e.getSessionID(), session

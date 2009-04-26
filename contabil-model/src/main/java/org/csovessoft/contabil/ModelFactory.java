@@ -2,7 +2,7 @@ package org.csovessoft.contabil;
 
 import org.csovessoft.contabil.config.FileConfigurationManager;
 import org.csovessoft.contabil.session.BasicSessionManager;
-import org.csovessoft.contabil.user.DummyUserManager;
+import org.csovessoft.contabil.user.HibernateUserManager;
 
 /**
  * Factory class for business-logic implementation. All main sections of the
@@ -29,7 +29,7 @@ public class ModelFactory {
 	 * @return the configured {@link UserManager} implementation
 	 */
 	public static UserManager getUserManager() {
-		return DummyUserManager.getInstance();
+		return HibernateUserManager.getInstance();
 	}
 
 	/**

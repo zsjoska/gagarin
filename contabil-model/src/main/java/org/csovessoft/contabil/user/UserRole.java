@@ -1,5 +1,6 @@
 package org.csovessoft.contabil.user;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -16,7 +17,7 @@ public class UserRole extends BaseEntity {
 	private static final long serialVersionUID = -566662791080932756L;
 
 	private String roleName;
-	private Set<UserPermission> userPermissions;
+	private Set<UserPermission> userPermissions = new HashSet<UserPermission>();
 
 	@Override
 	@Id

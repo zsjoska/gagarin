@@ -8,7 +8,7 @@ import org.csovessoft.contabil.user.UserRole;
 
 public interface RoleManager {
 
-	UserRole getAdminRole(String adminRoleName);
+	UserRole getRoleByName(String roleName);
 
 	long createRole(UserRole role) throws AlreadyExistsException;
 
@@ -16,6 +16,14 @@ public interface RoleManager {
 
 	List<UserPermission> getAllPermissions();
 
-	void saveRole(UserRole adminRole) throws AlreadyExistsException;
+	void saveRole(UserRole role) throws AlreadyExistsException;
+
+	void release();
+
+	void deleteRole(UserRole role2);
+
+	UserPermission getPermissionByName(String string);
+
+	void deletePermission(UserPermission perm);
 
 }

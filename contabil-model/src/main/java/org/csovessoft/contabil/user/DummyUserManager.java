@@ -1,6 +1,7 @@
 package org.csovessoft.contabil.user;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.csovessoft.contabil.UserManager;
@@ -80,6 +81,12 @@ public class DummyUserManager implements UserManager {
 		LOG.info("Delete user:" + user.getUsername() + "; id:" + user.getId());
 		this.users_id.remove(id);
 		this.users_userName.remove(user.getUsername());
+	}
+
+	@Override
+	public List<User> getUsersWithRole(UserRole role) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

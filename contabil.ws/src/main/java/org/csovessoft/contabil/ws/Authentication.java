@@ -40,7 +40,7 @@ public class Authentication {
 	}
 
 	@WebMethod
-	public boolean login(long sessionID, String username, String password, String[] extra)
+	public boolean login(Long sessionID, String username, String password, String[] extra)
 			throws SessionNotFoundException, UserNotFoundException {
 
 		LOG.info("Login User " + username + "; extra:" + Arrays.toString(extra));

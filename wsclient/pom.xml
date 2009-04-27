@@ -70,6 +70,7 @@
 							</wsdlUrls>
 							<packageName>org.csovessoft.wsclient 
 							</packageName>
+							<verbose>true</verbose>
 						</configuration>
 					</execution>
 				</executions>

@@ -1,12 +1,13 @@
-package org.csovessoft.contabil;
+package ro.gagarin;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-import org.csovessoft.contabil.exceptions.FieldRequiredException;
-import org.csovessoft.contabil.exceptions.UserAlreadyExistsException;
-import org.csovessoft.contabil.user.User;
 import org.junit.Test;
+
+import ro.gagarin.exceptions.FieldRequiredException;
+import ro.gagarin.exceptions.UserAlreadyExistsException;
+import ro.gagarin.user.User;
 
 /**
  * Unit test for simple App.

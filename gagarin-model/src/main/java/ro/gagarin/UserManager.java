@@ -1,9 +1,9 @@
-package org.csovessoft.contabil;
+package ro.gagarin;
 
-import org.csovessoft.contabil.exceptions.FieldRequiredException;
-import org.csovessoft.contabil.exceptions.UserAlreadyExistsException;
-import org.csovessoft.contabil.exceptions.UserNotFoundException;
-import org.csovessoft.contabil.user.User;
+import ro.gagarin.exceptions.FieldRequiredException;
+import ro.gagarin.exceptions.UserAlreadyExistsException;
+import ro.gagarin.exceptions.UserNotFoundException;
+import ro.gagarin.user.User;
 
 /**
  * Base interface to handle the operations related to the users of the system.

@@ -1,4 +1,4 @@
-package org.csovessoft.contabil.exceptions;
+package ro.gagarin.exceptions;
 
 public class ErrorCodes {
 

@@ -1,4 +1,4 @@
-package org.csovessoft.contabil.user;
+package ro.gagarin.user;
 
 public class User extends BaseEntity {
 

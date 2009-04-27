@@ -1,15 +1,5 @@
-package org.csovessoft.contabil;
+package ro.gagarin;
 
-import org.csovessoft.wsclient.Authentication;
-import org.csovessoft.wsclient.AuthenticationService;
-import org.csovessoft.wsclient.FieldRequiredException_Exception;
-import org.csovessoft.wsclient.Session;
-import org.csovessoft.wsclient.SessionNotFoundException_Exception;
-import org.csovessoft.wsclient.User;
-import org.csovessoft.wsclient.UserAlreadyExistsException_Exception;
-import org.csovessoft.wsclient.UserNotFoundException_Exception;
-import org.csovessoft.wsclient.UserService;
-import org.csovessoft.wsclient.UserServiceService;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;

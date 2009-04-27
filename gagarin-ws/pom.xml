@@ -1,15 +1,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.csovessoft</groupId>
-	<artifactId>contabil.ws</artifactId>
+	<groupId>ro.gagarin</groupId>
+	<artifactId>gagarin-ws</artifactId>
 	<packaging>war</packaging>
 	<version>1.0-SNAPSHOT</version>
-	<name>contabil.ws</name>
+	<name>gagarin-ws</name>
 	<url>http://maven.apache.org</url>
 	<parent>
-		<groupId>com.csovessoft</groupId>
-		<artifactId>contabil</artifactId>
+		<groupId>ro.gagarin</groupId>
+		<artifactId>gagarin</artifactId>
 		<version>1.0-SNAPSHOT</version>
 	</parent>
 	<repositories>
@@ -33,8 +33,8 @@
 	</pluginRepositories>
 	<dependencies>
 		<dependency>
-			<groupId>com.csovessoft</groupId>
-			<artifactId>contabil-model</artifactId>
+			<groupId>ro.gagarin</groupId>
+			<artifactId>gagarin-model</artifactId>
 			<scope>compile</scope>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
@@ -75,7 +75,7 @@
 							<goal>wsgen</goal>
 						</goals>
 						<configuration>
-							<sei>org.csovessoft.contabil.ws.Authentication 
+							<sei>ro.gagarin.ws.Authentication 
 							</sei>
 							<genWsdl>true</genWsdl>
 							<keep>true</keep>
@@ -89,7 +89,7 @@
 							<goal>wsgen</goal>
 						</goals>
 						<configuration>
-							<sei>org.csovessoft.contabil.ws.UserService 
+							<sei>ro.gagarin.ws.UserService 
 							</sei>
 							<genWsdl>true</genWsdl>
 							<keep>true</keep>
@@ -104,6 +104,6 @@
 				<artifactId>maven-jetty-plugin</artifactId>
 			</plugin>
 		</plugins>
-		<finalName>contabil.ws</finalName>
+		<finalName>gagarin-ws</finalName>
 	</build>
 </project>

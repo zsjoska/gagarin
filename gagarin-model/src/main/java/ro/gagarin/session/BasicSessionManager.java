@@ -1,13 +1,14 @@
-package org.csovessoft.contabil.session;
+package ro.gagarin.session;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.apache.log4j.Logger;
-import org.csovessoft.contabil.ModelFactory;
-import org.csovessoft.contabil.SessionManager;
-import org.csovessoft.contabil.config.Config;
-import org.csovessoft.contabil.config.SettingsChangeObserver;
+
+import ro.gagarin.ModelFactory;
+import ro.gagarin.SessionManager;
+import ro.gagarin.config.Config;
+import ro.gagarin.config.SettingsChangeObserver;
 
 public class BasicSessionManager implements SessionManager, SettingsChangeObserver {
 

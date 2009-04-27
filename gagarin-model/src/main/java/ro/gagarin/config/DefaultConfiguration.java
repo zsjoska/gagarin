@@ -1,4 +1,4 @@
-package org.csovessoft.contabil.config;
+package ro.gagarin.config;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package org.csovessoft.contabil.user;
+package ro.gagarin.user;
 
 import java.io.Serializable;
 

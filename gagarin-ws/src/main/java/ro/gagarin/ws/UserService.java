@@ -1,15 +1,16 @@
-package org.csovessoft.contabil.ws;
+package ro.gagarin.ws;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 
 import org.apache.log4j.Logger;
-import org.csovessoft.contabil.ModelFactory;
-import org.csovessoft.contabil.exceptions.FieldRequiredException;
-import org.csovessoft.contabil.exceptions.SessionNotFoundException;
-import org.csovessoft.contabil.exceptions.UserAlreadyExistsException;
-import org.csovessoft.contabil.session.Session;
-import org.csovessoft.contabil.user.User;
+
+import ro.gagarin.ModelFactory;
+import ro.gagarin.exceptions.FieldRequiredException;
+import ro.gagarin.exceptions.SessionNotFoundException;
+import ro.gagarin.exceptions.UserAlreadyExistsException;
+import ro.gagarin.session.Session;
+import ro.gagarin.user.User;
 
 @WebService
 public class UserService {

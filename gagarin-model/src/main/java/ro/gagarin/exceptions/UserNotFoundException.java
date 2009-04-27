@@ -1,4 +1,4 @@
-package org.csovessoft.contabil.exceptions;
+package ro.gagarin.exceptions;
 
 import org.apache.log4j.Logger;
 

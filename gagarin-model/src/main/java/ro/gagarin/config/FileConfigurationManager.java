@@ -1,9 +1,10 @@
-package org.csovessoft.contabil.config;
+package ro.gagarin.config;
 
 import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
-import org.csovessoft.contabil.ConfigurationManager;
+
+import ro.gagarin.ConfigurationManager;
 
 public class FileConfigurationManager implements ConfigurationManager {
 

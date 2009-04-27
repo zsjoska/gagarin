@@ -1,7 +1,7 @@
-package org.csovessoft.contabil.session;
+package ro.gagarin.session;
 
-import org.csovessoft.contabil.user.BaseEntity;
-import org.csovessoft.contabil.user.User;
+import ro.gagarin.user.BaseEntity;
+import ro.gagarin.user.User;
 
 public class Session extends BaseEntity {
 

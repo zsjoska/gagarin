@@ -1,19 +1,20 @@
-package org.csovessoft.contabil;
+package ro.gagarin;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
-import org.csovessoft.contabil.config.Config;
-import org.csovessoft.contabil.exceptions.FieldRequiredException;
-import org.csovessoft.contabil.exceptions.SessionNotFoundException;
-import org.csovessoft.contabil.exceptions.UserAlreadyExistsException;
-import org.csovessoft.contabil.exceptions.UserNotFoundException;
-import org.csovessoft.contabil.session.Session;
-import org.csovessoft.contabil.user.User;
-import org.csovessoft.contabil.ws.Authentication;
 import org.junit.Test;
+
+import ro.gagarin.config.Config;
+import ro.gagarin.exceptions.FieldRequiredException;
+import ro.gagarin.exceptions.SessionNotFoundException;
+import ro.gagarin.exceptions.UserAlreadyExistsException;
+import ro.gagarin.exceptions.UserNotFoundException;
+import ro.gagarin.session.Session;
+import ro.gagarin.user.User;
+import ro.gagarin.ws.Authentication;
 
 /**
  * Unit test for simple App.

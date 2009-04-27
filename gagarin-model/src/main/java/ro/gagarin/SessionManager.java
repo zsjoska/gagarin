@@ -1,8 +1,8 @@
-package org.csovessoft.contabil;
+package ro.gagarin;
 
 import java.util.ArrayList;
 
-import org.csovessoft.contabil.session.Session;
+import ro.gagarin.session.Session;
 
 /**
  * Base interface for session management. Provides methods for session creation,

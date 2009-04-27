@@ -1,8 +1,8 @@
 <projectDescription>
-  <name>contabil.ws</name>
+  <name>gagarin-ws</name>
   <comment/>
   <projects>
-    <project>contabil-model</project>
+    <project>gagarin-model</project>
   </projects>
   <buildSpec>
     <buildCommand>

@@ -1,8 +1,8 @@
-package org.csovessoft.contabil;
+package ro.gagarin;
 
-import org.csovessoft.contabil.config.FileConfigurationManager;
-import org.csovessoft.contabil.session.BasicSessionManager;
-import org.csovessoft.contabil.user.DummyUserManager;
+import ro.gagarin.config.FileConfigurationManager;
+import ro.gagarin.session.BasicSessionManager;
+import ro.gagarin.user.DummyUserManager;
 
 /**
  * Factory class for business-logic implementation. All main sections of the

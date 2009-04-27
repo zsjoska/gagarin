@@ -9,13 +9,13 @@
 		</listener-class>
 	</listener>
 	<servlet>
-		<servlet-name>contabil.ws</servlet-name>
+		<servlet-name>gagarin-ws</servlet-name>
 		<servlet-class> com.sun.xml.ws.transport.http.servlet.WSServlet 
 		</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>contabil.ws</servlet-name>
+		<servlet-name>gagarin-ws</servlet-name>
 		<url-pattern>/ws/*</url-pattern>
 	</servlet-mapping>
 	<session-config>

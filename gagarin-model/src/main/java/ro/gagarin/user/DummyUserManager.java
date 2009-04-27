@@ -1,13 +1,14 @@
-package org.csovessoft.contabil.user;
+package ro.gagarin.user;
 
 import java.util.HashMap;
 
 import org.apache.log4j.Logger;
-import org.csovessoft.contabil.UserManager;
-import org.csovessoft.contabil.exceptions.ExceptionBase;
-import org.csovessoft.contabil.exceptions.FieldRequiredException;
-import org.csovessoft.contabil.exceptions.UserAlreadyExistsException;
-import org.csovessoft.contabil.exceptions.UserNotFoundException;
+
+import ro.gagarin.UserManager;
+import ro.gagarin.exceptions.ExceptionBase;
+import ro.gagarin.exceptions.FieldRequiredException;
+import ro.gagarin.exceptions.UserAlreadyExistsException;
+import ro.gagarin.exceptions.UserNotFoundException;
 
 public class DummyUserManager implements UserManager {
 

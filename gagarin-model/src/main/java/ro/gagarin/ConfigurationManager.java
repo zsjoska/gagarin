@@ -1,7 +1,7 @@
-package org.csovessoft.contabil;
+package ro.gagarin;
 
-import org.csovessoft.contabil.config.Config;
-import org.csovessoft.contabil.config.SettingsChangeObserver;
+import ro.gagarin.config.Config;
+import ro.gagarin.config.SettingsChangeObserver;
 
 /**
  * Base interface for the application to interact with the application

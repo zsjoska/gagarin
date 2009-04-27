@@ -1,4 +1,4 @@
-package org.csovessoft.contabil.results;
+package ro.gagarin.results;
 
 public class MResult {
 

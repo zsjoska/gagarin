@@ -1,4 +1,4 @@
-package org.csovessoft.contabil;
+package ro.gagarin;
 
 import org.junit.Test;
 

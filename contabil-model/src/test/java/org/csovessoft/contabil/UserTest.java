@@ -28,7 +28,7 @@ public class UserTest {
 	@Test
 	public void createUser() throws FieldRequiredException, UserAlreadyExistsException {
 
-		UserRole adminRole = roleManager.getAdminRole(configManager
+		UserRole adminRole = roleManager.getRoleByName(configManager
 				.getString(Config.ADMIN_ROLE_NAME));
 		User user = new User();
 		user.setName("Name Of User");

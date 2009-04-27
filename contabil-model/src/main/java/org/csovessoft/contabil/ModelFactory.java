@@ -16,13 +16,12 @@ import org.csovessoft.contabil.session.BasicSessionManager;
 public class ModelFactory {
 
 	static {
-		try {
-			ApplicationInitializer.init();
-		} catch (RuntimeException e) {
-			e.printStackTrace();
-			throw e;
-		}
-
+		// try {
+		// ApplicationInitializer.init();
+		// } catch (RuntimeException e) {
+		// e.printStackTrace();
+		// throw e;
+		// }
 	}
 
 	/**
@@ -35,7 +34,7 @@ public class ModelFactory {
 	}
 
 	public static RoleManager getRoleManager() {
-		return HibernateRoleManager.getInstance();
+		return new HibernateRoleManager();
 	}
 
 	/**

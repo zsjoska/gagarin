@@ -5,7 +5,6 @@ import ro.gagarin.hibernate.HibernateRoleManager;
 import ro.gagarin.hibernate.HibernateUserManager;
 import ro.gagarin.session.BasicSessionManager;
 
-
 /**
  * Factory class for business-logic implementation. All main sections of the
  * business logic has it's own method for retrieving the concrete implementation
@@ -17,12 +16,7 @@ import ro.gagarin.session.BasicSessionManager;
 public class ModelFactory {
 
 	static {
-		// try {
-		// ApplicationInitializer.init();
-		// } catch (RuntimeException e) {
-		// e.printStackTrace();
-		// throw e;
-		// }
+		ApplicationInitializer.init();
 	}
 
 	/**
@@ -38,13 +32,21 @@ public class ModelFactory {
 		return new HibernateRoleManager();
 	}
 
+	public static RoleManager getRoleManager(BaseManager mgr) {
+		return new HibernateRoleManager(mgr);
+	}
+
 	/**
 	 * This method returns the {@link UserManager} implementation selected.
 	 * 
 	 * @return the configured {@link UserManager} implementation
 	 */
 	public static UserManager getUserManager() {
-		return HibernateUserManager.getInstance();
+		return new HibernateUserManager();
+	}
+
+	public static UserManager getUserManager(BaseManager mgr) {
+		return new HibernateUserManager(mgr);
 	}
 
 	/**
@@ -54,6 +56,10 @@ public class ModelFactory {
 	 * @return the configured {@link ConfigurationManager} implementation
 	 */
 	public static ConfigurationManager getConfigurationManager() {
+		return FileConfigurationManager.getInstance();
+	}
+
+	public static ConfigurationManager getConfigurationManager(UserManager userManager) {
 		return FileConfigurationManager.getInstance();
 	}
 }

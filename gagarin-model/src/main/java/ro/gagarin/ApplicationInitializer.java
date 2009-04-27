@@ -1,14 +1,14 @@
 package ro.gagarin;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
 
 import ro.gagarin.config.Config;
-import ro.gagarin.exceptions.AlreadyExistsException;
+import ro.gagarin.exceptions.FieldRequiredException;
+import ro.gagarin.exceptions.UserAlreadyExistsException;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserPermission;
@@ -20,58 +20,85 @@ public class ApplicationInitializer {
 
 	private static boolean initRun = false;
 
-	public static boolean init() {
+	private final ConfigurationManager cfgManager;
 
-		synchronized (ApplicationInitializer.class) {
-			if (initRun)
-				return true;
-			initRun = true;
-		}
+	private final UserManager userManager;
+
+	private final RoleManager roleManager;
+
+	private String task;
+
+	public ApplicationInitializer(ConfigurationManager cfgManager, UserManager userManager,
+			RoleManager roleManager) {
+		this.cfgManager = cfgManager;
+		this.userManager = userManager;
+		this.roleManager = roleManager;
+	}
+
+	public static synchronized boolean init() {
+
+		if (initRun)
+			return true;
+		initRun = true;
 
 		LOG.info("Application initializer started");
 
-		RoleManager roleManager = ModelFactory.getRoleManager();
-		ConfigurationManager cfgManager = ModelFactory.getConfigurationManager();
 		UserManager userManager = ModelFactory.getUserManager();
+		ConfigurationManager cfgManager = ModelFactory.getConfigurationManager(userManager);
+		RoleManager roleManager = ModelFactory.getRoleManager(userManager);
 
-		String adminRoleName = cfgManager.getString(Config.ADMIN_ROLE_NAME);
-
-		if (!checkCreatePermissionList(roleManager)) {
-			LOG.error("Permission list verification failed; aborting init");
-			return false;
+		ApplicationInitializer initializer = new ApplicationInitializer(cfgManager, userManager,
+				roleManager);
+		try {
+			initializer.doInit();
+		} catch (Exception e) {
+			LOG.error("Application initializer failed for task:" + initializer.getTask(), e);
+			throw new RuntimeException(e);
+		} finally {
+			roleManager.release();
+			userManager.release();
+			cfgManager.release();
 		}
-
-		UserRole adminRole = checkCreateAdminRole(roleManager, adminRoleName);
-		checkAdminUsers(userManager, cfgManager, adminRole);
-		checkAdminRolePermissionList(adminRole, roleManager);
-
-		roleManager.release();
 
 		LOG.info("Application initializer finished");
 		return true;
 	}
 
-	private static UserRole checkCreateAdminRole(RoleManager roleManager, String adminRoleName) {
+	private void doInit() throws FieldRequiredException, UserAlreadyExistsException {
+		this.setTask("GET_CFG_ADMIN_ROLE");
+		String adminRoleName = cfgManager.getString(Config.ADMIN_ROLE_NAME);
+
+		this.setTask("CHK_CREATE_PERMISSIONLIST");
+		checkCreatePermissionList();
+
+		this.setTask("CHK_CREATE_ADMIN_ROLE");
+		UserRole adminRole = checkCreateAdminRole(adminRoleName);
+
+		this.setTask("CHK_CREATE_ADMIN_ROLE_PERMISSION_LIST");
+		checkAdminRolePermissionList(adminRole);
+
+		this.setTask("CHK_CREATE_ADMIN_USERS");
+		checkAdminUsers(adminRole);
+
+		this.setTask(null);
+
+	}
+
+	private UserRole checkCreateAdminRole(String adminRoleName) {
 		LOG.info("Checking admin role existence");
 		UserRole adminRole = roleManager.getRoleByName(adminRoleName);
 		if (adminRole == null) {
 			LOG.info("No admin role was found, creating role with " + adminRoleName);
 			adminRole = new UserRole();
 			adminRole.setRoleName(adminRoleName);
-			try {
-				roleManager.createRole(adminRole);
-				LOG.info("Admin role created.");
-			} catch (AlreadyExistsException e) {
-				LOG.error("The role was not found but later exception was thrown.", e);
-				return null;
-
-			}
+			roleManager.createRole(adminRole);
+			LOG.info("Admin role created.");
 		}
 		return adminRole;
 	}
 
-	private static boolean checkAdminUsers(UserManager userManager,
-			ConfigurationManager cfgManager, UserRole adminRole) {
+	private void checkAdminUsers(UserRole adminRole) throws FieldRequiredException,
+			UserAlreadyExistsException {
 		LOG.info("Checking admin user");
 		String adminUserName = cfgManager.getString(Config.ADMIN_USER_NAME);
 		String adminPassword = cfgManager.getString(Config.ADMIN_PASSWORD);
@@ -84,63 +111,55 @@ public class ApplicationInitializer {
 			adminUser.setUsername(adminUserName);
 			adminUser.setPassword(adminPassword);
 			adminUser.setName("Gagarin");
-			try {
-				userManager.createUser(adminUser);
-			} catch (Exception e) {
-				LOG.error("Exception while creating the admin user; aborting init", e);
-				return false;
-			}
+			userManager.createUser(adminUser);
 			if (adminUsers == null)
 				adminUsers = new ArrayList<User>(1);
 			adminUsers.add(adminUser);
 		}
-		return true;
 	}
 
-	private static boolean checkAdminRolePermissionList(UserRole adminRole, RoleManager roleManager) {
+	private void checkAdminRolePermissionList(UserRole adminRole) {
 		LOG.info("Checking AdminRolePermissionList to include all permissions");
 		Set<UserPermission> grantedPermissions = adminRole.getUserPermissions();
-		Set<UserPermission> newPermissions = new HashSet<UserPermission>();
-		if (grantedPermissions == null) {
-			grantedPermissions = new HashSet<UserPermission>();
-			adminRole.setUserPermissions(grantedPermissions);
-		}
 		List<UserPermission> permissions = roleManager.getAllPermissions();
 		if (permissions == null || permissions.size() == 0) {
-			return false;
+			throw new RuntimeException(
+					"Inconsistent state: The permission list should have been created!");
 		}
 		for (UserPermission userPermission : permissions) {
 			if (!grantedPermissions.contains(userPermission)) {
 				LOG.info("Adding permission " + userPermission.getPermissionName()
 						+ " to admin role");
-				newPermissions.add(userPermission);
 				grantedPermissions.add(userPermission);
+				userPermission.getUserRoles().add(adminRole);
 			} else {
 				LOG.info("Already assigned " + userPermission.getPermissionName()
 						+ " to admin role");
 			}
 		}
-		try {
-			roleManager.saveRole(adminRole);
-		} catch (AlreadyExistsException e) {
-			LOG.error("Saving the role failed", e);
-			return false;
-		}
-		return true;
 	}
 
-	private static boolean checkCreatePermissionList(RoleManager roleManager) {
+	private void checkCreatePermissionList() {
 		LOG.info("Checking Permission List");
 		PermissionEnum[] values = PermissionEnum.values();
 		for (PermissionEnum permission : values) {
-			UserPermission perm = new UserPermission();
-			perm.setPermissionName(permission.name());
-			try {
+
+			if (roleManager.getPermissionByName(permission.name()) == null) {
+				UserPermission perm = new UserPermission();
+				perm.setPermissionName(permission.name());
 				roleManager.createPermission(perm);
-			} catch (AlreadyExistsException e) {
-				LOG.info("Permission " + permission.name() + " exists");
+			} else {
+				LOG.debug("Permission was found:" + permission.name());
 			}
 		}
-		return true;
+	}
+
+	public void setTask(String task) {
+		this.task = task;
+		LOG.info("Executing task " + task);
+	}
+
+	public String getTask() {
+		return task;
 	}
 }

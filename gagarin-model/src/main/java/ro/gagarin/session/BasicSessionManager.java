@@ -10,14 +10,16 @@ import ro.gagarin.SessionManager;
 import ro.gagarin.config.Config;
 import ro.gagarin.config.SettingsChangeObserver;
 
-public class BasicSessionManager implements SessionManager, SettingsChangeObserver {
+public class BasicSessionManager implements SessionManager,
+		SettingsChangeObserver {
 
-	private static final transient Logger LOG = Logger.getLogger(BasicSessionManager.class);
+	private static final transient Logger LOG = Logger
+			.getLogger(BasicSessionManager.class);
 
 	private static final BasicSessionManager INSTANCE = new BasicSessionManager();
 
-	private long USER_SESSION_TIMEOUT = ModelFactory.getConfigurationManager().getLong(
-			Config.USER_SESSION_TIMEOUT);
+	private long USER_SESSION_TIMEOUT = ModelFactory.getConfigurationManager()
+			.getLong(Config.USER_SESSION_TIMEOUT);
 
 	private final HashMap<Long, Session> sessions = new HashMap<Long, Session>();
 
@@ -36,10 +38,10 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
 	public Session createSession(String language, String reason) {
 		Session session = new Session();
 		session.setSessiontimeout(USER_SESSION_TIMEOUT);
-		session.generateId();
 		session.setLanguage(language);
 		session.setReason(reason);
-		session.setExpires(System.currentTimeMillis() + session.getSessionTimeout());
+		session.setExpires(System.currentTimeMillis()
+				+ session.getSessionTimeout());
 		this.sessions.put(session.getId(), session);
 		LOG.info("Created Session " + session.getId());
 		return session;
@@ -59,7 +61,8 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
 			return null;
 		}
 
-		session.setExpires(System.currentTimeMillis() + session.getSessionTimeout());
+		session.setExpires(System.currentTimeMillis()
+				+ session.getSessionTimeout());
 		return session;
 	}
 

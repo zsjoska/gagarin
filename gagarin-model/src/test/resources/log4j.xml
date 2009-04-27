@@ -1,16 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-	<!--
-		default log4j.xml Log4J configuration file used by the default logging
-		engine (bundled with the server). Update with your own settings as
-		required.
-	-->
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
 
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
 
-	<!-- all logging goes at least to the console-->
 	<appender name="ALL" class="org.apache.log4j.ConsoleAppender">
-		<param name="Threshold" value="DEBUG" />
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern" value="[%x]%-5p [%d{ISO8601} - %t]%l - %m%n" />
 		</layout>
@@ -23,7 +16,7 @@
 		<param name="MaxBackupIndex" value="5" />
 		<param name="MaxFileSize" value="128MB" />
 		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="[%x]%-5p [%d{ISO8601} - %t]%l - %m%n" />
+			<param name="ConversionPattern" value="[%x]%-5p [%d{ISO8601} - %t] %l - %m%n" />
 		</layout>
 	</appender>
 
@@ -34,7 +27,7 @@
 		<param name="MaxBackupIndex" value="5" />
 		<param name="MaxFileSize" value="128MB" />
 		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="[%x]%-5p [%d{ISO8601} - %t]%l - %m%n" />
+			<param name="ConversionPattern" value="[%x]%-5p [%d{ISO8601} - %t] %l - %m%n" />
 		</layout>
 	</appender>
 	<appender name="HIBERNATE" class="org.apache.log4j.RollingFileAppender">
@@ -50,11 +43,11 @@
 
 	<appender name="MAIN-CONSOLE" class="org.apache.log4j.ConsoleAppender">
 		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="[%x]%-5p [%d{ISO8601} - %t]%l - %m%n" />
+			<param name="ConversionPattern" value="[%x]%-5p [%d{ISO8601} - %t] %l - %m%n" />
 		</layout>
 	</appender>
 
-	<logger name="org" additivity="false">
+	<logger name="ro.gagarin" additivity="false">
 		<level value="DEBUG" />
 		<appender-ref ref="MAIN" />
 		<appender-ref ref="MAIN-CONSOLE" />

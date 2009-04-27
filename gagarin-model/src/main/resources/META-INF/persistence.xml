@@ -3,7 +3,7 @@
 	xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
     http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
-	<persistence-unit name="contabil" >
+	<persistence-unit name="gagarin" >
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 	<!-- 	<jta-data-source>jdbc/derby</jta-data-source> -->
 		<properties>

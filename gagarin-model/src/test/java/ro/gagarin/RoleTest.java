@@ -4,9 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.junit.Test;
 
 import ro.gagarin.exceptions.AlreadyExistsException;
@@ -86,7 +83,50 @@ public class RoleTest {
 		roleManager.release();
 	}
 
-	// @Test
+	@Test
+	public void createRoleWith2Permissions() throws AlreadyExistsException {
+		RoleManager roleManager = ModelFactory.getRoleManager();
+		UserRole role = new UserRole();
+		role.setRoleName("C_ROLE");
+
+		UserPermission perm1 = new UserPermission();
+		perm1.setPermissionName("C_PERMISSION1");
+		UserPermission perm2 = new UserPermission();
+		perm2.setPermissionName("C_PERMISSION2");
+
+		role.getUserPermissions().add(perm1);
+		role.getUserPermissions().add(perm2);
+		perm1.getUserRoles().add(role);
+		perm2.getUserRoles().add(role);
+
+		// roleManager.createPermission(perm1);
+		roleManager.createRole(role);
+
+		UserRole role2 = roleManager.getRoleByName("C_ROLE");
+		assertNotNull(role2);
+		assertNotNull(role2.getUserPermissions());
+		assertEquals(role2.getUserPermissions().size(), 2);
+
+		UserPermission perm_1 = roleManager
+				.getPermissionByName("C_PERMISSION1");
+		assertNotNull(perm_1);
+		assertNotNull(perm_1.getUserRoles());
+		assertEquals(1, perm_1.getUserRoles().size());
+
+		UserPermission perm_2 = roleManager
+				.getPermissionByName("C_PERMISSION2");
+		assertNotNull(perm_2);
+		assertNotNull(perm_2.getUserRoles());
+		assertEquals(1, perm_2.getUserRoles().size());
+
+		roleManager.deleteRole(role);
+		roleManager.deletePermission(perm1);
+		roleManager.deletePermission(perm2);
+
+		roleManager.release();
+	}
+
+	@Test
 	public void addPermissionToRole() throws AlreadyExistsException {
 		RoleManager roleManager = ModelFactory.getRoleManager();
 		UserRole role = roleManager.getRoleByName("B_ROLE");
@@ -96,18 +136,13 @@ public class RoleTest {
 			roleManager.createRole(role);
 		}
 
-		Set<UserPermission> userPermissions = role.getUserPermissions();
-		if (userPermissions == null) {
-			userPermissions = new HashSet<UserPermission>();
-		}
-
-		System.out.println("Permissions:" + userPermissions.size());
+		System.out.println("Permissions:" + role.getUserPermissions().size());
 
 		UserPermission permission = new UserPermission();
-		permission.setPermissionName("PERM" + userPermissions.size());
-		roleManager.createPermission(permission);
+		permission.setPermissionName("PERM" + role.getUserPermissions().size());
 
-		userPermissions.add(permission);
+		role.getUserPermissions().add(permission);
+		permission.getUserRoles().add(role);
 
 		roleManager.release();
 	}

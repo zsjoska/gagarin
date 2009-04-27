@@ -2,23 +2,18 @@ package ro.gagarin;
 
 import java.util.List;
 
-import ro.gagarin.exceptions.AlreadyExistsException;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
 
-public interface RoleManager {
+public interface RoleManager extends BaseManager {
 
 	UserRole getRoleByName(String roleName);
 
-	long createRole(UserRole role) throws AlreadyExistsException;
+	long createRole(UserRole role);
 
-	long createPermission(UserPermission perm) throws AlreadyExistsException;
+	long createPermission(UserPermission perm);
 
 	List<UserPermission> getAllPermissions();
-
-	void saveRole(UserRole role) throws AlreadyExistsException;
-
-	void release();
 
 	void deleteRole(UserRole role2);
 

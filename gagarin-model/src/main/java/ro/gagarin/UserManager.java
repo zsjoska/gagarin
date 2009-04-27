@@ -15,7 +15,7 @@ import ro.gagarin.user.UserRole;
  * @author zsjoska
  * 
  */
-public interface UserManager {
+public interface UserManager  extends BaseManager{
 
 	/**
 	 * Verifies the validity of <code>username</code> and <code>password</code>

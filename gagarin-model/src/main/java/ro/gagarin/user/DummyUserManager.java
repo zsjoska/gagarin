@@ -57,7 +57,6 @@ public class DummyUserManager implements UserManager {
 		if (user2 != null)
 			throw new UserAlreadyExistsException("username", user.getUsername());
 
-		user.generateId();
 		users_id.put(user.getId(), user);
 		users_userName.put(user.getUsername(), user);
 		LOG.info("Created user:" + user.getUsername() + "; id:" + user.getId());
@@ -88,6 +87,12 @@ public class DummyUserManager implements UserManager {
 	public List<User> getUsersWithRole(UserRole role) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void release() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

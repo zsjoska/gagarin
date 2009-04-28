@@ -26,6 +26,7 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
 	private long SESSION_CHECK_PERIOD;
 
 	private BasicSessionManager() {
+		LOG.debug("Creating BasicSessionManager");
 		ConfigurationManager cfgManager = ModelFactory.getConfigurationManager(this);
 		cfgManager.registerForChange(this);
 		USER_SESSION_TIMEOUT = cfgManager.getLong(Config.USER_SESSION_TIMEOUT);

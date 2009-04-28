@@ -1,5 +1,6 @@
 package ro.gagarin;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ro.gagarin.user.UserPermission;
@@ -20,5 +21,9 @@ public interface RoleManager extends BaseManager {
 	UserPermission getPermissionByName(String string);
 
 	void deletePermission(UserPermission perm);
+
+	ArrayList<UserPermission> substractUsersRolePermissions(UserRole main, UserRole substract);
+
+	List<UserRole> getAllRoles();
 
 }

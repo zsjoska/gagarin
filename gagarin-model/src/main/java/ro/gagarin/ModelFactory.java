@@ -3,6 +3,7 @@ package ro.gagarin;
 import ro.gagarin.config.FileConfigurationManager;
 import ro.gagarin.session.BasicSessionManager;
 import ro.gagarin.session.Session;
+import ro.gagarin.user.DummyAuthorizationManager;
 import ro.gagarin.user.DummyRoleManager;
 import ro.gagarin.user.DummyUserManager;
 
@@ -43,8 +44,7 @@ public class ModelFactory {
 	}
 
 	@Deprecated
-	public static ConfigurationManager getConfigurationManager(
-			BaseManager userManager) {
+	public static ConfigurationManager getConfigurationManager(BaseManager userManager) {
 		return FileConfigurationManager.getInstance();
 	}
 
@@ -56,5 +56,9 @@ public class ModelFactory {
 	 */
 	public static ConfigurationManager getConfigurationManager(Session session) {
 		return FileConfigurationManager.getInstance();
+	}
+
+	public static AuthorizationManager getAuthorizationManager(Session session) {
+		return new DummyAuthorizationManager();
 	}
 }

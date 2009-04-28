@@ -37,7 +37,7 @@ public class FileConfigurationManager implements ConfigurationManager {
 		}
 		if (strValue == null) {
 			LOG.warn(config.name() + " config value was not found, getting the default value");
-			strValue = DefaultConfiguration.getValue(config);
+			strValue = config.getDefaultValue();
 		}
 		try {
 			long value = Long.valueOf(strValue);
@@ -75,7 +75,7 @@ public class FileConfigurationManager implements ConfigurationManager {
 		}
 		if (strValue == null) {
 			LOG.warn(config.name() + " config value was not found, getting the default value");
-			strValue = DefaultConfiguration.getValue(config);
+			strValue = config.getDefaultValue();
 		}
 		return strValue;
 	}

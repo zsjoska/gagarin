@@ -30,18 +30,24 @@ public class SessionTest {
 			FieldRequiredException, UserAlreadyExistsException {
 
 		UserManager userManager = ModelFactory.getUserManager(session);
+		RoleManager roleManager = ModelFactory.getRoleManager(session);
+		ConfigurationManager cfgManager = ModelFactory.getConfigurationManager(session);
 
 		User user = new User();
 		user.setUsername("1" + username);
 		user.setPassword("password1");
+		user.setRole(roleManager.getRoleByName(cfgManager.getString(Config.ADMIN_ROLE_NAME)));
 		userManager.createUser(user);
+		userManager.release();
+		roleManager.release();
+		cfgManager.release();
 
-		Session session = authentication.createSession(null, null);
+		String session = authentication.createSession(null, null);
 		assertNotNull(session);
 
-		authentication.login(session.getId(), "1" + username, "password1", null);
+		authentication.login(session, "1" + username, "password1", null);
 
-		authentication.logout(session.getId());
+		authentication.logout(session);
 	}
 
 	@Test
@@ -49,23 +55,30 @@ public class SessionTest {
 			UserAlreadyExistsException {
 
 		UserManager userManager = ModelFactory.getUserManager(session);
+		ConfigurationManager cfgManager = ModelFactory.getConfigurationManager(session);
+		RoleManager roleManager = ModelFactory.getRoleManager(session);
 
 		User user = new User();
 		user.setUsername("2" + username);
 		user.setPassword("password2");
+		user.setRole(roleManager.getRoleByName(cfgManager.getString(Config.ADMIN_ROLE_NAME)));
 		userManager.createUser(user);
 
-		Session session = authentication.createSession(null, null);
+		userManager.release();
+		roleManager.release();
+		cfgManager.release();
+
+		String session = authentication.createSession(null, null);
 		assertNotNull(session);
 
 		try {
-			authentication.login(session.getId(), "user2_", "password2", null);
+			authentication.login(session, "user2_", "password2", null);
 			fail("The user does not exists");
 		} catch (UserNotFoundException e) {
 			// the exception was expected
 		}
 		try {
-			authentication.login(session.getId(), "user2", "password2_", null);
+			authentication.login(session, "user2", "password2_", null);
 			fail("The user and password does not match; thus authentication must fail");
 		} catch (UserNotFoundException e) {
 			// the exception was expected
@@ -77,22 +90,28 @@ public class SessionTest {
 			UserAlreadyExistsException {
 
 		UserManager userManager = ModelFactory.getUserManager(session);
+		ConfigurationManager cfgManager = ModelFactory.getConfigurationManager(session);
+		RoleManager roleManager = ModelFactory.getRoleManager(session);
 
 		User user = new User();
 		user.setUsername("3" + username);
 		user.setPassword("password3");
+		user.setRole(roleManager.getRoleByName(cfgManager.getString(Config.ADMIN_ROLE_NAME)));
 		userManager.createUser(user);
 
-		Session session = authentication.createSession(null, null);
+		userManager.release();
+		roleManager.release();
+		cfgManager.release();
+
+		String session = authentication.createSession(null, null);
 		assertNotNull(session);
 
-		authentication.logout(session.getId());
+		authentication.logout(session);
 		try {
-			authentication.login(session.getId(), "3" + username, "password3", null);
+			authentication.login(session, "3" + username, "password3", null);
 			fail("The login must fail since the session was deleted");
 		} catch (SessionNotFoundException e) {
-			assertEquals("Wrong session ID returned by the exception", e.getSessionID(), session
-					.getId());
+			assertEquals("Wrong session ID returned by the exception", e.getSessionID(), session);
 		}
 
 	}
@@ -100,19 +119,22 @@ public class SessionTest {
 	@Test
 	public void testSessionExpiration() throws InterruptedException {
 
-		ModelFactory.getConfigurationManager(session).setConfigValue(Config.USER_SESSION_TIMEOUT,
-				"100");
+		ConfigurationManager cfgManager = ModelFactory.getConfigurationManager(session);
+		cfgManager.setConfigValue(Config.USER_SESSION_TIMEOUT, "100");
 
 		SessionManager sessionManager = ModelFactory.getSessionManager();
 		Session session = sessionManager.createSession(null, null);
 		assertNotNull(session);
 		assertEquals("We just set the timeout to 100", session.getSessionTimeout(), 100);
 
-		session = sessionManager.getSessionById(session.getId());
+		session = sessionManager.getSessionById(session.getSessionString());
 		assertNotNull(session);
 
-		Thread.sleep(101);
-		session = sessionManager.getSessionById(session.getId());
+		Thread.sleep(110);
+		session = sessionManager.getSessionById(session.getSessionString());
 		assertNull("The session must be expired at this time", session);
+
+		sessionManager.release();
+		cfgManager.release();
 	}
 }

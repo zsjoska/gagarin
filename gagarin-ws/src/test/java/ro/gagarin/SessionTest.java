@@ -30,11 +30,17 @@ public class SessionTest {
 			FieldRequiredException, UserAlreadyExistsException {
 
 		UserManager userManager = ModelFactory.getUserManager(session);
+		RoleManager roleManager = ModelFactory.getRoleManager(session);
+		ConfigurationManager cfgManager = ModelFactory.getConfigurationManager(session);
 
 		User user = new User();
 		user.setUsername("1" + username);
 		user.setPassword("password1");
+		user.setRole(roleManager.getRoleByName(cfgManager.getString(Config.ADMIN_ROLE_NAME)));
 		userManager.createUser(user);
+		userManager.release();
+		roleManager.release();
+		cfgManager.release();
 
 		String session = authentication.createSession(null, null);
 		assertNotNull(session);
@@ -49,11 +55,18 @@ public class SessionTest {
 			UserAlreadyExistsException {
 
 		UserManager userManager = ModelFactory.getUserManager(session);
+		ConfigurationManager cfgManager = ModelFactory.getConfigurationManager(session);
+		RoleManager roleManager = ModelFactory.getRoleManager(session);
 
 		User user = new User();
 		user.setUsername("2" + username);
 		user.setPassword("password2");
+		user.setRole(roleManager.getRoleByName(cfgManager.getString(Config.ADMIN_ROLE_NAME)));
 		userManager.createUser(user);
+
+		userManager.release();
+		roleManager.release();
+		cfgManager.release();
 
 		String session = authentication.createSession(null, null);
 		assertNotNull(session);
@@ -77,11 +90,18 @@ public class SessionTest {
 			UserAlreadyExistsException {
 
 		UserManager userManager = ModelFactory.getUserManager(session);
+		ConfigurationManager cfgManager = ModelFactory.getConfigurationManager(session);
+		RoleManager roleManager = ModelFactory.getRoleManager(session);
 
 		User user = new User();
 		user.setUsername("3" + username);
 		user.setPassword("password3");
+		user.setRole(roleManager.getRoleByName(cfgManager.getString(Config.ADMIN_ROLE_NAME)));
 		userManager.createUser(user);
+
+		userManager.release();
+		roleManager.release();
+		cfgManager.release();
 
 		String session = authentication.createSession(null, null);
 		assertNotNull(session);
@@ -99,8 +119,8 @@ public class SessionTest {
 	@Test
 	public void testSessionExpiration() throws InterruptedException {
 
-		ModelFactory.getConfigurationManager(session).setConfigValue(Config.USER_SESSION_TIMEOUT,
-				"100");
+		ConfigurationManager cfgManager = ModelFactory.getConfigurationManager(session);
+		cfgManager.setConfigValue(Config.USER_SESSION_TIMEOUT, "100");
 
 		SessionManager sessionManager = ModelFactory.getSessionManager();
 		Session session = sessionManager.createSession(null, null);
@@ -113,5 +133,8 @@ public class SessionTest {
 		Thread.sleep(110);
 		session = sessionManager.getSessionById(session.getSessionString());
 		assertNull("The session must be expired at this time", session);
+
+		sessionManager.release();
+		cfgManager.release();
 	}
 }

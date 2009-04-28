@@ -25,6 +25,8 @@ public class SessionTest {
 
 	private Session session = new Session();
 
+	// TODO: add test with null session for all classes
+
 	@Test
 	public void testSuccessLogin() throws UserNotFoundException, SessionNotFoundException,
 			FieldRequiredException, UserAlreadyExistsException {

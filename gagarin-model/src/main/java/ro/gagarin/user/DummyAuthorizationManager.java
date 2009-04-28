@@ -1,13 +1,14 @@
 package ro.gagarin.user;
 
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
 import ro.gagarin.AuthorizationManager;
 import ro.gagarin.ModelFactory;
 import ro.gagarin.RoleManager;
+import ro.gagarin.UserManager;
 import ro.gagarin.exceptions.PermissionDeniedException;
 import ro.gagarin.session.Session;
 
@@ -18,8 +19,8 @@ public class DummyAuthorizationManager implements AuthorizationManager {
 	public void checkUserRole(Session session, User user) throws PermissionDeniedException {
 		User sessionUser = session.getUser();
 		RoleManager roleManager = ModelFactory.getRoleManager(session);
-		ArrayList<UserPermission> leftList = roleManager.substractUsersRolePermissions(user
-				.getRole(), sessionUser.getRole());
+		List<UserPermission> leftList = roleManager.substractUsersRolePermissions(user.getRole(),
+				sessionUser.getRole());
 		LOG.debug("left permissions:" + leftList.toString());
 		roleManager.release();
 		if (leftList.size() != 0)
@@ -30,7 +31,10 @@ public class DummyAuthorizationManager implements AuthorizationManager {
 	@Override
 	public void requiresPermission(Session session, PermissionEnum reqPermission)
 			throws PermissionDeniedException {
-		User user = session.getUser();
+		UserManager userManager = ModelFactory.getUserManager(session);
+
+		User user = userManager.getUserByUsername(session.getUser().getUsername());
+
 		Iterator<UserPermission> iterator = user.getRole().getUserPermissions().iterator();
 		while (iterator.hasNext()) {
 			UserPermission userPermission = (UserPermission) iterator.next();
@@ -40,6 +44,7 @@ public class DummyAuthorizationManager implements AuthorizationManager {
 			}
 
 		}
+		userManager.release();
 		throw new PermissionDeniedException(user.getUsername(), reqPermission.name());
 	}
 

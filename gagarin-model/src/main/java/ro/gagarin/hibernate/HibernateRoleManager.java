@@ -126,4 +126,20 @@ public class HibernateRoleManager extends BaseHibernateManager implements RoleMa
 		LOG.info("Deleted permission:" + perm.getPermissionName() + "; id:" + perm.getId());
 	}
 
+	@Override
+	public List<UserRole> getAllRoles() {
+
+		Query query = getEM().createQuery("select r from UserRole r ");
+		return query.getResultList();
+	}
+
+	@Override
+	public List<UserPermission> substractUsersRolePermissions(UserRole main, UserRole substract) {
+		Query query = getEM()
+				.createQuery(
+						"select r from UserPermission r where r.id=:subRoleid and r not in (select p from UserPermission p where p.id=:mainRoleid)")
+				.setParameter("mainRoleid", main.getId()).setParameter("subRoleid",
+						substract.getId());
+		return query.getResultList();
+	}
 }

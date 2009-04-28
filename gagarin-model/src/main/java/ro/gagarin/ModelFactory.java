@@ -79,4 +79,18 @@ public class ModelFactory {
 	public static AuthorizationManager getAuthorizationManager(Session session) {
 		return new DummyAuthorizationManager();
 	}
+
+	public static void releaseManagers(Session session, BaseManager... baseManagers) {
+
+		if (baseManagers == null)
+			return;
+
+		synchronized (session) {
+			for (BaseManager baseManager : baseManagers) {
+				baseManager.release();
+			}
+			session.setManager(null);
+		}
+	}
+
 }

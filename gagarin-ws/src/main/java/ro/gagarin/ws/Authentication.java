@@ -10,6 +10,7 @@ import javax.jws.WebService;
 
 import org.apache.log4j.Logger;
 
+import ro.gagarin.BaseManager;
 import ro.gagarin.ModelFactory;
 import ro.gagarin.SessionManager;
 import ro.gagarin.UserManager;
@@ -70,8 +71,8 @@ public class Authentication {
 					+ session.getId());
 			return true;
 		} finally {
-			userManager.release();
-			sessionManager.release();
+			ModelFactory
+					.releaseManagers(session, new BaseManager[] { userManager, sessionManager });
 		}
 	}
 

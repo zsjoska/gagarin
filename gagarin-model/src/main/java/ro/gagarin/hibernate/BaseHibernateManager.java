@@ -23,6 +23,8 @@ public class BaseHibernateManager {
 	}
 
 	public BaseHibernateManager(BaseManager mgr) {
+		if (mgr == null)
+			throw new NullPointerException("attempt to initialize BaseHibernateManager with null");
 		if (mgr instanceof BaseHibernateManager) {
 			this.em = ((BaseHibernateManager) mgr).getEM();
 			this.ourEntityManager = false;
@@ -41,11 +43,25 @@ public class BaseHibernateManager {
 	public void release() {
 		if (this.ourEntityManager) {
 			LOG.debug("Committing EntityManagerInstance " + em.toString());
-			em.getTransaction().commit();
+			RuntimeException exception = null;
+			try {
+				em.getTransaction().commit();
+				this.em.close();
+				LOG.debug("Released EntityManagerInstance " + em.toString());
+				this.em = null;
+				return;
+			} catch (RuntimeException e) {
+				exception = e;
+				LOG.error("Exception on commit:", e);
+			}
+			try {
+				em.getTransaction().rollback();
+			} catch (Exception e) {
+				LOG.error("Exception on rollback:", e);
+			}
 			this.em.close();
-			LOG.debug("Released EntityManagerInstance " + em.toString());
+			throw exception;
 		}
 		this.em = null;
 	}
-
 }

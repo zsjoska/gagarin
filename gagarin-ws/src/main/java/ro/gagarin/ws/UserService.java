@@ -19,6 +19,7 @@ import ro.gagarin.exceptions.UserAlreadyExistsException;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.User;
+import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
 
 @WebService
@@ -52,7 +53,7 @@ public class UserService {
 					+ sessionId);
 			return userId;
 		} finally {
-			sessionManager.release();
+			ModelFactory.releaseManagers(session, userManager, permissionManager, sessionManager);
 		}
 	}
 
@@ -74,7 +75,35 @@ public class UserService {
 			return roleManager.getAllRoles();
 
 		} finally {
-			sessionManager.release();
+			ModelFactory.releaseManagers(session, permissionManager, roleManager, sessionManager);
 		}
+	}
+
+	@WebMethod
+	public UserRole createRoleWithPermissions(String sessionId, String[] strings)
+			throws SessionNotFoundException, PermissionDeniedException {
+		SessionManager sessionManager = ModelFactory.getSessionManager();
+		Session session = sessionManager.getSessionById(sessionId);
+		RoleManager roleManager = ModelFactory.getRoleManager(session);
+		AuthorizationManager permissionManager = ModelFactory.getAuthorizationManager(session);
+
+		try {
+			if (session == null)
+				throw new SessionNotFoundException(sessionId);
+
+			// the session user must have LIST_ROLES permission
+			permissionManager.requiresPermission(session, PermissionEnum.LIST_ROLES);
+
+			return null;
+
+		} finally {
+			ModelFactory.releaseManagers(session, permissionManager, roleManager, sessionManager);
+		}
+	}
+
+	@WebMethod
+	public List<UserPermission> getAllPermissionList(String session) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

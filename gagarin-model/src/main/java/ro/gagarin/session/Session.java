@@ -1,5 +1,6 @@
 package ro.gagarin.session;
 
+import ro.gagarin.BaseManager;
 import ro.gagarin.user.BaseEntity;
 import ro.gagarin.user.User;
 
@@ -14,6 +15,7 @@ public class Session extends BaseEntity {
 	private String language;
 	private String reason;
 	private User user;
+	private BaseManager manager;
 
 	public Session() {
 	}
@@ -62,4 +64,19 @@ public class Session extends BaseEntity {
 		return sessionTimeout;
 	}
 
+	public BaseManager getManager() {
+		return this.manager;
+	}
+
+	public void setManager(BaseManager manager) {
+		this.manager = manager;
+	}
+
+	@Override
+	public String toString() {
+		if (this.user == null) {
+			return "<unbound>:" + getId();
+		}
+		return this.getUser().getName() + ":" + this.getId();
+	}
 }

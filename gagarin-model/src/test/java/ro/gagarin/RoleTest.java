@@ -7,6 +7,7 @@ import static org.junit.Assert.assertNull;
 import org.junit.Test;
 
 import ro.gagarin.exceptions.AlreadyExistsException;
+import ro.gagarin.session.Session;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
 
@@ -15,9 +16,11 @@ import ro.gagarin.user.UserRole;
  */
 public class RoleTest {
 
+	private Session session = new Session();
+
 	@Test
 	public void createGetDeleteSimpleRole() throws AlreadyExistsException {
-		RoleManager roleManager = ModelFactory.getRoleManager();
+		RoleManager roleManager = ModelFactory.getRoleManager(session);
 		UserRole role = new UserRole();
 		role.setRoleName("A_ROLE");
 		roleManager.createRole(role);
@@ -35,7 +38,7 @@ public class RoleTest {
 
 	@Test
 	public void createGetDeleteSimplePermission() throws AlreadyExistsException {
-		RoleManager roleManager = ModelFactory.getRoleManager();
+		RoleManager roleManager = ModelFactory.getRoleManager(session);
 
 		UserPermission perm = new UserPermission();
 		perm.setPermissionName("A_PERMISSION");
@@ -54,7 +57,7 @@ public class RoleTest {
 
 	@Test
 	public void createRoleWithPermission() throws AlreadyExistsException {
-		RoleManager roleManager = ModelFactory.getRoleManager();
+		RoleManager roleManager = ModelFactory.getRoleManager(session);
 		UserRole role = new UserRole();
 		role.setRoleName("C_ROLE");
 
@@ -85,7 +88,7 @@ public class RoleTest {
 
 	@Test
 	public void createRoleWith2Permissions() throws AlreadyExistsException {
-		RoleManager roleManager = ModelFactory.getRoleManager();
+		RoleManager roleManager = ModelFactory.getRoleManager(session);
 		UserRole role = new UserRole();
 		role.setRoleName("C_ROLE");
 
@@ -107,14 +110,12 @@ public class RoleTest {
 		assertNotNull(role2.getUserPermissions());
 		assertEquals(role2.getUserPermissions().size(), 2);
 
-		UserPermission perm_1 = roleManager
-				.getPermissionByName("C_PERMISSION1");
+		UserPermission perm_1 = roleManager.getPermissionByName("C_PERMISSION1");
 		assertNotNull(perm_1);
 		assertNotNull(perm_1.getUserRoles());
 		assertEquals(1, perm_1.getUserRoles().size());
 
-		UserPermission perm_2 = roleManager
-				.getPermissionByName("C_PERMISSION2");
+		UserPermission perm_2 = roleManager.getPermissionByName("C_PERMISSION2");
 		assertNotNull(perm_2);
 		assertNotNull(perm_2.getUserRoles());
 		assertEquals(1, perm_2.getUserRoles().size());
@@ -128,7 +129,7 @@ public class RoleTest {
 
 	@Test
 	public void addPermissionToRole() throws AlreadyExistsException {
-		RoleManager roleManager = ModelFactory.getRoleManager();
+		RoleManager roleManager = ModelFactory.getRoleManager(session);
 		UserRole role = roleManager.getRoleByName("B_ROLE");
 		if (role == null) {
 			role = new UserRole();

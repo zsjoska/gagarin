@@ -5,28 +5,31 @@ import java.util.HashMap;
 
 import org.apache.log4j.Logger;
 
+import ro.gagarin.ConfigurationManager;
 import ro.gagarin.ModelFactory;
 import ro.gagarin.SessionManager;
 import ro.gagarin.config.Config;
 import ro.gagarin.config.SettingsChangeObserver;
 
-public class BasicSessionManager implements SessionManager,
-		SettingsChangeObserver {
+public class BasicSessionManager implements SessionManager, SettingsChangeObserver {
 
-	private static final transient Logger LOG = Logger
-			.getLogger(BasicSessionManager.class);
+	private static final transient Logger LOG = Logger.getLogger(BasicSessionManager.class);
 
 	private static final BasicSessionManager INSTANCE = new BasicSessionManager();
 
-	private long USER_SESSION_TIMEOUT = ModelFactory.getConfigurationManager()
-			.getLong(Config.USER_SESSION_TIMEOUT);
+	private long USER_SESSION_TIMEOUT;
 
 	private final HashMap<Long, Session> sessions = new HashMap<Long, Session>();
 
 	private SessionCheckerThread chkSession = new SessionCheckerThread(INSTANCE);
 
+	private long SESSION_CHECK_PERIOD;
+
 	private BasicSessionManager() {
-		ModelFactory.getConfigurationManager().registerForChange(this);
+		ConfigurationManager cfgManager = ModelFactory.getConfigurationManager(this);
+		cfgManager.registerForChange(this);
+		USER_SESSION_TIMEOUT = cfgManager.getLong(Config.USER_SESSION_TIMEOUT);
+		SESSION_CHECK_PERIOD = cfgManager.getLong(Config.SESSION_CHECK_PERIOD);
 		chkSession.start();
 	}
 
@@ -40,8 +43,7 @@ public class BasicSessionManager implements SessionManager,
 		session.setSessiontimeout(USER_SESSION_TIMEOUT);
 		session.setLanguage(language);
 		session.setReason(reason);
-		session.setExpires(System.currentTimeMillis()
-				+ session.getSessionTimeout());
+		session.setExpires(System.currentTimeMillis() + session.getSessionTimeout());
 		this.sessions.put(session.getId(), session);
 		LOG.info("Created Session " + session.getId());
 		return session;
@@ -61,8 +63,7 @@ public class BasicSessionManager implements SessionManager,
 			return null;
 		}
 
-		session.setExpires(System.currentTimeMillis()
-				+ session.getSessionTimeout());
+		session.setExpires(System.currentTimeMillis() + session.getSessionTimeout());
 		return session;
 	}
 
@@ -96,7 +97,20 @@ public class BasicSessionManager implements SessionManager,
 		case USER_SESSION_TIMEOUT:
 			USER_SESSION_TIMEOUT = Long.valueOf(value);
 			return true;
+		case SESSION_CHECK_PERIOD:
+			SESSION_CHECK_PERIOD = Long.valueOf(value);
+			return true;
 		}
 		return false;
+	}
+
+	public long getSessionCheckPeriod() {
+		return SESSION_CHECK_PERIOD;
+	}
+
+	@Override
+	public void release() {
+		// TODO: iterate remaining sessions and warn if an active session was
+		// left
 	}
 }

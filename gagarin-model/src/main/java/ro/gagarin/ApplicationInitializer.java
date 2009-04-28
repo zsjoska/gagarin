@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import ro.gagarin.config.Config;
 import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.UserAlreadyExistsException;
+import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserPermission;
@@ -43,9 +44,11 @@ public class ApplicationInitializer {
 
 		LOG.info("Application initializer started");
 
-		UserManager userManager = ModelFactory.getUserManager();
-		ConfigurationManager cfgManager = ModelFactory.getConfigurationManager(userManager);
-		RoleManager roleManager = ModelFactory.getRoleManager(userManager);
+		Session session = new Session();
+
+		UserManager userManager = ModelFactory.getUserManager(session);
+		ConfigurationManager cfgManager = ModelFactory.getConfigurationManager(session);
+		RoleManager roleManager = ModelFactory.getRoleManager(session);
 
 		ApplicationInitializer initializer = new ApplicationInitializer(cfgManager, userManager,
 				roleManager);

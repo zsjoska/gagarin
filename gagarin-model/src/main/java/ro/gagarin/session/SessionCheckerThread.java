@@ -4,24 +4,20 @@ import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 
-import ro.gagarin.ModelFactory;
 import ro.gagarin.SessionManager;
-import ro.gagarin.config.Config;
-import ro.gagarin.config.SettingsChangeObserver;
 
-public class SessionCheckerThread extends Thread implements SettingsChangeObserver {
+public class SessionCheckerThread extends Thread {
 
 	private static final transient Logger LOG = Logger.getLogger(SessionCheckerThread.class);
 
-	private long SESSION_CHECK_PERIOD = ModelFactory.getConfigurationManager().getLong(
-			Config.SESSION_CHECK_PERIOD);
+	private long SESSION_CHECK_PERIOD;
 	private volatile boolean terminate = false;
 	private final SessionManager sessionManager;
 
 	public SessionCheckerThread(SessionManager sessionManager) {
 		this.sessionManager = sessionManager;
 		this.setDaemon(true);
-		ModelFactory.getConfigurationManager().registerForChange(this);
+		SESSION_CHECK_PERIOD = sessionManager.getSessionCheckPeriod();
 		LOG.info("Session checker initialized with " + SESSION_CHECK_PERIOD + "ms period");
 	}
 
@@ -47,16 +43,6 @@ public class SessionCheckerThread extends Thread implements SettingsChangeObserv
 
 	public void terminate() {
 		this.terminate = true;
-	}
-
-	@Override
-	public boolean configChanged(Config config, String value) {
-		switch (config) {
-		case SESSION_CHECK_PERIOD:
-			SESSION_CHECK_PERIOD = Long.valueOf(value);
-			return true;
-		}
-		return false;
 	}
 
 }

@@ -4,6 +4,7 @@ import ro.gagarin.config.FileConfigurationManager;
 import ro.gagarin.hibernate.HibernateRoleManager;
 import ro.gagarin.hibernate.HibernateUserManager;
 import ro.gagarin.session.BasicSessionManager;
+import ro.gagarin.session.Session;
 
 /**
  * Factory class for business-logic implementation. All main sections of the
@@ -28,12 +29,17 @@ public class ModelFactory {
 		return BasicSessionManager.getInstance();
 	}
 
-	public static RoleManager getRoleManager() {
-		return new HibernateRoleManager();
-	}
-
-	public static RoleManager getRoleManager(BaseManager mgr) {
-		return new HibernateRoleManager(mgr);
+	public static RoleManager getRoleManager(Session session) {
+		synchronized (session) {
+			BaseManager manager = session.getManager();
+			if (manager == null) {
+				HibernateRoleManager roleManager = new HibernateRoleManager();
+				session.setManager(roleManager);
+				return roleManager;
+			} else {
+				return new HibernateRoleManager(manager);
+			}
+		}
 	}
 
 	/**
@@ -41,12 +47,22 @@ public class ModelFactory {
 	 * 
 	 * @return the configured {@link UserManager} implementation
 	 */
-	public static UserManager getUserManager() {
-		return new HibernateUserManager();
+	public static UserManager getUserManager(Session session) {
+		synchronized (session) {
+			BaseManager manager = session.getManager();
+			if (manager == null) {
+				HibernateUserManager userManager = new HibernateUserManager();
+				session.setManager(userManager);
+				return userManager;
+			} else {
+				return new HibernateUserManager(manager);
+			}
+		}
 	}
 
-	public static UserManager getUserManager(BaseManager mgr) {
-		return new HibernateUserManager(mgr);
+	@Deprecated
+	public static ConfigurationManager getConfigurationManager(BaseManager userManager) {
+		return FileConfigurationManager.getInstance();
 	}
 
 	/**
@@ -55,11 +71,7 @@ public class ModelFactory {
 	 * 
 	 * @return the configured {@link ConfigurationManager} implementation
 	 */
-	public static ConfigurationManager getConfigurationManager() {
-		return FileConfigurationManager.getInstance();
-	}
-
-	public static ConfigurationManager getConfigurationManager(UserManager userManager) {
+	public static ConfigurationManager getConfigurationManager(Session session) {
 		return FileConfigurationManager.getInstance();
 	}
 }

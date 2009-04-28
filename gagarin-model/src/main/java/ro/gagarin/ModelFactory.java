@@ -5,6 +5,7 @@ import ro.gagarin.hibernate.HibernateRoleManager;
 import ro.gagarin.hibernate.HibernateUserManager;
 import ro.gagarin.session.BasicSessionManager;
 import ro.gagarin.session.Session;
+import ro.gagarin.user.DummyAuthorizationManager;
 
 /**
  * Factory class for business-logic implementation. All main sections of the
@@ -73,5 +74,9 @@ public class ModelFactory {
 	 */
 	public static ConfigurationManager getConfigurationManager(Session session) {
 		return FileConfigurationManager.getInstance();
+	}
+
+	public static AuthorizationManager getAuthorizationManager(Session session) {
+		return new DummyAuthorizationManager();
 	}
 }

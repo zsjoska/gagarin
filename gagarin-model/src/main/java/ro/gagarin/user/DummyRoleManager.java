@@ -2,7 +2,9 @@ package ro.gagarin.user;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import ro.gagarin.RoleManager;
 
@@ -42,8 +44,7 @@ public class DummyRoleManager implements RoleManager {
 	@Override
 	public List<UserPermission> getAllPermissions() {
 		ArrayList<UserPermission> permissions = new ArrayList<UserPermission>();
-		for (UserPermission userPermission : DummyRoleManager.permissions_id
-				.values()) {
+		for (UserPermission userPermission : DummyRoleManager.permissions_id.values()) {
 			permissions.add(userPermission);
 		}
 		return permissions;
@@ -63,4 +64,30 @@ public class DummyRoleManager implements RoleManager {
 	public void release() {
 	}
 
+	@Override
+	public ArrayList<UserPermission> substractUsersRolePermissions(UserRole main, UserRole substract) {
+
+		ArrayList<UserPermission> leftPermissions = new ArrayList<UserPermission>();
+		UserRole mainRole = DummyRoleManager.roles_id.get(main.getId());
+		UserRole substractRole = DummyRoleManager.roles_id.get(substract.getId());
+
+		Iterator<UserPermission> iterator = mainRole.getUserPermissions().iterator();
+		Set<UserPermission> subPerm = substractRole.getUserPermissions();
+		while (iterator.hasNext()) {
+			UserPermission userPermission = (UserPermission) iterator.next();
+			if (!subPerm.contains(userPermission)) {
+				leftPermissions.add(userPermission);
+			}
+		}
+		return leftPermissions;
+	}
+
+	@Override
+	public List<UserRole> getAllRoles() {
+		ArrayList<UserRole> roles = new ArrayList<UserRole>();
+		for (UserRole userPermission : DummyRoleManager.roles_id.values()) {
+			roles.add(userPermission);
+		}
+		return roles;
+	}
 }

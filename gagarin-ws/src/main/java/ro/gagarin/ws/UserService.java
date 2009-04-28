@@ -6,6 +6,8 @@ import javax.jws.WebService;
 import org.apache.log4j.Logger;
 
 import ro.gagarin.ModelFactory;
+import ro.gagarin.SessionManager;
+import ro.gagarin.UserManager;
 import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.exceptions.UserAlreadyExistsException;
@@ -21,15 +23,23 @@ public class UserService {
 	public Long createUser(String sessionId, User user) throws SessionNotFoundException,
 			FieldRequiredException, UserAlreadyExistsException {
 		LOG.info("createUser " + user.getUsername());
-		Session session = ModelFactory.getSessionManager().getSessionById(sessionId);
-		if (session == null)
-			throw new SessionNotFoundException(sessionId);
 
-		// TODO: permission check
+		SessionManager sessionManager = ModelFactory.getSessionManager();
+		Session session = sessionManager.getSessionById(sessionId);
+		UserManager userManager = ModelFactory.getUserManager(session);
 
-		long userId = ModelFactory.getUserManager(session).createUser(user);
-		LOG.info("Created User" + user.getId() + ":" + user.getUsername() + "; session:"
-				+ sessionId);
-		return userId;
+		try {
+			if (session == null)
+				throw new SessionNotFoundException(sessionId);
+
+			// TODO: permission check
+
+			long userId = userManager.createUser(user);
+			LOG.info("Created User" + user.getId() + ":" + user.getUsername() + "; session:"
+					+ sessionId);
+			return userId;
+		} finally {
+			sessionManager.release();
+		}
 	}
 }

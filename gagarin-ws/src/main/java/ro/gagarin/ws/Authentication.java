@@ -29,15 +29,23 @@ public class Authentication {
 
 	@WebMethod
 	public String createSession(String language, String reason) {
-		if (language == null) {
-			language = "en_us";
-		}
-		SessionManager sessionManager = ModelFactory.getSessionManager();
-		Session session = sessionManager.createSession(language, reason);
-		LOG.info("Session created:" + session.getId() + "; reason:" + session.getReason()
-				+ "; language:" + session.getLanguage());
-		return session.getSessionString();
 
+		SessionManager sessionManager = ModelFactory.getSessionManager();
+		try {
+
+			if (language == null) {
+				language = "en_us";
+			}
+
+			Session session = sessionManager.createSession(language, reason);
+			LOG.info("Session created:" + session.getId() + "; reason:" + session.getReason()
+					+ "; language:" + session.getLanguage());
+
+			return session.getSessionString();
+
+		} finally {
+			sessionManager.release();
+		}
 	}
 
 	@WebMethod
@@ -48,23 +56,33 @@ public class Authentication {
 
 		SessionManager sessionManager = ModelFactory.getSessionManager();
 		Session session = sessionManager.getSessionById(sessionID);
-		if (session == null)
-			throw new SessionNotFoundException(sessionID);
-
 		UserManager userManager = ModelFactory.getUserManager(session);
-		User user = userManager.userLogin(username, password);
 
-		session.setUser(user);
-		LOG.info("User " + user.getId() + ":" + user.getUsername() + " was bound to session "
-				+ session.getId());
-		return true;
+		try {
+
+			if (session == null)
+				throw new SessionNotFoundException(sessionID);
+
+			User user = userManager.userLogin(username, password);
+
+			session.setUser(user);
+			LOG.info("User " + user.getId() + ":" + user.getUsername() + " was bound to session "
+					+ session.getId());
+			return true;
+		} finally {
+			userManager.release();
+			sessionManager.release();
+		}
 	}
 
 	@WebMethod
 	public void logout(String sessionId) {
 		LOG.info("Session logout " + sessionId);
 		SessionManager sessionManager = ModelFactory.getSessionManager();
-		sessionManager.logout(sessionId);
+		try {
+			sessionManager.logout(sessionId);
+		} finally {
+			sessionManager.release();
+		}
 	}
-
 }

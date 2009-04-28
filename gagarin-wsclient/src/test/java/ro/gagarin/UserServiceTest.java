@@ -9,7 +9,7 @@ import org.junit.Test;
  */
 public class UserServiceTest {
 
-	private static Session session = null;
+	private static String session = null;
 	private static Authentication api = null;
 
 	@BeforeClass
@@ -18,12 +18,12 @@ public class UserServiceTest {
 		AuthenticationService service = new AuthenticationService();
 		api = service.getAuthenticationPort();
 		session = api.createSession(null, null);
-		api.login(session.getId(), "admin", "test", null);
+		api.login(session, "admin", "password", null);
 	}
 
 	@AfterClass
 	public static void shutDown() {
-		api.logout(session.getId());
+		api.logout(session);
 	}
 
 	@Test
@@ -34,6 +34,6 @@ public class UserServiceTest {
 		User user = new User();
 		user.setUsername("wsUser1");
 		user.setPassword("wspassword1");
-		userAPI.createUser(session.getId(), user);
+		userAPI.createUser(session, user);
 	}
 }

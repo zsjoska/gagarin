@@ -16,6 +16,7 @@ public class Session extends BaseEntity {
 	private String reason;
 	private User user;
 	private BaseManager manager;
+	private String sessionString;
 
 	public Session() {
 	}
@@ -78,5 +79,13 @@ public class Session extends BaseEntity {
 			return "<unbound>:" + getId();
 		}
 		return this.getUser().getName() + ":" + this.getId();
+	}
+
+	public void setSessionString(String id) {
+		this.sessionString = id;
+	}
+
+	public String getSessionString() {
+		return sessionString;
 	}
 }

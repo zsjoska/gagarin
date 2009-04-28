@@ -5,7 +5,7 @@
 
 	<appender name="ALL" class="org.apache.log4j.ConsoleAppender">
 		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="[%x]%-5p [%d{ISO8601} - %t]%l - %m%n" />
+			<param name="ConversionPattern" value="[%x]%-5p [%d{ISO8601} - %t] %l - %m%n" />
 		</layout>
 	</appender>
 

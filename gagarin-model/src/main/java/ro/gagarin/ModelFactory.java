@@ -2,8 +2,9 @@ package ro.gagarin;
 
 import ro.gagarin.config.FileConfigurationManager;
 import ro.gagarin.session.BasicSessionManager;
-import ro.gagarin.user.DummyUserManager;
 import ro.gagarin.session.Session;
+import ro.gagarin.user.DummyRoleManager;
+import ro.gagarin.user.DummyUserManager;
 
 /**
  * Factory class for business-logic implementation. All main sections of the
@@ -29,7 +30,7 @@ public class ModelFactory {
 	}
 
 	public static RoleManager getRoleManager(Session session) {
-		return null;
+		return new DummyRoleManager();
 	}
 
 	/**
@@ -38,11 +39,12 @@ public class ModelFactory {
 	 * @return the configured {@link UserManager} implementation
 	 */
 	public static UserManager getUserManager(Session session) {
-		return DummyUserManager.getInstance();
+		return new DummyUserManager();
 	}
 
 	@Deprecated
-	public static ConfigurationManager getConfigurationManager(BaseManager userManager) {
+	public static ConfigurationManager getConfigurationManager(
+			BaseManager userManager) {
 		return FileConfigurationManager.getInstance();
 	}
 

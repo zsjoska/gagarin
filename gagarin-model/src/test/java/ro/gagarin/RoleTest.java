@@ -68,7 +68,7 @@ public class RoleTest {
 		perm.getUserRoles().add(role);
 
 		roleManager.createPermission(perm);
-		// roleManager.createRole(role);
+		roleManager.createRole(role);
 
 		UserRole role2 = roleManager.getRoleByName("C_ROLE");
 		assertNotNull(role2);
@@ -102,7 +102,8 @@ public class RoleTest {
 		perm1.getUserRoles().add(role);
 		perm2.getUserRoles().add(role);
 
-		// roleManager.createPermission(perm1);
+		roleManager.createPermission(perm1);
+		roleManager.createPermission(perm2);
 		roleManager.createRole(role);
 
 		UserRole role2 = roleManager.getRoleByName("C_ROLE");

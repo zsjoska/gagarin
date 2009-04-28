@@ -21,15 +21,17 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
 
 	private final HashMap<Long, Session> sessions = new HashMap<Long, Session>();
 
-	private SessionCheckerThread chkSession = new SessionCheckerThread(INSTANCE);
+	private SessionCheckerThread chkSession = null;
 
 	private long SESSION_CHECK_PERIOD;
 
 	private BasicSessionManager() {
+		LOG.debug("Creating BasicSessionManager");
 		ConfigurationManager cfgManager = ModelFactory.getConfigurationManager(this);
 		cfgManager.registerForChange(this);
 		USER_SESSION_TIMEOUT = cfgManager.getLong(Config.USER_SESSION_TIMEOUT);
 		SESSION_CHECK_PERIOD = cfgManager.getLong(Config.SESSION_CHECK_PERIOD);
+		chkSession  = new SessionCheckerThread(this);
 		chkSession.start();
 	}
 

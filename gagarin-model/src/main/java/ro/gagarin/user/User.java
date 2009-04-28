@@ -7,6 +7,7 @@ public class User extends BaseEntity {
 	private String username;
 	private String password;
 	private String name;
+	private UserRole role;
 
 	public void setUsername(String username) {
 		this.username = username;
@@ -32,4 +33,15 @@ public class User extends BaseEntity {
 		return name;
 	}
 
+	public long getId() {
+		return super.getId();
+	}
+
+	public void setRole(UserRole role) {
+		this.role = role;
+	}
+
+	public UserRole getRole() {
+		return role;
+	}
 }

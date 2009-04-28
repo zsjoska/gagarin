@@ -1,6 +1,7 @@
 package ro.gagarin.user;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -56,7 +57,6 @@ public class DummyUserManager implements UserManager {
 		if (user2 != null)
 			throw new UserAlreadyExistsException("username", user.getUsername());
 
-		user.generateId();
 		users_id.put(user.getId(), user);
 		users_userName.put(user.getUsername(), user);
 		LOG.info("Created user:" + user.getUsername() + "; id:" + user.getId());
@@ -81,6 +81,18 @@ public class DummyUserManager implements UserManager {
 		LOG.info("Delete user:" + user.getUsername() + "; id:" + user.getId());
 		this.users_id.remove(id);
 		this.users_userName.remove(user.getUsername());
+	}
+
+	@Override
+	public List<User> getUsersWithRole(UserRole role) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void release() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

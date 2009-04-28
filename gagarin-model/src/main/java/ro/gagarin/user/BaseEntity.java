@@ -7,7 +7,7 @@ public class BaseEntity implements Serializable {
 
 	private static long nextId = System.currentTimeMillis();
 
-	private long id;
+	private long id = BaseEntity.getNextId();
 
 	private boolean fromDB = false;
 
@@ -25,10 +25,6 @@ public class BaseEntity implements Serializable {
 
 	public long getId() {
 		return id;
-	}
-
-	public void generateId() {
-		this.id = BaseEntity.getNextId();
 	}
 
 	private static synchronized long getNextId() {

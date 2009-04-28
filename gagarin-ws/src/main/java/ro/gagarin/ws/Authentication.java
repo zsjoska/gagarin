@@ -51,7 +51,7 @@ public class Authentication {
 		if (session == null)
 			throw new SessionNotFoundException(sessionID);
 
-		UserManager userManager = ModelFactory.getUserManager();
+		UserManager userManager = ModelFactory.getUserManager(session);
 		User user = userManager.userLogin(username, password);
 
 		session.setUser(user);

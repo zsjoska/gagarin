@@ -24,6 +24,9 @@ public class FileConfigurationManager implements ConfigurationManager {
 		// TODO: load from file
 		configuration.add(Config.USER_SESSION_TIMEOUT.ordinal(), "5000");
 		configuration.add(Config.SESSION_CHECK_PERIOD.ordinal(), "3000");
+		configuration.add(Config.ADMIN_ROLE_NAME.ordinal(), "ADMIN_ROLE");
+		configuration.add(Config.ADMIN_USER_NAME.ordinal(), "admin");
+		configuration.add(Config.ADMIN_PASSWORD.ordinal(), "password");
 	}
 
 	@Override
@@ -62,6 +65,25 @@ public class FileConfigurationManager implements ConfigurationManager {
 						+ observer.getClass().getName(), e);
 			}
 		}
+	}
+
+	@Override
+	public String getString(Config config) {
+		String strValue = null;
+		if (this.configuration.size() > config.ordinal()) {
+			strValue = this.configuration.get(config.ordinal());
+		}
+		if (strValue == null) {
+			LOG.warn(config.name() + " config value was not found, getting the default value");
+			strValue = DefaultConfiguration.getValue(config);
+		}
+		return strValue;
+	}
+
+	@Override
+	public void release() {
+		// TODO Auto-generated method stub
+
 	}
 
 }

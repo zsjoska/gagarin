@@ -10,7 +10,7 @@ import ro.gagarin.config.SettingsChangeObserver;
  * @author zsjoska
  * 
  */
-public interface ConfigurationManager {
+public interface ConfigurationManager extends BaseManager {
 
 	/**
 	 * Returns a configuration value converted to long
@@ -43,5 +43,7 @@ public interface ConfigurationManager {
 	 *            configuration value
 	 */
 	void setConfigValue(Config config, String value);
+
+	String getString(Config admin_role_name);
 
 }

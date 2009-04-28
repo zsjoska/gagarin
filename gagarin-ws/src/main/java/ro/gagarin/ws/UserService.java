@@ -27,7 +27,7 @@ public class UserService {
 
 		// TODO: permission check
 
-		long userId = ModelFactory.getUserManager().createUser(user);
+		long userId = ModelFactory.getUserManager(session).createUser(user);
 		LOG.info("Created User" + user.getId() + ":" + user.getUsername() + "; session:"
 				+ sessionId);
 		return userId;

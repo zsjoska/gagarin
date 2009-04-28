@@ -1,9 +1,13 @@
 package ro.gagarin;
 
+import java.util.List;
+
 import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.UserAlreadyExistsException;
 import ro.gagarin.exceptions.UserNotFoundException;
 import ro.gagarin.user.User;
+import ro.gagarin.user.UserRole;
+
 
 /**
  * Base interface to handle the operations related to the users of the system.
@@ -11,7 +15,7 @@ import ro.gagarin.user.User;
  * @author zsjoska
  * 
  */
-public interface UserManager {
+public interface UserManager  extends BaseManager{
 
 	/**
 	 * Verifies the validity of <code>username</code> and <code>password</code>
@@ -56,4 +60,6 @@ public interface UserManager {
 	 *            the ID of the user to be deleted
 	 */
 	void deleteUserById(long id);
+
+	List<User> getUsersWithRole(UserRole role);
 }

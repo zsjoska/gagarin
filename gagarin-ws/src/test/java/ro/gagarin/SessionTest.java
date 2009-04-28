@@ -23,11 +23,13 @@ public class SessionTest {
 	private Authentication authentication = new Authentication();
 	private String username = "_User_" + System.currentTimeMillis();
 
+	private Session session = new Session();
+
 	@Test
 	public void testSuccessLogin() throws UserNotFoundException, SessionNotFoundException,
 			FieldRequiredException, UserAlreadyExistsException {
 
-		UserManager userManager = ModelFactory.getUserManager();
+		UserManager userManager = ModelFactory.getUserManager(session);
 
 		User user = new User();
 		user.setUsername("1" + username);
@@ -46,7 +48,7 @@ public class SessionTest {
 	public void testFailedLogin() throws SessionNotFoundException, FieldRequiredException,
 			UserAlreadyExistsException {
 
-		UserManager userManager = ModelFactory.getUserManager();
+		UserManager userManager = ModelFactory.getUserManager(session);
 
 		User user = new User();
 		user.setUsername("2" + username);
@@ -74,7 +76,7 @@ public class SessionTest {
 	public void testSessionDeletion() throws UserNotFoundException, FieldRequiredException,
 			UserAlreadyExistsException {
 
-		UserManager userManager = ModelFactory.getUserManager();
+		UserManager userManager = ModelFactory.getUserManager(session);
 
 		User user = new User();
 		user.setUsername("3" + username);
@@ -98,7 +100,8 @@ public class SessionTest {
 	@Test
 	public void testSessionExpiration() throws InterruptedException {
 
-		ModelFactory.getConfigurationManager().setConfigValue(Config.USER_SESSION_TIMEOUT, "100");
+		ModelFactory.getConfigurationManager(session).setConfigValue(Config.USER_SESSION_TIMEOUT,
+				"100");
 
 		SessionManager sessionManager = ModelFactory.getSessionManager();
 		Session session = sessionManager.createSession(null, null);

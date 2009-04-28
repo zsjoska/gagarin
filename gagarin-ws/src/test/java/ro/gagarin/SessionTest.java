@@ -36,12 +36,12 @@ public class SessionTest {
 		user.setPassword("password1");
 		userManager.createUser(user);
 
-		Session session = authentication.createSession(null, null);
+		String session = authentication.createSession(null, null);
 		assertNotNull(session);
 
-		authentication.login(session.getId(), "1" + username, "password1", null);
+		authentication.login(session, "1" + username, "password1", null);
 
-		authentication.logout(session.getId());
+		authentication.logout(session);
 	}
 
 	@Test
@@ -55,17 +55,17 @@ public class SessionTest {
 		user.setPassword("password2");
 		userManager.createUser(user);
 
-		Session session = authentication.createSession(null, null);
+		String session = authentication.createSession(null, null);
 		assertNotNull(session);
 
 		try {
-			authentication.login(session.getId(), "user2_", "password2", null);
+			authentication.login(session, "user2_", "password2", null);
 			fail("The user does not exists");
 		} catch (UserNotFoundException e) {
 			// the exception was expected
 		}
 		try {
-			authentication.login(session.getId(), "user2", "password2_", null);
+			authentication.login(session, "user2", "password2_", null);
 			fail("The user and password does not match; thus authentication must fail");
 		} catch (UserNotFoundException e) {
 			// the exception was expected
@@ -83,16 +83,15 @@ public class SessionTest {
 		user.setPassword("password3");
 		userManager.createUser(user);
 
-		Session session = authentication.createSession(null, null);
+		String session = authentication.createSession(null, null);
 		assertNotNull(session);
 
-		authentication.logout(session.getId());
+		authentication.logout(session);
 		try {
-			authentication.login(session.getId(), "3" + username, "password3", null);
+			authentication.login(session, "3" + username, "password3", null);
 			fail("The login must fail since the session was deleted");
 		} catch (SessionNotFoundException e) {
-			assertEquals("Wrong session ID returned by the exception", e.getSessionID(), session
-					.getId());
+			assertEquals("Wrong session ID returned by the exception", e.getSessionID(), session);
 		}
 
 	}
@@ -108,11 +107,11 @@ public class SessionTest {
 		assertNotNull(session);
 		assertEquals("We just set the timeout to 100", session.getSessionTimeout(), 100);
 
-		session = sessionManager.getSessionById(session.getId());
+		session = sessionManager.getSessionById(session.getSessionString());
 		assertNotNull(session);
 
-		Thread.sleep(101);
-		session = sessionManager.getSessionById(session.getId());
+		Thread.sleep(110);
+		session = sessionManager.getSessionById(session.getSessionString());
 		assertNull("The session must be expired at this time", session);
 	}
 }

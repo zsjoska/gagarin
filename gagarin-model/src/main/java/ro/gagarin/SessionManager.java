@@ -30,20 +30,20 @@ public interface SessionManager extends BaseManager {
 	/**
 	 * Returns the session identified by the given session ID.
 	 * 
-	 * @param sessionId
+	 * @param sessionID
 	 *            the ID of the requested session
 	 * @return the session or <code>null</code> if the session was not found or
 	 *         it was expired
 	 */
-	Session getSessionById(long sessionId);
+	Session getSessionById(String sessionID);
 
 	/**
 	 * Destroys the session.
 	 * 
-	 * @param id
+	 * @param sessionId
 	 *            the ID of the session to be destroyed
 	 */
-	void logout(long id);
+	void logout(String sessionId);
 
 	/**
 	 * Returns a list with sessions that expired. These sessions will be

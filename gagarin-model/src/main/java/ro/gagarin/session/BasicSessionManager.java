@@ -19,7 +19,7 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
 
 	private long USER_SESSION_TIMEOUT;
 
-	private final HashMap<Long, Session> sessions = new HashMap<Long, Session>();
+	private final HashMap<String, Session> sessions = new HashMap<String, Session>();
 
 	private SessionCheckerThread chkSession = null;
 
@@ -31,7 +31,7 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
 		cfgManager.registerForChange(this);
 		USER_SESSION_TIMEOUT = cfgManager.getLong(Config.USER_SESSION_TIMEOUT);
 		SESSION_CHECK_PERIOD = cfgManager.getLong(Config.SESSION_CHECK_PERIOD);
-		chkSession  = new SessionCheckerThread(this);
+		chkSession = new SessionCheckerThread(this);
 		chkSession.start();
 	}
 
@@ -46,13 +46,14 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
 		session.setLanguage(language);
 		session.setReason(reason);
 		session.setExpires(System.currentTimeMillis() + session.getSessionTimeout());
-		this.sessions.put(session.getId(), session);
+		session.setSessionString(System.currentTimeMillis() + "-" + System.nanoTime());
+		this.sessions.put(session.getSessionString(), session);
 		LOG.info("Created Session " + session.getId());
 		return session;
 	}
 
 	@Override
-	public Session getSessionById(long sessionId) {
+	public Session getSessionById(String sessionId) {
 		Session session = this.sessions.get(sessionId);
 
 		if (session == null) {
@@ -70,7 +71,7 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
 	}
 
 	@Override
-	public void logout(long id) {
+	public void logout(String id) {
 		Session session = this.sessions.get(id);
 		if (session != null)
 			destroySession(session);
@@ -90,7 +91,7 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
 	@Override
 	public void destroySession(Session session) {
 		LOG.info("Destroy session " + session.getId());
-		this.sessions.remove(session.getId());
+		this.sessions.remove(session.getSessionString());
 	}
 
 	@Override

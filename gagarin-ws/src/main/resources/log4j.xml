@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+	<appender name="ALL" class="org.apache.log4j.ConsoleAppender">
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="[%x]%-5p [%d{ISO8601} - %t] %l - %m%n" />
+		</layout>
+	</appender>
+
+	<appender name="MAIN" class="org.apache.log4j.RollingFileAppender">
+		<param name="Append" value="true" />
+		<param name="ImmediateFlush" value="true" />
+		<param name="File" value="./target/server.log" />
+		<param name="MaxBackupIndex" value="5" />
+		<param name="MaxFileSize" value="128MB" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="[%x]%-5p [%d{ISO8601} - %t] %l - %m%n" />
+		</layout>
+	</appender>
+
+	<appender name="MAIN-CONSOLE" class="org.apache.log4j.ConsoleAppender">
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="[%x]%-5p [%d{ISO8601} - %t]%l - %m%n" />
+		</layout>
+	</appender>
+
+	<logger name="ro.gagarin" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="MAIN" />
+		<appender-ref ref="MAIN-CONSOLE" />
+	</logger>
+
+	<root>
+		<level value="trace" />
+		<appender-ref ref="ALL" />
+	</root>
+
+</log4j:configuration>

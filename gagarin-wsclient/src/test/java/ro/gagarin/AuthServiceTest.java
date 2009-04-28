@@ -12,8 +12,8 @@ public class AuthServiceTest {
 			UserNotFoundException_Exception {
 		AuthenticationService service = new AuthenticationService();
 		Authentication api = service.getAuthenticationPort();
-		Session session = api.createSession(null, null);
-		api.login(session.getId(), "admin", "test", null);
-		api.logout(session.getId());
+		String session = api.createSession(null, null);
+		api.login(session, "admin", "password", null);
+		api.logout(session);
 	}
 }

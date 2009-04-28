@@ -28,7 +28,7 @@ public class Authentication {
 	private static final transient Logger LOG = Logger.getLogger(Authentication.class);
 
 	@WebMethod
-	public Session createSession(String language, String reason) {
+	public String createSession(String language, String reason) {
 		if (language == null) {
 			language = "en_us";
 		}
@@ -36,12 +36,12 @@ public class Authentication {
 		Session session = sessionManager.createSession(language, reason);
 		LOG.info("Session created:" + session.getId() + "; reason:" + session.getReason()
 				+ "; language:" + session.getLanguage());
-		return session;
+		return session.getSessionString();
 
 	}
 
 	@WebMethod
-	public boolean login(Long sessionID, String username, String password, String[] extra)
+	public boolean login(String sessionID, String username, String password, String[] extra)
 			throws SessionNotFoundException, UserNotFoundException {
 
 		LOG.info("Login User " + username + "; extra:" + Arrays.toString(extra));
@@ -61,7 +61,7 @@ public class Authentication {
 	}
 
 	@WebMethod
-	public void logout(Long sessionId) {
+	public void logout(String sessionId) {
 		LOG.info("Session logout " + sessionId);
 		SessionManager sessionManager = ModelFactory.getSessionManager();
 		sessionManager.logout(sessionId);

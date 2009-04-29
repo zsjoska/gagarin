@@ -1,46 +1,13 @@
 package ro.gagarin.user;
 
-import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+public interface UserRole {
 
-@Entity
-@Table(name = "ROLES")
-public class UserRole extends BaseEntity {
+	long getId();
 
-	private static final long serialVersionUID = -566662791080932756L;
+	String getRoleName();
 
-	private String roleName;
-	private Set<UserPermission> userPermissions = new HashSet<UserPermission>();
-
-	@Override
-	@Id
-	public long getId() {
-		return super.getId();
-	}
-
-	public void setRoleName(String roleName) {
-		this.roleName = roleName;
-	}
-
-	@Column(nullable = false, unique = true)
-	public String getRoleName() {
-		return roleName;
-	}
-
-	@ManyToMany(mappedBy = "userRoles", cascade = CascadeType.ALL)
-	public Set<UserPermission> getUserPermissions() {
-		return userPermissions;
-	}
-
-	public void setUserPermissions(Set<UserPermission> permissions) {
-		this.userPermissions = permissions;
-	}
+	Set<? extends UserPermission> getUserPermissions();
 
 }

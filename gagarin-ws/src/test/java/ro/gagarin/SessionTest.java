@@ -13,7 +13,7 @@ import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.exceptions.UserAlreadyExistsException;
 import ro.gagarin.exceptions.UserNotFoundException;
 import ro.gagarin.session.Session;
-import ro.gagarin.user.User;
+import ro.gagarin.user.DBUser;
 import ro.gagarin.ws.Authentication;
 
 /**
@@ -35,7 +35,7 @@ public class SessionTest {
 		RoleManager roleManager = ModelFactory.getRoleManager(session);
 		ConfigurationManager cfgManager = ModelFactory.getConfigurationManager(session);
 
-		User user = new User();
+		DBUser user = new DBUser();
 		user.setUsername("1" + username);
 		user.setPassword("password1");
 		user.setRole(roleManager.getRoleByName(cfgManager.getString(Config.ADMIN_ROLE_NAME)));
@@ -60,7 +60,7 @@ public class SessionTest {
 		ConfigurationManager cfgManager = ModelFactory.getConfigurationManager(session);
 		RoleManager roleManager = ModelFactory.getRoleManager(session);
 
-		User user = new User();
+		DBUser user = new DBUser();
 		user.setUsername("2" + username);
 		user.setPassword("password2");
 		user.setRole(roleManager.getRoleByName(cfgManager.getString(Config.ADMIN_ROLE_NAME)));
@@ -95,7 +95,7 @@ public class SessionTest {
 		ConfigurationManager cfgManager = ModelFactory.getConfigurationManager(session);
 		RoleManager roleManager = ModelFactory.getRoleManager(session);
 
-		User user = new User();
+		DBUser user = new DBUser();
 		user.setUsername("3" + username);
 		user.setPassword("password3");
 		user.setRole(roleManager.getRoleByName(cfgManager.getString(Config.ADMIN_ROLE_NAME)));

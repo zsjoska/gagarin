@@ -12,6 +12,7 @@ import ro.gagarin.UserManager;
 import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.UserAlreadyExistsException;
 import ro.gagarin.exceptions.UserNotFoundException;
+import ro.gagarin.user.DBUser;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserRole;
 
@@ -44,7 +45,7 @@ public class HibernateUserManager extends BaseHibernateManager implements UserMa
 	}
 
 	@Override
-	public long createUser(User user) throws FieldRequiredException, UserAlreadyExistsException {
+	public long createUser(DBUser user) throws FieldRequiredException, UserAlreadyExistsException {
 
 		requireStringField(user.getUsername(), "username");
 
@@ -56,13 +57,13 @@ public class HibernateUserManager extends BaseHibernateManager implements UserMa
 
 	private void requireStringField(String value, String fieldname) throws FieldRequiredException {
 		if (value == null || value.length() == 0)
-			throw new FieldRequiredException(fieldname, User.class);
+			throw new FieldRequiredException(fieldname, DBUser.class);
 	}
 
 	@Override
 	public User getUserByUsername(String username) {
 
-		Query query = getEM().createQuery("select u from User u where u.username=:username");
+		Query query = getEM().createQuery("select u from DBUser u where u.username=:username");
 		query.setParameter("username", username);
 		try {
 			User user = (User) query.getSingleResult();
@@ -75,7 +76,7 @@ public class HibernateUserManager extends BaseHibernateManager implements UserMa
 	@Override
 	public void deleteUserById(long id) {
 
-		Query query = getEM().createQuery("select u from User u where u.id=:id");
+		Query query = getEM().createQuery("select u from DBUser u where u.id=:id");
 		query.setParameter("id", id);
 		User user = (User) query.getSingleResult();
 
@@ -90,7 +91,7 @@ public class HibernateUserManager extends BaseHibernateManager implements UserMa
 	@Override
 	public List<User> getUsersWithRole(UserRole role) {
 
-		Query query = getEM().createQuery("select u from User u where u.role=:role");
+		Query query = getEM().createQuery("select u from DBUser u where u.role=:role");
 		query.setParameter("role", role);
 		List result = query.getResultList();
 		return result;

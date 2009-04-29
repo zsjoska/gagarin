@@ -12,6 +12,8 @@ import org.hibernate.exception.ConstraintViolationException;
 
 import ro.gagarin.BaseManager;
 import ro.gagarin.RoleManager;
+import ro.gagarin.user.DBUserPermission;
+import ro.gagarin.user.DBUserRole;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
 
@@ -27,13 +29,13 @@ public class HibernateRoleManager extends BaseHibernateManager implements RoleMa
 	}
 
 	@Override
-	public UserRole getRoleByName(String roleName) {
+	public DBUserRole getRoleByName(String roleName) {
 
-		Query query = getEM().createQuery("select r from UserRole r where r.roleName=:roleName");
+		Query query = getEM().createQuery("select r from DBUserRole r where r.roleName=:roleName");
 		query.setParameter("roleName", roleName);
 
 		try {
-			UserRole adminRole = (UserRole) query.getSingleResult();
+			DBUserRole adminRole = (DBUserRole) query.getSingleResult();
 			return adminRole;
 		} catch (NoResultException e) {
 			LOG.info("No " + roleName + " role found");
@@ -43,7 +45,7 @@ public class HibernateRoleManager extends BaseHibernateManager implements RoleMa
 	}
 
 	@Override
-	public long createRole(UserRole role) {
+	public long createRole(DBUserRole role) {
 		// requireStringField(user.getUsername(), "username");
 
 		// em.getTransaction().begin();
@@ -73,7 +75,7 @@ public class HibernateRoleManager extends BaseHibernateManager implements RoleMa
 	}
 
 	@Override
-	public long createPermission(UserPermission perm) {
+	public long createPermission(DBUserPermission perm) {
 		// TODO: requireStringField(user.getUsername(), "username");
 
 		getEM().persist(perm);
@@ -83,11 +85,11 @@ public class HibernateRoleManager extends BaseHibernateManager implements RoleMa
 	}
 
 	@Override
-	public List<UserPermission> getAllPermissions() {
+	public List<DBUserPermission> getAllPermissions() {
 
-		Query query = getEM().createQuery("select p from UserPermission p");
+		Query query = getEM().createQuery("select p from DBUserPermission p");
 		try {
-			List<UserPermission> resultList = query.getResultList();
+			List<DBUserPermission> resultList = query.getResultList();
 			return resultList;
 
 		} catch (NoResultException e) {
@@ -106,7 +108,7 @@ public class HibernateRoleManager extends BaseHibernateManager implements RoleMa
 	@Override
 	public UserPermission getPermissionByName(String permissionName) {
 		Query query = getEM().createQuery(
-				"select p from UserPermission p where p.permissionName=:permissionName");
+				"select p from DBUserPermission p where p.permissionName=:permissionName");
 		query.setParameter("permissionName", permissionName);
 
 		try {
@@ -127,14 +129,14 @@ public class HibernateRoleManager extends BaseHibernateManager implements RoleMa
 	}
 
 	@Override
-	public List<UserRole> getAllRoles() {
+	public List<DBUserRole> getAllRoles() {
 
 		Query query = getEM().createQuery("select r from UserRole r ");
 		return query.getResultList();
 	}
 
 	@Override
-	public List<UserPermission> substractUsersRolePermissions(UserRole main, UserRole substract) {
+	public List<DBUserPermission> substractUsersRolePermissions(UserRole main, UserRole substract) {
 		Query query = getEM()
 				.createQuery(
 						"select r from UserPermission r where r.id=:subRoleid and r not in (select p from UserPermission p where p.id=:mainRoleid)")

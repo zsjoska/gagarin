@@ -9,6 +9,7 @@ import ro.gagarin.config.Config;
 import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.UserAlreadyExistsException;
 import ro.gagarin.session.Session;
+import ro.gagarin.user.DBUser;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserRole;
 
@@ -41,7 +42,7 @@ public class UserTest {
 		try {
 			UserRole adminRole = roleManager.getRoleByName(configManager
 					.getString(Config.ADMIN_ROLE_NAME));
-			User user = new User();
+			DBUser user = new DBUser();
 			user.setName("Name Of User");
 			user.setUsername(username);
 			user.setPassword("password" + username);

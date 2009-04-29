@@ -5,9 +5,9 @@ import java.util.List;
 import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.UserAlreadyExistsException;
 import ro.gagarin.exceptions.UserNotFoundException;
+import ro.gagarin.user.DBUser;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserRole;
-
 
 /**
  * Base interface to handle the operations related to the users of the system.
@@ -15,7 +15,7 @@ import ro.gagarin.user.UserRole;
  * @author zsjoska
  * 
  */
-public interface UserManager  extends BaseManager{
+public interface UserManager extends BaseManager {
 
 	/**
 	 * Verifies the validity of <code>username</code> and <code>password</code>
@@ -42,7 +42,7 @@ public interface UserManager  extends BaseManager{
 	 * @throws UserAlreadyExistsException
 	 *             the user or a key-field like username or email already exists
 	 */
-	long createUser(User user) throws FieldRequiredException, UserAlreadyExistsException;
+	long createUser(DBUser user) throws FieldRequiredException, UserAlreadyExistsException;
 
 	/**
 	 * Returns the user with the specified username

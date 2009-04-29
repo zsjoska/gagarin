@@ -9,16 +9,6 @@ public class BaseEntity implements Serializable {
 
 	private long id = BaseEntity.getNextId();
 
-	private boolean fromDB = false;
-
-	public void setFromDB(boolean fromDB) {
-		this.fromDB = fromDB;
-	}
-
-	public boolean isFromDB() {
-		return fromDB;
-	}
-
 	public void setId(long id) {
 		this.id = id;
 	}

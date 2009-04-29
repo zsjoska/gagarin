@@ -10,9 +10,11 @@ import ro.gagarin.config.Config;
 import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.UserAlreadyExistsException;
 import ro.gagarin.session.Session;
+import ro.gagarin.user.DBUser;
+import ro.gagarin.user.DBUserPermission;
+import ro.gagarin.user.DBUserRole;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.User;
-import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
 
 public class ApplicationInitializer {
@@ -75,7 +77,7 @@ public class ApplicationInitializer {
 		checkCreatePermissionList();
 
 		this.setTask("CHK_CREATE_ADMIN_ROLE");
-		UserRole adminRole = checkCreateAdminRole(adminRoleName);
+		DBUserRole adminRole = checkCreateAdminRole(adminRoleName);
 
 		this.setTask("CHK_CREATE_ADMIN_ROLE_PERMISSION_LIST");
 		checkAdminRolePermissionList(adminRole);
@@ -87,12 +89,12 @@ public class ApplicationInitializer {
 
 	}
 
-	private UserRole checkCreateAdminRole(String adminRoleName) {
+	private DBUserRole checkCreateAdminRole(String adminRoleName) {
 		LOG.info("Checking admin role existence");
-		UserRole adminRole = roleManager.getRoleByName(adminRoleName);
+		DBUserRole adminRole = roleManager.getRoleByName(adminRoleName);
 		if (adminRole == null) {
 			LOG.info("No admin role was found, creating role with " + adminRoleName);
-			adminRole = new UserRole();
+			adminRole = new DBUserRole();
 			adminRole.setRoleName(adminRoleName);
 			roleManager.createRole(adminRole);
 			LOG.info("Admin role created.");
@@ -108,8 +110,8 @@ public class ApplicationInitializer {
 		List<User> adminUsers = userManager.getUsersWithRole(adminRole);
 		if (adminUsers == null || adminUsers.size() == 0) {
 			LOG.info("admin user was not found; creating");
-			User adminUser = null;
-			adminUser = new User();
+			DBUser adminUser = null;
+			adminUser = new DBUser();
 			adminUser.setRole(adminRole);
 			adminUser.setUsername(adminUserName);
 			adminUser.setPassword(adminPassword);
@@ -121,15 +123,15 @@ public class ApplicationInitializer {
 		}
 	}
 
-	private void checkAdminRolePermissionList(UserRole adminRole) {
+	private void checkAdminRolePermissionList(DBUserRole adminRole) {
 		LOG.info("Checking AdminRolePermissionList to include all permissions");
-		Set<UserPermission> grantedPermissions = adminRole.getUserPermissions();
-		List<UserPermission> permissions = roleManager.getAllPermissions();
+		Set<DBUserPermission> grantedPermissions = adminRole.getUserPermissions();
+		List<DBUserPermission> permissions = roleManager.getAllPermissions();
 		if (permissions == null || permissions.size() == 0) {
 			throw new RuntimeException(
 					"Inconsistent state: The permission list should have been created!");
 		}
-		for (UserPermission userPermission : permissions) {
+		for (DBUserPermission userPermission : permissions) {
 			if (!grantedPermissions.contains(userPermission)) {
 				LOG.info("Adding permission " + userPermission.getPermissionName()
 						+ " to admin role");
@@ -148,7 +150,7 @@ public class ApplicationInitializer {
 		for (PermissionEnum permission : values) {
 
 			if (roleManager.getPermissionByName(permission.name()) == null) {
-				UserPermission perm = new UserPermission();
+				DBUserPermission perm = new DBUserPermission();
 				perm.setPermissionName(permission.name());
 				roleManager.createPermission(perm);
 			} else {

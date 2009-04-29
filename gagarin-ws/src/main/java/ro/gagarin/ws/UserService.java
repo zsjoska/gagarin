@@ -18,8 +18,9 @@ import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.exceptions.UserAlreadyExistsException;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
-import ro.gagarin.user.User;
-import ro.gagarin.user.UserPermission;
+import ro.gagarin.user.DBUser;
+import ro.gagarin.user.DBUserPermission;
+import ro.gagarin.user.DBUserRole;
 import ro.gagarin.user.UserRole;
 
 @WebService
@@ -28,7 +29,7 @@ public class UserService {
 	private static final transient Logger LOG = Logger.getLogger(UserService.class);
 
 	@WebMethod
-	public Long createUser(String sessionId, User user) throws SessionNotFoundException,
+	public Long createUser(String sessionId, DBUser user) throws SessionNotFoundException,
 			FieldRequiredException, UserAlreadyExistsException, PermissionDeniedException {
 		LOG.info("createUser " + user.getUsername());
 
@@ -58,7 +59,7 @@ public class UserService {
 	}
 
 	@WebMethod
-	public List<UserRole> getRoleList(String sessionId) throws SessionNotFoundException,
+	public List<DBUserRole> getRoleList(String sessionId) throws SessionNotFoundException,
 			PermissionDeniedException {
 		SessionManager sessionManager = ModelFactory.getSessionManager();
 		Session session = sessionManager.getSessionById(sessionId);
@@ -102,7 +103,7 @@ public class UserService {
 	}
 
 	@WebMethod
-	public List<UserPermission> getAllPermissionList(String session) {
+	public List<DBUserPermission> getAllPermissionList(String session) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -8,7 +8,9 @@ import org.junit.Test;
 
 import ro.gagarin.exceptions.AlreadyExistsException;
 import ro.gagarin.session.Session;
+import ro.gagarin.user.DBUserPermission;
 import ro.gagarin.user.UserPermission;
+import ro.gagarin.user.DBUserRole;
 import ro.gagarin.user.UserRole;
 
 /**
@@ -21,7 +23,7 @@ public class RoleTest {
 	@Test
 	public void createGetDeleteSimpleRole() throws AlreadyExistsException {
 		RoleManager roleManager = ModelFactory.getRoleManager(session);
-		UserRole role = new UserRole();
+		DBUserRole role = new DBUserRole();
 		role.setRoleName("A_ROLE");
 		roleManager.createRole(role);
 
@@ -40,7 +42,7 @@ public class RoleTest {
 	public void createGetDeleteSimplePermission() throws AlreadyExistsException {
 		RoleManager roleManager = ModelFactory.getRoleManager(session);
 
-		UserPermission perm = new UserPermission();
+		DBUserPermission perm = new DBUserPermission();
 		perm.setPermissionName("A_PERMISSION");
 		roleManager.createPermission(perm);
 
@@ -58,10 +60,10 @@ public class RoleTest {
 	@Test
 	public void createRoleWithPermission() throws AlreadyExistsException {
 		RoleManager roleManager = ModelFactory.getRoleManager(session);
-		UserRole role = new UserRole();
+		DBUserRole role = new DBUserRole();
 		role.setRoleName("C_ROLE");
 
-		UserPermission perm = new UserPermission();
+		DBUserPermission perm = new DBUserPermission();
 		perm.setPermissionName("C_PERMISSION");
 
 		role.getUserPermissions().add(perm);
@@ -89,12 +91,12 @@ public class RoleTest {
 	@Test
 	public void createRoleWith2Permissions() throws AlreadyExistsException {
 		RoleManager roleManager = ModelFactory.getRoleManager(session);
-		UserRole role = new UserRole();
+		DBUserRole role = new DBUserRole();
 		role.setRoleName("C_ROLE");
 
-		UserPermission perm1 = new UserPermission();
+		DBUserPermission perm1 = new DBUserPermission();
 		perm1.setPermissionName("C_PERMISSION1");
-		UserPermission perm2 = new UserPermission();
+		DBUserPermission perm2 = new DBUserPermission();
 		perm2.setPermissionName("C_PERMISSION2");
 
 		role.getUserPermissions().add(perm1);
@@ -131,16 +133,16 @@ public class RoleTest {
 	@Test
 	public void addPermissionToRole() throws AlreadyExistsException {
 		RoleManager roleManager = ModelFactory.getRoleManager(session);
-		UserRole role = roleManager.getRoleByName("B_ROLE");
+		DBUserRole role = roleManager.getRoleByName("B_ROLE");
 		if (role == null) {
-			role = new UserRole();
+			role = new DBUserRole();
 			role.setRoleName("B_ROLE");
 			roleManager.createRole(role);
 		}
 
 		System.out.println("Permissions:" + role.getUserPermissions().size());
 
-		UserPermission permission = new UserPermission();
+		DBUserPermission permission = new DBUserPermission();
 		permission.setPermissionName("PERM" + role.getUserPermissions().size());
 
 		role.getUserPermissions().add(permission);

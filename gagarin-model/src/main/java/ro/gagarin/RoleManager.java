@@ -2,18 +2,20 @@ package ro.gagarin;
 
 import java.util.List;
 
+import ro.gagarin.user.DBUserPermission;
 import ro.gagarin.user.UserPermission;
+import ro.gagarin.user.DBUserRole;
 import ro.gagarin.user.UserRole;
 
 public interface RoleManager extends BaseManager {
 
-	UserRole getRoleByName(String roleName);
+	DBUserRole getRoleByName(String roleName);
 
-	long createRole(UserRole role);
+	long createRole(DBUserRole role);
 
-	long createPermission(UserPermission perm);
+	long createPermission(DBUserPermission perm);
 
-	List<UserPermission> getAllPermissions();
+	List<DBUserPermission> getAllPermissions();
 
 	void deleteRole(UserRole role2);
 
@@ -21,8 +23,8 @@ public interface RoleManager extends BaseManager {
 
 	void deletePermission(UserPermission perm);
 
-	List<UserPermission> substractUsersRolePermissions(UserRole main, UserRole substract);
+	List<DBUserPermission> substractUsersRolePermissions(UserRole main, UserRole substract);
 
-	List<UserRole> getAllRoles();
+	List<DBUserRole> getAllRoles();
 
 }

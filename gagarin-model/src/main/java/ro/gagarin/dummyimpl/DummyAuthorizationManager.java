@@ -1,4 +1,4 @@
-package ro.gagarin.user;
+package ro.gagarin.dummyimpl;
 
 import java.util.Iterator;
 import java.util.List;
@@ -11,6 +11,10 @@ import ro.gagarin.RoleManager;
 import ro.gagarin.UserManager;
 import ro.gagarin.exceptions.PermissionDeniedException;
 import ro.gagarin.session.Session;
+import ro.gagarin.user.DBUserPermission;
+import ro.gagarin.user.PermissionEnum;
+import ro.gagarin.user.User;
+import ro.gagarin.user.UserPermission;
 
 public class DummyAuthorizationManager implements AuthorizationManager {
 	private static final transient Logger LOG = Logger.getLogger(DummyAuthorizationManager.class);
@@ -19,7 +23,7 @@ public class DummyAuthorizationManager implements AuthorizationManager {
 	public void checkUserRole(Session session, User user) throws PermissionDeniedException {
 		User sessionUser = session.getUser();
 		RoleManager roleManager = ModelFactory.getRoleManager(session);
-		List<UserPermission> leftList = roleManager.substractUsersRolePermissions(user.getRole(),
+		List<DBUserPermission> leftList = roleManager.substractUsersRolePermissions(user.getRole(),
 				sessionUser.getRole());
 		LOG.debug("left permissions:" + leftList.toString());
 		roleManager.release();
@@ -35,9 +39,10 @@ public class DummyAuthorizationManager implements AuthorizationManager {
 
 		User user = userManager.getUserByUsername(session.getUser().getUsername());
 
-		Iterator<UserPermission> iterator = user.getRole().getUserPermissions().iterator();
+		Iterator<? extends UserPermission> iterator = user.getRole().getUserPermissions()
+				.iterator();
 		while (iterator.hasNext()) {
-			UserPermission userPermission = (UserPermission) iterator.next();
+			UserPermission userPermission = iterator.next();
 			if (userPermission.getPermissionName().equals(reqPermission.name())) {
 				LOG.debug(reqPermission.name() + " was found for user " + user.getUsername());
 				return;

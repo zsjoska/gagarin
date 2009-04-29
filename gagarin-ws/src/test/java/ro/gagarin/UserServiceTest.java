@@ -10,8 +10,9 @@ import ro.gagarin.exceptions.PermissionDeniedException;
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.exceptions.UserAlreadyExistsException;
 import ro.gagarin.exceptions.UserNotFoundException;
-import ro.gagarin.user.User;
-import ro.gagarin.user.UserPermission;
+import ro.gagarin.user.DBUser;
+import ro.gagarin.user.DBUserPermission;
+import ro.gagarin.user.DBUserRole;
 import ro.gagarin.user.UserRole;
 import ro.gagarin.ws.Authentication;
 import ro.gagarin.ws.UserService;
@@ -36,9 +37,9 @@ public class UserServiceTest {
 
 		UserService userService = new UserService();
 
-		List<UserRole> roles = userService.getRoleList(session);
+		List<DBUserRole> roles = userService.getRoleList(session);
 
-		User user = new User();
+		DBUser user = new DBUser();
 		user.setUsername(username);
 		user.setPassword("password");
 		user.setRole(roles.get(0));
@@ -47,9 +48,9 @@ public class UserServiceTest {
 	}
 
 	@Test
-	public void testCreateRole() {
+	public void testCreateRole() throws SessionNotFoundException, PermissionDeniedException {
 		UserService userService = new UserService();
-		List<UserPermission> list = userService.getAllPermissionList(session);
+		List<DBUserPermission> list = userService.getAllPermissionList(session);
 		UserRole role = userService.createRoleWithPermissions(session,
 				new String[] { "CREATE_USER" });
 	}

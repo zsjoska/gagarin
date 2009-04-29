@@ -1,4 +1,4 @@
-package ro.gagarin.user;
+package ro.gagarin.dummyimpl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,23 +10,22 @@ import ro.gagarin.UserManager;
 import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.UserAlreadyExistsException;
 import ro.gagarin.exceptions.UserNotFoundException;
+import ro.gagarin.user.DBUser;
+import ro.gagarin.user.User;
+import ro.gagarin.user.UserRole;
 
 public class DummyUserManager implements UserManager {
 
-	private static final transient Logger LOG = Logger
-			.getLogger(DummyUserManager.class);
+	private static final transient Logger LOG = Logger.getLogger(DummyUserManager.class);
 
-
-	private static HashMap<Long, User> users_id = new HashMap<Long, User>();
-	private static HashMap<String, User> users_userName = new HashMap<String, User>();
+	private static HashMap<Long, DBUser> users_id = new HashMap<Long, DBUser>();
+	private static HashMap<String, DBUser> users_userName = new HashMap<String, DBUser>();
 
 	public DummyUserManager() {
 	}
 
-
 	@Override
-	public User userLogin(String username, String password)
-			throws UserNotFoundException {
+	public User userLogin(String username, String password) throws UserNotFoundException {
 		User user = DummyUserManager.users_userName.get(username);
 		if (user != null && user.getPassword().equals(password)) {
 			return user;
@@ -36,8 +35,7 @@ public class DummyUserManager implements UserManager {
 	}
 
 	@Override
-	public long createUser(User user) throws FieldRequiredException,
-			UserAlreadyExistsException {
+	public long createUser(DBUser user) throws FieldRequiredException, UserAlreadyExistsException {
 
 		requireStringField(user.getUsername(), "username");
 
@@ -51,10 +49,9 @@ public class DummyUserManager implements UserManager {
 		return user.getId();
 	}
 
-	private void requireStringField(String value, String fieldname)
-			throws FieldRequiredException {
+	private void requireStringField(String value, String fieldname) throws FieldRequiredException {
 		if (value == null || value.length() == 0)
-			throw new FieldRequiredException(fieldname, User.class);
+			throw new FieldRequiredException(fieldname, DBUser.class);
 	}
 
 	@Override
@@ -75,7 +72,7 @@ public class DummyUserManager implements UserManager {
 	@Override
 	public List<User> getUsersWithRole(UserRole role) {
 		ArrayList<User> users = new ArrayList<User>();
-		for (User user : DummyUserManager.users_id.values()) {
+		for (DBUser user : DummyUserManager.users_id.values()) {
 			if (role.getRoleName().equals(user.getRole().getRoleName()))
 				users.add(user);
 		}

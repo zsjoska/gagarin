@@ -1,11 +1,11 @@
 package ro.gagarin;
 
 import ro.gagarin.config.FileConfigurationManager;
+import ro.gagarin.dummyimpl.DummyAuthorizationManager;
 import ro.gagarin.hibernate.HibernateRoleManager;
 import ro.gagarin.hibernate.HibernateUserManager;
 import ro.gagarin.session.BasicSessionManager;
 import ro.gagarin.session.Session;
-import ro.gagarin.user.DummyAuthorizationManager;
 
 /**
  * Factory class for business-logic implementation. All main sections of the

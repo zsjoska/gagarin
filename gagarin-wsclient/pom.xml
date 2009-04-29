@@ -50,28 +50,52 @@
 			<version>1.2.12</version>
 			<scope>compile</scope>
 		</dependency>
+		<dependency>
+			<groupId>ro.gagarin</groupId>
+			<artifactId>gagarin-ws</artifactId>
+			<version>1.0-SNAPSHOT</version>
+			<type>war</type>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
+			<!--
+				plugin> <groupId>org.codehaus.mojo</groupId>
+				<artifactId>jaxws-maven-plugin</artifactId> <executions> <execution>
+				<goals> <goal>wsimport</goal> </goals> <configuration> <wsdlUrls>
+				<wsdlUrl> http://localhost:8080/gagarin-ws/ws/AuthService?wsdl
+				</wsdlUrl> <wsdlUrl>
+				http://localhost:8080/gagarin-ws/ws/UserService?wsdl </wsdlUrl>
+				</wsdlUrls> <packageName>ro.gagarin </packageName>
+				<verbose>true</verbose> </configuration> </execution> </executions>
+				</plugin
+			-->
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>jaxws-maven-plugin</artifactId>
+				<groupId>org.mortbay.jetty</groupId>
+				<artifactId>maven-jetty-plugin</artifactId>
+				<version>6.1.16</version>
+				<configuration>
+					<scanIntervalSeconds>0</scanIntervalSeconds>
+					<daemon>false</daemon>
+					<stopKey>foo</stopKey>
+					<stopPort>9999</stopPort>
+					<webApp>../gagarin-ws/target/gagarin-ws-1.0-SNAPSHOT.war</webApp>
+					<contextPath>/gagarin-ws</contextPath>
+				</configuration>
 				<executions>
 					<execution>
+						<id>start-jetty</id>
+						<phase>generate-sources</phase>
 						<goals>
-							<goal>wsimport</goal>
+							<goal>run-war</goal>
 						</goals>
-						<configuration>
-							<wsdlUrls>
-								<wsdlUrl> http://localhost:8080/gagarin-ws/ws/AuthService?wsdl 
-								</wsdlUrl>
-								<wsdlUrl> http://localhost:8080/gagarin-ws/ws/UserService?wsdl 
-								</wsdlUrl>
-							</wsdlUrls>
-							<packageName>ro.gagarin
-							</packageName>
-							<verbose>true</verbose>
-						</configuration>
+					</execution>
+					<execution>
+						<id>stop-jetty</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>stop</goal>
+						</goals>
 					</execution>
 				</executions>
 			</plugin>

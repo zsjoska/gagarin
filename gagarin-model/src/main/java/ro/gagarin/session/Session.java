@@ -1,5 +1,7 @@
 package ro.gagarin.session;
 
+import java.util.HashMap;
+
 import ro.gagarin.BaseManager;
 import ro.gagarin.user.BaseEntity;
 import ro.gagarin.user.User;
@@ -17,6 +19,8 @@ public class Session extends BaseEntity {
 	private User user;
 	private BaseManager manager;
 	private String sessionString;
+
+	HashMap<String, Object> properties = new HashMap<String, Object>();
 
 	public Session() {
 	}
@@ -87,5 +91,13 @@ public class Session extends BaseEntity {
 
 	public String getSessionString() {
 		return sessionString;
+	}
+
+	public void setProperty(Class<?> owner, Object object) {
+		this.properties.put(owner.getName(), object);
+	}
+
+	public Object getProperty(Class<?> owner) {
+		return this.properties.get(owner.getName());
 	}
 }

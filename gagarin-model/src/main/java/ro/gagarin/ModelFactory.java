@@ -2,6 +2,7 @@ package ro.gagarin;
 
 import ro.gagarin.config.FileConfigurationManager;
 import ro.gagarin.dummyimpl.DummyAuthorizationManager;
+import ro.gagarin.hibernate.BaseHibernateManager;
 import ro.gagarin.hibernate.HibernateRoleManager;
 import ro.gagarin.hibernate.HibernateUserManager;
 import ro.gagarin.session.BasicSessionManager;
@@ -31,16 +32,7 @@ public class ModelFactory {
 	}
 
 	public static RoleManager getRoleManager(Session session) {
-		synchronized (session) {
-			BaseManager manager = session.getManager();
-			if (manager == null) {
-				HibernateRoleManager roleManager = new HibernateRoleManager();
-				session.setManager(roleManager);
-				return roleManager;
-			} else {
-				return new HibernateRoleManager(manager);
-			}
-		}
+		return new HibernateRoleManager(session);
 	}
 
 	/**
@@ -49,21 +41,7 @@ public class ModelFactory {
 	 * @return the configured {@link UserManager} implementation
 	 */
 	public static UserManager getUserManager(Session session) {
-		synchronized (session) {
-			BaseManager manager = session.getManager();
-			if (manager == null) {
-				HibernateUserManager userManager = new HibernateUserManager();
-				session.setManager(userManager);
-				return userManager;
-			} else {
-				return new HibernateUserManager(manager);
-			}
-		}
-	}
-
-	@Deprecated
-	public static ConfigurationManager getConfigurationManager(BaseManager userManager) {
-		return FileConfigurationManager.getInstance();
+		return new HibernateUserManager(session);
 	}
 
 	/**
@@ -80,16 +58,21 @@ public class ModelFactory {
 		return new DummyAuthorizationManager();
 	}
 
-	public static void releaseManagers(Session session, BaseManager... baseManagers) {
+	public static void releaseSession(Session session) {
 
-		if (baseManagers == null)
-			return;
+		// TODO: find a better logic for release the manager in order that this
+		// code to not depend on BaseHibernateManager.class
+
+		// TODO: find a way to move this code to the sessionManager; see
+		// BasicSessionManager.destroySession(Session session)
 
 		synchronized (session) {
-			for (BaseManager baseManager : baseManagers) {
-				baseManager.release();
+			Class<?> key = BaseHibernateManager.class;
+			Object property = session.getProperty(key);
+			session.setProperty(key, null);
+			if (property instanceof BaseManager) {
+				((BaseManager) property).release();
 			}
-			session.setManager(null);
 		}
 	}
 

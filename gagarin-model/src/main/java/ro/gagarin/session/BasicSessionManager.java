@@ -18,16 +18,18 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
 	private static final BasicSessionManager INSTANCE = new BasicSessionManager();
 
 	private long USER_SESSION_TIMEOUT;
+	private long SESSION_CHECK_PERIOD;
 
 	private final HashMap<String, Session> sessions = new HashMap<String, Session>();
 
 	private SessionCheckerThread chkSession = null;
 
-	private long SESSION_CHECK_PERIOD;
-
 	private BasicSessionManager() {
 		LOG.debug("Creating BasicSessionManager");
-		ConfigurationManager cfgManager = ModelFactory.getConfigurationManager(this);
+
+		// TODO: find a way to have acces to configuration and fix this null
+		ConfigurationManager cfgManager = ModelFactory.getConfigurationManager(null);
+
 		cfgManager.registerForChange(this);
 		USER_SESSION_TIMEOUT = cfgManager.getLong(Config.USER_SESSION_TIMEOUT);
 		SESSION_CHECK_PERIOD = cfgManager.getLong(Config.SESSION_CHECK_PERIOD);
@@ -73,8 +75,10 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
 	@Override
 	public void logout(String id) {
 		Session session = this.sessions.get(id);
-		if (session != null)
-			destroySession(session);
+		if (session != null) {
+			// TODO: do something useful here
+		}
+		this.sessions.remove(id);
 	}
 
 	@Override
@@ -91,7 +95,10 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
 	@Override
 	public void destroySession(Session session) {
 		LOG.info("Destroy session " + session.getId());
-		this.sessions.remove(session.getSessionString());
+		synchronized (session) {
+			ModelFactory.releaseSession(session);
+			this.sessions.remove(session.getSessionString());
+		}
 	}
 
 	@Override

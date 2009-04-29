@@ -10,8 +10,8 @@ import javax.persistence.RollbackException;
 import org.apache.log4j.Logger;
 import org.hibernate.exception.ConstraintViolationException;
 
-import ro.gagarin.BaseManager;
 import ro.gagarin.RoleManager;
+import ro.gagarin.session.Session;
 import ro.gagarin.user.DBUserPermission;
 import ro.gagarin.user.DBUserRole;
 import ro.gagarin.user.UserPermission;
@@ -21,11 +21,8 @@ public class HibernateRoleManager extends BaseHibernateManager implements RoleMa
 
 	private static final transient Logger LOG = Logger.getLogger(HibernateRoleManager.class);
 
-	public HibernateRoleManager() {
-	}
-
-	public HibernateRoleManager(BaseManager mgr) {
-		super(mgr);
+	public HibernateRoleManager(Session session) {
+		super(session);
 	}
 
 	@Override
@@ -131,7 +128,7 @@ public class HibernateRoleManager extends BaseHibernateManager implements RoleMa
 	@Override
 	public List<DBUserRole> getAllRoles() {
 
-		Query query = getEM().createQuery("select r from UserRole r ");
+		Query query = getEM().createQuery("select r from DBUserRole r ");
 		return query.getResultList();
 	}
 
@@ -139,7 +136,7 @@ public class HibernateRoleManager extends BaseHibernateManager implements RoleMa
 	public List<DBUserPermission> substractUsersRolePermissions(UserRole main, UserRole substract) {
 		Query query = getEM()
 				.createQuery(
-						"select r from UserPermission r where r.id=:subRoleid and r not in (select p from UserPermission p where p.id=:mainRoleid)")
+						"select r from DBUserPermission r where r.id=:subRoleid and r not in (select p from DBUserPermission p where p.id=:mainRoleid)")
 				.setParameter("mainRoleid", main.getId()).setParameter("subRoleid",
 						substract.getId());
 		return query.getResultList();

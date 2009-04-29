@@ -61,6 +61,11 @@ public interface SessionManager extends BaseManager {
 	 */
 	void destroySession(Session session);
 
+	/**
+	 * Returns the time period for the Session Checker thread to check for
+	 * expired sessions
+	 * 
+	 * @return the time in miliseconds
+	 */
 	long getSessionCheckPeriod();
-
 }

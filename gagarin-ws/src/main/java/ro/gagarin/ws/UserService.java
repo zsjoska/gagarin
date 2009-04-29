@@ -17,10 +17,10 @@ import ro.gagarin.exceptions.PermissionDeniedException;
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.exceptions.UserAlreadyExistsException;
 import ro.gagarin.session.Session;
-import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.DBUser;
 import ro.gagarin.user.DBUserPermission;
 import ro.gagarin.user.DBUserRole;
+import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.UserRole;
 
 @WebService
@@ -54,7 +54,7 @@ public class UserService {
 					+ sessionId);
 			return userId;
 		} finally {
-			ModelFactory.releaseManagers(session, userManager, permissionManager, sessionManager);
+			ModelFactory.releaseSession(session);
 		}
 	}
 
@@ -76,7 +76,7 @@ public class UserService {
 			return roleManager.getAllRoles();
 
 		} finally {
-			ModelFactory.releaseManagers(session, permissionManager, roleManager, sessionManager);
+			ModelFactory.releaseSession(session);
 		}
 	}
 
@@ -98,7 +98,7 @@ public class UserService {
 			return null;
 
 		} finally {
-			ModelFactory.releaseManagers(session, permissionManager, roleManager, sessionManager);
+			ModelFactory.releaseSession(session);
 		}
 	}
 

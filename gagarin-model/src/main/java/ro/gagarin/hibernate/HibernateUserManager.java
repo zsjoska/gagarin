@@ -7,11 +7,11 @@ import javax.persistence.Query;
 
 import org.apache.log4j.Logger;
 
-import ro.gagarin.BaseManager;
 import ro.gagarin.UserManager;
 import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.UserAlreadyExistsException;
 import ro.gagarin.exceptions.UserNotFoundException;
+import ro.gagarin.session.Session;
 import ro.gagarin.user.DBUser;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserRole;
@@ -20,18 +20,15 @@ public class HibernateUserManager extends BaseHibernateManager implements UserMa
 
 	private static final transient Logger LOG = Logger.getLogger(HibernateUserManager.class);
 
-	public HibernateUserManager() {
-	}
-
-	public HibernateUserManager(BaseManager mgr) {
-		super(mgr);
+	public HibernateUserManager(Session session) {
+		super(session);
 	}
 
 	@Override
 	public User userLogin(String username, String password) throws UserNotFoundException {
 
 		Query query = getEM().createQuery(
-				"select u from User u where u.username=:username and u.password=:password");
+				"select u from DBUser u where u.username=:username and u.password=:password");
 		query.setParameter("username", username);
 		query.setParameter("password", password);
 

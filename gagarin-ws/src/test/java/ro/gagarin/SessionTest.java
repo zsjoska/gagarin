@@ -40,9 +40,7 @@ public class SessionTest {
 		user.setPassword("password1");
 		user.setRole(roleManager.getRoleByName(cfgManager.getString(Config.ADMIN_ROLE_NAME)));
 		userManager.createUser(user);
-		userManager.release();
-		roleManager.release();
-		cfgManager.release();
+		ModelFactory.releaseSession(session);
 
 		String session = authentication.createSession(null, null);
 		assertNotNull(session);

@@ -28,10 +28,11 @@ public class UserServiceTest {
 
 	@Test
 	public void createUser() throws FieldRequiredException_Exception,
-			SessionNotFoundException_Exception, UserAlreadyExistsException_Exception {
+			SessionNotFoundException_Exception, UserAlreadyExistsException_Exception,
+			PermissionDeniedException_Exception {
 		UserServiceService service = new UserServiceService();
 		UserService userAPI = service.getUserServicePort();
-		User user = new User();
+		DbUser user = new DbUser();
 		user.setUsername("wsUser1");
 		user.setPassword("wspassword1");
 		userAPI.createUser(session, user);

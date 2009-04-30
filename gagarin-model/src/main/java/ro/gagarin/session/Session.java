@@ -19,6 +19,7 @@ public class Session extends BaseEntity {
 	private User user;
 	private BaseManager manager;
 	private String sessionString;
+	private boolean busy;
 
 	HashMap<String, Object> properties = new HashMap<String, Object>();
 
@@ -99,5 +100,13 @@ public class Session extends BaseEntity {
 
 	public Object getProperty(Class<?> owner) {
 		return this.properties.get(owner.getName());
+	}
+
+	public void setBusy(boolean busy) {
+		this.busy = busy;
+	}
+
+	public boolean isBusy() {
+		return busy;
 	}
 }

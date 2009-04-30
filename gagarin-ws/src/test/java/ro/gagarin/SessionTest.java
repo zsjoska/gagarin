@@ -2,7 +2,6 @@ package ro.gagarin;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 import org.junit.Test;
@@ -64,9 +63,7 @@ public class SessionTest {
 		user.setRole(roleManager.getRoleByName(cfgManager.getString(Config.ADMIN_ROLE_NAME)));
 		userManager.createUser(user);
 
-		userManager.release();
-		roleManager.release();
-		cfgManager.release();
+		ModelFactory.releaseSession(session);
 
 		String session = authentication.createSession(null, null);
 		assertNotNull(session);
@@ -99,9 +96,7 @@ public class SessionTest {
 		user.setRole(roleManager.getRoleByName(cfgManager.getString(Config.ADMIN_ROLE_NAME)));
 		userManager.createUser(user);
 
-		userManager.release();
-		roleManager.release();
-		cfgManager.release();
+		ModelFactory.releaseSession(session);
 
 		String session = authentication.createSession(null, null);
 		assertNotNull(session);
@@ -127,14 +122,21 @@ public class SessionTest {
 		assertNotNull(session);
 		assertEquals("We just set the timeout to 100", session.getSessionTimeout(), 100);
 
-		session = sessionManager.getSessionById(session.getSessionString());
+		try {
+			session = sessionManager.acquireSession(session.getSessionString());
+		} catch (SessionNotFoundException e) {
+			fail("The session should be active");
+		}
 		assertNotNull(session);
 
 		Thread.sleep(110);
-		session = sessionManager.getSessionById(session.getSessionString());
-		assertNull("The session must be expired at this time", session);
+		try {
+			session = sessionManager.acquireSession(session.getSessionString());
+			fail("The session must be expired at this time");
+		} catch (SessionNotFoundException e) {
+			// expected exception
+		}
 
-		sessionManager.release();
-		cfgManager.release();
+		ModelFactory.releaseSession(session);
 	}
 }

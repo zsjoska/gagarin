@@ -10,6 +10,7 @@ import ro.gagarin.ModelFactory;
 import ro.gagarin.SessionManager;
 import ro.gagarin.config.Config;
 import ro.gagarin.config.SettingsChangeObserver;
+import ro.gagarin.exceptions.SessionNotFoundException;
 
 public class BasicSessionManager implements SessionManager, SettingsChangeObserver {
 
@@ -57,18 +58,6 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
 	@Override
 	public Session getSessionById(String sessionId) {
 		Session session = this.sessions.get(sessionId);
-
-		if (session == null) {
-			LOG.debug("The requested session was not found:" + sessionId);
-			return null;
-		}
-
-		if (session.isExpired()) {
-			LOG.debug("The requested session expired:" + sessionId);
-			return null;
-		}
-
-		session.setExpires(System.currentTimeMillis() + session.getSessionTimeout());
 		return session;
 	}
 
@@ -122,5 +111,30 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
 	public void release() {
 		// TODO: iterate remaining sessions and warn if an active session was
 		// left
+	}
+
+	@Override
+	public Session acquireSession(String sessionId) throws SessionNotFoundException {
+		Session session = getSessionById(sessionId);
+		if (session == null) {
+			LOG.debug("The requested session was not found:" + sessionId);
+			throw new SessionNotFoundException(sessionId);
+		}
+
+		if (session.isExpired()) {
+			LOG.info("The requested session expired:" + sessionId);
+			throw new SessionNotFoundException(session);
+		}
+
+		synchronized (session) {
+			if (session.isBusy()) {
+				LOG.info("The requested session is busy:" + sessionId);
+				throw new SessionNotFoundException(session);
+			}
+			session.setBusy(true);
+			session.setExpires(System.currentTimeMillis() + session.getSessionTimeout());
+		}
+
+		return session;
 	}
 }

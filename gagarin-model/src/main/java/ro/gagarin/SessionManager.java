@@ -2,6 +2,7 @@ package ro.gagarin;
 
 import java.util.ArrayList;
 
+import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.session.Session;
 
 /**
@@ -68,4 +69,6 @@ public interface SessionManager extends BaseManager {
 	 * @return the time in miliseconds
 	 */
 	long getSessionCheckPeriod();
+
+	Session acquireSession(String sessionID) throws SessionNotFoundException;
 }

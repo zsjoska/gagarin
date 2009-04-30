@@ -33,13 +33,11 @@ public class UserService {
 		LOG.info("createUser " + user.getUsername());
 
 		SessionManager sessionManager = ModelFactory.getSessionManager();
-		Session session = sessionManager.getSessionById(sessionId);
+		Session session = sessionManager.acquireSession(sessionId);
 		UserManager userManager = ModelFactory.getUserManager(session);
 		AuthorizationManager permissionManager = ModelFactory.getAuthorizationManager(session);
 
 		try {
-			if (session == null)
-				throw new SessionNotFoundException(sessionId);
 
 			// the session user must have CREATE_USER permission
 			permissionManager.requiresPermission(session, PermissionEnum.CREATE_USER);
@@ -61,13 +59,11 @@ public class UserService {
 	public List<DBUserRole> getRoleList(String sessionId) throws SessionNotFoundException,
 			PermissionDeniedException {
 		SessionManager sessionManager = ModelFactory.getSessionManager();
-		Session session = sessionManager.getSessionById(sessionId);
+		Session session = sessionManager.acquireSession(sessionId);
 		RoleManager roleManager = ModelFactory.getRoleManager(session);
 		AuthorizationManager permissionManager = ModelFactory.getAuthorizationManager(session);
 
 		try {
-			if (session == null)
-				throw new SessionNotFoundException(sessionId);
 
 			// the session user must have LIST_ROLES permission
 			permissionManager.requiresPermission(session, PermissionEnum.LIST_ROLES);
@@ -83,13 +79,11 @@ public class UserService {
 	public DBUserRole createRoleWithPermissions(String sessionId, String[] strings)
 			throws SessionNotFoundException, PermissionDeniedException {
 		SessionManager sessionManager = ModelFactory.getSessionManager();
-		Session session = sessionManager.getSessionById(sessionId);
+		Session session = sessionManager.acquireSession(sessionId);
 		RoleManager roleManager = ModelFactory.getRoleManager(session);
 		AuthorizationManager permissionManager = ModelFactory.getAuthorizationManager(session);
 
 		try {
-			if (session == null)
-				throw new SessionNotFoundException(sessionId);
 
 			// the session user must have LIST_ROLES permission
 			permissionManager.requiresPermission(session, PermissionEnum.LIST_ROLES);

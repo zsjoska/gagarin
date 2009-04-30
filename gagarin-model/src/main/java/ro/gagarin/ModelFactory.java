@@ -73,6 +73,7 @@ public class ModelFactory {
 			if (property instanceof BaseManager) {
 				((BaseManager) property).release();
 			}
+			session.setBusy(false);
 		}
 	}
 

@@ -55,7 +55,7 @@ public class Authentication {
 		LOG.info("Login User " + username + "; extra:" + Arrays.toString(extra));
 
 		SessionManager sessionManager = ModelFactory.getSessionManager();
-		Session session = sessionManager.getSessionById(sessionID);
+		Session session = sessionManager.acquireSession(sessionID);
 		if (session == null)
 			throw new SessionNotFoundException(sessionID);
 

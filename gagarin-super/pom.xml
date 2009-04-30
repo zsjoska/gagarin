@@ -10,7 +10,10 @@
 	<modules>
 		<module>../gagarin-ws</module>
 		<module>../gagarin-model</module>
+		<module>../gagarin-wsclient</module>
 	</modules>
+	<dependencies>
+	</dependencies>
 	<build>
 		<plugins>
 			<plugin>

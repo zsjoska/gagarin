@@ -21,7 +21,6 @@ import ro.gagarin.user.DBUser;
 import ro.gagarin.user.DBUserPermission;
 import ro.gagarin.user.DBUserRole;
 import ro.gagarin.user.PermissionEnum;
-import ro.gagarin.user.UserRole;
 
 @WebService
 public class UserService {
@@ -81,7 +80,7 @@ public class UserService {
 	}
 
 	@WebMethod
-	public UserRole createRoleWithPermissions(String sessionId, String[] strings)
+	public DBUserRole createRoleWithPermissions(String sessionId, String[] strings)
 			throws SessionNotFoundException, PermissionDeniedException {
 		SessionManager sessionManager = ModelFactory.getSessionManager();
 		Session session = sessionManager.getSessionById(sessionId);

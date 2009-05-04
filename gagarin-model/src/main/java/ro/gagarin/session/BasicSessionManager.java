@@ -108,12 +108,6 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
 	}
 
 	@Override
-	public void release() {
-		// TODO: iterate remaining sessions and warn if an active session was
-		// left
-	}
-
-	@Override
 	public Session acquireSession(String sessionId) throws SessionNotFoundException {
 		Session session = getSessionById(sessionId);
 		if (session == null) {

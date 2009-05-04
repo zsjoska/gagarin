@@ -15,7 +15,7 @@ import ro.gagarin.user.UserRole;
  * @author zsjoska
  * 
  */
-public interface UserDAO extends BaseManager {
+public interface UserDAO extends BaseDAO {
 
 	/**
 	 * Verifies the validity of <code>username</code> and <code>password</code>

@@ -31,21 +31,17 @@ public class Authentication {
 	public String createSession(String language, String reason) {
 
 		SessionManager sessionManager = ModelFactory.getSessionManager();
-		try {
 
-			if (language == null) {
-				language = "en_us";
-			}
-
-			Session session = sessionManager.createSession(language, reason);
-			LOG.info("Session created:" + session.getId() + "; reason:" + session.getReason()
-					+ "; language:" + session.getLanguage());
-
-			return session.getSessionString();
-
-		} finally {
-			sessionManager.release();
+		if (language == null) {
+			language = "en_us";
 		}
+
+		Session session = sessionManager.createSession(language, reason);
+		LOG.info("Session created:" + session.getId() + "; reason:" + session.getReason()
+				+ "; language:" + session.getLanguage());
+
+		return session.getSessionString();
+
 	}
 
 	@WebMethod
@@ -77,10 +73,6 @@ public class Authentication {
 	public void logout(String sessionId) {
 		LOG.info("Session logout " + sessionId);
 		SessionManager sessionManager = ModelFactory.getSessionManager();
-		try {
-			sessionManager.logout(sessionId);
-		} finally {
-			sessionManager.release();
-		}
+		sessionManager.logout(sessionId);
 	}
 }

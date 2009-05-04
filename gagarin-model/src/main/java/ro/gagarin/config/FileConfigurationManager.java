@@ -80,10 +80,4 @@ public class FileConfigurationManager implements ConfigurationManager {
 		return strValue;
 	}
 
-	@Override
-	public void release() {
-		// TODO Auto-generated method stub
-
-	}
-
 }

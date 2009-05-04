@@ -53,10 +53,4 @@ public class DummyAuthorizationManager implements AuthorizationManager {
 		throw new PermissionDeniedException(user.getUsername(), reqPermission.name());
 	}
 
-	@Override
-	public void release() {
-		// TODO Auto-generated method stub
-
-	}
-
 }

@@ -1,5 +1,5 @@
 package ro.gagarin;
 
-public interface BaseManager {
+public interface BaseDAO {
 	void release();
 }

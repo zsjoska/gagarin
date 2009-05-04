@@ -12,7 +12,7 @@ import ro.gagarin.session.Session;
  * @author zsjoska
  * 
  */
-public interface SessionManager extends BaseManager {
+public interface SessionManager {
 
 	/**
 	 * Creates a new, empty session with the specified language and scope. The

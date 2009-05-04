@@ -7,7 +7,7 @@ import ro.gagarin.user.DBUserRole;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
 
-public interface RoleDAO extends BaseManager {
+public interface RoleDAO extends BaseDAO {
 
 	DBUserRole getRoleByName(String roleName);
 

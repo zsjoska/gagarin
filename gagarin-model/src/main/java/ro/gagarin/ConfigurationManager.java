@@ -10,7 +10,7 @@ import ro.gagarin.config.SettingsChangeObserver;
  * @author zsjoska
  * 
  */
-public interface ConfigurationManager extends BaseManager {
+public interface ConfigurationManager {
 
 	/**
 	 * Returns a configuration value converted to long

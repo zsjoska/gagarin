@@ -60,9 +60,7 @@ public class ApplicationInitializer {
 			LOG.error("Application initializer failed for task:" + initializer.getTask(), e);
 			throw new RuntimeException(e);
 		} finally {
-			roleManager.release();
-			userManager.release();
-			cfgManager.release();
+			ModelFactory.releaseSession(session);
 		}
 
 		LOG.info("Application initializer finished");

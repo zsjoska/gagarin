@@ -2,7 +2,7 @@ package ro.gagarin.session;
 
 import java.util.HashMap;
 
-import ro.gagarin.BaseManager;
+import ro.gagarin.BaseDAO;
 import ro.gagarin.user.BaseEntity;
 import ro.gagarin.user.User;
 
@@ -17,7 +17,7 @@ public class Session extends BaseEntity {
 	private String language;
 	private String reason;
 	private User user;
-	private BaseManager manager;
+	private BaseDAO manager;
 	private String sessionString;
 	private boolean busy;
 
@@ -70,11 +70,11 @@ public class Session extends BaseEntity {
 		return sessionTimeout;
 	}
 
-	public BaseManager getManager() {
+	public BaseDAO getManager() {
 		return this.manager;
 	}
 
-	public void setManager(BaseManager manager) {
+	public void setManager(BaseDAO manager) {
 		this.manager = manager;
 	}
 

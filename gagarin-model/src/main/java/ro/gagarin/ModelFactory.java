@@ -60,8 +60,8 @@ public class ModelFactory {
 			Class<?> key = BaseHibernateDAO.class;
 			Object property = session.getProperty(key);
 			session.setProperty(key, null);
-			if (property instanceof BaseManager) {
-				((BaseManager) property).release();
+			if (property instanceof BaseDAO) {
+				((BaseDAO) property).release();
 			}
 			session.setBusy(false);
 		}

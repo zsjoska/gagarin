@@ -1,4 +1,4 @@
-package ro.gagarin.user;
+package ro.gagarin.hibernate.objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -6,6 +6,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import ro.gagarin.user.BaseEntity;
+import ro.gagarin.user.User;
+import ro.gagarin.user.UserRole;
 
 @Entity
 @Table(name = "USERS")

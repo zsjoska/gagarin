@@ -8,8 +8,8 @@ import org.junit.Test;
 import ro.gagarin.config.Config;
 import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.UserAlreadyExistsException;
+import ro.gagarin.hibernate.objects.DBUser;
 import ro.gagarin.session.Session;
-import ro.gagarin.user.DBUser;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserRole;
 

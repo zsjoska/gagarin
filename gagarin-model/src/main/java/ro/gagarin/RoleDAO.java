@@ -2,8 +2,8 @@ package ro.gagarin;
 
 import java.util.List;
 
-import ro.gagarin.user.DBUserPermission;
-import ro.gagarin.user.DBUserRole;
+import ro.gagarin.hibernate.objects.DBUserPermission;
+import ro.gagarin.hibernate.objects.DBUserRole;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
 

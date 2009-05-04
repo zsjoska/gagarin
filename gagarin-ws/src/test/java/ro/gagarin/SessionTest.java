@@ -11,8 +11,8 @@ import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.exceptions.UserAlreadyExistsException;
 import ro.gagarin.exceptions.UserNotFoundException;
+import ro.gagarin.hibernate.objects.DBUser;
 import ro.gagarin.session.Session;
-import ro.gagarin.user.DBUser;
 import ro.gagarin.ws.Authentication;
 
 /**

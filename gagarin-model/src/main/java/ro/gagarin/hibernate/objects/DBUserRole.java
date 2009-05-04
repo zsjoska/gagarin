@@ -1,4 +1,4 @@
-package ro.gagarin.user;
+package ro.gagarin.hibernate.objects;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -9,6 +9,9 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+
+import ro.gagarin.user.BaseEntity;
+import ro.gagarin.user.UserRole;
 
 @Entity
 @Table(name = "ROLES")

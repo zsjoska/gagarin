@@ -7,9 +7,9 @@ import static org.junit.Assert.assertNull;
 import org.junit.Test;
 
 import ro.gagarin.exceptions.AlreadyExistsException;
+import ro.gagarin.hibernate.objects.DBUserPermission;
+import ro.gagarin.hibernate.objects.DBUserRole;
 import ro.gagarin.session.Session;
-import ro.gagarin.user.DBUserPermission;
-import ro.gagarin.user.DBUserRole;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
 

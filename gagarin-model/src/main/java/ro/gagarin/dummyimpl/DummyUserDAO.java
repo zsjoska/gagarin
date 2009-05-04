@@ -10,7 +10,7 @@ import ro.gagarin.UserDAO;
 import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.UserAlreadyExistsException;
 import ro.gagarin.exceptions.UserNotFoundException;
-import ro.gagarin.user.DBUser;
+import ro.gagarin.hibernate.objects.DBUser;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserRole;
 

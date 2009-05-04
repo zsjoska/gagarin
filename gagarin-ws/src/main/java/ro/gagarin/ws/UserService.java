@@ -16,10 +16,10 @@ import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.PermissionDeniedException;
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.exceptions.UserAlreadyExistsException;
+import ro.gagarin.hibernate.objects.DBUser;
+import ro.gagarin.hibernate.objects.DBUserPermission;
+import ro.gagarin.hibernate.objects.DBUserRole;
 import ro.gagarin.session.Session;
-import ro.gagarin.user.DBUser;
-import ro.gagarin.user.DBUserPermission;
-import ro.gagarin.user.DBUserRole;
 import ro.gagarin.user.PermissionEnum;
 
 @WebService

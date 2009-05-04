@@ -12,7 +12,7 @@ import org.apache.log4j.Logger;
 
 import ro.gagarin.ModelFactory;
 import ro.gagarin.SessionManager;
-import ro.gagarin.UserManager;
+import ro.gagarin.UserDAO;
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.exceptions.UserNotFoundException;
 import ro.gagarin.session.Session;
@@ -61,7 +61,7 @@ public class Authentication {
 
 		try {
 
-			UserManager userManager = ModelFactory.getUserManager(session);
+			UserDAO userManager = ModelFactory.getDAOManager().getUserDAO(session);
 			User user = userManager.userLogin(username, password);
 
 			session.setUser(user);

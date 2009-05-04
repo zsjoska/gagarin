@@ -9,8 +9,8 @@ import org.junit.Test;
 import ro.gagarin.exceptions.AlreadyExistsException;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.DBUserPermission;
-import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.DBUserRole;
+import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
 
 /**
@@ -22,7 +22,7 @@ public class RoleTest {
 
 	@Test
 	public void createGetDeleteSimpleRole() throws AlreadyExistsException {
-		RoleManager roleManager = ModelFactory.getRoleManager(session);
+		RoleDAO roleManager = ModelFactory.getDAOManager().getRoleDAO(session);
 		DBUserRole role = new DBUserRole();
 		role.setRoleName("A_ROLE");
 		roleManager.createRole(role);
@@ -40,7 +40,7 @@ public class RoleTest {
 
 	@Test
 	public void createGetDeleteSimplePermission() throws AlreadyExistsException {
-		RoleManager roleManager = ModelFactory.getRoleManager(session);
+		RoleDAO roleManager = ModelFactory.getDAOManager().getRoleDAO(session);
 
 		DBUserPermission perm = new DBUserPermission();
 		perm.setPermissionName("A_PERMISSION");
@@ -59,7 +59,7 @@ public class RoleTest {
 
 	@Test
 	public void createRoleWithPermission() throws AlreadyExistsException {
-		RoleManager roleManager = ModelFactory.getRoleManager(session);
+		RoleDAO roleManager = ModelFactory.getDAOManager().getRoleDAO(session);
 		DBUserRole role = new DBUserRole();
 		role.setRoleName("C_ROLE");
 
@@ -90,7 +90,7 @@ public class RoleTest {
 
 	@Test
 	public void createRoleWith2Permissions() throws AlreadyExistsException {
-		RoleManager roleManager = ModelFactory.getRoleManager(session);
+		RoleDAO roleManager = ModelFactory.getDAOManager().getRoleDAO(session);
 		DBUserRole role = new DBUserRole();
 		role.setRoleName("C_ROLE");
 
@@ -132,7 +132,7 @@ public class RoleTest {
 
 	@Test
 	public void addPermissionToRole() throws AlreadyExistsException {
-		RoleManager roleManager = ModelFactory.getRoleManager(session);
+		RoleDAO roleManager = ModelFactory.getDAOManager().getRoleDAO(session);
 		DBUserRole role = roleManager.getRoleByName("B_ROLE");
 		if (role == null) {
 			role = new DBUserRole();

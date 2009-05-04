@@ -25,7 +25,7 @@ public class UserTest {
 
 	@Test
 	public void getUserByNameInexistent() {
-		UserManager usrManager = ModelFactory.getUserManager(session);
+		UserDAO usrManager = ModelFactory.getDAOManager().getUserDAO(session);
 		try {
 			User user = usrManager.getUserByUsername(username);
 			assertNull("The user could not exists", user);
@@ -37,8 +37,8 @@ public class UserTest {
 	@Test
 	public void createUser() throws FieldRequiredException, UserAlreadyExistsException {
 
-		UserManager usrManager = ModelFactory.getUserManager(session);
-		RoleManager roleManager = ModelFactory.getRoleManager(session);
+		UserDAO usrManager = ModelFactory.getDAOManager().getUserDAO(session);
+		RoleDAO roleManager = ModelFactory.getDAOManager().getRoleDAO(session);
 		try {
 			UserRole adminRole = roleManager.getRoleByName(configManager
 					.getString(Config.ADMIN_ROLE_NAME));

@@ -10,18 +10,18 @@ import javax.persistence.RollbackException;
 import org.apache.log4j.Logger;
 import org.hibernate.exception.ConstraintViolationException;
 
-import ro.gagarin.RoleManager;
+import ro.gagarin.RoleDAO;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.DBUserPermission;
 import ro.gagarin.user.DBUserRole;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
 
-public class HibernateRoleManager extends BaseHibernateManager implements RoleManager {
+public class HibernateRoleDAO extends BaseHibernateDAO implements RoleDAO {
 
-	private static final transient Logger LOG = Logger.getLogger(HibernateRoleManager.class);
+	private static final transient Logger LOG = Logger.getLogger(HibernateRoleDAO.class);
 
-	public HibernateRoleManager(Session session) {
+	public HibernateRoleDAO(Session session) {
 		super(session);
 	}
 

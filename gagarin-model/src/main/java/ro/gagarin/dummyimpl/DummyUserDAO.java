@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import ro.gagarin.UserManager;
+import ro.gagarin.UserDAO;
 import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.UserAlreadyExistsException;
 import ro.gagarin.exceptions.UserNotFoundException;
@@ -14,19 +14,19 @@ import ro.gagarin.user.DBUser;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserRole;
 
-public class DummyUserManager implements UserManager {
+public class DummyUserDAO implements UserDAO {
 
-	private static final transient Logger LOG = Logger.getLogger(DummyUserManager.class);
+	private static final transient Logger LOG = Logger.getLogger(DummyUserDAO.class);
 
 	private static HashMap<Long, DBUser> users_id = new HashMap<Long, DBUser>();
 	private static HashMap<String, DBUser> users_userName = new HashMap<String, DBUser>();
 
-	public DummyUserManager() {
+	public DummyUserDAO() {
 	}
 
 	@Override
 	public User userLogin(String username, String password) throws UserNotFoundException {
-		User user = DummyUserManager.users_userName.get(username);
+		User user = DummyUserDAO.users_userName.get(username);
 		if (user != null && user.getPassword().equals(password)) {
 			return user;
 		}
@@ -39,7 +39,7 @@ public class DummyUserManager implements UserManager {
 
 		requireStringField(user.getUsername(), "username");
 
-		User user2 = DummyUserManager.users_userName.get(user.getUsername());
+		User user2 = DummyUserDAO.users_userName.get(user.getUsername());
 		if (user2 != null)
 			throw new UserAlreadyExistsException("username", user.getUsername());
 
@@ -56,23 +56,23 @@ public class DummyUserManager implements UserManager {
 
 	@Override
 	public User getUserByUsername(String username) {
-		return DummyUserManager.users_userName.get(username);
+		return DummyUserDAO.users_userName.get(username);
 	}
 
 	@Override
 	public void deleteUserById(long id) {
-		User user = DummyUserManager.users_id.get(id);
+		User user = DummyUserDAO.users_id.get(id);
 		if (user == null)
 			return;
 		LOG.info("Delete user:" + user.getUsername() + "; id:" + user.getId());
-		DummyUserManager.users_id.remove(id);
-		DummyUserManager.users_userName.remove(user.getUsername());
+		DummyUserDAO.users_id.remove(id);
+		DummyUserDAO.users_userName.remove(user.getUsername());
 	}
 
 	@Override
 	public List<User> getUsersWithRole(UserRole role) {
 		ArrayList<User> users = new ArrayList<User>();
-		for (DBUser user : DummyUserManager.users_id.values()) {
+		for (DBUser user : DummyUserDAO.users_id.values()) {
 			if (role.getRoleName().equals(user.getRole().getRoleName()))
 				users.add(user);
 		}

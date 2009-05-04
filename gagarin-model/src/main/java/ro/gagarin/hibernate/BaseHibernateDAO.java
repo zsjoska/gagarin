@@ -8,34 +8,34 @@ import org.apache.log4j.Logger;
 
 import ro.gagarin.session.Session;
 
-public class BaseHibernateManager {
-	private static final transient Logger LOG = Logger.getLogger(BaseHibernateManager.class);
+public class BaseHibernateDAO {
+	private static final transient Logger LOG = Logger.getLogger(BaseHibernateDAO.class);
 	private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("gagarin");
 
 	private EntityManager em = null;
 	private boolean ourEntityManager = false;
 
-	public BaseHibernateManager(Session session) {
+	public BaseHibernateDAO(Session session) {
 		if (session == null)
 			throw new NullPointerException("attempt to initialize BaseHibernateManager with null");
 
 		synchronized (session) {
-			Object property = session.getProperty(BaseHibernateManager.class);
-			if (property instanceof BaseHibernateManager) {
-				EntityManager em = ((BaseHibernateManager) property).getEM();
+			Object property = session.getProperty(BaseHibernateDAO.class);
+			if (property instanceof BaseHibernateDAO) {
+				EntityManager em = ((BaseHibernateDAO) property).getEM();
 				this.em = em;
 				this.ourEntityManager = false;
 			} else {
 				// null -- or wrong object
 				if (property != null) {
 					throw new RuntimeException("Wrong object type was found on session for "
-							+ BaseHibernateManager.class.getName() + "; found:"
+							+ BaseHibernateDAO.class.getName() + "; found:"
 							+ property.getClass().getName());
 				}
 				this.em = emf.createEntityManager();
 				this.em.getTransaction().begin();
 				this.ourEntityManager = true;
-				session.setProperty(BaseHibernateManager.class, this);
+				session.setProperty(BaseHibernateDAO.class, this);
 				LOG.debug("Created EntityManagerInstance " + em.toString());
 			}
 		}

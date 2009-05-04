@@ -7,7 +7,7 @@ import javax.persistence.Query;
 
 import org.apache.log4j.Logger;
 
-import ro.gagarin.UserManager;
+import ro.gagarin.UserDAO;
 import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.UserAlreadyExistsException;
 import ro.gagarin.exceptions.UserNotFoundException;
@@ -16,11 +16,11 @@ import ro.gagarin.user.DBUser;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserRole;
 
-public class HibernateUserManager extends BaseHibernateManager implements UserManager {
+public class HibernateUserDAO extends BaseHibernateDAO implements UserDAO {
 
-	private static final transient Logger LOG = Logger.getLogger(HibernateUserManager.class);
+	private static final transient Logger LOG = Logger.getLogger(HibernateUserDAO.class);
 
-	public HibernateUserManager(Session session) {
+	public HibernateUserDAO(Session session) {
 		super(session);
 	}
 

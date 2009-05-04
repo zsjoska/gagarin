@@ -9,9 +9,9 @@ import org.apache.log4j.Logger;
 
 import ro.gagarin.AuthorizationManager;
 import ro.gagarin.ModelFactory;
-import ro.gagarin.RoleManager;
+import ro.gagarin.RoleDAO;
 import ro.gagarin.SessionManager;
-import ro.gagarin.UserManager;
+import ro.gagarin.UserDAO;
 import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.PermissionDeniedException;
 import ro.gagarin.exceptions.SessionNotFoundException;
@@ -34,7 +34,7 @@ public class UserService {
 
 		SessionManager sessionManager = ModelFactory.getSessionManager();
 		Session session = sessionManager.acquireSession(sessionId);
-		UserManager userManager = ModelFactory.getUserManager(session);
+		UserDAO userManager = ModelFactory.getDAOManager().getUserDAO(session);
 		AuthorizationManager permissionManager = ModelFactory.getAuthorizationManager(session);
 
 		try {
@@ -60,7 +60,7 @@ public class UserService {
 			PermissionDeniedException {
 		SessionManager sessionManager = ModelFactory.getSessionManager();
 		Session session = sessionManager.acquireSession(sessionId);
-		RoleManager roleManager = ModelFactory.getRoleManager(session);
+		RoleDAO roleManager = ModelFactory.getDAOManager().getRoleDAO(session);
 		AuthorizationManager permissionManager = ModelFactory.getAuthorizationManager(session);
 
 		try {
@@ -80,7 +80,7 @@ public class UserService {
 			throws SessionNotFoundException, PermissionDeniedException {
 		SessionManager sessionManager = ModelFactory.getSessionManager();
 		Session session = sessionManager.acquireSession(sessionId);
-		RoleManager roleManager = ModelFactory.getRoleManager(session);
+		RoleDAO roleManager = ModelFactory.getDAOManager().getRoleDAO(session);
 		AuthorizationManager permissionManager = ModelFactory.getAuthorizationManager(session);
 
 		try {

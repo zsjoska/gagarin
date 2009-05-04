@@ -2,9 +2,8 @@ package ro.gagarin;
 
 import ro.gagarin.config.FileConfigurationManager;
 import ro.gagarin.dummyimpl.DummyAuthorizationManager;
-import ro.gagarin.hibernate.BaseHibernateManager;
-import ro.gagarin.hibernate.HibernateRoleManager;
-import ro.gagarin.hibernate.HibernateUserManager;
+import ro.gagarin.hibernate.BaseHibernateDAO;
+import ro.gagarin.hibernate.HibernateDAOManager;
 import ro.gagarin.session.BasicSessionManager;
 import ro.gagarin.session.Session;
 
@@ -31,17 +30,8 @@ public class ModelFactory {
 		return BasicSessionManager.getInstance();
 	}
 
-	public static RoleManager getRoleManager(Session session) {
-		return new HibernateRoleManager(session);
-	}
-
-	/**
-	 * This method returns the {@link UserManager} implementation selected.
-	 * 
-	 * @return the configured {@link UserManager} implementation
-	 */
-	public static UserManager getUserManager(Session session) {
-		return new HibernateUserManager(session);
+	public static DAOManager getDAOManager() {
+		return HibernateDAOManager.getInstance();
 	}
 
 	/**
@@ -67,7 +57,7 @@ public class ModelFactory {
 		// BasicSessionManager.destroySession(Session session)
 
 		synchronized (session) {
-			Class<?> key = BaseHibernateManager.class;
+			Class<?> key = BaseHibernateDAO.class;
 			Object property = session.getProperty(key);
 			session.setProperty(key, null);
 			if (property instanceof BaseManager) {

@@ -25,14 +25,14 @@ public class ApplicationInitializer {
 
 	private final ConfigurationManager cfgManager;
 
-	private final UserManager userManager;
+	private final UserDAO userManager;
 
-	private final RoleManager roleManager;
+	private final RoleDAO roleManager;
 
 	private String task;
 
-	public ApplicationInitializer(ConfigurationManager cfgManager, UserManager userManager,
-			RoleManager roleManager) {
+	public ApplicationInitializer(ConfigurationManager cfgManager, UserDAO userManager,
+			RoleDAO roleManager) {
 		this.cfgManager = cfgManager;
 		this.userManager = userManager;
 		this.roleManager = roleManager;
@@ -48,9 +48,9 @@ public class ApplicationInitializer {
 
 		Session session = new Session();
 
-		UserManager userManager = ModelFactory.getUserManager(session);
+		UserDAO userManager = ModelFactory.getDAOManager().getUserDAO(session);
 		ConfigurationManager cfgManager = ModelFactory.getConfigurationManager(session);
-		RoleManager roleManager = ModelFactory.getRoleManager(session);
+		RoleDAO roleManager = ModelFactory.getDAOManager().getRoleDAO(session);
 
 		ApplicationInitializer initializer = new ApplicationInitializer(cfgManager, userManager,
 				roleManager);

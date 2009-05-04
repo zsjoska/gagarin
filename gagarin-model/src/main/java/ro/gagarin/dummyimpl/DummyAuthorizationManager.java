@@ -7,8 +7,8 @@ import org.apache.log4j.Logger;
 
 import ro.gagarin.AuthorizationManager;
 import ro.gagarin.ModelFactory;
-import ro.gagarin.RoleManager;
-import ro.gagarin.UserManager;
+import ro.gagarin.RoleDAO;
+import ro.gagarin.UserDAO;
 import ro.gagarin.exceptions.PermissionDeniedException;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.DBUserPermission;
@@ -22,7 +22,7 @@ public class DummyAuthorizationManager implements AuthorizationManager {
 	@Override
 	public void checkUserRole(Session session, User user) throws PermissionDeniedException {
 		User sessionUser = session.getUser();
-		RoleManager roleManager = ModelFactory.getRoleManager(session);
+		RoleDAO roleManager = ModelFactory.getDAOManager().getRoleDAO(session);
 		List<DBUserPermission> leftList = roleManager.substractUsersRolePermissions(user.getRole(),
 				sessionUser.getRole());
 		LOG.debug("left permissions:" + leftList.toString());
@@ -35,7 +35,7 @@ public class DummyAuthorizationManager implements AuthorizationManager {
 	@Override
 	public void requiresPermission(Session session, PermissionEnum reqPermission)
 			throws PermissionDeniedException {
-		UserManager userManager = ModelFactory.getUserManager(session);
+		UserDAO userManager = ModelFactory.getDAOManager().getUserDAO(session);
 
 		User user = userManager.getUserByUsername(session.getUser().getUsername());
 

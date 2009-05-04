@@ -24,14 +24,14 @@ public class SessionTest {
 
 	private Session session = new Session();
 
-	// TODO: add test with null session for all classes
+	// TODO: add test with null session for all WS methods
 
 	@Test
 	public void testSuccessLogin() throws UserNotFoundException, SessionNotFoundException,
 			FieldRequiredException, UserAlreadyExistsException {
 
-		UserManager userManager = ModelFactory.getUserManager(session);
-		RoleManager roleManager = ModelFactory.getRoleManager(session);
+		UserDAO userManager = ModelFactory.getDAOManager().getUserDAO(session);
+		RoleDAO roleManager = ModelFactory.getDAOManager().getRoleDAO(session);
 		ConfigurationManager cfgManager = ModelFactory.getConfigurationManager(session);
 
 		DBUser user = new DBUser();
@@ -53,9 +53,9 @@ public class SessionTest {
 	public void testFailedLogin() throws SessionNotFoundException, FieldRequiredException,
 			UserAlreadyExistsException {
 
-		UserManager userManager = ModelFactory.getUserManager(session);
+		UserDAO userManager = ModelFactory.getDAOManager().getUserDAO(session);
 		ConfigurationManager cfgManager = ModelFactory.getConfigurationManager(session);
-		RoleManager roleManager = ModelFactory.getRoleManager(session);
+		RoleDAO roleManager = ModelFactory.getDAOManager().getRoleDAO(session);
 
 		DBUser user = new DBUser();
 		user.setUsername("2" + username);
@@ -86,9 +86,9 @@ public class SessionTest {
 	public void testSessionDeletion() throws UserNotFoundException, FieldRequiredException,
 			UserAlreadyExistsException {
 
-		UserManager userManager = ModelFactory.getUserManager(session);
+		UserDAO userManager = ModelFactory.getDAOManager().getUserDAO(session);
 		ConfigurationManager cfgManager = ModelFactory.getConfigurationManager(session);
-		RoleManager roleManager = ModelFactory.getRoleManager(session);
+		RoleDAO roleManager = ModelFactory.getDAOManager().getRoleDAO(session);
 
 		DBUser user = new DBUser();
 		user.setUsername("3" + username);

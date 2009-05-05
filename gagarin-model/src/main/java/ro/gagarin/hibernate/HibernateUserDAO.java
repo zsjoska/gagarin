@@ -42,7 +42,7 @@ public class HibernateUserDAO extends BaseHibernateDAO implements UserDAO {
 	}
 
 	@Override
-	public long createUser(DBUser user) throws FieldRequiredException, UserAlreadyExistsException {
+	public long createUser(User user) throws FieldRequiredException, UserAlreadyExistsException {
 
 		requireStringField(user.getUsername(), "username");
 

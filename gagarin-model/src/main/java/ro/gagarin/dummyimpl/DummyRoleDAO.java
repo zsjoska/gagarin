@@ -7,27 +7,25 @@ import java.util.List;
 import java.util.Set;
 
 import ro.gagarin.RoleDAO;
-import ro.gagarin.hibernate.objects.DBUserPermission;
-import ro.gagarin.hibernate.objects.DBUserRole;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
 
 public class DummyRoleDAO implements RoleDAO {
 
-	private static HashMap<Long, DBUserPermission> permissions_id = new HashMap<Long, DBUserPermission>();
-	private static HashMap<Long, DBUserRole> roles_id = new HashMap<Long, DBUserRole>();
-	private static HashMap<String, DBUserPermission> permissions_name = new HashMap<String, DBUserPermission>();
-	private static HashMap<String, DBUserRole> roles_name = new HashMap<String, DBUserRole>();
+	private static HashMap<Long, UserPermission> permissions_id = new HashMap<Long, UserPermission>();
+	private static HashMap<Long, UserRole> roles_id = new HashMap<Long, UserRole>();
+	private static HashMap<String, UserPermission> permissions_name = new HashMap<String, UserPermission>();
+	private static HashMap<String, UserRole> roles_name = new HashMap<String, UserRole>();
 
 	@Override
-	public long createPermission(DBUserPermission perm) {
+	public long createPermission(UserPermission perm) {
 		DummyRoleDAO.permissions_id.put(perm.getId(), perm);
 		DummyRoleDAO.permissions_name.put(perm.getPermissionName(), perm);
 		return perm.getId();
 	}
 
 	@Override
-	public long createRole(DBUserRole role) {
+	public long createRole(UserRole role) {
 		DummyRoleDAO.roles_id.put(role.getId(), role);
 		DummyRoleDAO.roles_name.put(role.getRoleName(), role);
 		return role.getId();
@@ -46,9 +44,9 @@ public class DummyRoleDAO implements RoleDAO {
 	}
 
 	@Override
-	public List<DBUserPermission> getAllPermissions() {
-		ArrayList<DBUserPermission> permissions = new ArrayList<DBUserPermission>();
-		for (DBUserPermission userPermission : DummyRoleDAO.permissions_id.values()) {
+	public List<UserPermission> getAllPermissions() {
+		ArrayList<UserPermission> permissions = new ArrayList<UserPermission>();
+		for (UserPermission userPermission : DummyRoleDAO.permissions_id.values()) {
 			permissions.add(userPermission);
 		}
 		return permissions;
@@ -60,7 +58,7 @@ public class DummyRoleDAO implements RoleDAO {
 	}
 
 	@Override
-	public DBUserRole getRoleByName(String roleName) {
+	public UserRole getRoleByName(String roleName) {
 		return DummyRoleDAO.roles_name.get(roleName);
 	}
 
@@ -69,17 +67,16 @@ public class DummyRoleDAO implements RoleDAO {
 	}
 
 	@Override
-	public ArrayList<DBUserPermission> substractUsersRolePermissions(UserRole main,
-			UserRole substract) {
+	public ArrayList<UserPermission> substractUsersRolePermissions(UserRole main, UserRole substract) {
 
-		ArrayList<DBUserPermission> leftPermissions = new ArrayList<DBUserPermission>();
+		ArrayList<UserPermission> leftPermissions = new ArrayList<UserPermission>();
 		UserRole mainRole = DummyRoleDAO.roles_id.get(main.getId());
 		UserRole substractRole = DummyRoleDAO.roles_id.get(substract.getId());
 
 		Iterator<? extends UserPermission> iterator = mainRole.getUserPermissions().iterator();
 		Set<? extends UserPermission> subPerm = substractRole.getUserPermissions();
 		while (iterator.hasNext()) {
-			DBUserPermission userPermission = (DBUserPermission) iterator.next();
+			UserPermission userPermission = (UserPermission) iterator.next();
 			if (!subPerm.contains(userPermission)) {
 				leftPermissions.add(userPermission);
 			}
@@ -88,9 +85,9 @@ public class DummyRoleDAO implements RoleDAO {
 	}
 
 	@Override
-	public List<DBUserRole> getAllRoles() {
-		ArrayList<DBUserRole> roles = new ArrayList<DBUserRole>();
-		for (DBUserRole userPermission : DummyRoleDAO.roles_id.values()) {
+	public List<UserRole> getAllRoles() {
+		ArrayList<UserRole> roles = new ArrayList<UserRole>();
+		for (UserRole userPermission : DummyRoleDAO.roles_id.values()) {
 			roles.add(userPermission);
 		}
 		return roles;

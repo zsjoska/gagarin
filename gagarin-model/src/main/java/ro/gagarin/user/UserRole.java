@@ -8,6 +8,6 @@ public interface UserRole {
 
 	String getRoleName();
 
-	Set<? extends UserPermission> getUserPermissions();
+	Set<UserPermission> getUserPermissions();
 
 }

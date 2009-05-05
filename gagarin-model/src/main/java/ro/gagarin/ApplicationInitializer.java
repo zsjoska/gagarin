@@ -1,6 +1,7 @@
 package ro.gagarin;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -11,10 +12,11 @@ import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.UserAlreadyExistsException;
 import ro.gagarin.hibernate.objects.DBUser;
 import ro.gagarin.hibernate.objects.DBUserPermission;
-import ro.gagarin.hibernate.objects.DBUserRole;
 import ro.gagarin.session.Session;
+import ro.gagarin.user.BaseEntity;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.User;
+import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
 
 public class ApplicationInitializer {
@@ -75,7 +77,7 @@ public class ApplicationInitializer {
 		checkCreatePermissionList();
 
 		this.setTask("CHK_CREATE_ADMIN_ROLE");
-		DBUserRole adminRole = checkCreateAdminRole(adminRoleName);
+		UserRole adminRole = checkCreateAdminRole(adminRoleName);
 
 		this.setTask("CHK_CREATE_ADMIN_ROLE_PERMISSION_LIST");
 		checkAdminRolePermissionList(adminRole);
@@ -87,13 +89,28 @@ public class ApplicationInitializer {
 
 	}
 
-	private DBUserRole checkCreateAdminRole(String adminRoleName) {
+	private UserRole checkCreateAdminRole(final String adminRoleName) {
 		LOG.info("Checking admin role existence");
-		DBUserRole adminRole = roleManager.getRoleByName(adminRoleName);
+		UserRole adminRole = roleManager.getRoleByName(adminRoleName);
 		if (adminRole == null) {
 			LOG.info("No admin role was found, creating role with " + adminRoleName);
-			adminRole = new DBUserRole();
-			adminRole.setRoleName(adminRoleName);
+			adminRole = new UserRole() {
+
+				@Override
+				public long getId() {
+					return BaseEntity.getNextId();
+				}
+
+				@Override
+				public String getRoleName() {
+					return adminRoleName;
+				}
+
+				@Override
+				public Set<UserPermission> getUserPermissions() {
+					return new HashSet<UserPermission>();
+				}
+			};
 			roleManager.createRole(adminRole);
 			LOG.info("Admin role created.");
 		}
@@ -121,15 +138,15 @@ public class ApplicationInitializer {
 		}
 	}
 
-	private void checkAdminRolePermissionList(DBUserRole adminRole) {
+	private void checkAdminRolePermissionList(UserRole adminRole) {
 		LOG.info("Checking AdminRolePermissionList to include all permissions");
-		Set<DBUserPermission> grantedPermissions = adminRole.getUserPermissions();
-		List<DBUserPermission> permissions = roleManager.getAllPermissions();
+		Set<UserPermission> grantedPermissions = adminRole.getUserPermissions();
+		List<UserPermission> permissions = roleManager.getAllPermissions();
 		if (permissions == null || permissions.size() == 0) {
 			throw new RuntimeException(
 					"Inconsistent state: The permission list should have been created!");
 		}
-		for (DBUserPermission userPermission : permissions) {
+		for (UserPermission userPermission : permissions) {
 			if (!grantedPermissions.contains(userPermission)) {
 				LOG.info("Adding permission " + userPermission.getPermissionName()
 						+ " to admin role");

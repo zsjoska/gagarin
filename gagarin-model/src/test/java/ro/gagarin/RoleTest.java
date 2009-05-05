@@ -4,12 +4,16 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.junit.Test;
 
 import ro.gagarin.exceptions.AlreadyExistsException;
 import ro.gagarin.hibernate.objects.DBUserPermission;
 import ro.gagarin.hibernate.objects.DBUserRole;
 import ro.gagarin.session.Session;
+import ro.gagarin.user.BaseEntity;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
 
@@ -133,10 +137,28 @@ public class RoleTest {
 	@Test
 	public void addPermissionToRole() throws AlreadyExistsException {
 		RoleDAO roleManager = ModelFactory.getDAOManager().getRoleDAO(session);
-		DBUserRole role = roleManager.getRoleByName("B_ROLE");
+		UserRole role = roleManager.getRoleByName("B_ROLE");
 		if (role == null) {
-			role = new DBUserRole();
-			role.setRoleName("B_ROLE");
+			role = new UserRole() {
+
+				private long id = BaseEntity.getNextId();
+
+				@Override
+				public String getRoleName() {
+					return "B_ROLE";
+				}
+
+				@Override
+				public Set<UserPermission> getUserPermissions() {
+					return new HashSet<UserPermission>();
+				}
+
+				@Override
+				public long getId() {
+					return this.id;
+				}
+
+			};
 			roleManager.createRole(role);
 		}
 

@@ -11,7 +11,6 @@ import org.apache.log4j.Logger;
 import org.hibernate.exception.ConstraintViolationException;
 
 import ro.gagarin.RoleDAO;
-import ro.gagarin.hibernate.objects.DBUserPermission;
 import ro.gagarin.hibernate.objects.DBUserRole;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.UserPermission;
@@ -42,7 +41,7 @@ public class HibernateRoleDAO extends BaseHibernateDAO implements RoleDAO {
 	}
 
 	@Override
-	public long createRole(DBUserRole role) {
+	public long createRole(UserRole role) {
 		// requireStringField(user.getUsername(), "username");
 
 		// em.getTransaction().begin();
@@ -72,7 +71,7 @@ public class HibernateRoleDAO extends BaseHibernateDAO implements RoleDAO {
 	}
 
 	@Override
-	public long createPermission(DBUserPermission perm) {
+	public long createPermission(UserPermission perm) {
 		// TODO: requireStringField(user.getUsername(), "username");
 
 		getEM().persist(perm);
@@ -82,11 +81,11 @@ public class HibernateRoleDAO extends BaseHibernateDAO implements RoleDAO {
 	}
 
 	@Override
-	public List<DBUserPermission> getAllPermissions() {
+	public List<UserPermission> getAllPermissions() {
 
 		Query query = getEM().createQuery("select p from DBUserPermission p");
 		try {
-			List<DBUserPermission> resultList = query.getResultList();
+			List<UserPermission> resultList = query.getResultList();
 			return resultList;
 
 		} catch (NoResultException e) {
@@ -126,14 +125,14 @@ public class HibernateRoleDAO extends BaseHibernateDAO implements RoleDAO {
 	}
 
 	@Override
-	public List<DBUserRole> getAllRoles() {
+	public List<UserRole> getAllRoles() {
 
 		Query query = getEM().createQuery("select r from DBUserRole r ");
 		return query.getResultList();
 	}
 
 	@Override
-	public List<DBUserPermission> substractUsersRolePermissions(UserRole main, UserRole substract) {
+	public List<UserPermission> substractUsersRolePermissions(UserRole main, UserRole substract) {
 		Query query = getEM()
 				.createQuery(
 						"select r from DBUserPermission r where r.id=:subRoleid and r not in (select p from DBUserPermission p where p.id=:mainRoleid)")

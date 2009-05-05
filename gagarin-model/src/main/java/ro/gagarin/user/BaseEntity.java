@@ -17,7 +17,7 @@ public class BaseEntity implements Serializable {
 		return id;
 	}
 
-	private static synchronized long getNextId() {
+	public static synchronized long getNextId() {
 		return ++nextId;
 	}
 }

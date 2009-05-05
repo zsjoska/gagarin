@@ -10,12 +10,11 @@ import ro.gagarin.exceptions.PermissionDeniedException;
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.exceptions.UserAlreadyExistsException;
 import ro.gagarin.exceptions.UserNotFoundException;
-import ro.gagarin.hibernate.objects.DBUser;
 import ro.gagarin.hibernate.objects.DBUserPermission;
-import ro.gagarin.hibernate.objects.DBUserRole;
 import ro.gagarin.user.UserRole;
 import ro.gagarin.ws.Authentication;
 import ro.gagarin.ws.UserService;
+import ro.gagarin.ws.objects.WSUser;
 
 /**
  * Unit test for simple App.
@@ -37,9 +36,9 @@ public class UserServiceTest {
 
 		UserService userService = new UserService();
 
-		List<DBUserRole> roles = userService.getRoleList(session);
+		List<UserRole> roles = userService.getRoleList(session);
 
-		DBUser user = new DBUser();
+		WSUser user = new WSUser();
 		user.setUsername(username);
 		user.setPassword("password");
 		user.setRole(roles.get(0));

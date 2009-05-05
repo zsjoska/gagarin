@@ -1,4 +1,4 @@
-package ro.gagarin.hibernate.objects;
+package ro.gagarin.ws.objects;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -16,20 +16,20 @@ import ro.gagarin.user.UserRole;
 
 @Entity
 @Table(name = "ROLES")
-public class DBUserRole extends BaseEntity implements UserRole {
+public class WSUserRole extends BaseEntity implements UserRole {
 
 	private static final long serialVersionUID = -566662791080932756L;
 
 	private String roleName;
 	private Set<UserPermission> userPermissions = new HashSet<UserPermission>();
 
-	public DBUserRole(UserRole role) {
+	public WSUserRole(UserRole role) {
 		this.roleName = role.getRoleName();
 		// this.userPermissions = role.getUserPermissions();
 		this.setId(role.getId());
 	}
 
-	public DBUserRole() {
+	public WSUserRole() {
 	}
 
 	@Override
@@ -47,7 +47,7 @@ public class DBUserRole extends BaseEntity implements UserRole {
 		return roleName;
 	}
 
-	@ManyToMany(mappedBy = "userRoles", cascade = CascadeType.ALL, targetEntity = DBUserPermission.class)
+	@ManyToMany(mappedBy = "userRoles", cascade = CascadeType.ALL)
 	public Set<UserPermission> getUserPermissions() {
 		return userPermissions;
 	}

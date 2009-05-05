@@ -16,11 +16,12 @@ import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.PermissionDeniedException;
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.exceptions.UserAlreadyExistsException;
-import ro.gagarin.hibernate.objects.DBUser;
 import ro.gagarin.hibernate.objects.DBUserPermission;
 import ro.gagarin.hibernate.objects.DBUserRole;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
+import ro.gagarin.user.UserRole;
+import ro.gagarin.ws.objects.WSUser;
 
 @WebService
 public class UserService {
@@ -28,7 +29,7 @@ public class UserService {
 	private static final transient Logger LOG = Logger.getLogger(UserService.class);
 
 	@WebMethod
-	public Long createUser(String sessionId, DBUser user) throws SessionNotFoundException,
+	public Long createUser(String sessionId, WSUser user) throws SessionNotFoundException,
 			FieldRequiredException, UserAlreadyExistsException, PermissionDeniedException {
 		LOG.info("createUser " + user.getUsername());
 
@@ -56,7 +57,7 @@ public class UserService {
 	}
 
 	@WebMethod
-	public List<DBUserRole> getRoleList(String sessionId) throws SessionNotFoundException,
+	public List<UserRole> getRoleList(String sessionId) throws SessionNotFoundException,
 			PermissionDeniedException {
 		SessionManager sessionManager = ModelFactory.getSessionManager();
 		Session session = sessionManager.acquireSession(sessionId);

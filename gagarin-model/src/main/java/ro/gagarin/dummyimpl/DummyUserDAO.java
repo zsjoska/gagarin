@@ -10,7 +10,6 @@ import ro.gagarin.UserDAO;
 import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.UserAlreadyExistsException;
 import ro.gagarin.exceptions.UserNotFoundException;
-import ro.gagarin.hibernate.objects.DBUser;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserRole;
 
@@ -18,8 +17,8 @@ public class DummyUserDAO implements UserDAO {
 
 	private static final transient Logger LOG = Logger.getLogger(DummyUserDAO.class);
 
-	private static HashMap<Long, DBUser> users_id = new HashMap<Long, DBUser>();
-	private static HashMap<String, DBUser> users_userName = new HashMap<String, DBUser>();
+	private static HashMap<Long, User> users_id = new HashMap<Long, User>();
+	private static HashMap<String, User> users_userName = new HashMap<String, User>();
 
 	public DummyUserDAO() {
 	}
@@ -35,7 +34,7 @@ public class DummyUserDAO implements UserDAO {
 	}
 
 	@Override
-	public long createUser(DBUser user) throws FieldRequiredException, UserAlreadyExistsException {
+	public long createUser(User user) throws FieldRequiredException, UserAlreadyExistsException {
 
 		requireStringField(user.getUsername(), "username");
 
@@ -51,7 +50,7 @@ public class DummyUserDAO implements UserDAO {
 
 	private void requireStringField(String value, String fieldname) throws FieldRequiredException {
 		if (value == null || value.length() == 0)
-			throw new FieldRequiredException(fieldname, DBUser.class);
+			throw new FieldRequiredException(fieldname, User.class);
 	}
 
 	@Override
@@ -72,7 +71,7 @@ public class DummyUserDAO implements UserDAO {
 	@Override
 	public List<User> getUsersWithRole(UserRole role) {
 		ArrayList<User> users = new ArrayList<User>();
-		for (DBUser user : DummyUserDAO.users_id.values()) {
+		for (User user : DummyUserDAO.users_id.values()) {
 			if (role.getRoleName().equals(user.getRole().getRoleName()))
 				users.add(user);
 		}

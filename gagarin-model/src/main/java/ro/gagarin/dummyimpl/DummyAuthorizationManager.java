@@ -10,7 +10,6 @@ import ro.gagarin.ModelFactory;
 import ro.gagarin.RoleDAO;
 import ro.gagarin.UserDAO;
 import ro.gagarin.exceptions.PermissionDeniedException;
-import ro.gagarin.hibernate.objects.DBUserPermission;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.User;
@@ -23,7 +22,7 @@ public class DummyAuthorizationManager implements AuthorizationManager {
 	public void checkUserRole(Session session, User user) throws PermissionDeniedException {
 		User sessionUser = session.getUser();
 		RoleDAO roleManager = ModelFactory.getDAOManager().getRoleDAO(session);
-		List<DBUserPermission> leftList = roleManager.substractUsersRolePermissions(user.getRole(),
+		List<UserPermission> leftList = roleManager.substractUsersRolePermissions(user.getRole(),
 				sessionUser.getRole());
 		LOG.debug("left permissions:" + leftList.toString());
 		roleManager.release();

@@ -5,7 +5,6 @@ import java.util.List;
 import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.UserAlreadyExistsException;
 import ro.gagarin.exceptions.UserNotFoundException;
-import ro.gagarin.hibernate.objects.DBUser;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserRole;
 
@@ -42,7 +41,7 @@ public interface UserDAO extends BaseDAO {
 	 * @throws UserAlreadyExistsException
 	 *             the user or a key-field like username or email already exists
 	 */
-	long createUser(DBUser user) throws FieldRequiredException, UserAlreadyExistsException;
+	long createUser(User user) throws FieldRequiredException, UserAlreadyExistsException;
 
 	/**
 	 * Returns the user with the specified username

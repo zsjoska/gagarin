@@ -2,20 +2,18 @@ package ro.gagarin;
 
 import java.util.List;
 
-import ro.gagarin.hibernate.objects.DBUserPermission;
-import ro.gagarin.hibernate.objects.DBUserRole;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
 
 public interface RoleDAO extends BaseDAO {
 
-	DBUserRole getRoleByName(String roleName);
+	UserRole getRoleByName(String roleName);
 
-	long createRole(DBUserRole role);
+	long createRole(UserRole role);
 
-	long createPermission(DBUserPermission perm);
+	long createPermission(UserPermission perm);
 
-	List<DBUserPermission> getAllPermissions();
+	List<UserPermission> getAllPermissions();
 
 	void deleteRole(UserRole role2);
 
@@ -23,8 +21,8 @@ public interface RoleDAO extends BaseDAO {
 
 	void deletePermission(UserPermission perm);
 
-	List<DBUserPermission> substractUsersRolePermissions(UserRole main, UserRole substract);
+	List<UserPermission> substractUsersRolePermissions(UserRole main, UserRole substract);
 
-	List<DBUserRole> getAllRoles();
+	List<UserRole> getAllRoles();
 
 }

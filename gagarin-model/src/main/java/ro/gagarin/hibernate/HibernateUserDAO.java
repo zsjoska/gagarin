@@ -46,7 +46,10 @@ public class HibernateUserDAO extends BaseHibernateDAO implements UserDAO {
 
 		requireStringField(user.getUsername(), "username");
 
-		getEM().persist(user);
+		DBUser dbUser = new DBUser(user);
+
+		getEM().persist(dbUser);
+		getEM().flush();
 
 		LOG.info("Created user:" + user.getUsername() + "; id:" + user.getId());
 		return user.getId();
@@ -88,8 +91,13 @@ public class HibernateUserDAO extends BaseHibernateDAO implements UserDAO {
 	@Override
 	public List<User> getUsersWithRole(UserRole role) {
 
-		Query query = getEM().createQuery("select u from DBUser u where u.role=:role");
-		query.setParameter("role", role);
+		// DBUserRole dbUserRole = HibernateRoleDAO.findRole(getEM(), role);
+
+		// System.out.println("roleid:" + dbUserRole.getId());
+
+		// DBUserRole dbUserRole = getEM().find(DBUserRole.class, role);
+		Query query = getEM().createQuery("select u from DBUser u where u.role.id=:role");
+		query.setParameter("role", role.getId());
 		List result = query.getResultList();
 		return result;
 

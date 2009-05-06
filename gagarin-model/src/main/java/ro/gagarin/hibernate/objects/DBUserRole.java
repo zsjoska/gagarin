@@ -24,17 +24,16 @@ public class DBUserRole extends BaseEntity implements UserRole {
 	private Set<UserPermission> userPermissions = new HashSet<UserPermission>();
 
 	public DBUserRole(UserRole role) {
+		super.setId(role.getId());
 		this.roleName = role.getRoleName();
-		// this.userPermissions = role.getUserPermissions();
-		this.setId(role.getId());
+		this.userPermissions = role.getUserPermissions();
 	}
 
 	public DBUserRole() {
 	}
 
-	@Override
 	@Id
-	public long getId() {
+	public Long getId() {
 		return super.getId();
 	}
 

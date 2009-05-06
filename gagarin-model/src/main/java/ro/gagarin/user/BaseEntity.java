@@ -7,13 +7,13 @@ public class BaseEntity implements Serializable {
 
 	private static long nextId = System.currentTimeMillis();
 
-	private long id = BaseEntity.getNextId();
+	private Long id = BaseEntity.getNextId();
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 

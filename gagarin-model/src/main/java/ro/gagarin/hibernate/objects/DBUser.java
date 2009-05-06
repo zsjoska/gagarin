@@ -20,7 +20,18 @@ public class DBUser extends BaseEntity implements User {
 	private String username;
 	private String password;
 	private String name;
-	private DBUserRole role;
+	private UserRole role;
+
+	public DBUser(User user) {
+		super.setId(user.getId());
+		this.username = user.getUsername();
+		this.password = user.getPassword();
+		this.name = user.getName();
+		this.role = user.getRole();
+	}
+
+	public DBUser() {
+	}
 
 	public void setUsername(String username) {
 		this.username = username;
@@ -48,26 +59,17 @@ public class DBUser extends BaseEntity implements User {
 	}
 
 	@Id
-	public long getId() {
+	public Long getId() {
 		return super.getId();
 	}
 
 	public void setRole(UserRole role) {
-		if (role instanceof DBUserRole) {
-			this.role = (DBUserRole) role;
-
-		} else {
-			this.role = new DBUserRole(role);
-		}
-	}
-
-	public void setRole(DBUserRole role) {
 		this.role = role;
 	}
 
-	@ManyToOne(optional = false)
+	@ManyToOne(optional = false, targetEntity = DBUserRole.class)
 	@JoinColumn(name = "ROLE_ID", nullable = false, updatable = true)
-	public DBUserRole getRole() {
+	public UserRole getRole() {
 		return role;
 	}
 }

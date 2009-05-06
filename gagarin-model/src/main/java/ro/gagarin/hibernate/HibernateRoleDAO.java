@@ -3,12 +3,11 @@ package ro.gagarin.hibernate;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
-import javax.persistence.RollbackException;
 
 import org.apache.log4j.Logger;
-import org.hibernate.exception.ConstraintViolationException;
 
 import ro.gagarin.RoleDAO;
 import ro.gagarin.hibernate.objects.DBUserRole;
@@ -42,42 +41,52 @@ public class HibernateRoleDAO extends BaseHibernateDAO implements RoleDAO {
 
 	@Override
 	public long createRole(UserRole role) {
-		// requireStringField(user.getUsername(), "username");
 
-		// em.getTransaction().begin();
-		getEM().persist(role);
-		// try {
-		// commit(em);
-		// } catch (ConstraintViolationException e) {
-		// throw new AlreadyExistsException("ROLES", role.getRoleName(), e);
-		// }
-		LOG.info("Created role:" + role.getRoleName() + "; id:" + role.getId());
-		return role.getId();
-
-	}
-
-	// TODO: getRid of duplicate
-	private void commit(EntityManager em) {
 		try {
-			em.getTransaction().commit();
-		} catch (RollbackException e) {
-			Throwable cause = e.getCause();
-			if (cause instanceof ConstraintViolationException) {
-				throw (ConstraintViolationException) cause;
-			}
+
+			DBUserRole dbRole = findRole(getEM(), role);
+
+			// requireStringField(user.getUsername(), "username");
+
+			getEM().persist(dbRole);
+			getEM().flush();
+
+			LOG.info("Created role:" + role.getRoleName() + "; id:" + role.getId());
+			return role.getId();
+		} catch (RuntimeException e) {
+			LOG.error("createRole", e);
 			throw e;
 		}
 
+	}
+
+	public static DBUserRole findRole(EntityManager em, UserRole role)
+			throws EntityNotFoundException {
+		try {
+			DBUserRole reference = em.getReference(DBUserRole.class, role.getId());
+			if (reference != null) {
+				LOG.debug("found role" + reference.getId());
+				return reference;
+			}
+		} catch (RuntimeException e) {
+			LOG.error("findRole", e);
+		}
+		return new DBUserRole(role);
 	}
 
 	@Override
 	public long createPermission(UserPermission perm) {
 		// TODO: requireStringField(user.getUsername(), "username");
 
-		getEM().persist(perm);
-		getEM().flush();
-		LOG.info("Created permission:" + perm.getPermissionName() + "; id:" + perm.getId());
-		return perm.getId();
+		try {
+			getEM().persist(perm);
+			getEM().flush();
+			LOG.info("Created permission:" + perm.getPermissionName() + "; id:" + perm.getId());
+			return perm.getId();
+		} catch (RuntimeException e) {
+			LOG.error("createPermission", e);
+			throw e;
+		}
 	}
 
 	@Override
@@ -95,9 +104,8 @@ public class HibernateRoleDAO extends BaseHibernateDAO implements RoleDAO {
 
 	@Override
 	public void deleteRole(UserRole role) {
-		// em.getTransaction().begin();
-		getEM().remove(role);
-		// commit(em);
+		DBUserRole dbUserRole = findRole(getEM(), role);
+		getEM().remove(dbUserRole);
 		LOG.info("Deleted role:" + role.getRoleName() + "; id:" + role.getId());
 	}
 
@@ -118,9 +126,7 @@ public class HibernateRoleDAO extends BaseHibernateDAO implements RoleDAO {
 
 	@Override
 	public void deletePermission(UserPermission perm) {
-		// em.getTransaction().begin();
 		getEM().remove(perm);
-		// commit(em);
 		LOG.info("Deleted permission:" + perm.getPermissionName() + "; id:" + perm.getId());
 	}
 

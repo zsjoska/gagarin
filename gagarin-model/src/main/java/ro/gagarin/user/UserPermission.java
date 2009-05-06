@@ -4,7 +4,7 @@ import java.util.Set;
 
 public interface UserPermission {
 
-	long getId();
+	Long getId();
 
 	String getPermissionName();
 

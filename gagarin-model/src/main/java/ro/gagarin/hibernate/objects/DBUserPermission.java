@@ -1,7 +1,6 @@
 package ro.gagarin.hibernate.objects;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -31,20 +30,12 @@ public class DBUserPermission extends BaseEntity implements UserPermission {
 	public DBUserPermission(UserPermission perm) {
 		this.setId(perm.getId());
 		this.permissionName = perm.getPermissionName();
-		this.userRoles = new HashSet<UserRole>();
-		for (Iterator<UserRole> iterator = perm.getUserRoles().iterator(); iterator.hasNext();) {
-			UserRole role = iterator.next();
-			if (role instanceof DBUserRole) {
-				this.userRoles.add((DBUserRole) role);
-			} else {
-				this.userRoles.add(new DBUserRole(role));
-			}
-		}
+		this.userRoles = perm.getUserRoles();
 	}
 
 	@Override
 	@Id
-	public long getId() {
+	public Long getId() {
 		return super.getId();
 	}
 

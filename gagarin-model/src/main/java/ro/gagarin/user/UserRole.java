@@ -4,7 +4,7 @@ import java.util.Set;
 
 public interface UserRole {
 
-	long getId();
+	Long getId();
 
 	String getRoleName();
 

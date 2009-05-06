@@ -19,7 +19,7 @@ import ro.gagarin.user.UserRole;
 public class UserTest {
 	private String username = "User_" + System.nanoTime();
 
-	private Session session = new Session();
+	private Session session = ModelFactory.getSessionManager().createSession(null, null);
 
 	private ConfigurationManager configManager = ModelFactory.getConfigurationManager(session);
 
@@ -58,8 +58,7 @@ public class UserTest {
 			assertNull("We just deleted the user; must not exists", usrManager
 					.getUserByUsername(username));
 		} finally {
-			roleManager.release();
-			usrManager.release();
+			ModelFactory.releaseSession(session);
 		}
 	}
 }

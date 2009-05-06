@@ -10,7 +10,6 @@ import org.apache.log4j.Logger;
 import ro.gagarin.config.Config;
 import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.UserAlreadyExistsException;
-import ro.gagarin.hibernate.objects.DBUser;
 import ro.gagarin.hibernate.objects.DBUserPermission;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.BaseEntity;
@@ -57,7 +56,7 @@ public class ApplicationInitializer {
 		ApplicationInitializer initializer = new ApplicationInitializer(cfgManager, userManager,
 				roleManager);
 		try {
-			initializer.doInit();
+			// initializer.doInit();
 		} catch (Exception e) {
 			LOG.error("Application initializer failed for task:" + initializer.getTask(), e);
 			throw new RuntimeException(e);
@@ -85,7 +84,7 @@ public class ApplicationInitializer {
 		this.setTask("CHK_CREATE_ADMIN_USERS");
 		checkAdminUsers(adminRole);
 
-		this.setTask(null);
+		this.setTask("DONE");
 
 	}
 
@@ -96,9 +95,12 @@ public class ApplicationInitializer {
 			LOG.info("No admin role was found, creating role with " + adminRoleName);
 			adminRole = new UserRole() {
 
+				private Long id = BaseEntity.getNextId();
+				private Set<UserPermission> permissions = new HashSet<UserPermission>();
+
 				@Override
-				public long getId() {
-					return BaseEntity.getNextId();
+				public Long getId() {
+					return this.id;
 				}
 
 				@Override
@@ -108,7 +110,7 @@ public class ApplicationInitializer {
 
 				@Override
 				public Set<UserPermission> getUserPermissions() {
-					return new HashSet<UserPermission>();
+					return this.permissions;
 				}
 			};
 			roleManager.createRole(adminRole);
@@ -117,20 +119,37 @@ public class ApplicationInitializer {
 		return adminRole;
 	}
 
-	private void checkAdminUsers(UserRole adminRole) throws FieldRequiredException,
+	private void checkAdminUsers(final UserRole adminRole) throws FieldRequiredException,
 			UserAlreadyExistsException {
 		LOG.info("Checking admin user");
-		String adminUserName = cfgManager.getString(Config.ADMIN_USER_NAME);
-		String adminPassword = cfgManager.getString(Config.ADMIN_PASSWORD);
+		final String adminUserName = cfgManager.getString(Config.ADMIN_USER_NAME);
+		final String adminPassword = cfgManager.getString(Config.ADMIN_PASSWORD);
 		List<User> adminUsers = userManager.getUsersWithRole(adminRole);
 		if (adminUsers == null || adminUsers.size() == 0) {
 			LOG.info("admin user was not found; creating");
-			DBUser adminUser = null;
-			adminUser = new DBUser();
-			adminUser.setRole(adminRole);
-			adminUser.setUsername(adminUserName);
-			adminUser.setPassword(adminPassword);
-			adminUser.setName("Gagarin");
+			User adminUser = new User() {
+				private Long id = BaseEntity.getNextId();
+
+				public Long getId() {
+					return this.id;
+				}
+
+				public String getName() {
+					return "Gagarin";
+				}
+
+				public String getPassword() {
+					return adminPassword;
+				}
+
+				public UserRole getRole() {
+					return adminRole;
+				}
+
+				public String getUsername() {
+					return adminUserName;
+				}
+			};
 			userManager.createUser(adminUser);
 			if (adminUsers == null)
 				adminUsers = new ArrayList<User>(1);

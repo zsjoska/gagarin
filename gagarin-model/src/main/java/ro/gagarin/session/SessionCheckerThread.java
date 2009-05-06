@@ -27,9 +27,10 @@ public class SessionCheckerThread extends Thread {
 			while (!this.terminate) {
 				synchronized (this) {
 					this.wait(sessionManager.getSessionCheckPeriod());
-					LOG.debug("SessionCheck looking for expired sessions");
 					ArrayList<Session> expiredSessions = this.sessionManager.getExpiredSessions();
-					LOG.debug("SessionCheck found" + expiredSessions.size() + " expired sessions");
+					if (expiredSessions == null || expiredSessions.size() == 0)
+						continue;
+					LOG.debug("SessionCheck found " + expiredSessions.size() + " expired sessions");
 					for (Session session : expiredSessions) {
 						LOG.debug("Terminating expired session " + session.getSessionString());
 						this.sessionManager.destroySession(session);

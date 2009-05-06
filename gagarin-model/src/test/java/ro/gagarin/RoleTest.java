@@ -7,6 +7,8 @@ import static org.junit.Assert.assertNull;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import ro.gagarin.exceptions.AlreadyExistsException;
@@ -22,7 +24,17 @@ import ro.gagarin.user.UserRole;
  */
 public class RoleTest {
 
-	private Session session = new Session();
+	private Session session = null;
+
+	@Before
+	public void init() {
+		this.session = ModelFactory.getSessionManager().createSession(null, null);
+	}
+
+	@After
+	public void close() {
+		ModelFactory.releaseSession(session);
+	}
 
 	@Test
 	public void createGetDeleteSimpleRole() throws AlreadyExistsException {
@@ -39,7 +51,6 @@ public class RoleTest {
 		roleManager.deleteRole(role2);
 		role2 = roleManager.getRoleByName("A_ROLE");
 		assertNull(role2);
-		roleManager.release();
 	}
 
 	@Test
@@ -58,7 +69,6 @@ public class RoleTest {
 		roleManager.deletePermission(perm);
 		perm2 = roleManager.getPermissionByName("A_PERMISSION");
 		assertNull(perm2);
-		roleManager.release();
 	}
 
 	@Test
@@ -73,8 +83,8 @@ public class RoleTest {
 		role.getUserPermissions().add(perm);
 		perm.getUserRoles().add(role);
 
-		roleManager.createPermission(perm);
 		roleManager.createRole(role);
+		roleManager.createPermission(perm);
 
 		UserRole role2 = roleManager.getRoleByName("C_ROLE");
 		assertNotNull(role2);
@@ -89,7 +99,6 @@ public class RoleTest {
 		roleManager.deleteRole(role);
 		roleManager.deletePermission(perm);
 
-		roleManager.release();
 	}
 
 	@Test
@@ -131,7 +140,6 @@ public class RoleTest {
 		roleManager.deletePermission(perm1);
 		roleManager.deletePermission(perm2);
 
-		roleManager.release();
 	}
 
 	@Test
@@ -154,7 +162,7 @@ public class RoleTest {
 				}
 
 				@Override
-				public long getId() {
+				public Long getId() {
 					return this.id;
 				}
 
@@ -170,6 +178,5 @@ public class RoleTest {
 		role.getUserPermissions().add(permission);
 		permission.getUserRoles().add(role);
 
-		roleManager.release();
 	}
 }

@@ -48,7 +48,6 @@ public class HibernateRoleDAO extends BaseHibernateDAO implements RoleDAO {
 		try {
 
 			DBUserRole dbRole = findRole(getEM(), role);
-			dbRole.setUserPermissions(findPermissionSet(getEM(), role.getUserPermissions()));
 
 			// requireStringField(user.getUsername(), "username");
 
@@ -64,67 +63,56 @@ public class HibernateRoleDAO extends BaseHibernateDAO implements RoleDAO {
 
 	}
 
-	public static DBUserRole findPermissionSet(EntityManager em, Set<UserPermission> set)
+	public static Set<UserPermission> findPermissionSet(EntityManager em, Set<UserPermission> set)
 			throws EntityNotFoundException {
-		try {
 
-			DBUserRole reference = em.find(DBUserRole.class, set.getId());
-
-			if (reference != null) {
-				LOG.debug("found role" + reference.getId());
-				return reference;
-			}
-		} catch (RuntimeException e) {
-			LOG.error("findRole", e);
+		Set<UserPermission> permissions = new HashSet<UserPermission>();
+		for (UserPermission userPermission : set) {
+			permissions.add(findPermission(em, userPermission));
 		}
-
-		if (set instanceof DBUserRole) {
-			return (DBUserRole) set;
-
-		}
-		return new DBUserRole(set);
+		return permissions;
 	}
 
 	public static DBUserRole findRole(EntityManager em, UserRole role)
 			throws EntityNotFoundException {
-		try {
 
-			DBUserRole reference = em.find(DBUserRole.class, role.getId());
+		DBUserRole reference = em.find(DBUserRole.class, role.getId());
 
-			if (reference != null) {
-				LOG.debug("found role" + reference.getId());
-				return reference;
-			}
-		} catch (RuntimeException e) {
-			LOG.error("findRole", e);
+		if (reference != null) {
+			LOG.debug("found role" + reference.getId());
+		} else if (role instanceof DBUserRole) {
+			reference = (DBUserRole) role;
+
+		} else {
+			reference = new DBUserRole(role);
 		}
 
-		if (role instanceof DBUserRole) {
-			return (DBUserRole) role;
+		Set<UserPermission> userPermissions = reference.getUserPermissions();
+		reference.setUserPermissions(new HashSet<UserPermission>());
+		reference.setUserPermissions(findPermissionSet(em, userPermissions));
 
-		}
-		return new DBUserRole(role);
+		return reference;
 	}
 
 	public static DBUserPermission findPermission(EntityManager em, UserPermission perm)
 			throws EntityNotFoundException {
-		try {
 
-			DBUserPermission reference = em.find(DBUserPermission.class, perm.getId());
+		DBUserPermission reference = em.find(DBUserPermission.class, perm.getId());
 
-			if (reference != null) {
-				LOG.debug("found permission" + reference.getId());
-				return reference;
-			}
-		} catch (RuntimeException e) {
-			LOG.error("findRole", e);
+		if (reference != null) {
+			LOG.debug("found permission" + reference.getId());
+			return reference;
+		} else if (perm instanceof DBUserPermission) {
+			reference = (DBUserPermission) perm;
+
+		} else {
+			reference = new DBUserPermission(perm);
 		}
+		Set<UserRole> userRoles = reference.getUserRoles();
+		reference.setUserRoles(null);
+		reference.setUserRoles(findRoleSet(em, userRoles));
 
-		if (perm instanceof DBUserPermission) {
-			return (DBUserPermission) perm;
-
-		}
-		return new DBUserPermission(perm);
+		return reference;
 	}
 
 	public static Set<UserRole> findRoleSet(EntityManager em, Set<UserRole> set)
@@ -142,7 +130,6 @@ public class HibernateRoleDAO extends BaseHibernateDAO implements RoleDAO {
 		// TODO: requireStringField(user.getUsername(), "username");
 
 		DBUserPermission dbPermission = findPermission(getEM(), perm);
-		dbPermission.setUserRoles(findRoleSet(getEM(), perm.getUserRoles()));
 
 		try {
 			getEM().persist(dbPermission);

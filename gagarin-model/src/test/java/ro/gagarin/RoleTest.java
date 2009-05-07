@@ -4,18 +4,20 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import ro.gagarin.exceptions.AlreadyExistsException;
-import ro.gagarin.hibernate.objects.DBUserPermission;
-import ro.gagarin.hibernate.objects.DBUserRole;
+import ro.gagarin.exceptions.FieldRequiredException;
+import ro.gagarin.exceptions.UserAlreadyExistsException;
 import ro.gagarin.session.Session;
-import ro.gagarin.user.BaseEntity;
+import ro.gagarin.testobjects.ATestUser;
+import ro.gagarin.testobjects.ATestUserPermission;
+import ro.gagarin.testobjects.ATestUserRole;
+import ro.gagarin.user.User;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
 
@@ -39,7 +41,7 @@ public class RoleTest {
 	@Test
 	public void createGetDeleteSimpleRole() throws AlreadyExistsException {
 		RoleDAO roleManager = ModelFactory.getDAOManager().getRoleDAO(session);
-		DBUserRole role = new DBUserRole();
+		ATestUserRole role = new ATestUserRole();
 		role.setRoleName("A_ROLE");
 		roleManager.createRole(role);
 
@@ -57,7 +59,7 @@ public class RoleTest {
 	public void createGetDeleteSimplePermission() throws AlreadyExistsException {
 		RoleDAO roleManager = ModelFactory.getDAOManager().getRoleDAO(session);
 
-		DBUserPermission perm = new DBUserPermission();
+		ATestUserPermission perm = new ATestUserPermission();
 		perm.setPermissionName("A_PERMISSION");
 		roleManager.createPermission(perm);
 
@@ -74,17 +76,17 @@ public class RoleTest {
 	@Test
 	public void createRoleWithPermission() throws AlreadyExistsException {
 		RoleDAO roleManager = ModelFactory.getDAOManager().getRoleDAO(session);
-		DBUserRole role = new DBUserRole();
+		ATestUserRole role = new ATestUserRole();
 		role.setRoleName("C_ROLE");
 
-		DBUserPermission perm = new DBUserPermission();
+		ATestUserPermission perm = new ATestUserPermission();
 		perm.setPermissionName("C_PERMISSION");
 
 		role.getUserPermissions().add(perm);
 		perm.getUserRoles().add(role);
 
-		roleManager.createRole(role);
 		roleManager.createPermission(perm);
+		roleManager.createRole(role);
 
 		UserRole role2 = roleManager.getRoleByName("C_ROLE");
 		assertNotNull(role2);
@@ -104,12 +106,12 @@ public class RoleTest {
 	@Test
 	public void createRoleWith2Permissions() throws AlreadyExistsException {
 		RoleDAO roleManager = ModelFactory.getDAOManager().getRoleDAO(session);
-		DBUserRole role = new DBUserRole();
+		ATestUserRole role = new ATestUserRole();
 		role.setRoleName("C_ROLE");
 
-		DBUserPermission perm1 = new DBUserPermission();
+		ATestUserPermission perm1 = new ATestUserPermission();
 		perm1.setPermissionName("C_PERMISSION1");
-		DBUserPermission perm2 = new DBUserPermission();
+		ATestUserPermission perm2 = new ATestUserPermission();
 		perm2.setPermissionName("C_PERMISSION2");
 
 		role.getUserPermissions().add(perm1);
@@ -147,36 +149,45 @@ public class RoleTest {
 		RoleDAO roleManager = ModelFactory.getDAOManager().getRoleDAO(session);
 		UserRole role = roleManager.getRoleByName("B_ROLE");
 		if (role == null) {
-			role = new UserRole() {
-
-				private long id = BaseEntity.getNextId();
-
-				@Override
-				public String getRoleName() {
-					return "B_ROLE";
-				}
-
-				@Override
-				public Set<UserPermission> getUserPermissions() {
-					return new HashSet<UserPermission>();
-				}
-
-				@Override
-				public Long getId() {
-					return this.id;
-				}
-
-			};
-			roleManager.createRole(role);
+			ATestUserRole role2 = new ATestUserRole();
+			role2.setRoleName("B_ROLE");
+			roleManager.createRole(role2);
+			role = role2;
 		}
 
 		System.out.println("Permissions:" + role.getUserPermissions().size());
 
-		DBUserPermission permission = new DBUserPermission();
+		ATestUserPermission permission = new ATestUserPermission();
 		permission.setPermissionName("PERM" + role.getUserPermissions().size());
 
 		role.getUserPermissions().add(permission);
 		permission.getUserRoles().add(role);
 
+	}
+
+	@Test
+	public void testGetUsersWithRole() throws FieldRequiredException, UserAlreadyExistsException {
+		RoleDAO roleManager = ModelFactory.getDAOManager().getRoleDAO(session);
+		UserDAO userDAO = ModelFactory.getDAOManager().getUserDAO(session);
+
+		ATestUserRole role = new ATestUserRole();
+		role.setRoleName("A_ROLE");
+		roleManager.createRole(role);
+
+		ATestUser user = new ATestUser();
+		user.setName("name");
+		user.setUsername("username");
+		user.setPassword("password");
+		user.setRole(role);
+		userDAO.createUser(user);
+
+		List<User> usersWithRole = userDAO.getUsersWithRole(role);
+
+		assertNotNull(usersWithRole);
+		assertEquals(1, usersWithRole.size());
+		assertEquals(user.getId(), usersWithRole.get(0).getId());
+
+		userDAO.deleteUserById(user.getId());
+		roleManager.deleteRole(role);
 	}
 }

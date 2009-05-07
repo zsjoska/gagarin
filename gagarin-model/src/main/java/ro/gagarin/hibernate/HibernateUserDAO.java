@@ -46,13 +46,20 @@ public class HibernateUserDAO extends BaseHibernateDAO implements UserDAO {
 
 		requireStringField(user.getUsername(), "username");
 
-		DBUser dbUser = new DBUser(user);
+		try {
 
-		getEM().persist(dbUser);
-		getEM().flush();
+			DBUser dbUser = new DBUser(user);
+			dbUser.setRole(HibernateRoleDAO.findRole(getEM(), user.getRole()));
 
-		LOG.info("Created user:" + user.getUsername() + "; id:" + user.getId());
-		return user.getId();
+			getEM().persist(dbUser);
+			getEM().flush();
+
+			LOG.info("Created user:" + user.getUsername() + "; id:" + user.getId());
+			return user.getId();
+		} catch (RuntimeException e) {
+			LOG.error("createUser", e);
+			throw e;
+		}
 	}
 
 	private void requireStringField(String value, String fieldname) throws FieldRequiredException {

@@ -15,7 +15,7 @@ public interface RoleDAO extends BaseDAO {
 
 	List<UserPermission> getAllPermissions();
 
-	void deleteRole(UserRole role2);
+	void deleteRole(UserRole role);
 
 	UserPermission getPermissionByName(String string);
 

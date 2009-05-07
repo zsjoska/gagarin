@@ -22,7 +22,7 @@ public class FileConfigurationManager implements ConfigurationManager {
 
 	private FileConfigurationManager() {
 		// TODO: load from file
-		configuration.add(Config.USER_SESSION_TIMEOUT.ordinal(), "50000");
+		configuration.add(Config.USER_SESSION_TIMEOUT.ordinal(), "100000");
 		configuration.add(Config.SESSION_CHECK_PERIOD.ordinal(), "10000");
 		configuration.add(Config.ADMIN_ROLE_NAME.ordinal(), "ADMIN_ROLE");
 		configuration.add(Config.ADMIN_USER_NAME.ordinal(), "admin");

@@ -4,7 +4,7 @@ import org.apache.log4j.Logger;
 
 public class UserAlreadyExistsException extends ExceptionBase {
 
-	private static final transient Logger LOG = Logger.getLogger(UserNotFoundException.class);
+	private static final transient Logger LOG = Logger.getLogger(ItemNotFoundException.class);
 
 	/**
 	 * 

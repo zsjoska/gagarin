@@ -8,8 +8,8 @@ import org.apache.log4j.Logger;
 
 import ro.gagarin.UserDAO;
 import ro.gagarin.exceptions.FieldRequiredException;
+import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.UserAlreadyExistsException;
-import ro.gagarin.exceptions.UserNotFoundException;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserRole;
 
@@ -24,13 +24,13 @@ public class DummyUserDAO implements UserDAO {
 	}
 
 	@Override
-	public User userLogin(String username, String password) throws UserNotFoundException {
+	public User userLogin(String username, String password) throws ItemNotFoundException {
 		User user = DummyUserDAO.users_userName.get(username);
 		if (user != null && user.getPassword().equals(password)) {
 			return user;
 		}
 		LOG.info("User " + username + " was not authenticated");
-		throw new UserNotFoundException(username);
+		throw new ItemNotFoundException(User.class, username);
 	}
 
 	@Override

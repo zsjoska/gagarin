@@ -14,7 +14,7 @@ import ro.gagarin.ModelFactory;
 import ro.gagarin.SessionManager;
 import ro.gagarin.UserDAO;
 import ro.gagarin.exceptions.SessionNotFoundException;
-import ro.gagarin.exceptions.UserNotFoundException;
+import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.User;
 
@@ -46,7 +46,7 @@ public class Authentication {
 
 	@WebMethod
 	public boolean login(String sessionID, String username, String password, String[] extra)
-			throws SessionNotFoundException, UserNotFoundException {
+			throws SessionNotFoundException, ItemNotFoundException {
 
 		LOG.info("Login User " + username + "; extra:" + Arrays.toString(extra));
 

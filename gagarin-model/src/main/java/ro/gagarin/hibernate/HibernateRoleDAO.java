@@ -27,15 +27,19 @@ public class HibernateRoleDAO extends BaseHibernateDAO implements RoleDAO {
 	@Override
 	public DBUserRole getRoleByName(String roleName) {
 
-		Query query = getEM().createQuery("select r from DBUserRole r where r.roleName=:roleName");
-		query.setParameter("roleName", roleName);
-
 		try {
+			Query query = getEM().createQuery(
+					"select r from DBUserRole r where r.roleName=:roleName");
+			query.setParameter("roleName", roleName);
+
 			DBUserRole adminRole = (DBUserRole) query.getSingleResult();
 			return adminRole;
 		} catch (NoResultException e) {
 			LOG.info("No " + roleName + " role found");
 			return null;
+		} catch (RuntimeException e) {
+			LOG.error("getRoleByName", e);
+			throw e;
 		}
 
 	}
@@ -45,7 +49,7 @@ public class HibernateRoleDAO extends BaseHibernateDAO implements RoleDAO {
 
 		try {
 
-			DBUserRole dbRole = findRole(getEM(), role);
+			DBUserRole dbRole = findOrCreateRole(getEM(), role);
 
 			// requireStringField(user.getUsername(), "username");
 
@@ -61,8 +65,7 @@ public class HibernateRoleDAO extends BaseHibernateDAO implements RoleDAO {
 
 	}
 
-	public static DBUserRole findRole(EntityManager em, UserRole role)
-			throws EntityNotFoundException {
+	public static DBUserRole findOrCreateRole(EntityManager em, UserRole role) {
 
 		DBUserRole reference = em.find(DBUserRole.class, role.getId());
 
@@ -98,11 +101,12 @@ public class HibernateRoleDAO extends BaseHibernateDAO implements RoleDAO {
 
 	@Override
 	public long createPermission(UserPermission perm) {
+
 		// TODO: requireStringField(user.getUsername(), "username");
 
-		DBUserPermission dbPermission = findPermission(getEM(), perm);
-
 		try {
+			DBUserPermission dbPermission = findPermission(getEM(), perm);
+
 			getEM().persist(dbPermission);
 			getEM().flush();
 			LOG.info("Created permission:" + perm.getPermissionName() + "; id:" + perm.getId());
@@ -116,80 +120,112 @@ public class HibernateRoleDAO extends BaseHibernateDAO implements RoleDAO {
 	@Override
 	public List<UserPermission> getAllPermissions() {
 
-		Query query = getEM().createQuery("select p from DBUserPermission p");
 		try {
+			Query query = getEM().createQuery("select p from DBUserPermission p");
 			List<UserPermission> resultList = query.getResultList();
 			return resultList;
 
 		} catch (NoResultException e) {
 			return null;
+		} catch (RuntimeException e) {
+			LOG.error("getAllPermissions", e);
+			throw e;
 		}
+
 	}
 
 	@Override
 	public void deleteRole(UserRole role) {
-		DBUserRole dbUserRole = findRole(getEM(), role);
-		getEM().remove(dbUserRole);
-		LOG.info("Deleted role:" + role.getRoleName() + "; id:" + role.getId());
+		try {
+			DBUserRole dbUserRole = findOrCreateRole(getEM(), role);
+			getEM().remove(dbUserRole);
+			LOG.info("Deleted role:" + role.getRoleName() + "; id:" + role.getId());
+		} catch (RuntimeException e) {
+			LOG.error("deleteRole", e);
+			throw e;
+		}
 	}
 
 	@Override
 	public UserPermission getPermissionByName(String permissionName) {
-		Query query = getEM().createQuery(
-				"select p from DBUserPermission p where p.permissionName=:permissionName");
-		query.setParameter("permissionName", permissionName);
-
 		try {
+			Query query = getEM().createQuery(
+					"select p from DBUserPermission p where p.permissionName=:permissionName");
+			query.setParameter("permissionName", permissionName);
+
 			UserPermission permission = (UserPermission) query.getSingleResult();
 			return permission;
 		} catch (NoResultException e) {
 			LOG.info("No " + permissionName + " role found");
 			return null;
+		} catch (RuntimeException e) {
+			LOG.error("getPermissionByName", e);
+			throw e;
 		}
 	}
 
 	@Override
 	public void deletePermission(UserPermission perm) {
-		DBUserPermission dbUserPermission = getEM().find(DBUserPermission.class, perm.getId());
-		if (dbUserPermission == null) {
-			LOG.info("Permission was not found:" + perm.getPermissionName() + "; id:"
-					+ perm.getId());
-			return;
+		try {
+			DBUserPermission dbUserPermission = getEM().find(DBUserPermission.class, perm.getId());
+			if (dbUserPermission == null) {
+				LOG.debug("Permission was not found:" + perm.getPermissionName() + "; id:"
+						+ perm.getId());
+				return;
+			}
+			getEM().remove(dbUserPermission);
+			LOG.info("Deleted permission:" + perm.getPermissionName() + "; id:" + perm.getId());
+		} catch (RuntimeException e) {
+			LOG.error("deletePermission", e);
+			throw e;
 		}
-		getEM().remove(dbUserPermission);
-		LOG.info("Deleted permission:" + perm.getPermissionName() + "; id:" + perm.getId());
+
 	}
 
 	@Override
 	public List<UserRole> getAllRoles() {
-
-		Query query = getEM().createQuery("select r from DBUserRole r ");
-		return query.getResultList();
+		try {
+			Query query = getEM().createQuery("select r from DBUserRole r ");
+			return query.getResultList();
+		} catch (RuntimeException e) {
+			LOG.error("getAllRoles", e);
+			throw e;
+		}
 	}
 
 	@Override
 	public List<UserPermission> substractUsersRolePermissions(UserRole main, UserRole substract) {
-		Query query = getEM()
-				.createQuery(
-						"select r from DBUserPermission r where r.id=:subRoleid and r not in (select p from DBUserPermission p where p.id=:mainRoleid)")
-				.setParameter("mainRoleid", main.getId()).setParameter("subRoleid",
-						substract.getId());
-		return query.getResultList();
+		try {
+			Query query = getEM()
+					.createQuery(
+							"select r from DBUserPermission r where r.id=:subRoleid and r not in (select p from DBUserPermission p where p.id=:mainRoleid)")
+					.setParameter("mainRoleid", main.getId()).setParameter("subRoleid",
+							substract.getId());
+			return query.getResultList();
+		} catch (RuntimeException e) {
+			LOG.error("substractUsersRolePermissions", e);
+			throw e;
+		}
 	}
 
 	@Override
 	public void assignPermissionToRole(UserRole role, UserPermission perm) {
-		DBUserRole dbRole = getEM().find(DBUserRole.class, role.getId());
-		// TODO: do it better
-		if (dbRole == null)
-			return;
-
-		DBUserPermission dbPerm = getEM().find(DBUserPermission.class, perm.getId());
-		if (dbPerm == null)
+		try {
+			DBUserRole dbRole = getEM().find(DBUserRole.class, role.getId());
 			// TODO: do it better
-			return;
+			if (dbRole == null)
+				return;
 
-		dbRole.getUserPermissions().add(dbPerm);
-		dbPerm.getUserRoles().add(dbRole);
+			DBUserPermission dbPerm = getEM().find(DBUserPermission.class, perm.getId());
+			if (dbPerm == null)
+				// TODO: do it better
+				return;
+
+			dbRole.getUserPermissions().add(dbPerm);
+			dbPerm.getUserRoles().add(dbRole);
+		} catch (RuntimeException e) {
+			LOG.error("assignPermissionToRole", e);
+			throw e;
+		}
 	}
 }

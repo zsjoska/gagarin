@@ -9,9 +9,10 @@ import org.apache.log4j.Logger;
 
 import ro.gagarin.UserDAO;
 import ro.gagarin.exceptions.FieldRequiredException;
+import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.UserAlreadyExistsException;
-import ro.gagarin.exceptions.UserNotFoundException;
 import ro.gagarin.hibernate.objects.DBUser;
+import ro.gagarin.hibernate.objects.DBUserRole;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserRole;
@@ -25,31 +26,40 @@ public class HibernateUserDAO extends BaseHibernateDAO implements UserDAO {
 	}
 
 	@Override
-	public User userLogin(String username, String password) throws UserNotFoundException {
-
-		Query query = getEM().createQuery(
-				"select u from DBUser u where u.username=:username and u.password=:password");
-		query.setParameter("username", username);
-		query.setParameter("password", password);
+	public User userLogin(String username, String password) throws ItemNotFoundException {
 
 		try {
+			Query query = getEM().createQuery(
+					"select u from DBUser u where u.username=:username and u.password=:password");
+			query.setParameter("username", username);
+			query.setParameter("password", password);
+
 			User user = (User) query.getSingleResult();
 			return user;
 		} catch (NoResultException e) {
 			LOG.info("User " + username + " was not authenticated");
-			throw new UserNotFoundException(username);
+			throw new ItemNotFoundException(User.class, username);
+		} catch (RuntimeException e) {
+			super.markRollback();
+			LOG.error("userLogin", e);
+			throw e;
 		}
 	}
 
 	@Override
-	public long createUser(User user) throws FieldRequiredException, UserAlreadyExistsException {
+	public long createUser(User user) throws FieldRequiredException, UserAlreadyExistsException,
+			ItemNotFoundException {
 
-		requireStringField(user.getUsername(), "username");
+		HibernateUtils.requireStringField("getUsername", user);
+		HibernateUtils.requireStringField("getId", user);
 
 		try {
-
+			DBUserRole dbRole = HibernateRoleDAO.findOrCreateRole(getEM(), user.getRole());
+			if (dbRole == null) {
+				throw new ItemNotFoundException(UserRole.class, "" + user.getRole().getId());
+			}
 			DBUser dbUser = new DBUser(user);
-			dbUser.setRole(HibernateRoleDAO.findRole(getEM(), user.getRole()));
+			dbUser.setRole(dbRole);
 
 			getEM().persist(dbUser);
 			getEM().flush();
@@ -57,56 +67,58 @@ public class HibernateUserDAO extends BaseHibernateDAO implements UserDAO {
 			LOG.info("Created user:" + user.getUsername() + "; id:" + user.getId());
 			return user.getId();
 		} catch (RuntimeException e) {
+			markRollback();
 			LOG.error("createUser", e);
 			throw e;
 		}
 	}
 
-	private void requireStringField(String value, String fieldname) throws FieldRequiredException {
-		if (value == null || value.length() == 0)
-			throw new FieldRequiredException(fieldname, DBUser.class);
-	}
-
 	@Override
 	public User getUserByUsername(String username) {
 
-		Query query = getEM().createQuery("select u from DBUser u where u.username=:username");
-		query.setParameter("username", username);
 		try {
+			Query query = getEM().createQuery("select u from DBUser u where u.username=:username");
+			query.setParameter("username", username);
 			User user = (User) query.getSingleResult();
 			return user;
 		} catch (NoResultException e) {
 			return null;
+		} catch (RuntimeException e) {
+			super.markRollback();
+			LOG.error("getUserByUsername", e);
+			throw e;
 		}
 	}
 
 	@Override
 	public void deleteUserById(long id) {
+		try {
+			DBUser dbUser = getEM().find(DBUser.class, id);
+			if (dbUser == null)
+				return;
+			LOG.info("Delete user:" + dbUser.getUsername() + "; id:" + dbUser.getId());
 
-		Query query = getEM().createQuery("select u from DBUser u where u.id=:id");
-		query.setParameter("id", id);
-		User user = (User) query.getSingleResult();
-
-		if (user == null)
-			return;
-		LOG.info("Delete user:" + user.getUsername() + "; id:" + user.getId());
-
-		getEM().remove(user);
+			getEM().remove(dbUser);
+		} catch (RuntimeException e) {
+			super.markRollback();
+			LOG.error("deleteUserById", e);
+			throw e;
+		}
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<User> getUsersWithRole(UserRole role) {
-
-		// DBUserRole dbUserRole = HibernateRoleDAO.findRole(getEM(), role);
-
-		// System.out.println("roleid:" + dbUserRole.getId());
-
-		// DBUserRole dbUserRole = getEM().find(DBUserRole.class, role);
-		Query query = getEM().createQuery("select u from DBUser u where u.role.id=:role");
-		query.setParameter("role", role.getId());
-		List result = query.getResultList();
-		return result;
+		try {
+			Query query = getEM().createQuery("select u from DBUser u where u.role.id=:roleid");
+			query.setParameter("roleid", role.getId());
+			List result = query.getResultList();
+			return result;
+		} catch (RuntimeException e) {
+			super.markRollback();
+			LOG.error("getUsersWithRole", e);
+			throw e;
+		}
 
 	}
 }

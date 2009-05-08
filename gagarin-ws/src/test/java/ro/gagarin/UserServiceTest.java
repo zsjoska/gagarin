@@ -9,7 +9,7 @@ import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.PermissionDeniedException;
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.exceptions.UserAlreadyExistsException;
-import ro.gagarin.exceptions.UserNotFoundException;
+import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.hibernate.objects.DBUserPermission;
 import ro.gagarin.user.UserRole;
 import ro.gagarin.ws.Authentication;
@@ -25,13 +25,13 @@ public class UserServiceTest {
 	private static String session;
 
 	@BeforeClass
-	public static void startup() throws SessionNotFoundException, UserNotFoundException {
+	public static void startup() throws SessionNotFoundException, ItemNotFoundException {
 		session = authentication.createSession(null, null);
 		authentication.login(session, "admin", "password", null);
 	}
 
 	@Test
-	public void testCreateUser() throws SessionNotFoundException, UserNotFoundException,
+	public void testCreateUser() throws SessionNotFoundException, ItemNotFoundException,
 			FieldRequiredException, UserAlreadyExistsException, PermissionDeniedException {
 
 		UserService userService = new UserService();

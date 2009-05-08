@@ -10,7 +10,7 @@ import ro.gagarin.config.Config;
 import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.exceptions.UserAlreadyExistsException;
-import ro.gagarin.exceptions.UserNotFoundException;
+import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.hibernate.objects.DBUser;
 import ro.gagarin.session.Session;
 import ro.gagarin.ws.Authentication;
@@ -27,7 +27,7 @@ public class SessionTest {
 	// TODO: add test with null session for all WS methods
 
 	@Test
-	public void testSuccessLogin() throws UserNotFoundException, SessionNotFoundException,
+	public void testSuccessLogin() throws ItemNotFoundException, SessionNotFoundException,
 			FieldRequiredException, UserAlreadyExistsException {
 
 		UserDAO userManager = ModelFactory.getDAOManager().getUserDAO(session);
@@ -71,19 +71,19 @@ public class SessionTest {
 		try {
 			authentication.login(session, "user2_", "password2", null);
 			fail("The user does not exists");
-		} catch (UserNotFoundException e) {
+		} catch (ItemNotFoundException e) {
 			// the exception was expected
 		}
 		try {
 			authentication.login(session, "user2", "password2_", null);
 			fail("The user and password does not match; thus authentication must fail");
-		} catch (UserNotFoundException e) {
+		} catch (ItemNotFoundException e) {
 			// the exception was expected
 		}
 	}
 
 	@Test
-	public void testSessionDeletion() throws UserNotFoundException, FieldRequiredException,
+	public void testSessionDeletion() throws ItemNotFoundException, FieldRequiredException,
 			UserAlreadyExistsException {
 
 		UserDAO userManager = ModelFactory.getDAOManager().getUserDAO(session);

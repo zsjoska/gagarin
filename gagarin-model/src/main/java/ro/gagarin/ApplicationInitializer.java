@@ -7,12 +7,14 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+import ro.gagarin.application.objects.AppUser;
+import ro.gagarin.application.objects.AppUserRole;
 import ro.gagarin.config.Config;
 import ro.gagarin.exceptions.FieldRequiredException;
+import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.UserAlreadyExistsException;
 import ro.gagarin.hibernate.objects.DBUserPermission;
 import ro.gagarin.session.Session;
-import ro.gagarin.user.BaseEntity;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserPermission;
@@ -68,7 +70,8 @@ public class ApplicationInitializer {
 		return true;
 	}
 
-	private void doInit() throws FieldRequiredException, UserAlreadyExistsException {
+	private void doInit() throws FieldRequiredException, UserAlreadyExistsException,
+			ItemNotFoundException {
 		this.setTask("GET_CFG_ADMIN_ROLE");
 		String adminRoleName = cfgManager.getString(Config.ADMIN_ROLE_NAME);
 
@@ -93,26 +96,9 @@ public class ApplicationInitializer {
 		UserRole adminRole = roleManager.getRoleByName(adminRoleName);
 		if (adminRole == null) {
 			LOG.info("No admin role was found, creating role with " + adminRoleName);
-			adminRole = new UserRole() {
-
-				private Long id = BaseEntity.getNextId();
-				private Set<UserPermission> permissions = null;
-
-				@Override
-				public Long getId() {
-					return this.id;
-				}
-
-				@Override
-				public String getRoleName() {
-					return adminRoleName;
-				}
-
-				@Override
-				public Set<UserPermission> getUserPermissions() {
-					return this.permissions;
-				}
-			};
+			AppUserRole aRole = new AppUserRole();
+			aRole.setRoleName(adminRoleName);
+			adminRole = aRole;
 			roleManager.createRole(adminRole);
 			LOG.info("Admin role created.");
 		}
@@ -120,36 +106,18 @@ public class ApplicationInitializer {
 	}
 
 	private void checkAdminUsers(final UserRole adminRole) throws FieldRequiredException,
-			UserAlreadyExistsException {
+			UserAlreadyExistsException, ItemNotFoundException {
 		LOG.info("Checking admin user");
 		final String adminUserName = cfgManager.getString(Config.ADMIN_USER_NAME);
 		final String adminPassword = cfgManager.getString(Config.ADMIN_PASSWORD);
 		List<User> adminUsers = userManager.getUsersWithRole(adminRole);
 		if (adminUsers == null || adminUsers.size() == 0) {
 			LOG.info("admin user was not found; creating");
-			User adminUser = new User() {
-				private Long id = BaseEntity.getNextId();
-
-				public Long getId() {
-					return this.id;
-				}
-
-				public String getName() {
-					return "Gagarin";
-				}
-
-				public String getPassword() {
-					return adminPassword;
-				}
-
-				public UserRole getRole() {
-					return adminRole;
-				}
-
-				public String getUsername() {
-					return adminUserName;
-				}
-			};
+			AppUser adminUser = new AppUser();
+			adminUser.setName("Gagarin");
+			adminUser.setPassword(adminPassword);
+			adminUser.setUsername(adminUserName);
+			adminUser.setRole(adminRole);
 			userManager.createUser(adminUser);
 			if (adminUsers == null)
 				adminUsers = new ArrayList<User>(1);

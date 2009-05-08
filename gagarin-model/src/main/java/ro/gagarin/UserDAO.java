@@ -3,8 +3,8 @@ package ro.gagarin;
 import java.util.List;
 
 import ro.gagarin.exceptions.FieldRequiredException;
+import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.UserAlreadyExistsException;
-import ro.gagarin.exceptions.UserNotFoundException;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserRole;
 
@@ -25,10 +25,10 @@ public interface UserDAO extends BaseDAO {
 	 * @param password
 	 *            the user's password
 	 * @return the user identified by the given credentials
-	 * @throws UserNotFoundException
+	 * @throws ItemNotFoundException
 	 *             if the user was not found or the password does not match
 	 */
-	User userLogin(String username, String password) throws UserNotFoundException;
+	User userLogin(String username, String password) throws ItemNotFoundException;
 
 	/**
 	 * Creates a user
@@ -40,8 +40,10 @@ public interface UserDAO extends BaseDAO {
 	 *             a required field was missing
 	 * @throws UserAlreadyExistsException
 	 *             the user or a key-field like username or email already exists
+	 * @throws ItemNotFoundException
 	 */
-	long createUser(User user) throws FieldRequiredException, UserAlreadyExistsException;
+	long createUser(User user) throws FieldRequiredException, UserAlreadyExistsException,
+			ItemNotFoundException;
 
 	/**
 	 * Returns the user with the specified username

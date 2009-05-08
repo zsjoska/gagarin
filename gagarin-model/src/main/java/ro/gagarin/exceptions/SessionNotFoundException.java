@@ -6,7 +6,7 @@ import ro.gagarin.session.Session;
 
 public class SessionNotFoundException extends ExceptionBase {
 
-	private static final transient Logger LOG = Logger.getLogger(UserNotFoundException.class);
+	private static final transient Logger LOG = Logger.getLogger(ItemNotFoundException.class);
 
 	/**
 	 * 

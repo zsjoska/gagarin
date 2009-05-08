@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import ro.gagarin.exceptions.AlreadyExistsException;
 import ro.gagarin.exceptions.FieldRequiredException;
+import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.UserAlreadyExistsException;
 import ro.gagarin.session.Session;
 import ro.gagarin.testobjects.ATestUser;
@@ -161,7 +162,8 @@ public class RoleTest {
 	}
 
 	@Test
-	public void testGetUsersWithRole() throws FieldRequiredException, UserAlreadyExistsException {
+	public void testGetUsersWithRole() throws FieldRequiredException, UserAlreadyExistsException,
+			ItemNotFoundException {
 		RoleDAO roleManager = ModelFactory.getDAOManager().getRoleDAO(session);
 		UserDAO userDAO = ModelFactory.getDAOManager().getUserDAO(session);
 

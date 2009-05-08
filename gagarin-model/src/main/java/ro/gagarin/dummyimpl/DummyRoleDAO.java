@@ -92,4 +92,9 @@ public class DummyRoleDAO implements RoleDAO {
 		}
 		return roles;
 	}
+
+	@Override
+	public void assignPermissionToRole(UserRole role, UserPermission perm) {
+		roles_id.get(role.getId()).getUserPermissions().add(permissions_id.get(perm.getId()));
+	}
 }

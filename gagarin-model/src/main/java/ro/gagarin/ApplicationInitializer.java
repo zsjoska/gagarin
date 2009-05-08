@@ -56,7 +56,7 @@ public class ApplicationInitializer {
 		ApplicationInitializer initializer = new ApplicationInitializer(cfgManager, userManager,
 				roleManager);
 		try {
-			// initializer.doInit();
+			initializer.doInit();
 		} catch (Exception e) {
 			LOG.error("Application initializer failed for task:" + initializer.getTask(), e);
 			throw new RuntimeException(e);
@@ -96,7 +96,7 @@ public class ApplicationInitializer {
 			adminRole = new UserRole() {
 
 				private Long id = BaseEntity.getNextId();
-				private Set<UserPermission> permissions = new HashSet<UserPermission>();
+				private Set<UserPermission> permissions = null;
 
 				@Override
 				public Long getId() {
@@ -160,17 +160,21 @@ public class ApplicationInitializer {
 	private void checkAdminRolePermissionList(UserRole adminRole) {
 		LOG.info("Checking AdminRolePermissionList to include all permissions");
 		Set<UserPermission> grantedPermissions = adminRole.getUserPermissions();
+		if (grantedPermissions == null) {
+			grantedPermissions = new HashSet<UserPermission>();
+		}
+
 		List<UserPermission> permissions = roleManager.getAllPermissions();
 		if (permissions == null || permissions.size() == 0) {
 			throw new RuntimeException(
 					"Inconsistent state: The permission list should have been created!");
 		}
+
 		for (UserPermission userPermission : permissions) {
 			if (!grantedPermissions.contains(userPermission)) {
 				LOG.info("Adding permission " + userPermission.getPermissionName()
 						+ " to admin role");
-				grantedPermissions.add(userPermission);
-				userPermission.getUserRoles().add(adminRole);
+				roleManager.assignPermissionToRole(adminRole, userPermission);
 			} else {
 				LOG.info("Already assigned " + userPermission.getPermissionName()
 						+ " to admin role");

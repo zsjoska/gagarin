@@ -82,16 +82,14 @@ public class RoleTest {
 		ATestUserPermission perm = new ATestUserPermission();
 		perm.setPermissionName("C_PERMISSION");
 
-		role.getUserPermissions().add(perm);
-		perm.getUserRoles().add(role);
-
 		roleManager.createPermission(perm);
 		roleManager.createRole(role);
+		roleManager.assignPermissionToRole(role, perm);
 
 		UserRole role2 = roleManager.getRoleByName("C_ROLE");
 		assertNotNull(role2);
 		assertNotNull(role2.getUserPermissions());
-		assertEquals(role2.getUserPermissions().size(), 1);
+		assertEquals(1, role2.getUserPermissions().size());
 
 		UserPermission perm2 = roleManager.getPermissionByName("C_PERMISSION");
 		assertNotNull(perm2);
@@ -114,14 +112,12 @@ public class RoleTest {
 		ATestUserPermission perm2 = new ATestUserPermission();
 		perm2.setPermissionName("C_PERMISSION2");
 
-		role.getUserPermissions().add(perm1);
-		role.getUserPermissions().add(perm2);
-		perm1.getUserRoles().add(role);
-		perm2.getUserRoles().add(role);
-
 		roleManager.createPermission(perm1);
 		roleManager.createPermission(perm2);
 		roleManager.createRole(role);
+
+		roleManager.assignPermissionToRole(role, perm1);
+		roleManager.assignPermissionToRole(role, perm2);
 
 		UserRole role2 = roleManager.getRoleByName("C_ROLE");
 		assertNotNull(role2);
@@ -160,9 +156,8 @@ public class RoleTest {
 		ATestUserPermission permission = new ATestUserPermission();
 		permission.setPermissionName("PERM" + role.getUserPermissions().size());
 
-		role.getUserPermissions().add(permission);
-		permission.getUserRoles().add(role);
-
+		roleManager.createPermission(permission);
+		roleManager.assignPermissionToRole(role, permission);
 	}
 
 	@Test

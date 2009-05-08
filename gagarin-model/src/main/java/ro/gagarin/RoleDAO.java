@@ -25,4 +25,6 @@ public interface RoleDAO extends BaseDAO {
 
 	List<UserRole> getAllRoles();
 
+	void assignPermissionToRole(UserRole role, UserPermission perm);
+
 }

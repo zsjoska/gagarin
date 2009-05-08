@@ -30,7 +30,6 @@ public class DBUserPermission extends BaseEntity implements UserPermission {
 	public DBUserPermission(UserPermission perm) {
 		this.setId(perm.getId());
 		this.permissionName = perm.getPermissionName();
-		this.userRoles = perm.getUserRoles();
 	}
 
 	@Override

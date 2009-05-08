@@ -26,7 +26,6 @@ public class DBUserRole extends BaseEntity implements UserRole {
 	public DBUserRole(UserRole role) {
 		super.setId(role.getId());
 		this.roleName = role.getRoleName();
-		this.userPermissions = role.getUserPermissions();
 	}
 
 	public DBUserRole() {

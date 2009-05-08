@@ -6,15 +6,16 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import ro.gagarin.exceptions.FieldRequiredException;
+import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.PermissionDeniedException;
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.exceptions.UserAlreadyExistsException;
-import ro.gagarin.exceptions.ItemNotFoundException;
-import ro.gagarin.hibernate.objects.DBUserPermission;
 import ro.gagarin.user.UserRole;
 import ro.gagarin.ws.Authentication;
 import ro.gagarin.ws.UserService;
 import ro.gagarin.ws.objects.WSUser;
+import ro.gagarin.ws.objects.WSUserPermission;
+import ro.gagarin.ws.objects.WSUserRole;
 
 /**
  * Unit test for simple App.
@@ -36,7 +37,7 @@ public class UserServiceTest {
 
 		UserService userService = new UserService();
 
-		List<UserRole> roles = userService.getRoleList(session);
+		List<WSUserRole> roles = userService.getRoleList(session);
 
 		WSUser user = new WSUser();
 		user.setUsername(username);
@@ -49,7 +50,7 @@ public class UserServiceTest {
 	@Test
 	public void testCreateRole() throws SessionNotFoundException, PermissionDeniedException {
 		UserService userService = new UserService();
-		List<DBUserPermission> list = userService.getAllPermissionList(session);
+		List<WSUserPermission> list = userService.getAllPermissionList(session);
 		UserRole role = userService.createRoleWithPermissions(session,
 				new String[] { "CREATE_USER" });
 	}

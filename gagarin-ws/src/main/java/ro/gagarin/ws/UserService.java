@@ -1,5 +1,6 @@
 package ro.gagarin.ws;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.jws.WebMethod;
@@ -17,12 +18,12 @@ import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.PermissionDeniedException;
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.exceptions.UserAlreadyExistsException;
-import ro.gagarin.hibernate.objects.DBUserPermission;
-import ro.gagarin.hibernate.objects.DBUserRole;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.UserRole;
 import ro.gagarin.ws.objects.WSUser;
+import ro.gagarin.ws.objects.WSUserPermission;
+import ro.gagarin.ws.objects.WSUserRole;
 
 @WebService
 public class UserService {
@@ -59,7 +60,7 @@ public class UserService {
 	}
 
 	@WebMethod
-	public List<UserRole> getRoleList(String sessionId) throws SessionNotFoundException,
+	public List<WSUserRole> getRoleList(String sessionId) throws SessionNotFoundException,
 			PermissionDeniedException {
 		SessionManager sessionManager = ModelFactory.getSessionManager();
 		Session session = sessionManager.acquireSession(sessionId);
@@ -70,8 +71,12 @@ public class UserService {
 
 			// the session user must have LIST_ROLES permission
 			permissionManager.requiresPermission(session, PermissionEnum.LIST_ROLES);
-
-			return roleManager.getAllRoles();
+			List<UserRole> allRoles = roleManager.getAllRoles();
+			List<WSUserRole> convRoles = new ArrayList<WSUserRole>();
+			for (UserRole userRole : allRoles) {
+				convRoles.add(new WSUserRole(userRole));
+			}
+			return convRoles;
 
 		} finally {
 			ModelFactory.releaseSession(session);
@@ -79,7 +84,7 @@ public class UserService {
 	}
 
 	@WebMethod
-	public DBUserRole createRoleWithPermissions(String sessionId, String[] strings)
+	public WSUserRole createRoleWithPermissions(String sessionId, String[] strings)
 			throws SessionNotFoundException, PermissionDeniedException {
 		SessionManager sessionManager = ModelFactory.getSessionManager();
 		Session session = sessionManager.acquireSession(sessionId);
@@ -99,7 +104,7 @@ public class UserService {
 	}
 
 	@WebMethod
-	public List<DBUserPermission> getAllPermissionList(String session) {
+	public List<WSUserPermission> getAllPermissionList(String session) {
 		// TODO Auto-generated method stub
 		return null;
 	}

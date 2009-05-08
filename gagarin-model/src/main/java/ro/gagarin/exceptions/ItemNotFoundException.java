@@ -8,6 +8,10 @@ public class ItemNotFoundException extends ExceptionBase {
 
 	private String message;
 
+	public ItemNotFoundException() {
+		super(ErrorCodes.ITEM_NOT_FOUND);
+	}
+
 	public ItemNotFoundException(Class<?> itemClass, String detail) {
 		super(ErrorCodes.ITEM_NOT_FOUND);
 		this.message = "Item " + detail + " of type " + itemClass.getSimpleName() + "was not found";

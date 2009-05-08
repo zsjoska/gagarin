@@ -1,8 +1,9 @@
 package ro.gagarin.ws.objects;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
+
+import javax.xml.bind.annotation.XmlElement;
 
 import ro.gagarin.user.BaseEntity;
 import ro.gagarin.user.UserPermission;
@@ -21,15 +22,7 @@ public class WSUserPermission extends BaseEntity implements UserPermission {
 	public WSUserPermission(UserPermission perm) {
 		this.setId(perm.getId());
 		this.permissionName = perm.getPermissionName();
-		this.userRoles = new HashSet<UserRole>();
-		for (Iterator<UserRole> iterator = perm.getUserRoles().iterator(); iterator.hasNext();) {
-			UserRole role = iterator.next();
-			if (role instanceof WSUserRole) {
-				this.userRoles.add((WSUserRole) role);
-			} else {
-				this.userRoles.add(new WSUserRole(role));
-			}
-		}
+		this.userRoles = perm.getUserRoles();
 	}
 
 	public Long getId() {
@@ -44,6 +37,7 @@ public class WSUserPermission extends BaseEntity implements UserPermission {
 		return permissionName;
 	}
 
+	@XmlElement(type = WSUserRole.class)
 	public Set<UserRole> getUserRoles() {
 		return userRoles;
 	}

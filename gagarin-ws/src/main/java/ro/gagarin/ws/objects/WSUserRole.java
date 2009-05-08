@@ -3,37 +3,29 @@ package ro.gagarin.ws.objects;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlElement;
 
 import ro.gagarin.user.BaseEntity;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
 
-@Entity
-@Table(name = "ROLES")
 public class WSUserRole extends BaseEntity implements UserRole {
 
 	private static final long serialVersionUID = -566662791080932756L;
 
 	private String roleName;
+
 	private Set<UserPermission> userPermissions = new HashSet<UserPermission>();
 
 	public WSUserRole(UserRole role) {
 		this.roleName = role.getRoleName();
-		// this.userPermissions = role.getUserPermissions();
 		this.setId(role.getId());
+		this.setUserPermissions(role.getUserPermissions());
 	}
 
 	public WSUserRole() {
 	}
 
-	@Override
-	@Id
 	public Long getId() {
 		return super.getId();
 	}
@@ -42,12 +34,11 @@ public class WSUserRole extends BaseEntity implements UserRole {
 		this.roleName = roleName;
 	}
 
-	@Column(nullable = false, unique = true)
 	public String getRoleName() {
 		return roleName;
 	}
 
-	@ManyToMany(mappedBy = "userRoles", cascade = CascadeType.ALL)
+	@XmlElement(type = WSUserPermission.class)
 	public Set<UserPermission> getUserPermissions() {
 		return userPermissions;
 	}

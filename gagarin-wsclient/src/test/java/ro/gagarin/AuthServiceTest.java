@@ -9,7 +9,7 @@ public class AuthServiceTest {
 
 	@Test
 	public void testSessionCreateLoginLogout() throws SessionNotFoundException_Exception,
-			UserNotFoundException_Exception {
+			UserNotFoundException_Exception, ItemNotFoundException_Exception {
 		AuthenticationService service = new AuthenticationService();
 		Authentication api = service.getAuthenticationPort();
 		String session = api.createSession(null, null);

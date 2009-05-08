@@ -14,7 +14,7 @@ public class UserServiceTest {
 
 	@BeforeClass
 	public static void setUp() throws SessionNotFoundException_Exception,
-			UserNotFoundException_Exception {
+			UserNotFoundException_Exception, ItemNotFoundException_Exception {
 		AuthenticationService service = new AuthenticationService();
 		api = service.getAuthenticationPort();
 		session = api.createSession(null, null);
@@ -29,10 +29,10 @@ public class UserServiceTest {
 	@Test
 	public void createUser() throws FieldRequiredException_Exception,
 			SessionNotFoundException_Exception, UserAlreadyExistsException_Exception,
-			PermissionDeniedException_Exception {
+			PermissionDeniedException_Exception, ItemNotFoundException_Exception {
 		UserServiceService service = new UserServiceService();
 		UserService userAPI = service.getUserServicePort();
-		DbUser user = new DbUser();
+		WsUser user = new WsUser();
 		user.setUsername("wsUser1");
 		user.setPassword("wspassword1");
 		userAPI.createUser(session, user);

@@ -34,7 +34,7 @@ public class WSUserRole extends BaseEntity implements UserRole {
 
 	@Override
 	@Id
-	public long getId() {
+	public Long getId() {
 		return super.getId();
 	}
 

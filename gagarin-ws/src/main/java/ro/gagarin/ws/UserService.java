@@ -13,6 +13,7 @@ import ro.gagarin.RoleDAO;
 import ro.gagarin.SessionManager;
 import ro.gagarin.UserDAO;
 import ro.gagarin.exceptions.FieldRequiredException;
+import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.PermissionDeniedException;
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.exceptions.UserAlreadyExistsException;
@@ -30,7 +31,8 @@ public class UserService {
 
 	@WebMethod
 	public Long createUser(String sessionId, WSUser user) throws SessionNotFoundException,
-			FieldRequiredException, UserAlreadyExistsException, PermissionDeniedException {
+			FieldRequiredException, UserAlreadyExistsException, PermissionDeniedException,
+			ItemNotFoundException {
 		LOG.info("createUser " + user.getUsername());
 
 		SessionManager sessionManager = ModelFactory.getSessionManager();

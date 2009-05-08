@@ -8,9 +8,9 @@ import org.junit.Test;
 
 import ro.gagarin.config.Config;
 import ro.gagarin.exceptions.FieldRequiredException;
+import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.exceptions.UserAlreadyExistsException;
-import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.hibernate.objects.DBUser;
 import ro.gagarin.session.Session;
 import ro.gagarin.ws.Authentication;
@@ -51,7 +51,7 @@ public class SessionTest {
 
 	@Test
 	public void testFailedLogin() throws SessionNotFoundException, FieldRequiredException,
-			UserAlreadyExistsException {
+			UserAlreadyExistsException, ItemNotFoundException {
 
 		UserDAO userManager = ModelFactory.getDAOManager().getUserDAO(session);
 		ConfigurationManager cfgManager = ModelFactory.getConfigurationManager(session);

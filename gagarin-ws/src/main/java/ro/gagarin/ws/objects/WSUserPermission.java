@@ -32,7 +32,7 @@ public class WSUserPermission extends BaseEntity implements UserPermission {
 		}
 	}
 
-	public long getId() {
+	public Long getId() {
 		return super.getId();
 	}
 

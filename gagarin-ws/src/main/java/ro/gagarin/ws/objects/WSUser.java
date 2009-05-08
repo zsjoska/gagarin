@@ -21,7 +21,7 @@ public class WSUser extends BaseEntity implements User {
 	}
 
 	@Override
-	public long getId() {
+	public Long getId() {
 		return super.getId();
 	}
 

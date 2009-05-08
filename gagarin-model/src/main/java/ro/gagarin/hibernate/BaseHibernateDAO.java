@@ -6,9 +6,10 @@ import javax.persistence.Persistence;
 
 import org.apache.log4j.Logger;
 
+import ro.gagarin.BaseDAO;
 import ro.gagarin.session.Session;
 
-public class BaseHibernateDAO {
+public class BaseHibernateDAO implements BaseDAO {
 	private static final transient Logger LOG = Logger.getLogger(BaseHibernateDAO.class);
 	private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("gagarin");
 
@@ -47,29 +48,49 @@ public class BaseHibernateDAO {
 
 	public void release() {
 
-		// this class could be
+		EntityManager tmpem = this.em;
+		this.em = null;
 
 		if (this.ourEntityManager) {
-			LOG.debug("Committing EntityManagerInstance " + em.toString());
+
 			RuntimeException exception = null;
-			try {
-				em.getTransaction().commit();
-				this.em.close();
-				LOG.debug("Released EntityManagerInstance " + em.toString());
-				this.em = null;
-				return;
-			} catch (RuntimeException e) {
-				exception = e;
-				LOG.error("Exception on commit:", e);
+			if (!tmpem.getTransaction().getRollbackOnly()) {
+				LOG.debug("Committing EntityManagerInstance " + tmpem.toString());
+				try {
+					tmpem.getTransaction().commit();
+					tmpem.close();
+					LOG.debug("Released EntityManagerInstance " + tmpem.toString());
+
+					return;
+				} catch (RuntimeException e) {
+					// this is the most relevant exception, so keep it then
+					// throw it
+					exception = e;
+					LOG.error("Exception on commit:", e);
+				}
 			}
+			LOG.debug("Rollback EntityManagerInstance " + tmpem.toString());
 			try {
-				em.getTransaction().rollback();
-			} catch (Exception e) {
+				tmpem.getTransaction().rollback();
+			} catch (RuntimeException e) {
+				if (exception == null)
+					exception = e;
 				LOG.error("Exception on rollback:", e);
 			}
-			this.em.close();
-			throw exception;
+			try {
+				tmpem.close();
+			} catch (RuntimeException e) {
+				if (exception == null)
+					exception = e;
+				LOG.error("Exception on close:", e);
+			}
+			if (exception != null)
+				throw exception;
 		}
-		this.em = null;
+
+	}
+
+	public void markRollback() {
+		this.em.getTransaction().setRollbackOnly();
 	}
 }

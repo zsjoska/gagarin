@@ -14,7 +14,7 @@ public class UserServiceTest {
 
 	@BeforeClass
 	public static void setUp() throws SessionNotFoundException_Exception,
-			UserNotFoundException_Exception, ItemNotFoundException_Exception {
+			ItemNotFoundException_Exception {
 		AuthenticationService service = new AuthenticationService();
 		api = service.getAuthenticationPort();
 		session = api.createSession(null, null);

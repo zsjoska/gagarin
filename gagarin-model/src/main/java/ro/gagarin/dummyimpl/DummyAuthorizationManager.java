@@ -25,7 +25,7 @@ public class DummyAuthorizationManager implements AuthorizationManager {
 		List<UserPermission> leftList = roleManager.substractUsersRolePermissions(user.getRole(),
 				sessionUser.getRole());
 		LOG.debug("left permissions:" + leftList.toString());
-		roleManager.release();
+
 		if (leftList.size() != 0)
 			throw new PermissionDeniedException(sessionUser.getUsername(), leftList.toString());
 

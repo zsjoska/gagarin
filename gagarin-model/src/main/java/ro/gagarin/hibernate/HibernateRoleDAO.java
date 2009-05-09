@@ -137,7 +137,7 @@ public class HibernateRoleDAO extends BaseHibernateDAO implements RoleDAO {
 	@Override
 	public void deleteRole(UserRole role) {
 		try {
-			DBUserRole dbUserRole = findOrCreateRole(getEM(), role);
+			DBUserRole dbUserRole = getEM().find(DBUserRole.class, role.getId());
 			getEM().remove(dbUserRole);
 			LOG.info("Deleted role:" + role.getRoleName() + "; id:" + role.getId());
 		} catch (RuntimeException e) {
@@ -196,6 +196,9 @@ public class HibernateRoleDAO extends BaseHibernateDAO implements RoleDAO {
 	@Override
 	public List<UserPermission> substractUsersRolePermissions(UserRole main, UserRole substract) {
 		try {
+			// DBUserRole dbMain = getEM().find(DBUserRole.class, main.getId());
+			// DBUserRole dbSubstract = getEM().find(DBUserRole.class,
+			// substract.getId());
 			Query query = getEM()
 					.createQuery(
 							"select r from DBUserPermission r where r.id=:subRoleid and r not in (select p from DBUserPermission p where p.id=:mainRoleid)")

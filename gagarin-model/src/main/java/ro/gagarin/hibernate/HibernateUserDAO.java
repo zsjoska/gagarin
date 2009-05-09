@@ -121,4 +121,9 @@ public class HibernateUserDAO extends BaseHibernateDAO implements UserDAO {
 		}
 
 	}
+
+	@Override
+	public void deleteUser(User user) {
+		deleteUserById(user.getId());
+	}
 }

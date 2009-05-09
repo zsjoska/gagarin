@@ -63,4 +63,6 @@ public interface UserDAO extends BaseDAO {
 	void deleteUserById(long id);
 
 	List<User> getUsersWithRole(UserRole role);
+
+	void deleteUser(User user);
 }

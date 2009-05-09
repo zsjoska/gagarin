@@ -21,6 +21,7 @@ public class BaseHibernateDAO implements BaseDAO {
 			throw new NullPointerException("attempt to initialize BaseHibernateManager with null");
 
 		synchronized (session) {
+			session.setBusy(true);
 			Object property = session.getProperty(BaseHibernateDAO.class);
 			if (property instanceof BaseHibernateDAO) {
 				EntityManager em = ((BaseHibernateDAO) property).getEM();

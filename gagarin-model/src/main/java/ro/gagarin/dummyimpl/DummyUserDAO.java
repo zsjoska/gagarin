@@ -82,4 +82,11 @@ public class DummyUserDAO implements UserDAO {
 	public void release() {
 	}
 
+	@Override
+	public void deleteUser(User user) {
+		LOG.info("Delete user:" + user.getUsername() + "; id:" + user.getId());
+		DummyUserDAO.users_id.remove(user.getId());
+		DummyUserDAO.users_userName.remove(user.getUsername());
+	}
+
 }

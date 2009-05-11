@@ -125,7 +125,7 @@ public class ApplicationInitializer {
 		}
 	}
 
-	private void checkAdminRolePermissionList(UserRole adminRole) {
+	private void checkAdminRolePermissionList(UserRole adminRole) throws ItemNotFoundException {
 		LOG.info("Checking AdminRolePermissionList to include all permissions");
 		Set<UserPermission> grantedPermissions = adminRole.getUserPermissions();
 		if (grantedPermissions == null) {

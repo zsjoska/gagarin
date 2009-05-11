@@ -10,6 +10,7 @@ import javax.persistence.Query;
 import org.apache.log4j.Logger;
 
 import ro.gagarin.RoleDAO;
+import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.hibernate.objects.DBUserPermission;
 import ro.gagarin.hibernate.objects.DBUserRole;
 import ro.gagarin.session.Session;
@@ -212,17 +213,16 @@ public class HibernateRoleDAO extends BaseHibernateDAO implements RoleDAO {
 	}
 
 	@Override
-	public void assignPermissionToRole(UserRole role, UserPermission perm) {
+	public void assignPermissionToRole(UserRole role, UserPermission perm)
+			throws ItemNotFoundException {
 		try {
 			DBUserRole dbRole = getEM().find(DBUserRole.class, role.getId());
-			// TODO: do it better
 			if (dbRole == null)
-				return;
+				throw new ItemNotFoundException(UserRole.class, role.getId().toString());
 
 			DBUserPermission dbPerm = getEM().find(DBUserPermission.class, perm.getId());
 			if (dbPerm == null)
-				// TODO: do it better
-				return;
+				throw new ItemNotFoundException(UserPermission.class, perm.getId().toString());
 
 			dbRole.getUserPermissions().add(dbPerm);
 			dbPerm.getUserRoles().add(dbRole);

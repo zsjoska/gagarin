@@ -75,7 +75,7 @@ public class RoleTest {
 	}
 
 	@Test
-	public void createRoleWithPermission() throws AlreadyExistsException {
+	public void createRoleWithPermission() throws AlreadyExistsException, ItemNotFoundException {
 		RoleDAO roleManager = ModelFactory.getDAOManager().getRoleDAO(session);
 		ATestUserRole role = new ATestUserRole();
 		role.setRoleName("C_ROLE");
@@ -103,7 +103,7 @@ public class RoleTest {
 	}
 
 	@Test
-	public void createRoleWith2Permissions() throws AlreadyExistsException {
+	public void createRoleWith2Permissions() throws AlreadyExistsException, ItemNotFoundException {
 		RoleDAO roleManager = ModelFactory.getDAOManager().getRoleDAO(session);
 		ATestUserRole role = new ATestUserRole();
 		role.setRoleName("C_ROLE");
@@ -142,7 +142,7 @@ public class RoleTest {
 	}
 
 	@Test
-	public void addPermissionToRole() throws AlreadyExistsException {
+	public void addPermissionToRole() throws AlreadyExistsException, ItemNotFoundException {
 		RoleDAO roleManager = ModelFactory.getDAOManager().getRoleDAO(session);
 		UserRole role = roleManager.getRoleByName("B_ROLE");
 		if (role == null) {

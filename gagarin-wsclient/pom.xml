@@ -1,20 +1,39 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
 	<modelVersion>4.0.0</modelVersion>
-
 	<parent>
 		<groupId>ro.gagarin</groupId>
 		<artifactId>gagarin</artifactId>
 		<version>1.0-SNAPSHOT</version>
 	</parent>
-
 	<artifactId>gagarin-wsclient</artifactId>
-
 	<name>gagarin-wsclient</name>
-
 	<build>
 		<plugins>
+			<plugin>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>prepare-gagarin-ws</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>${project.groupId}</groupId>
+									<artifactId>gagarin-ws</artifactId>
+									<version>${project.version}</version>
+									<type>war</type>
+									<outputDirectory>${project.build.directory}</outputDirectory>
+									<destFileName>${project.build.finalName}.war</destFileName>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>org.mortbay.jetty</groupId>
 				<artifactId>maven-jetty-plugin</artifactId>
@@ -24,8 +43,6 @@
 					<daemon>true</daemon>
 					<stopKey>foo</stopKey>
 					<stopPort>9999</stopPort>
-					<webApp>../gagarin-ws/target/gagarin-ws-1.0-SNAPSHOT.war</webApp>
-					<contextPath>/gagarin-ws</contextPath>
 				</configuration>
 				<executions>
 					<execution>
@@ -42,7 +59,7 @@
 							<goal>stop</goal>
 						</goals>
 					</execution>
-				</executions>				
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -54,12 +71,10 @@
 						</goals>
 						<configuration>
 							<wsdlUrls>
-								<wsdlUrl> http://localhost:8080/gagarin-ws/ws/AuthService?wsdl 
-								</wsdlUrl>
-								<wsdlUrl> http://localhost:8080/gagarin-ws/ws/UserService?wsdl 
-								</wsdlUrl>
+								<wsdlUrl>http://localhost:8080/${project.name}/ws/AuthService?wsdl</wsdlUrl>
+								<wsdlUrl>http://localhost:8080/${project.name}/ws/UserService?wsdl</wsdlUrl>
 							</wsdlUrls>
-							<packageName>ro.gagarin </packageName>
+							<packageName>ro.gagarin</packageName>
 							<verbose>true</verbose>
 						</configuration>
 					</execution>
@@ -67,7 +82,6 @@
 			</plugin>
 		</plugins>
 	</build>
-
 	<dependencies>
 		<dependency>
 			<groupId>com.sun.xml.ws</groupId>
@@ -84,12 +98,6 @@
 			<artifactId>junit</artifactId>
 			<version>4.3</version>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>ro.gagarin</groupId>
-			<artifactId>gagarin-ws</artifactId>
-			<version>1.0-SNAPSHOT</version>
-			<type>war</type>
 		</dependency>
 	</dependencies>
 </project>

@@ -27,7 +27,7 @@
 									<version>${project.version}</version>
 									<type>war</type>
 									<outputDirectory>${project.build.directory}</outputDirectory>
-									<destFileName>${project.build.finalName}.war</destFileName>
+									<destFileName>gagarin-ws.war</destFileName>
 								</artifactItem>
 							</artifactItems>
 						</configuration>
@@ -43,6 +43,8 @@
 					<daemon>true</daemon>
 					<stopKey>foo</stopKey>
 					<stopPort>9999</stopPort>
+					<webApp>${project.build.directory}/gagarin-ws.war</webApp>
+					<contextPath>/gagarin-ws</contextPath>
 				</configuration>
 				<executions>
 					<execution>
@@ -71,8 +73,8 @@
 						</goals>
 						<configuration>
 							<wsdlUrls>
-								<wsdlUrl>http://localhost:8080/${project.name}/ws/AuthService?wsdl</wsdlUrl>
-								<wsdlUrl>http://localhost:8080/${project.name}/ws/UserService?wsdl</wsdlUrl>
+								<wsdlUrl>http://localhost:8080/gagarin-ws/ws/AuthService?wsdl</wsdlUrl>
+								<wsdlUrl>http://localhost:8080/gagarin-ws/ws/UserService?wsdl</wsdlUrl>
 							</wsdlUrls>
 							<packageName>ro.gagarin</packageName>
 							<verbose>true</verbose>

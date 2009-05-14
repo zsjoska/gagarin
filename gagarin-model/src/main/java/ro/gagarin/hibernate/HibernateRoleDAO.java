@@ -139,6 +139,11 @@ public class HibernateRoleDAO extends BaseHibernateDAO implements RoleDAO {
 	public void deleteRole(UserRole role) {
 		try {
 			DBUserRole dbUserRole = getEM().find(DBUserRole.class, role.getId());
+			if (dbUserRole == null) {
+				LOG.debug("Role was not found:" + role.getRoleName() + "; id:" + role.getId());
+				return;
+			}
+
 			getEM().remove(dbUserRole);
 			LOG.info("Deleted role:" + role.getRoleName() + "; id:" + role.getId());
 		} catch (RuntimeException e) {
@@ -200,11 +205,25 @@ public class HibernateRoleDAO extends BaseHibernateDAO implements RoleDAO {
 			// DBUserRole dbMain = getEM().find(DBUserRole.class, main.getId());
 			// DBUserRole dbSubstract = getEM().find(DBUserRole.class,
 			// substract.getId());
+			// Query query = getEM()
+			// .createQuery(
+			// "select r from DBUserPermission r where r.id=:subRoleid and r not in (select p from DBUserPermission p where p.id=:mainRoleid)")
+			// .setParameter("mainRoleid",
+			// main.getId()).setParameter("subRoleid",
+			// substract.getId());
+			// Query query = getEM()
+			// .createQuery(
+			// ""
+			// +
+			// "select r.userPermissions as p from DBUserRole r where r.id=:subRoleid and (p not in ("
+			// +
+			// "select q.userPermissions as s from DBUserRole q where q.id=:mainRoleid))");
+			// query.setParameter("subRoleid", substract.getId());
+			// query.setParameter("mainRoleid", main.getId());
 			Query query = getEM()
 					.createQuery(
-							"select r from DBUserPermission r where r.id=:subRoleid and r not in (select p from DBUserPermission p where p.id=:mainRoleid)")
-					.setParameter("mainRoleid", main.getId()).setParameter("subRoleid",
-							substract.getId());
+							"select q.userPermission from DBRoleAssignment q where q.userRole.id=:mainRoleid");
+			query.setParameter("mainRoleid", main.getId());
 			return query.getResultList();
 		} catch (RuntimeException e) {
 			LOG.error("substractUsersRolePermissions", e);

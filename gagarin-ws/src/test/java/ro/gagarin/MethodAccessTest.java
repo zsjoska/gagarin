@@ -1,5 +1,6 @@
 package ro.gagarin;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -17,7 +18,9 @@ import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.exceptions.UserAlreadyExistsException;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
+import ro.gagarin.user.User;
 import ro.gagarin.user.UserPermission;
+import ro.gagarin.user.UserRole;
 import ro.gagarin.ws.Authentication;
 import ro.gagarin.ws.UserService;
 import ro.gagarin.ws.objects.WSUser;
@@ -48,7 +51,29 @@ public class MethodAccessTest {
 	@After
 	public void shutdown() {
 		authentication.logout(session);
+		cleanup();
 		ModelFactory.releaseSession(aDummySession);
+	}
+
+	private void cleanup() {
+
+		UserDAO userDAO = ModelFactory.getDAOManager().getUserDAO(aDummySession);
+		List<User> allUsers = userDAO.getAllUsers();
+		for (User user : allUsers) {
+			userDAO.deleteUser(user);
+		}
+
+		RoleDAO roleDAO = ModelFactory.getDAOManager().getRoleDAO(aDummySession);
+		List<UserRole> allRoles = roleDAO.getAllRoles();
+		for (UserRole userRole : allRoles) {
+			roleDAO.deleteRole(userRole);
+		}
+
+		List<UserPermission> allPermissions = roleDAO.getAllPermissions();
+		for (UserPermission userPermission : allPermissions) {
+			roleDAO.deletePermission(userPermission);
+		}
+
 	}
 
 	@Test
@@ -92,6 +117,9 @@ public class MethodAccessTest {
 		roleDAO.createRole(role2);
 		roleDAO.assignPermissionToRole(role2, findPermission(PermissionEnum.LIST_ROLES,
 				allPermissions));
+
+		List<UserPermission> left = roleDAO.substractUsersRolePermissions(role2, role1);
+		assertEquals(1, left.size());
 
 		// have it committed so other sessions to have access to it
 		ModelFactory.releaseSession(aDummySession);

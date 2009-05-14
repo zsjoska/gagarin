@@ -126,4 +126,17 @@ public class HibernateUserDAO extends BaseHibernateDAO implements UserDAO {
 	public void deleteUser(User user) {
 		deleteUserById(user.getId());
 	}
+
+	@Override
+	public List<User> getAllUsers() {
+		try {
+			Query query = getEM().createQuery("select u from DBUser u");
+			List result = query.getResultList();
+			return result;
+		} catch (RuntimeException e) {
+			super.markRollback();
+			LOG.error("getAllUsers", e);
+			throw e;
+		}
+	}
 }

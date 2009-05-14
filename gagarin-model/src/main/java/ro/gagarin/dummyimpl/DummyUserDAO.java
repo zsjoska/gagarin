@@ -89,4 +89,13 @@ public class DummyUserDAO implements UserDAO {
 		DummyUserDAO.users_userName.remove(user.getUsername());
 	}
 
+	@Override
+	public List<User> getAllUsers() {
+		ArrayList<User> users = new ArrayList<User>();
+		for (User user : DummyUserDAO.users_id.values()) {
+			users.add(user);
+		}
+		return users;
+	}
+
 }

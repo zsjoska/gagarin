@@ -1,81 +1,35 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>ro.gagarin</groupId>
-	<artifactId>gagarin-wsclient</artifactId>
-	<packaging>jar</packaging>
-	<version>1.0-SNAPSHOT</version>
-	<name>gagarin-wsclient</name>
-	<url>http://maven.apache.org</url>
 	<parent>
 		<groupId>ro.gagarin</groupId>
 		<artifactId>gagarin</artifactId>
 		<version>1.0-SNAPSHOT</version>
 	</parent>
-	<repositories>
-		<repository>
-			<id>maven-repository.dev.java.net</id>
-			<name>Java.net Repository for Maven 1</name>
-			<url>http://download.java.net/maven/1/</url>
-			<layout>legacy</layout>
-		</repository>
-		<repository>
-			<id>maven2-repository.dev.java.net</id>
-			<name>Java.net Repository for Maven 2</name>
-			<url>http://download.java.net/maven/2/</url>
-		</repository>
-	</repositories>
-	<pluginRepositories>
-		<pluginRepository>
-			<id>maven2-repository.dev.java.net</id>
-			<url>http://download.java.net/maven/2/</url>
-		</pluginRepository>
-	</pluginRepositories>
-	<dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.3</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.sun.xml.ws</groupId>
-			<artifactId>jaxws-rt</artifactId>
-			<version>2.1.3</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.12</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>ro.gagarin</groupId>
-			<artifactId>gagarin-ws</artifactId>
-			<version>1.0-SNAPSHOT</version>
-			<type>war</type>
-		</dependency>
-	</dependencies>
+	<artifactId>gagarin-wsclient</artifactId>
+	<name>gagarin-wsclient</name>
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>jaxws-maven-plugin</artifactId>
+				<artifactId>maven-dependency-plugin</artifactId>
 				<executions>
 					<execution>
+						<id>prepare-gagarin-ws</id>
+						<phase>generate-sources</phase>
 						<goals>
-							<goal>wsimport</goal>
+							<goal>copy</goal>
 						</goals>
 						<configuration>
-							<wsdlUrls>
-								<wsdlUrl> http://localhost:8080/gagarin-ws/ws/AuthService?wsdl 
-								</wsdlUrl>
-								<wsdlUrl> http://localhost:8080/gagarin-ws/ws/UserService?wsdl 
-								</wsdlUrl>
-							</wsdlUrls>
-							<packageName>ro.gagarin </packageName>
-							<verbose>true</verbose>
+							<artifactItems>
+								<artifactItem>
+									<groupId>${project.groupId}</groupId>
+									<artifactId>gagarin-ws</artifactId>
+									<version>${project.version}</version>
+									<type>war</type>
+									<outputDirectory>${project.build.directory}</outputDirectory>
+									<destFileName>gagarin-ws.war</destFileName>
+								</artifactItem>
+							</artifactItems>
 						</configuration>
 					</execution>
 				</executions>
@@ -89,8 +43,17 @@
 					<daemon>true</daemon>
 					<stopKey>foo</stopKey>
 					<stopPort>9999</stopPort>
+					<webApp>${project.build.directory}/gagarin-ws.war</webApp>
+					<contextPath>/gagarin-ws</contextPath>
 				</configuration>
 				<executions>
+					<execution>
+						<id>start-jetty</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>deploy-war</goal>
+						</goals>
+					</execution>
 					<execution>
 						<id>stop-jetty</id>
 						<phase>post-integration-test</phase>
@@ -100,6 +63,43 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jaxws-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>wsimport</goal>
+						</goals>
+						<configuration>
+							<wsdlUrls>
+								<wsdlUrl>http://localhost:8080/gagarin-ws/ws/AuthService?wsdl</wsdlUrl>
+								<wsdlUrl>http://localhost:8080/gagarin-ws/ws/UserService?wsdl</wsdlUrl>
+							</wsdlUrls>
+							<packageName>ro.gagarin</packageName>
+							<verbose>true</verbose>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
+	<dependencies>
+		<dependency>
+			<groupId>com.sun.xml.ws</groupId>
+			<artifactId>jaxws-rt</artifactId>
+			<version>2.1.3</version>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.12</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.3</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 </project>

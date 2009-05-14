@@ -2,31 +2,35 @@ package ro.gagarin.dummyimpl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import ro.gagarin.RoleDAO;
+import ro.gagarin.application.objects.AppUserPermission;
+import ro.gagarin.application.objects.AppUserRole;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
 
 public class DummyRoleDAO implements RoleDAO {
 
-	private static HashMap<Long, UserPermission> permissions_id = new HashMap<Long, UserPermission>();
-	private static HashMap<Long, UserRole> roles_id = new HashMap<Long, UserRole>();
-	private static HashMap<String, UserPermission> permissions_name = new HashMap<String, UserPermission>();
+	private static HashMap<Long, AppUserPermission> permissions_id = new HashMap<Long, AppUserPermission>();
+	private static HashMap<Long, AppUserRole> roles_id = new HashMap<Long, AppUserRole>();
+	private static HashMap<String, AppUserPermission> permissions_name = new HashMap<String, AppUserPermission>();
 	private static HashMap<String, UserRole> roles_name = new HashMap<String, UserRole>();
 
 	@Override
 	public long createPermission(UserPermission perm) {
-		DummyRoleDAO.permissions_id.put(perm.getId(), perm);
-		DummyRoleDAO.permissions_name.put(perm.getPermissionName(), perm);
+		AppUserPermission userPerm = new AppUserPermission(perm);
+		DummyRoleDAO.permissions_id.put(perm.getId(), userPerm);
+		DummyRoleDAO.permissions_name.put(perm.getPermissionName(), userPerm);
 		return perm.getId();
 	}
 
 	@Override
 	public long createRole(UserRole role) {
-		DummyRoleDAO.roles_id.put(role.getId(), role);
+		DummyRoleDAO.roles_id.put(role.getId(), new AppUserRole(role));
 		DummyRoleDAO.roles_name.put(role.getRoleName(), role);
 		return role.getId();
 	}
@@ -95,6 +99,21 @@ public class DummyRoleDAO implements RoleDAO {
 
 	@Override
 	public void assignPermissionToRole(UserRole role, UserPermission perm) {
-		roles_id.get(role.getId()).getUserPermissions().add(permissions_id.get(perm.getId()));
+		AppUserRole userRole = roles_id.get(role.getId());
+		AppUserPermission userPerm = permissions_id.get(perm.getId());
+
+		Set<UserPermission> userPermissions = userRole.getUserPermissions();
+		if (userPermissions == null) {
+			userPermissions = new HashSet<UserPermission>();
+			userRole.setUserPermissions(userPermissions);
+		}
+		userPermissions.add(userPerm);
+
+		Set<UserRole> userRoles = perm.getUserRoles();
+		if (userRoles == null) {
+			userRoles = new HashSet<UserRole>();
+			userPerm.setUserRoles(userRoles);
+		}
+		userRoles.add(userRole);
 	}
 }

@@ -10,7 +10,6 @@ import org.apache.log4j.Logger;
 import ro.gagarin.UserDAO;
 import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.ItemNotFoundException;
-import ro.gagarin.exceptions.UserAlreadyExistsException;
 import ro.gagarin.hibernate.objects.DBUser;
 import ro.gagarin.hibernate.objects.DBUserRole;
 import ro.gagarin.session.Session;
@@ -47,8 +46,7 @@ public class HibernateUserDAO extends BaseHibernateDAO implements UserDAO {
 	}
 
 	@Override
-	public long createUser(User user) throws FieldRequiredException, UserAlreadyExistsException,
-			ItemNotFoundException {
+	public long createUser(User user) throws FieldRequiredException, ItemNotFoundException {
 
 		HibernateUtils.requireStringField("getUsername", user);
 		HibernateUtils.requireStringField("getId", user);

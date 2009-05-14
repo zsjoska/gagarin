@@ -11,8 +11,8 @@ import ro.gagarin.application.objects.AppUser;
 import ro.gagarin.application.objects.AppUserRole;
 import ro.gagarin.config.Config;
 import ro.gagarin.exceptions.FieldRequiredException;
+import ro.gagarin.exceptions.ItemExistsException;
 import ro.gagarin.exceptions.ItemNotFoundException;
-import ro.gagarin.exceptions.UserAlreadyExistsException;
 import ro.gagarin.hibernate.objects.DBUserPermission;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
@@ -70,8 +70,7 @@ public class ApplicationInitializer {
 		return true;
 	}
 
-	private void doInit() throws FieldRequiredException, UserAlreadyExistsException,
-			ItemNotFoundException {
+	private void doInit() throws FieldRequiredException, ItemNotFoundException, ItemExistsException {
 		this.setTask("GET_CFG_ADMIN_ROLE");
 		String adminRoleName = cfgManager.getString(Config.ADMIN_ROLE_NAME);
 
@@ -106,7 +105,7 @@ public class ApplicationInitializer {
 	}
 
 	private void checkAdminUsers(final UserRole adminRole) throws FieldRequiredException,
-			UserAlreadyExistsException, ItemNotFoundException {
+			ItemNotFoundException, ItemExistsException {
 		LOG.info("Checking admin user");
 		final String adminUserName = cfgManager.getString(Config.ADMIN_USER_NAME);
 		final String adminPassword = cfgManager.getString(Config.ADMIN_PASSWORD);

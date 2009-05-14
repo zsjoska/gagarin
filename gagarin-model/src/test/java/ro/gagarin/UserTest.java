@@ -11,8 +11,8 @@ import org.junit.Test;
 
 import ro.gagarin.config.Config;
 import ro.gagarin.exceptions.FieldRequiredException;
+import ro.gagarin.exceptions.ItemExistsException;
 import ro.gagarin.exceptions.ItemNotFoundException;
-import ro.gagarin.exceptions.UserAlreadyExistsException;
 import ro.gagarin.hibernate.objects.DBUser;
 import ro.gagarin.session.Session;
 import ro.gagarin.testobjects.ATestUser;
@@ -47,8 +47,8 @@ public class UserTest {
 	}
 
 	@Test
-	public void createUser() throws FieldRequiredException, UserAlreadyExistsException,
-			ItemNotFoundException {
+	public void createUser() throws FieldRequiredException, ItemNotFoundException,
+			ItemExistsException {
 
 		UserDAO usrManager = ModelFactory.getDAOManager().getUserDAO(session);
 		RoleDAO roleManager = ModelFactory.getDAOManager().getRoleDAO(session);
@@ -75,7 +75,7 @@ public class UserTest {
 	}
 
 	@Test
-	public void usersWiththeSameID() throws FieldRequiredException, UserAlreadyExistsException,
+	public void usersWiththeSameID() throws FieldRequiredException, ItemExistsException,
 			ItemNotFoundException {
 
 		Session brokenSession = ModelFactory.getSessionManager().createSession(null, null);
@@ -105,19 +105,19 @@ public class UserTest {
 		try {
 			usrManager.createUser(user2);
 			fail("the userid is the same; thus this item must not be created");
-		} catch (RuntimeException e) {
+		} catch (ItemExistsException e) {
 			e.printStackTrace();
 		}
 		ModelFactory.releaseSession(brokenSession);
 
 		usrManager = ModelFactory.getDAOManager().getUserDAO(session);
-		assertNull(usrManager.getUserByUsername("UserName1"));
+		assertNull("Transaction rolback test", usrManager.getUserByUsername("UserName1"));
 
 	}
 
 	@Test
-	public void usersWiththeSameUsername() throws FieldRequiredException,
-			UserAlreadyExistsException, ItemNotFoundException {
+	public void usersWiththeSameUsername() throws FieldRequiredException, ItemExistsException,
+			ItemNotFoundException {
 
 		Session brokenSession = ModelFactory.getSessionManager().createSession(null, null);
 
@@ -128,34 +128,34 @@ public class UserTest {
 				.getString(Config.ADMIN_ROLE_NAME));
 
 		ATestUser user1 = new ATestUser();
-		user1.setUsername("UserName1");
+		user1.setUsername("UserName2");
 		user1.setPassword("password");
 		user1.setRole(adminRole);
 
 		ATestUser user2 = new ATestUser();
-		user2.setUsername("UserName1");
+		user2.setUsername("UserName2");
 		user2.setPassword("password");
 		user2.setRole(adminRole);
 
 		usrManager.createUser(user1);
 
-		assertNotNull(usrManager.getUserByUsername("UserName1"));
+		assertNotNull(usrManager.getUserByUsername("UserName2"));
 
 		try {
 			usrManager.createUser(user2);
 			fail("the username is the same; thus this item must not be created");
-		} catch (RuntimeException e) {
+		} catch (ItemExistsException e) {
 			e.printStackTrace();
 		}
 		ModelFactory.releaseSession(brokenSession);
 
 		usrManager = ModelFactory.getDAOManager().getUserDAO(session);
-		assertNull(usrManager.getUserByUsername("UserName1"));
+		assertNull("Transaction rolback test", usrManager.getUserByUsername("UserName2"));
 
 	}
 
 	@Test
-	public void usersWithoutUsername() throws UserAlreadyExistsException, ItemNotFoundException {
+	public void usersWithoutUsername() throws ItemExistsException, ItemNotFoundException {
 
 		UserDAO usrManager = ModelFactory.getDAOManager().getUserDAO(session);
 		RoleDAO roleManager = ModelFactory.getDAOManager().getRoleDAO(session);

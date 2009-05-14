@@ -28,8 +28,8 @@ public class UserServiceTest {
 
 	@Test
 	public void createUser() throws FieldRequiredException_Exception,
-			SessionNotFoundException_Exception, UserAlreadyExistsException_Exception,
-			PermissionDeniedException_Exception, ItemNotFoundException_Exception {
+			SessionNotFoundException_Exception, PermissionDeniedException_Exception,
+			ItemNotFoundException_Exception, ItemExistsException_Exception {
 		UserServiceService service = new UserServiceService();
 		UserService userAPI = service.getUserServicePort();
 		WsUser user = new WsUser();

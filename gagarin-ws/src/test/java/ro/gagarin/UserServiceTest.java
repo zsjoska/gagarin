@@ -6,10 +6,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import ro.gagarin.exceptions.FieldRequiredException;
+import ro.gagarin.exceptions.ItemExistsException;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.PermissionDeniedException;
 import ro.gagarin.exceptions.SessionNotFoundException;
-import ro.gagarin.exceptions.UserAlreadyExistsException;
 import ro.gagarin.user.UserRole;
 import ro.gagarin.ws.Authentication;
 import ro.gagarin.ws.UserService;
@@ -33,7 +33,7 @@ public class UserServiceTest {
 
 	@Test
 	public void testCreateUser() throws SessionNotFoundException, ItemNotFoundException,
-			FieldRequiredException, UserAlreadyExistsException, PermissionDeniedException {
+			FieldRequiredException, ItemExistsException, PermissionDeniedException {
 
 		UserService userService = new UserService();
 

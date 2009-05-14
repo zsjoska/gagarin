@@ -8,8 +8,8 @@ import org.apache.log4j.Logger;
 
 import ro.gagarin.UserDAO;
 import ro.gagarin.exceptions.FieldRequiredException;
+import ro.gagarin.exceptions.ItemExistsException;
 import ro.gagarin.exceptions.ItemNotFoundException;
-import ro.gagarin.exceptions.UserAlreadyExistsException;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserRole;
 
@@ -34,13 +34,16 @@ public class DummyUserDAO implements UserDAO {
 	}
 
 	@Override
-	public long createUser(User user) throws FieldRequiredException, UserAlreadyExistsException {
+	public long createUser(User user) throws FieldRequiredException, ItemExistsException {
 
 		requireStringField(user.getUsername(), "username");
 
 		User user2 = DummyUserDAO.users_userName.get(user.getUsername());
 		if (user2 != null)
-			throw new UserAlreadyExistsException("username", user.getUsername());
+			throw new ItemExistsException(User.class, user.getUsername());
+		user2 = DummyUserDAO.users_id.get(user.getId());
+		if (user2 != null)
+			throw new ItemExistsException(User.class, user.getId().toString());
 
 		users_id.put(user.getId(), user);
 		users_userName.put(user.getUsername(), user);

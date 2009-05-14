@@ -12,10 +12,10 @@ import org.junit.Test;
 
 import ro.gagarin.config.Config;
 import ro.gagarin.exceptions.FieldRequiredException;
+import ro.gagarin.exceptions.ItemExistsException;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.PermissionDeniedException;
 import ro.gagarin.exceptions.SessionNotFoundException;
-import ro.gagarin.exceptions.UserAlreadyExistsException;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.User;
@@ -77,7 +77,7 @@ public class MethodAccessTest {
 	}
 
 	@Test
-	public void createUserAccess() throws FieldRequiredException, UserAlreadyExistsException,
+	public void createUserAccess() throws FieldRequiredException, ItemExistsException,
 			ItemNotFoundException, SessionNotFoundException {
 		RoleDAO roleDAO = ModelFactory.getDAOManager().getRoleDAO(aDummySession);
 		UserDAO userDAO = ModelFactory.getDAOManager().getUserDAO(aDummySession);

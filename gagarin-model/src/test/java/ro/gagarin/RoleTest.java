@@ -10,10 +10,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import ro.gagarin.exceptions.AlreadyExistsException;
 import ro.gagarin.exceptions.FieldRequiredException;
+import ro.gagarin.exceptions.ItemExistsException;
 import ro.gagarin.exceptions.ItemNotFoundException;
-import ro.gagarin.exceptions.UserAlreadyExistsException;
 import ro.gagarin.session.Session;
 import ro.gagarin.testobjects.ATestUser;
 import ro.gagarin.testobjects.ATestUserPermission;
@@ -40,7 +39,7 @@ public class RoleTest {
 	}
 
 	@Test
-	public void createGetDeleteSimpleRole() throws AlreadyExistsException {
+	public void createGetDeleteSimpleRole() {
 		RoleDAO roleManager = ModelFactory.getDAOManager().getRoleDAO(session);
 		ATestUserRole role = new ATestUserRole();
 		role.setRoleName("A_ROLE");
@@ -57,7 +56,7 @@ public class RoleTest {
 	}
 
 	@Test
-	public void createGetDeleteSimplePermission() throws AlreadyExistsException {
+	public void createGetDeleteSimplePermission() {
 		RoleDAO roleManager = ModelFactory.getDAOManager().getRoleDAO(session);
 
 		ATestUserPermission perm = new ATestUserPermission();
@@ -75,7 +74,7 @@ public class RoleTest {
 	}
 
 	@Test
-	public void createRoleWithPermission() throws AlreadyExistsException, ItemNotFoundException {
+	public void createRoleWithPermission() throws ItemNotFoundException {
 		RoleDAO roleManager = ModelFactory.getDAOManager().getRoleDAO(session);
 		ATestUserRole role = new ATestUserRole();
 		role.setRoleName("C_ROLE");
@@ -103,7 +102,7 @@ public class RoleTest {
 	}
 
 	@Test
-	public void createRoleWith2Permissions() throws AlreadyExistsException, ItemNotFoundException {
+	public void createRoleWith2Permissions() throws ItemNotFoundException {
 		RoleDAO roleManager = ModelFactory.getDAOManager().getRoleDAO(session);
 		ATestUserRole role = new ATestUserRole();
 		role.setRoleName("C_ROLE");
@@ -142,7 +141,7 @@ public class RoleTest {
 	}
 
 	@Test
-	public void addPermissionToRole() throws AlreadyExistsException, ItemNotFoundException {
+	public void addPermissionToRole() throws ItemNotFoundException {
 		RoleDAO roleManager = ModelFactory.getDAOManager().getRoleDAO(session);
 		UserRole role = roleManager.getRoleByName("B_ROLE");
 		if (role == null) {
@@ -162,8 +161,8 @@ public class RoleTest {
 	}
 
 	@Test
-	public void testGetUsersWithRole() throws FieldRequiredException, UserAlreadyExistsException,
-			ItemNotFoundException {
+	public void testGetUsersWithRole() throws FieldRequiredException, ItemNotFoundException,
+			ItemExistsException {
 		RoleDAO roleManager = ModelFactory.getDAOManager().getRoleDAO(session);
 		UserDAO userDAO = ModelFactory.getDAOManager().getUserDAO(session);
 

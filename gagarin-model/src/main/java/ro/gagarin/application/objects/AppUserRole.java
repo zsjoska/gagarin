@@ -12,6 +12,13 @@ public class AppUserRole extends BaseEntity implements UserRole {
 	private String roleName;
 	private Set<UserPermission> userPermissions;
 
+	public AppUserRole(UserRole role) {
+		this.roleName = role.getRoleName();
+	}
+
+	public AppUserRole() {
+	}
+
 	@Override
 	public String getRoleName() {
 		return this.roleName;

@@ -1,23 +1,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    
 	<modelVersion>4.0.0</modelVersion>
-    
 	<groupId>ro.gagarin</groupId>
 	<artifactId>gagarin</artifactId>
-    <version>1.0-SNAPSHOT</version>
+	<version>1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
-    
 	<name>gagarin</name>
-    
 	<url>http://maven.apache.org</url>
-    
 	<modules>
 		<module>../gagarin-ws</module>
 		<module>../gagarin-model</module>
 		<module>../gagarin-wsclient</module>
 	</modules>
-    
 	<build>
 		<plugins>
 			<plugin>
@@ -31,7 +25,6 @@
 			</plugin>
 		</plugins>
 	</build>
-
 	<profiles>
 		<profile>
 			<activation>
@@ -46,32 +39,30 @@
 				</dependency>
 			</dependencies>
 		</profile>
-
-        <profile>
-            <id>repositories</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-
-            <repositories>
-                <repository>
-                    <id>maven-repository.dev.java.net</id>
-                    <name>Java.net Repository for Maven 1</name>
-                    <url>http://download.java.net/maven/1/</url>
-                    <layout>legacy</layout>
-                </repository>
-                <repository>
-                    <id>maven2-repository.dev.java.net</id>
-                    <name>Java.net Repository for Maven 2</name>
-                    <url>http://download.java.net/maven/2/</url>
-                </repository>
-            </repositories>
-            <pluginRepositories>
-                <pluginRepository>
-                    <id>maven2-repository.dev.java.net</id>
-                    <url>http://download.java.net/maven/2/</url>
-                </pluginRepository>
-            </pluginRepositories>
-        </profile>
+		<profile>
+			<id>repositories</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<repositories>
+				<repository>
+					<id>maven-repository.dev.java.net</id>
+					<name>Java.net Repository for Maven 1</name>
+					<url>http://download.java.net/maven/1/</url>
+					<layout>legacy</layout>
+				</repository>
+				<repository>
+					<id>maven2-repository.dev.java.net</id>
+					<name>Java.net Repository for Maven 2</name>
+					<url>http://download.java.net/maven/2/</url>
+				</repository>
+			</repositories>
+			<pluginRepositories>
+				<pluginRepository>
+					<id>maven2-repository.dev.java.net</id>
+					<url>http://download.java.net/maven/2/</url>
+				</pluginRepository>
+			</pluginRepositories>
+		</profile>
 	</profiles>
 </project>

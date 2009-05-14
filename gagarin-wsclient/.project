@@ -1,9 +1,7 @@
 <projectDescription>
   <name>gagarin-wsclient</name>
   <comment/>
-  <projects>
-    <project>gagarin-ws</project>
-  </projects>
+  <projects/>
   <buildSpec>
     <buildCommand>
       <name>org.eclipse.jdt.core.javabuilder</name>

@@ -1,33 +1,43 @@
 package ro.gagarin.jdbc;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
 
 import ro.gagarin.BaseDAO;
+import ro.gagarin.ConfigurationManager;
+import ro.gagarin.ModelFactory;
+import ro.gagarin.config.Config;
 import ro.gagarin.session.Session;
 
 public class BaseJdbcDAO implements BaseDAO {
 	private static final transient Logger LOG = Logger.getLogger(BaseJdbcDAO.class);
 
-	private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("gagarin");
+	private static boolean DRIVER_LOADED;
 
-	private EntityManager em = null;
-	private boolean ourEntityManager = false;
+	private boolean ourConnection = false;
+
+	private Connection connection;
+
+	private boolean rollback = false;
 
 	public BaseJdbcDAO(Session session) {
 		if (session == null)
 			throw new NullPointerException("attempt to initialize BaseHibernateManager with null");
 
+		ConfigurationManager cfgManager = ModelFactory.getConfigurationManager(session);
+		checkLoadDBDriver(cfgManager);
+
 		synchronized (session) {
 			session.setBusy(true);
 			Object property = session.getProperty(BaseJdbcDAO.class);
 			if (property instanceof BaseJdbcDAO) {
-				EntityManager em = ((BaseJdbcDAO) property).getEM();
-				this.em = em;
-				this.ourEntityManager = false;
+
+				Connection connection = ((BaseJdbcDAO) property).getConnection();
+				this.connection = connection;
+				this.ourConnection = false;
 			} else {
 				// null -- or wrong object
 				if (property != null) {
@@ -35,55 +45,84 @@ public class BaseJdbcDAO implements BaseDAO {
 							+ BaseJdbcDAO.class.getName() + "; found:"
 							+ property.getClass().getName());
 				}
-				this.em = emf.createEntityManager();
-				this.em.getTransaction().begin();
-				this.ourEntityManager = true;
+				this.connection = createConnection(cfgManager);
+				this.ourConnection = true;
 				session.setProperty(BaseJdbcDAO.class, this);
-				LOG.debug("Created EntityManagerInstance " + em.toString());
+				LOG.debug("Created Connection Instance " + connection.toString());
 			}
 		}
 	}
 
-	EntityManager getEM() {
-		return this.em;
+	private Connection createConnection(ConfigurationManager cfgManager) {
+		String url = cfgManager.getString(Config.JDBC_CONNECTION_URL);
+		String user = cfgManager.getString(Config.JDBC_DB_USER);
+		String password = cfgManager.getString(Config.JDBC_DB_PASSWORD);
+		try {
+			Connection connection = DriverManager.getConnection(url, user, password);
+			connection.setAutoCommit(false);
+			return connection;
+		} catch (SQLException e) {
+			LOG.error("Could not get DB connection for url:" + url, e);
+			throw new RuntimeException("Database is unavailable", e);
+		}
+
+	}
+
+	private Connection getConnection() {
+		return this.connection;
+	}
+
+	private void checkLoadDBDriver(ConfigurationManager cfgManager) {
+		if (DRIVER_LOADED)
+			return;
+		try {
+			// Load the JDBC driver
+			String driverName = cfgManager.getString(Config.JDBC_DB_DRIVER);
+			LOG.info("Loading DB driver " + driverName);
+			Class.forName(driverName);
+			BaseJdbcDAO.DRIVER_LOADED = true;
+		} catch (ClassNotFoundException e) {
+			BaseJdbcDAO.DRIVER_LOADED = false;
+			LOG.error("Could not load DB Driver class", e);
+		}
+
 	}
 
 	public void release() {
 
-		EntityManager tmpem = this.em;
-		this.em = null;
+		Connection tmpConn = this.connection;
+		this.connection = null;
 
-		if (this.ourEntityManager) {
+		if (this.ourConnection) {
 
 			RuntimeException exception = null;
-			if (!tmpem.getTransaction().getRollbackOnly()) {
-				LOG.debug("Committing EntityManagerInstance " + tmpem.toString());
+			if (!this.rollback) {
+				LOG.debug("Committing connection " + tmpConn.toString());
 				try {
-					tmpem.getTransaction().commit();
-					tmpem.close();
-					LOG.debug("Released EntityManagerInstance " + tmpem.toString());
-
+					tmpConn.commit();
+					tmpConn.close();
+					LOG.debug("Released connection " + tmpConn.toString());
 					return;
-				} catch (RuntimeException e) {
+				} catch (SQLException e) {
 					// this is the most relevant exception, so keep it then
 					// throw it
-					exception = e;
+					exception = new RuntimeException(e);
 					LOG.error("Exception on commit:", e);
 				}
 			}
-			LOG.debug("Rollback EntityManagerInstance " + tmpem.toString());
+			LOG.debug("Rollback connection " + tmpConn.toString());
 			try {
-				tmpem.getTransaction().rollback();
-			} catch (RuntimeException e) {
+				tmpConn.rollback();
+			} catch (SQLException e) {
 				if (exception == null)
-					exception = e;
+					exception = new RuntimeException(e);
 				LOG.error("Exception on rollback:", e);
 			}
 			try {
-				tmpem.close();
-			} catch (RuntimeException e) {
+				tmpConn.close();
+			} catch (SQLException e) {
 				if (exception == null)
-					exception = e;
+					exception = new RuntimeException(e);
 				LOG.error("Exception on close:", e);
 			}
 			if (exception != null)
@@ -93,6 +132,6 @@ public class BaseJdbcDAO implements BaseDAO {
 	}
 
 	public void markRollback() {
-		this.em.getTransaction().setRollbackOnly();
+		this.rollback = true;
 	}
 }

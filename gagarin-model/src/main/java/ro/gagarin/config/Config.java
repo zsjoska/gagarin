@@ -25,7 +25,14 @@ public enum Config {
 	/**
 	 * 
 	 */
-	ADMIN_PASSWORD("password");
+	ADMIN_PASSWORD("password"),
+
+	/**
+	 * 
+	 */
+	JDBC_DB_DRIVER("org.apache.derby.jdbc.EmbeddedDriver"),
+
+	JDBC_CONNECTION_URL(""), JDBC_DB_USER(""), JDBC_DB_PASSWORD("");
 
 	private final String defValue;
 

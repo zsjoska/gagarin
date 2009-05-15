@@ -2,8 +2,8 @@ package ro.gagarin;
 
 import ro.gagarin.config.FileConfigurationManager;
 import ro.gagarin.dummyimpl.DummyAuthorizationManager;
-import ro.gagarin.dummyimpl.DummyDAOManager;
 import ro.gagarin.hibernate.BaseHibernateDAO;
+import ro.gagarin.jdbc.JdbcDAOManager;
 import ro.gagarin.session.BasicSessionManager;
 import ro.gagarin.session.Session;
 
@@ -31,7 +31,7 @@ public class ModelFactory {
 	}
 
 	public static DAOManager getDAOManager() {
-		return DummyDAOManager.getInstance();
+		return JdbcDAOManager.getInstance();
 	}
 
 	/**

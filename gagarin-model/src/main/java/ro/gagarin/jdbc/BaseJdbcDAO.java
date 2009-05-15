@@ -2,6 +2,7 @@ package ro.gagarin.jdbc;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
@@ -68,7 +69,7 @@ public class BaseJdbcDAO implements BaseDAO {
 
 	}
 
-	private Connection getConnection() {
+	protected Connection getConnection() {
 		return this.connection;
 	}
 
@@ -133,5 +134,31 @@ public class BaseJdbcDAO implements BaseDAO {
 
 	public void markRollback() {
 		this.rollback = true;
+	}
+
+	public void checkCreateDependencies() {
+		TableEnum[] values = TableEnum.values();
+		try {
+			for (TableEnum table : values) {
+				PreparedStatement prepareStatement;
+				try {
+					prepareStatement = getConnection().prepareStatement(table.getTest());
+					if (prepareStatement.execute())
+						continue;
+				} catch (SQLException e) {
+					LOG.info("Test " + table.name() + " failed; Creating...");
+				}
+				prepareStatement = getConnection().prepareStatement(table.getCreate());
+				if (prepareStatement.execute()) {
+					LOG.info(table.name() + " Created.");
+				} else {
+					LOG.info(table.name() + " Not created.");
+				}
+
+			}
+		} catch (SQLException e) {
+			LOG.error("Unexpected exception during the table verification", e);
+			throw new RuntimeException(e);
+		}
 	}
 }

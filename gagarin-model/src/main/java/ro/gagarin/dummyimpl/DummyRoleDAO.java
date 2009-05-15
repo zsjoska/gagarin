@@ -13,7 +13,7 @@ import ro.gagarin.application.objects.AppUserRole;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
 
-public class DummyRoleDAO implements RoleDAO {
+public class DummyRoleDAO extends DummyBase implements RoleDAO {
 
 	private static HashMap<Long, AppUserPermission> permissions_id = new HashMap<Long, AppUserPermission>();
 	private static HashMap<Long, AppUserRole> roles_id = new HashMap<Long, AppUserRole>();

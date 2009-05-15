@@ -26,19 +26,18 @@ public class ApplicationInitializer {
 
 	private static boolean initRun = false;
 
-	private final ConfigurationManager cfgManager;
+	private ConfigurationManager cfgManager;
 
-	private final UserDAO userManager;
+	private UserDAO userManager;
 
-	private final RoleDAO roleManager;
+	private RoleDAO roleManager;
 
 	private String task;
 
-	public ApplicationInitializer(ConfigurationManager cfgManager, UserDAO userManager,
-			RoleDAO roleManager) {
-		this.cfgManager = cfgManager;
-		this.userManager = userManager;
-		this.roleManager = roleManager;
+	private final Session session;
+
+	public ApplicationInitializer(Session session) {
+		this.session = session;
 	}
 
 	public static synchronized boolean init() {
@@ -51,13 +50,9 @@ public class ApplicationInitializer {
 
 		Session session = new Session();
 
-		UserDAO userManager = ModelFactory.getDAOManager().getUserDAO(session);
-		ConfigurationManager cfgManager = ModelFactory.getConfigurationManager(session);
-		RoleDAO roleManager = ModelFactory.getDAOManager().getRoleDAO(session);
-
-		ApplicationInitializer initializer = new ApplicationInitializer(cfgManager, userManager,
-				roleManager);
+		ApplicationInitializer initializer = new ApplicationInitializer(session);
 		try {
+
 			initializer.doInit();
 		} catch (Exception e) {
 			LOG.error("Application initializer failed for task:" + initializer.getTask(), e);
@@ -71,6 +66,13 @@ public class ApplicationInitializer {
 	}
 
 	private void doInit() throws FieldRequiredException, ItemNotFoundException, ItemExistsException {
+
+		this.setTask("CREATE_MANAGERS");
+		initManagers(this.session);
+
+		this.setTask("CHECK_DB_TABLES");
+		checkCreateDBTables();
+
 		this.setTask("GET_CFG_ADMIN_ROLE");
 		String adminRoleName = cfgManager.getString(Config.ADMIN_ROLE_NAME);
 
@@ -87,6 +89,17 @@ public class ApplicationInitializer {
 		checkAdminUsers(adminRole);
 
 		this.setTask("DONE");
+
+	}
+
+	private void initManagers(Session session) {
+		this.cfgManager = ModelFactory.getConfigurationManager(session);
+		this.userManager = ModelFactory.getDAOManager().getUserDAO(session);
+		this.roleManager = ModelFactory.getDAOManager().getRoleDAO(session);
+	}
+
+	private void checkCreateDBTables() {
+		this.userManager.checkCreateDependencies();
 
 	}
 

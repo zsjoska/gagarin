@@ -13,7 +13,7 @@ import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserRole;
 
-public class DummyUserDAO implements UserDAO {
+public class DummyUserDAO extends DummyBase implements UserDAO {
 
 	private static final transient Logger LOG = Logger.getLogger(DummyUserDAO.class);
 

@@ -94,4 +94,9 @@ public class BaseHibernateDAO implements BaseDAO {
 	public void markRollback() {
 		this.em.getTransaction().setRollbackOnly();
 	}
+
+	@Override
+	public void checkCreateDependencies() {
+		// this is done by the framework
+	}
 }

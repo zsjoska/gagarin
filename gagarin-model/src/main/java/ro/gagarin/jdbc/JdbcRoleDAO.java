@@ -6,9 +6,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityNotFoundException;
-
 import org.apache.log4j.Logger;
 
 import ro.gagarin.RoleDAO;
@@ -82,18 +79,17 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 					"INSERT INTO UserRoles( id, roleName) VALUES (?,?)");
 			query.setLong(1, role.getId());
 			query.setString(2, role.getRoleName());
-			int rows = query.executeUpdate();
+			query.executeUpdate();
 
-			if (rows == 1) {
-				LOG.info("UserPermission " + role.getRoleName() + " was created");
-				return role.getId();
-			} else {
-				LOG.info("UserPermission " + role.getRoleName() + " was not created");
-			}
+			LOG.info("UserPermission " + role.getRoleName() + " was created");
+			return role.getId();
 		} catch (SQLException e) {
 			LOG.error("createPermission: Error Executing query", e);
 			super.markRollback();
+			// TODO: throw exception to signal the error
 		}
+		LOG.error("UserPermission " + role.getRoleName() + " was not created");
+		return 0;
 
 		// try {
 		//
@@ -112,44 +108,6 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 		// throw e;
 		// }
 
-		return 0;
-	}
-
-	public static DBUserRole findOrCreateRole(EntityManager em, UserRole role) {
-
-		// DBUserRole reference = em.find(DBUserRole.class, role.getId());
-		//
-		// if (reference != null) {
-		// LOG.debug("found role" + reference.getId());
-		// } else if (role instanceof DBUserRole) {
-		// reference = (DBUserRole) role;
-		//
-		// } else {
-		// reference = new DBUserRole(role);
-		// }
-		//
-		// return reference;
-		return null;
-	}
-
-	public static DBUserPermission findPermission(EntityManager em, UserPermission perm)
-			throws EntityNotFoundException {
-
-		// DBUserPermission reference = em.find(DBUserPermission.class,
-		// perm.getId());
-		//
-		// if (reference != null) {
-		// LOG.debug("found permission" + reference.getId());
-		// return reference;
-		// } else if (perm instanceof DBUserPermission) {
-		// reference = (DBUserPermission) perm;
-		//
-		// } else {
-		// reference = new DBUserPermission(perm);
-		// }
-		//
-		// return reference;
-		return null;
 	}
 
 	@Override
@@ -258,7 +216,8 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 	public UserPermission getPermissionByName(String permissionName) {
 		// try {
 		// Query query = getEM().createQuery(
-		// "select p from DBUserPermission p where p.permissionName=:permissionName");
+		// "select p from DBUserPermission p where p.permissionName=:permissionName"
+		// );
 		// query.setParameter("permissionName", permissionName);
 		//
 		// UserPermission permission = (UserPermission) query.getSingleResult();
@@ -315,7 +274,8 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 		// // Query query = getEM()
 		// // .createQuery(
 		// //
-		// "select r from DBUserPermission r where r.id=:subRoleid and r not in (select p from DBUserPermission p where p.id=:mainRoleid)")
+		// "select r from DBUserPermission r where r.id=:subRoleid and r not in (select p from DBUserPermission p where p.id=:mainRoleid)"
+		// )
 		// // .setParameter("mainRoleid",
 		// // main.getId()).setParameter("subRoleid",
 		// // substract.getId());
@@ -327,12 +287,14 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 		// "select r.userPermissions as p from DBUserRole r where r.id=:subRoleid and (p not in ("
 		// // +
 		// //
-		// "select q.userPermissions as s from DBUserRole q where q.id=:mainRoleid))");
+		// "select q.userPermissions as s from DBUserRole q where q.id=:mainRoleid))"
+		// );
 		// // query.setParameter("subRoleid", substract.getId());
 		// // query.setParameter("mainRoleid", main.getId());
 		// Query query = getEM()
 		// .createQuery(
-		// "select q.userPermission from DBRoleAssignment q where q.userRole.id=:mainRoleid");
+		// "select q.userPermission from DBRoleAssignment q where q.userRole.id=:mainRoleid"
+		// );
 		// query.setParameter("mainRoleid", main.getId());
 		// return query.getResultList();
 		// } catch (RuntimeException e) {

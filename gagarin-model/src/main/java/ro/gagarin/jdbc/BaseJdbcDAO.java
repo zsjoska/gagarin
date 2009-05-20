@@ -33,7 +33,7 @@ public class BaseJdbcDAO implements BaseDAO {
 
 		synchronized (session) {
 			session.setBusy(true);
-			Object property = session.getProperty(BaseJdbcDAO.class);
+			Object property = session.getProperty(BaseDAO.class);
 			if (property instanceof BaseJdbcDAO) {
 
 				Connection connection = ((BaseJdbcDAO) property).getConnection();
@@ -48,7 +48,7 @@ public class BaseJdbcDAO implements BaseDAO {
 				}
 				this.connection = createConnection(cfgManager);
 				this.ourConnection = true;
-				session.setProperty(BaseJdbcDAO.class, this);
+				session.setProperty(BaseDAO.class, this);
 				LOG.debug("Created Connection Instance " + connection.toString());
 			}
 		}

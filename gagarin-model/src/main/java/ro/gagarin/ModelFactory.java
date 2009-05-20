@@ -2,7 +2,6 @@ package ro.gagarin;
 
 import ro.gagarin.config.FileConfigurationManager;
 import ro.gagarin.dummyimpl.DummyAuthorizationManager;
-import ro.gagarin.hibernate.BaseHibernateDAO;
 import ro.gagarin.jdbc.JdbcDAOManager;
 import ro.gagarin.session.BasicSessionManager;
 import ro.gagarin.session.Session;
@@ -57,7 +56,7 @@ public class ModelFactory {
 		// BasicSessionManager.destroySession(Session session)
 
 		synchronized (session) {
-			Class<?> key = BaseHibernateDAO.class;
+			Class<?> key = BaseDAO.class;
 			Object property = session.getProperty(key);
 			session.setProperty(key, null);
 			if (property instanceof BaseDAO) {

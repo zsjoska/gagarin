@@ -24,7 +24,7 @@ public interface SessionManager {
 	 *            the scope of the session
 	 * @return a new initialized session
 	 */
-	Session createSession(String language, String reason);
+	Session createSession(String language, String reason, ManagerFactory factory);
 
 	// TODO: create associateUser
 

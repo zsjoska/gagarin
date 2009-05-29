@@ -9,7 +9,8 @@ import javax.jws.WebService;
 import org.apache.log4j.Logger;
 
 import ro.gagarin.AuthorizationManager;
-import ro.gagarin.ModelFactory;
+import ro.gagarin.ManagerFactory;
+import ro.gagarin.BasicManagerFactory;
 import ro.gagarin.RoleDAO;
 import ro.gagarin.SessionManager;
 import ro.gagarin.UserDAO;
@@ -36,10 +37,12 @@ public class UserService {
 			ItemExistsException {
 		LOG.info("createUser " + user.getUsername());
 
-		SessionManager sessionManager = ModelFactory.getSessionManager();
+		ManagerFactory factory = BasicManagerFactory.getInstance();
+
+		SessionManager sessionManager = factory.getSessionManager();
 		Session session = sessionManager.acquireSession(sessionId);
-		UserDAO userManager = ModelFactory.getDAOManager().getUserDAO(session);
-		AuthorizationManager permissionManager = ModelFactory.getAuthorizationManager(session);
+		UserDAO userManager = factory.getDAOManager().getUserDAO(session);
+		AuthorizationManager permissionManager = factory.getAuthorizationManager(session);
 
 		try {
 
@@ -55,17 +58,20 @@ public class UserService {
 					+ sessionId);
 			return userId;
 		} finally {
-			ModelFactory.releaseSession(session);
+			factory.releaseSession(session);
 		}
 	}
 
 	@WebMethod
 	public List<WSUserRole> getRoleList(String sessionId) throws SessionNotFoundException,
 			PermissionDeniedException {
-		SessionManager sessionManager = ModelFactory.getSessionManager();
+
+		ManagerFactory factory = BasicManagerFactory.getInstance();
+
+		SessionManager sessionManager = factory.getSessionManager();
 		Session session = sessionManager.acquireSession(sessionId);
-		RoleDAO roleManager = ModelFactory.getDAOManager().getRoleDAO(session);
-		AuthorizationManager permissionManager = ModelFactory.getAuthorizationManager(session);
+		RoleDAO roleManager = factory.getDAOManager().getRoleDAO(session);
+		AuthorizationManager permissionManager = factory.getAuthorizationManager(session);
 
 		try {
 
@@ -79,17 +85,20 @@ public class UserService {
 			return convRoles;
 
 		} finally {
-			ModelFactory.releaseSession(session);
+			factory.releaseSession(session);
 		}
 	}
 
 	@WebMethod
 	public WSUserRole createRoleWithPermissions(String sessionId, String[] strings)
 			throws SessionNotFoundException, PermissionDeniedException {
-		SessionManager sessionManager = ModelFactory.getSessionManager();
+
+		ManagerFactory factory = BasicManagerFactory.getInstance();
+
+		SessionManager sessionManager = factory.getSessionManager();
 		Session session = sessionManager.acquireSession(sessionId);
-		RoleDAO roleManager = ModelFactory.getDAOManager().getRoleDAO(session);
-		AuthorizationManager permissionManager = ModelFactory.getAuthorizationManager(session);
+		RoleDAO roleManager = factory.getDAOManager().getRoleDAO(session);
+		AuthorizationManager permissionManager = factory.getAuthorizationManager(session);
 
 		try {
 
@@ -99,7 +108,7 @@ public class UserService {
 			return null;
 
 		} finally {
-			ModelFactory.releaseSession(session);
+			factory.releaseSession(session);
 		}
 	}
 

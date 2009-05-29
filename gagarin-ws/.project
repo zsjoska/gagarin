@@ -2,6 +2,8 @@
   <name>gagarin-ws</name>
   <comment/>
   <projects>
+    <project>gagarin-app</project>
+    <project>gagarin-da-jdbc</project>
     <project>gagarin-model</project>
   </projects>
   <buildSpec>

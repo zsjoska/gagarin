@@ -10,11 +10,12 @@ import javax.jws.WebService;
 
 import org.apache.log4j.Logger;
 
-import ro.gagarin.ModelFactory;
+import ro.gagarin.ManagerFactory;
+import ro.gagarin.BasicManagerFactory;
 import ro.gagarin.SessionManager;
 import ro.gagarin.UserDAO;
-import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.exceptions.ItemNotFoundException;
+import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.User;
 
@@ -30,13 +31,14 @@ public class Authentication {
 	@WebMethod
 	public String createSession(String language, String reason) {
 
-		SessionManager sessionManager = ModelFactory.getSessionManager();
+		SessionManager sessionManager = BasicManagerFactory.getInstance().getSessionManager();
 
 		if (language == null) {
 			language = "en_us";
 		}
 
-		Session session = sessionManager.createSession(language, reason);
+		Session session = sessionManager
+				.createSession(language, reason, BasicManagerFactory.getInstance());
 		LOG.info("Session created:" + session.getId() + "; reason:" + session.getReason()
 				+ "; language:" + session.getLanguage());
 
@@ -50,14 +52,16 @@ public class Authentication {
 
 		LOG.info("Login User " + username + "; extra:" + Arrays.toString(extra));
 
-		SessionManager sessionManager = ModelFactory.getSessionManager();
+		ManagerFactory factory = BasicManagerFactory.getInstance();
+
+		SessionManager sessionManager = factory.getSessionManager();
 		Session session = sessionManager.acquireSession(sessionID);
 		if (session == null)
 			throw new SessionNotFoundException(sessionID);
 
 		try {
 
-			UserDAO userManager = ModelFactory.getDAOManager().getUserDAO(session);
+			UserDAO userManager = factory.getDAOManager().getUserDAO(session);
 			User user = userManager.userLogin(username, password);
 
 			session.setUser(user);
@@ -65,14 +69,14 @@ public class Authentication {
 					+ session.getId());
 			return true;
 		} finally {
-			ModelFactory.releaseSession(session);
+			factory.releaseSession(session);
 		}
 	}
 
 	@WebMethod
 	public void logout(String sessionId) {
 		LOG.info("Session logout " + sessionId);
-		SessionManager sessionManager = ModelFactory.getSessionManager();
+		SessionManager sessionManager = BasicManagerFactory.getInstance().getSessionManager();
 		sessionManager.logout(sessionId);
 	}
 }

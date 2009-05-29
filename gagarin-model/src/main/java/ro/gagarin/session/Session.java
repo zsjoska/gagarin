@@ -3,6 +3,7 @@ package ro.gagarin.session;
 import java.util.HashMap;
 
 import ro.gagarin.BaseDAO;
+import ro.gagarin.ManagerFactory;
 import ro.gagarin.user.BaseEntity;
 import ro.gagarin.user.User;
 
@@ -22,6 +23,7 @@ public class Session extends BaseEntity {
 	private boolean busy;
 
 	HashMap<String, Object> properties = new HashMap<String, Object>();
+	private ManagerFactory managerFactory;
 
 	public Session() {
 	}
@@ -108,5 +110,13 @@ public class Session extends BaseEntity {
 
 	public boolean isBusy() {
 		return busy;
+	}
+
+	public void setManagerFactory(ManagerFactory factory) {
+		this.managerFactory = factory;
+	}
+
+	public ManagerFactory getManagerFactory() {
+		return this.managerFactory;
 	}
 }

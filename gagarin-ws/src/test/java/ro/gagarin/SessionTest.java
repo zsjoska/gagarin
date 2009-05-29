@@ -6,12 +6,13 @@ import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
+import ro.gagarin.application.objects.AppUser;
 import ro.gagarin.config.Config;
 import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.ItemExistsException;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.SessionNotFoundException;
-import ro.gagarin.hibernate.objects.DBUser;
+import ro.gagarin.jdbc.objects.DBUser;
 import ro.gagarin.session.Session;
 import ro.gagarin.ws.Authentication;
 
@@ -30,16 +31,18 @@ public class SessionTest {
 	public void testSuccessLogin() throws ItemNotFoundException, SessionNotFoundException,
 			FieldRequiredException, ItemExistsException {
 
-		UserDAO userManager = ModelFactory.getDAOManager().getUserDAO(session);
-		RoleDAO roleManager = ModelFactory.getDAOManager().getRoleDAO(session);
-		ConfigurationManager cfgManager = ModelFactory.getConfigurationManager(session);
+		ManagerFactory factory = BasicManagerFactory.getInstance();
 
-		DBUser user = new DBUser();
+		UserDAO userManager = factory.getDAOManager().getUserDAO(session);
+		RoleDAO roleManager = factory.getDAOManager().getRoleDAO(session);
+		ConfigurationManager cfgManager = factory.getConfigurationManager(session);
+
+		AppUser user = new AppUser();
 		user.setUsername("1" + username);
 		user.setPassword("password1");
 		user.setRole(roleManager.getRoleByName(cfgManager.getString(Config.ADMIN_ROLE_NAME)));
 		userManager.createUser(user);
-		ModelFactory.releaseSession(session);
+		factory.releaseSession(session);
 
 		String session = authentication.createSession(null, null);
 		assertNotNull(session);
@@ -53,9 +56,11 @@ public class SessionTest {
 	public void testFailedLogin() throws SessionNotFoundException, FieldRequiredException,
 			ItemExistsException, ItemNotFoundException {
 
-		UserDAO userManager = ModelFactory.getDAOManager().getUserDAO(session);
-		ConfigurationManager cfgManager = ModelFactory.getConfigurationManager(session);
-		RoleDAO roleManager = ModelFactory.getDAOManager().getRoleDAO(session);
+		ManagerFactory factory = BasicManagerFactory.getInstance();
+
+		UserDAO userManager = factory.getDAOManager().getUserDAO(session);
+		ConfigurationManager cfgManager = factory.getConfigurationManager(session);
+		RoleDAO roleManager = factory.getDAOManager().getRoleDAO(session);
 
 		DBUser user = new DBUser();
 		user.setUsername("2" + username);
@@ -63,7 +68,7 @@ public class SessionTest {
 		user.setRole(roleManager.getRoleByName(cfgManager.getString(Config.ADMIN_ROLE_NAME)));
 		userManager.createUser(user);
 
-		ModelFactory.releaseSession(session);
+		factory.releaseSession(session);
 
 		String session = authentication.createSession(null, null);
 		assertNotNull(session);
@@ -85,10 +90,11 @@ public class SessionTest {
 	@Test
 	public void testSessionDeletion() throws ItemNotFoundException, FieldRequiredException,
 			ItemExistsException {
+		ManagerFactory factory = BasicManagerFactory.getInstance();
 
-		UserDAO userManager = ModelFactory.getDAOManager().getUserDAO(session);
-		ConfigurationManager cfgManager = ModelFactory.getConfigurationManager(session);
-		RoleDAO roleManager = ModelFactory.getDAOManager().getRoleDAO(session);
+		UserDAO userManager = factory.getDAOManager().getUserDAO(session);
+		ConfigurationManager cfgManager = factory.getConfigurationManager(session);
+		RoleDAO roleManager = factory.getDAOManager().getRoleDAO(session);
 
 		DBUser user = new DBUser();
 		user.setUsername("3" + username);
@@ -96,7 +102,7 @@ public class SessionTest {
 		user.setRole(roleManager.getRoleByName(cfgManager.getString(Config.ADMIN_ROLE_NAME)));
 		userManager.createUser(user);
 
-		ModelFactory.releaseSession(session);
+		factory.releaseSession(session);
 
 		String session = authentication.createSession(null, null);
 		assertNotNull(session);
@@ -114,11 +120,13 @@ public class SessionTest {
 	@Test
 	public void testSessionExpiration() throws InterruptedException {
 
-		ConfigurationManager cfgManager = ModelFactory.getConfigurationManager(session);
+		ManagerFactory factory = BasicManagerFactory.getInstance();
+
+		ConfigurationManager cfgManager = factory.getConfigurationManager(session);
 		cfgManager.setConfigValue(Config.USER_SESSION_TIMEOUT, "100");
 
-		SessionManager sessionManager = ModelFactory.getSessionManager();
-		Session session = sessionManager.createSession(null, null);
+		SessionManager sessionManager = factory.getSessionManager();
+		Session session = sessionManager.createSession(null, null, BasicManagerFactory.getInstance());
 		assertNotNull(session);
 		assertEquals("We just set the timeout to 100", session.getSessionTimeout(), 100);
 
@@ -137,6 +145,6 @@ public class SessionTest {
 			// expected exception
 		}
 
-		ModelFactory.releaseSession(session);
+		factory.releaseSession(session);
 	}
 }

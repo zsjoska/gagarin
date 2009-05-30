@@ -28,6 +28,10 @@ public class Session extends BaseEntity {
 	public Session() {
 	}
 
+	public Session(ManagerFactory managerFactory) {
+		this.managerFactory = managerFactory;
+	}
+
 	public void setLanguage(String language) {
 		this.language = language;
 	}

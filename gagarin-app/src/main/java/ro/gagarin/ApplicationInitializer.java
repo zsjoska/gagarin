@@ -51,10 +51,10 @@ public class ApplicationInitializer {
 
 		LOG.info("Application initializer started");
 
-		Session session = new Session();
+		Session session = new Session(BasicManagerFactory.getInstance());
 
-		ApplicationInitializer initializer = new ApplicationInitializer(session, BasicManagerFactory
-				.getInstance());
+		ApplicationInitializer initializer = new ApplicationInitializer(session,
+				BasicManagerFactory.getInstance());
 		try {
 
 			initializer.doInit();

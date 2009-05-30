@@ -12,8 +12,6 @@
 		<module>../gagarin-model</module>
 		<module>../gagarin-app</module>
 		<module>../gagarin-da-jdbc</module>
-		<module>../gagarin-da-dummy</module>
-		<module>../gagarin-da-hibernate</module>
 		<module>../gagarin-wsclient</module>
 	</modules>
 	<build>

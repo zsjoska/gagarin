@@ -4,7 +4,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -55,21 +57,6 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 				}
 		}
 		return null;
-		// try {
-		// Query query = getEM().createQuery(
-		// "select r from DBUserRole r where r.roleName=:roleName");
-		// query.setParameter("roleName", roleName);
-		//
-		// DBUserRole adminRole = (DBUserRole) query.getSingleResult();
-		// return adminRole;
-		// } catch (NoResultException e) {
-		// LOG.info("No " + roleName + " role found");
-		// return null;
-		// } catch (RuntimeException e) {
-		// LOG.error("getRoleByName", e);
-		// throw e;
-		// }
-
 	}
 
 	@Override
@@ -81,7 +68,7 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 			query.setString(2, role.getRoleName());
 			query.executeUpdate();
 
-			LOG.info("UserPermission " + role.getRoleName() + " was created");
+			LOG.info("UserRole " + role.getRoleName() + " was created");
 			return role.getId();
 		} catch (SQLException e) {
 			LOG.error("createPermission: Error Executing query", e);
@@ -90,24 +77,6 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 		}
 		LOG.error("UserPermission " + role.getRoleName() + " was not created");
 		return 0;
-
-		// try {
-		//
-		// DBUserRole dbRole = findOrCreateRole(getEM(), role);
-		//
-		// // requireStringField(user.getUsername(), "username");
-		//
-		// getEM().persist(dbRole);
-		// getEM().flush();
-		//
-		// LOG.info("Created role:" + role.getRoleName() + "; id:" +
-		// role.getId());
-		// return role.getId();
-		// } catch (RuntimeException e) {
-		// LOG.error("createRole", e);
-		// throw e;
-		// }
-
 	}
 
 	@Override
@@ -118,34 +87,17 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 					"INSERT INTO UserPermissions( id, permissionName) VALUES (?,?)");
 			query.setLong(1, perm.getId());
 			query.setString(2, perm.getPermissionName());
-			int rows = query.executeUpdate();
-
-			if (rows == 1) {
-				LOG.info("UserPermission " + perm.getPermissionName() + " was created");
-				return perm.getId();
-			} else {
-				LOG.info("UserPermission " + perm.getPermissionName() + " was not created");
-			}
+			query.executeUpdate();
+			LOG.info("UserPermission " + perm.getPermissionName() + " was created");
+			return perm.getId();
 		} catch (SQLException e) {
 			LOG.error("createPermission: Error Executing query", e);
 			super.markRollback();
+			// TODO: throw exception to signal the error
 		}
 
 		// // TODO: requireStringField(user.getUsername(), "username");
-		//
-		// try {
-		// DBUserPermission dbPermission = findPermission(getEM(), perm);
-		//
-		// getEM().persist(dbPermission);
-		// getEM().flush();
-		// LOG.info("Created permission:" + perm.getPermissionName() + "; id:" +
-		// perm.getId());
-		// return perm.getId();
-		// } catch (RuntimeException e) {
-		// LOG.error("createPermission", e);
-		// throw e;
-		// }
-		return 0;
+		return -1;
 	}
 
 	@Override
@@ -195,62 +147,62 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 
 	@Override
 	public void deleteRole(UserRole role) {
-		// try {
-		// DBUserRole dbUserRole = getEM().find(DBUserRole.class, role.getId());
-		// if (dbUserRole == null) {
-		// LOG.debug("Role was not found:" + role.getRoleName() + "; id:" +
-		// role.getId());
-		// return;
-		// }
-		//
-		// getEM().remove(dbUserRole);
-		// LOG.info("Deleted role:" + role.getRoleName() + "; id:" +
-		// role.getId());
-		// } catch (RuntimeException e) {
-		// LOG.error("deleteRole", e);
-		// throw e;
-		// }
+		try {
+			PreparedStatement query = getConnection().prepareStatement(
+					"DELETE FROM UserRoles WHERE id = ?");
+			query.setLong(1, role.getId());
+			query.executeUpdate();
+			LOG.info("UserRole " + role.getRoleName() + " was deleted");
+		} catch (SQLException e) {
+			LOG.error("deleteRole: Error Executing query", e);
+			super.markRollback();
+		}
 	}
 
 	@Override
 	public UserPermission getPermissionByName(String permissionName) {
-		// try {
-		// Query query = getEM().createQuery(
-		// "select p from DBUserPermission p where p.permissionName=:permissionName"
-		// );
-		// query.setParameter("permissionName", permissionName);
-		//
-		// UserPermission permission = (UserPermission) query.getSingleResult();
-		// return permission;
-		// } catch (NoResultException e) {
-		// LOG.info("No " + permissionName + " role found");
-		// return null;
-		// } catch (RuntimeException e) {
-		// LOG.error("getPermissionByName", e);
-		// throw e;
-		// }
+		DBUserPermission perm = new DBUserPermission();
+
+		ResultSet rs = null;
+		try {
+			PreparedStatement query = getConnection().prepareStatement(
+					"SELECT id, permissionName FROM UserPermissions WHERE permissionName = ?");
+			query.setString(1, permissionName);
+			rs = query.executeQuery();
+			if (rs.next()) {
+				perm.setId(rs.getLong("id"));
+				perm.setPermissionName(rs.getString("permissionName"));
+				rs.close();
+				return perm;
+			} else {
+				LOG.info("UserPermission " + permissionName + " was not found");
+			}
+		} catch (SQLException e) {
+			LOG.error("getPermissionByName: Error Executing query", e);
+			super.markRollback();
+		} finally {
+			if (rs != null)
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					LOG.error("getPermissionByName: Error on close", e);
+				}
+		}
 		return null;
 	}
 
 	@Override
 	public void deletePermission(UserPermission perm) {
-		// try {
-		// DBUserPermission dbUserPermission =
-		// getEM().find(DBUserPermission.class, perm.getId());
-		// if (dbUserPermission == null) {
-		// LOG.debug("Permission was not found:" + perm.getPermissionName() +
-		// "; id:"
-		// + perm.getId());
-		// return;
-		// }
-		// getEM().remove(dbUserPermission);
-		// LOG.info("Deleted permission:" + perm.getPermissionName() + "; id:" +
-		// perm.getId());
-		// } catch (RuntimeException e) {
-		// LOG.error("deletePermission", e);
-		// throw e;
-		// }
-
+		try {
+			PreparedStatement query = getConnection().prepareStatement(
+					"DELETE FROM UserPermissions WHERE id = ?");
+			query.setLong(1, perm.getId());
+			query.executeUpdate();
+			LOG.info("UserRole " + perm.getPermissionName() + " was deleted");
+		} catch (SQLException e) {
+			LOG.error("deletePermission: Error Executing query", e);
+			super.markRollback();
+		}
 	}
 
 	@Override
@@ -307,6 +259,20 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 	@Override
 	public void assignPermissionToRole(UserRole role, UserPermission perm)
 			throws ItemNotFoundException {
+
+		try {
+			PreparedStatement query = getConnection().prepareStatement(
+					"INSERT INTO PermissionAssignment( role_id, perm_id) VALUES (?,?)");
+			query.setLong(1, role.getId());
+			query.setLong(2, perm.getId());
+			query.executeUpdate();
+			LOG.info("UserPermission " + perm.getPermissionName() + " was assigned to role "
+					+ role.getRoleName());
+		} catch (SQLException e) {
+			LOG.error("createPermission: Error Executing query", e);
+			super.markRollback();
+		}
+
 		// try {
 		// DBUserRole dbRole = getEM().find(DBUserRole.class, role.getId());
 		// if (dbRole == null)
@@ -325,5 +291,69 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 		// LOG.error("assignPermissionToRole", e);
 		// throw e;
 		// }
+	}
+
+	@Override
+	public Set<UserPermission> getRolePermissions(UserRole role) {
+		HashSet<UserPermission> perms = new HashSet<UserPermission>();
+		ResultSet rs = null;
+		try {
+			PreparedStatement query = getConnection()
+					.prepareStatement(
+							"SELECT id, permissionName FROM UserPermissions INNER JOIN PermissionAssignment ON id = perm_id WHERE role_id = ?");
+			query.setLong(1, role.getId());
+			rs = query.executeQuery();
+
+			while (rs.next()) {
+				DBUserPermission permission = new DBUserPermission();
+				permission.setId(rs.getLong("id"));
+				permission.setPermissionName(rs.getString("permissionName"));
+				perms.add(permission);
+			}
+			rs.close();
+		} catch (SQLException e) {
+			LOG.error("getRolePermissions: Error Executing query", e);
+			super.markRollback();
+		} finally {
+			if (rs != null)
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					LOG.error("getRolePermissions: Error on close", e);
+				}
+		}
+		return perms;
+	}
+
+	@Override
+	public Set<UserRole> getPermissionRoles(UserPermission perm) {
+		HashSet<UserRole> roles = new HashSet<UserRole>();
+		ResultSet rs = null;
+		try {
+			PreparedStatement query = getConnection()
+					.prepareStatement(
+							"SELECT id, roleName FROM UserRoles INNER JOIN PermissionAssignment ON id = role_id WHERE perm_id = ?");
+			query.setLong(1, perm.getId());
+			rs = query.executeQuery();
+
+			while (rs.next()) {
+				DBUserRole role = new DBUserRole();
+				role.setId(rs.getLong("id"));
+				role.setRoleName(rs.getString("roleName"));
+				roles.add(role);
+			}
+			rs.close();
+		} catch (SQLException e) {
+			LOG.error("getRolePermissions: Error Executing query", e);
+			super.markRollback();
+		} finally {
+			if (rs != null)
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					LOG.error("getRolePermissions: Error on close", e);
+				}
+		}
+		return roles;
 	}
 }

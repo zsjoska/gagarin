@@ -116,4 +116,14 @@ public class DummyRoleDAO extends DummyBase implements RoleDAO {
 		}
 		userRoles.add(userRole);
 	}
+
+	@Override
+	public Set<UserRole> getPermissionRoles(UserPermission perm) {
+		return perm.getUserRoles();
+	}
+
+	@Override
+	public Set<UserPermission> getRolePermissions(UserRole role) {
+		return role.getUserPermissions();
+	}
 }

@@ -6,18 +6,24 @@ public enum TableEnum {
 	 */
 	USERS(
 			"SELECT * FROM Users",
-			"CREATE TABLE Users (id bigint, name char(50), userName char(50), password char(50), roleid bigint)"),
+			"CREATE TABLE Users (id bigint, name varchar(100), userName varchar(50), password varchar(50), roleid bigint)"),
 
 	/**
 	 * 
 	 */
-	USERROLES("SELECT * FROM UserRoles", "CREATE TABLE UserRoles (id bigint, roleName char(50))"),
+	USERROLES("SELECT * FROM UserRoles", "CREATE TABLE UserRoles (id bigint, roleName varchar(50))"),
 
 	/**
 	 * 
 	 */
-	USER_ERMISSIONS("SELECT * FROM UserPermissions",
-			"CREATE TABLE UserPermissions (id bigint, permissionName char(50))");
+	USER_PERMISSIONS("SELECT * FROM UserPermissions",
+			"CREATE TABLE UserPermissions (id bigint, permissionName varchar(50))"),
+
+	/**
+	 * 
+	 */
+	PERMISSION_ASSIGNMENT("SELECT * FROM PermissionAssignment",
+			"CREATE TABLE PermissionAssignment (role_id bigint, perm_id bigint)");
 
 	private final String test;
 	private final String create;

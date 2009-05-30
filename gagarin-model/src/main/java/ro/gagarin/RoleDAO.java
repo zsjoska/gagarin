@@ -1,6 +1,7 @@
 package ro.gagarin;
 
 import java.util.List;
+import java.util.Set;
 
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.user.UserPermission;
@@ -27,5 +28,9 @@ public interface RoleDAO extends BaseDAO {
 	List<UserRole> getAllRoles();
 
 	void assignPermissionToRole(UserRole role, UserPermission perm) throws ItemNotFoundException;
+
+	Set<UserPermission> getRolePermissions(UserRole role);
+
+	Set<UserRole> getPermissionRoles(UserPermission perm);
 
 }

@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import java.util.List;
+import java.util.Set;
 
 import org.junit.After;
 import org.junit.Before;
@@ -30,8 +31,8 @@ public class RoleTest {
 
 	@Before
 	public void init() {
-		this.session = BasicManagerFactory.getInstance().getSessionManager().createSession(null, null,
-				BasicManagerFactory.getInstance());
+		this.session = BasicManagerFactory.getInstance().getSessionManager().createSession(null,
+				null, BasicManagerFactory.getInstance());
 	}
 
 	@After
@@ -89,13 +90,15 @@ public class RoleTest {
 
 		UserRole role2 = roleManager.getRoleByName("C_ROLE");
 		assertNotNull(role2);
-		assertNotNull(role2.getUserPermissions());
-		assertEquals(1, role2.getUserPermissions().size());
+		Set<UserPermission> perms = roleManager.getRolePermissions(role2);
+		assertNotNull(perms);
+		assertEquals(1, perms.size());
 
 		UserPermission perm2 = roleManager.getPermissionByName("C_PERMISSION");
 		assertNotNull(perm2);
-		assertNotNull(perm2.getUserRoles());
-		assertEquals(perm2.getUserRoles().size(), 1);
+		Set<UserRole> roles = roleManager.getPermissionRoles(perm2);
+		assertNotNull(roles);
+		assertEquals(1, roles.size());
 
 		roleManager.deleteRole(role);
 		roleManager.deletePermission(perm);

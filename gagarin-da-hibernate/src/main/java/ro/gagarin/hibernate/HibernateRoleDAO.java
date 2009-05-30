@@ -1,6 +1,7 @@
 package ro.gagarin.hibernate;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
@@ -173,7 +174,8 @@ public class HibernateRoleDAO extends BaseHibernateDAO implements RoleDAO {
 	@Override
 	public void deletePermission(UserPermission perm) {
 		try {
-			HDBUserPermission dbUserPermission = getEM().find(HDBUserPermission.class, perm.getId());
+			HDBUserPermission dbUserPermission = getEM()
+					.find(HDBUserPermission.class, perm.getId());
 			if (dbUserPermission == null) {
 				LOG.debug("Permission was not found:" + perm.getPermissionName() + "; id:"
 						+ perm.getId());
@@ -249,5 +251,15 @@ public class HibernateRoleDAO extends BaseHibernateDAO implements RoleDAO {
 			LOG.error("assignPermissionToRole", e);
 			throw e;
 		}
+	}
+
+	@Override
+	public Set<UserRole> getPermissionRoles(UserPermission perm) {
+		return perm.getUserRoles();
+	}
+
+	@Override
+	public Set<UserPermission> getRolePermissions(UserRole role) {
+		return role.getUserPermissions();
 	}
 }

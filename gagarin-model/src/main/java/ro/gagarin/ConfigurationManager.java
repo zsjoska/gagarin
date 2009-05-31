@@ -1,7 +1,10 @@
 package ro.gagarin;
 
+import java.io.InputStream;
+
 import ro.gagarin.config.Config;
 import ro.gagarin.config.SettingsChangeObserver;
+import ro.gagarin.jdbc.OperationException;
 
 /**
  * Base interface for the application to interact with the application
@@ -45,5 +48,7 @@ public interface ConfigurationManager {
 	void setConfigValue(Config config, String value);
 
 	String getString(Config admin_role_name);
+
+	InputStream getConfigFileStream(Config file) throws OperationException;
 
 }

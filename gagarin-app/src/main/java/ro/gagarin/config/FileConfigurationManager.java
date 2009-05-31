@@ -1,10 +1,16 @@
 package ro.gagarin.config;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 
 import ro.gagarin.ConfigurationManager;
+import ro.gagarin.exceptions.ErrorCodes;
+import ro.gagarin.jdbc.OperationException;
 
 public class FileConfigurationManager implements ConfigurationManager {
 
@@ -80,4 +86,26 @@ public class FileConfigurationManager implements ConfigurationManager {
 		return strValue;
 	}
 
+	@Override
+	public InputStream getConfigFileStream(Config fileConfig) throws OperationException {
+		String filename = getString(fileConfig);
+		File file = new File(filename);
+		try {
+			return new FileInputStream(file);
+		} catch (FileNotFoundException e) {
+			// ignore it as for now
+		}
+		InputStream is = this.getClass().getResourceAsStream(filename);
+		if (is != null) {
+			return is;
+		}
+		is = this.getClass().getResourceAsStream('/' + filename);
+		if (is != null) {
+			return is;
+		}
+
+		LOG.error("Could not load file for config " + fileConfig.name() + " tried to load from "
+				+ file.getAbsolutePath() + " and " + filename + " in classpath");
+		throw new OperationException(ErrorCodes.ERROR_READING_FILE, "File not found:" + filename);
+	}
 }

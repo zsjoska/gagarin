@@ -1,18 +1,30 @@
 package ro.gagarin.jdbc;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 
 import ro.gagarin.BaseDAO;
 import ro.gagarin.ConfigurationManager;
 import ro.gagarin.config.Config;
+import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.session.Session;
+import ro.gagarin.utils.Triple;
 
 public class BaseJdbcDAO implements BaseDAO {
+
+	private static final String END = "--END";
+	private static final String CREATE = "--CREATE:";
+	private static final String CHECK = "--CHECK:";
+
 	private static final transient Logger LOG = Logger.getLogger(BaseJdbcDAO.class);
 
 	private static boolean DRIVER_LOADED;
@@ -27,7 +39,8 @@ public class BaseJdbcDAO implements BaseDAO {
 		if (session == null)
 			throw new NullPointerException("attempt to initialize BaseHibernateManager with null");
 
-		ConfigurationManager cfgManager = session.getManagerFactory().getConfigurationManager(session);
+		ConfigurationManager cfgManager = session.getManagerFactory().getConfigurationManager(
+				session);
 		checkLoadDBDriver(cfgManager);
 
 		synchronized (session) {
@@ -135,29 +148,107 @@ public class BaseJdbcDAO implements BaseDAO {
 		this.rollback = true;
 	}
 
-	public void checkCreateDependencies() {
-		TableEnum[] values = TableEnum.values();
+	public void checkCreateDependencies(ConfigurationManager cfgManager) {
+
 		try {
-			for (TableEnum table : values) {
+			ArrayList<Triple<String, String, String>> parseDBSQLFile = parseDBSQLFile(cfgManager,
+					Config.DB_INIT_SQL_FILE);
+			for (Triple<String, String, String> tuple : parseDBSQLFile) {
+				LOG.info("CHECK:" + tuple.s1);
+				LOG.info("CREATE:" + tuple.s2);
+			}
+
+			for (Triple<String, String, String> t : parseDBSQLFile) {
 				PreparedStatement prepareStatement;
 				try {
-					prepareStatement = getConnection().prepareStatement(table.getTest());
-					if (prepareStatement.execute())
-						continue;
+					prepareStatement = getConnection().prepareStatement(t.s1);
+					prepareStatement.execute();
+					continue;
 				} catch (SQLException e) {
-					LOG.info("Test " + table.name() + " failed; Creating...");
+					LOG.info("Test " + t.s3 + " failed; Creating...");
 				}
-				prepareStatement = getConnection().prepareStatement(table.getCreate());
-				if (prepareStatement.execute()) {
-					LOG.info(table.name() + " Created.");
-				} else {
-					LOG.info(table.name() + " Not created.");
+				try {
+					prepareStatement = getConnection().prepareStatement(t.s2);
+					prepareStatement.execute();
+					LOG.info(t.s3 + " Created.");
+				} catch (SQLException e) {
+					LOG.error(t.s3 + " not created.", e);
+					throw e;
 				}
 
 			}
 		} catch (SQLException e) {
 			LOG.error("Unexpected exception during the table verification", e);
+			// TODO: replace the RuntimeException with operation Exception
 			throw new RuntimeException(e);
+		} catch (OperationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+	}
+
+	private ArrayList<Triple<String, String, String>> parseDBSQLFile(
+			ConfigurationManager cfgManager, Config config) throws OperationException {
+
+		ArrayList<Triple<String, String, String>> list = new ArrayList<Triple<String, String, String>>();
+
+		InputStream is = cfgManager.getConfigFileStream(Config.DB_INIT_SQL_FILE);
+
+		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+
+		String line = null;
+		try {
+			StringBuilder sb = null;
+			Triple<String, String, String> tuple = null;
+			while ((line = reader.readLine()) != null) {
+
+				if (line.startsWith(CHECK)) {
+					if (sb != null || tuple != null) {
+						throw new OperationException(ErrorCodes.FILE_SYNTAX_ERROR, END
+								+ " mark was not found.");
+					}
+					sb = new StringBuilder();
+					tuple = new Triple<String, String, String>(null, null, line.substring(
+							CHECK.length()).trim());
+				} else if (line.startsWith(CREATE)) {
+					if (tuple == null || sb == null) {
+						throw new OperationException(ErrorCodes.FILE_SYNTAX_ERROR, CHECK
+								+ " mark was missing");
+					}
+					tuple.s1 = sb.toString();
+					sb = new StringBuilder();
+				} else if (line.startsWith(END)) {
+					if (tuple == null || sb == null) {
+						throw new OperationException(ErrorCodes.FILE_SYNTAX_ERROR, CREATE
+								+ " mark was missing");
+					}
+					tuple.s2 = sb.toString();
+					list.add(tuple);
+					sb = null;
+					tuple = null;
+				} else {
+					if (line.trim().length() == 0)
+						continue;
+					sb.append(line);
+				}
+			}
+			if (sb != null || tuple != null) {
+				throw new OperationException(ErrorCodes.FILE_SYNTAX_ERROR,
+						"Unexpected content after " + END);
+			}
+		} catch (IOException e) {
+			LOG.error("Exception reading file", e);
+			throw new OperationException(ErrorCodes.ERROR_READING_FILE, e);
+		} finally {
+			try {
+				is.close();
+			} catch (IOException e) {
+				// log, and ignore
+				LOG.error("Exception on closing file stream for " + config.name(), e);
+			}
+		}
+
+		return list;
+
 	}
 }

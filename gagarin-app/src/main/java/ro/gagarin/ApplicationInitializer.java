@@ -104,7 +104,7 @@ public class ApplicationInitializer {
 	}
 
 	private void checkCreateDBTables() {
-		this.userManager.checkCreateDependencies();
+		this.userManager.checkCreateDependencies(this.cfgManager);
 
 	}
 

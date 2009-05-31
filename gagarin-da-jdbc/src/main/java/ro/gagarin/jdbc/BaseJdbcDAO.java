@@ -229,7 +229,10 @@ public class BaseJdbcDAO implements BaseDAO {
 				} else {
 					if (line.trim().length() == 0)
 						continue;
+					if (line.startsWith("--"))
+						continue;
 					sb.append(line);
+					sb.append("\r\n");
 				}
 			}
 			if (sb != null || tuple != null) {

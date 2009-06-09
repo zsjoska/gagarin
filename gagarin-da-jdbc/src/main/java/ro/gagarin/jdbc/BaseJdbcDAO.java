@@ -16,6 +16,7 @@ import ro.gagarin.BaseDAO;
 import ro.gagarin.ConfigurationManager;
 import ro.gagarin.config.Config;
 import ro.gagarin.exceptions.ErrorCodes;
+import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.session.Session;
 import ro.gagarin.utils.Triple;
 

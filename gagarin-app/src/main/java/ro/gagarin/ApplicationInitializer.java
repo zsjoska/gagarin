@@ -11,9 +11,11 @@ import ro.gagarin.application.objects.AppUser;
 import ro.gagarin.application.objects.AppUserPermission;
 import ro.gagarin.application.objects.AppUserRole;
 import ro.gagarin.config.Config;
+import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.ItemExistsException;
 import ro.gagarin.exceptions.ItemNotFoundException;
+import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.User;
@@ -43,15 +45,16 @@ public class ApplicationInitializer {
 		this.factory = factory;
 	}
 
-	public static synchronized boolean init() {
+	public static synchronized void init() throws OperationException {
 
+		ManagerFactory factory = BasicManagerFactory.getInstance();
 		if (initRun)
-			return true;
+			return;
 		initRun = true;
 
 		LOG.info("Application initializer started");
 
-		Session session = new Session(BasicManagerFactory.getInstance());
+		Session session = new Session();
 
 		ApplicationInitializer initializer = new ApplicationInitializer(session,
 				BasicManagerFactory.getInstance());
@@ -60,13 +63,12 @@ public class ApplicationInitializer {
 			initializer.doInit();
 		} catch (Exception e) {
 			LOG.error("Application initializer failed for task:" + initializer.getTask(), e);
-			throw new RuntimeException(e);
+			throw new OperationException(ErrorCodes.STARTUP_FAILED, e);
 		} finally {
 			initializer.factory.releaseSession(session);
 		}
 
 		LOG.info("Application initializer finished");
-		return true;
 	}
 
 	private void doInit() throws FieldRequiredException, ItemNotFoundException, ItemExistsException {

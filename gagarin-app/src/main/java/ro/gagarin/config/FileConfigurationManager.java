@@ -10,7 +10,7 @@ import org.apache.log4j.Logger;
 
 import ro.gagarin.ConfigurationManager;
 import ro.gagarin.exceptions.ErrorCodes;
-import ro.gagarin.jdbc.OperationException;
+import ro.gagarin.exceptions.OperationException;
 
 public class FileConfigurationManager implements ConfigurationManager {
 

@@ -10,8 +10,8 @@ import javax.jws.WebService;
 
 import org.apache.log4j.Logger;
 
-import ro.gagarin.ManagerFactory;
 import ro.gagarin.BasicManagerFactory;
+import ro.gagarin.ManagerFactory;
 import ro.gagarin.SessionManager;
 import ro.gagarin.UserDAO;
 import ro.gagarin.exceptions.ItemNotFoundException;
@@ -34,11 +34,12 @@ public class Authentication {
 		SessionManager sessionManager = BasicManagerFactory.getInstance().getSessionManager();
 
 		if (language == null) {
+			// TODO move this to the configuration
 			language = "en_us";
 		}
 
-		Session session = sessionManager
-				.createSession(language, reason, BasicManagerFactory.getInstance());
+		Session session = sessionManager.createSession(language, reason, BasicManagerFactory
+				.getInstance());
 		LOG.info("Session created:" + session.getId() + "; reason:" + session.getReason()
 				+ "; language:" + session.getLanguage());
 

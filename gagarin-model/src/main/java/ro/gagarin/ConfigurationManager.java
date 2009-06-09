@@ -4,7 +4,7 @@ import java.io.InputStream;
 
 import ro.gagarin.config.Config;
 import ro.gagarin.config.SettingsChangeObserver;
-import ro.gagarin.jdbc.OperationException;
+import ro.gagarin.exceptions.OperationException;
 
 /**
  * Base interface for the application to interact with the application

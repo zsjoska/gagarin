@@ -1,6 +1,7 @@
 package ro.gagarin;
 
 import ro.gagarin.config.FileConfigurationManager;
+import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.JdbcDAOManager;
 import ro.gagarin.session.BasicSessionManager;
 import ro.gagarin.session.Session;
@@ -17,8 +18,15 @@ public class BasicManagerFactory implements ManagerFactory {
 
 	private static final BasicManagerFactory INSTANCE = new BasicManagerFactory();
 
+	private ApplicationState state = ApplicationState.INIT;
+
 	static {
-		ApplicationInitializer.init();
+		try {
+			ApplicationInitializer.init();
+			INSTANCE.setApplicationState(ApplicationState.READY);
+		} catch (OperationException e) {
+			INSTANCE.setApplicationState(ApplicationState.OFFLINE);
+		}
 	}
 
 	public static ManagerFactory getInstance() {
@@ -66,6 +74,16 @@ public class BasicManagerFactory implements ManagerFactory {
 			}
 			session.setBusy(false);
 		}
+	}
+
+	@Override
+	public ApplicationState getApplicationState() {
+		return this.state;
+	}
+
+	@Override
+	public void setApplicationState(ApplicationState state) {
+		this.state = state;
 	}
 
 }

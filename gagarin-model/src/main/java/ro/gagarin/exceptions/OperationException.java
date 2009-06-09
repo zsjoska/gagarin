@@ -1,13 +1,12 @@
-package ro.gagarin.jdbc;
+package ro.gagarin.exceptions;
 
-import ro.gagarin.exceptions.ExceptionBase;
 
 public class OperationException extends ExceptionBase {
 
 	private static final long serialVersionUID = -8797622648415392209L;
 
-	public OperationException(int error, Exception e) {
-		super(error, e);
+	public OperationException(int errorCode, Exception e) {
+		super(errorCode, e);
 	}
 
 	public OperationException(int errorCode, String detail) {

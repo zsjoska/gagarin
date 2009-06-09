@@ -12,4 +12,8 @@ public interface ManagerFactory {
 	SessionManager getSessionManager();
 
 	AuthorizationManager getAuthorizationManager(Session session);
+
+	ApplicationState getApplicationState();
+
+	void setApplicationState(ApplicationState state);
 }

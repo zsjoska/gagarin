@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.exceptions.PermissionDeniedException;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
@@ -30,22 +31,32 @@ public class BasicAuthorizationManager implements AuthorizationManager {
 	@Override
 	public void requiresPermission(Session session, PermissionEnum reqPermission)
 			throws PermissionDeniedException {
+
 		UserDAO userManager = session.getManagerFactory().getDAOManager().getUserDAO(session);
+		User user = null;
+		try {
 
-		User user = userManager.getUserByUsername(session.getUser().getUsername());
+			user = userManager.getUserByUsername(session.getUser().getUsername());
 
-		Iterator<? extends UserPermission> iterator = user.getRole().getUserPermissions()
-				.iterator();
-		while (iterator.hasNext()) {
-			UserPermission userPermission = iterator.next();
-			if (userPermission.getPermissionName().equals(reqPermission.name())) {
-				LOG.debug(reqPermission.name() + " was found for user " + user.getUsername());
-				return;
+			Iterator<? extends UserPermission> iterator = user.getRole().getUserPermissions()
+					.iterator();
+			while (iterator.hasNext()) {
+				UserPermission userPermission = iterator.next();
+				if (userPermission.getPermissionName().equals(reqPermission.name())) {
+					LOG.debug(reqPermission.name() + " was found for user " + user.getUsername());
+					return;
+				}
+
 			}
-
+			throw new PermissionDeniedException(user.getUsername(), reqPermission.name());
+		} finally {
+			try {
+				userManager.release();
+			} catch (OperationException e) {
+				LOG.error("Exception releasing the manger", e);
+				throw new PermissionDeniedException(user.getUsername(), reqPermission.name());
+			}
 		}
-		userManager.release();
-		throw new PermissionDeniedException(user.getUsername(), reqPermission.name());
 	}
 
 }

@@ -9,5 +9,7 @@ public class ErrorCodes {
 	public static final int ERROR_READING_FILE = 5;
 	public static final int FILE_SYNTAX_ERROR = 6;
 	public static final int STARTUP_FAILED = 7;
+	public static final int SQL_ERROR = 8;
+	public static final int DB_OP_ERROR = 9;
 
 }

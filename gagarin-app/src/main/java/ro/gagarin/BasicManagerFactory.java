@@ -62,19 +62,7 @@ public class BasicManagerFactory implements ManagerFactory {
 	}
 
 	public void releaseSession(Session session) {
-
-		// TODO: find a way to move this code to the sessionManager; see
-		// BasicSessionManager.destroySession(Session session)
-
-		synchronized (session) {
-			Class<?> key = BaseDAO.class;
-			Object property = session.getProperty(key);
-			session.setProperty(key, null);
-			if (property instanceof BaseDAO) {
-				((BaseDAO) property).release();
-			}
-			session.setBusy(false);
-		}
+		getSessionManager().releaseSession(session);
 	}
 
 	@Override
@@ -86,5 +74,4 @@ public class BasicManagerFactory implements ManagerFactory {
 	public void setApplicationState(ApplicationState state) {
 		this.state = state;
 	}
-
 }

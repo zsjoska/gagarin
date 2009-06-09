@@ -71,7 +71,8 @@ public class ApplicationInitializer {
 		return true;
 	}
 
-	private void doInit() throws FieldRequiredException, ItemNotFoundException, ItemExistsException {
+	private void doInit() throws FieldRequiredException, ItemNotFoundException,
+			ItemExistsException, OperationException {
 
 		this.setTask("CREATE_MANAGERS");
 		initManagers(this.session);
@@ -105,7 +106,7 @@ public class ApplicationInitializer {
 		this.roleManager = factory.getDAOManager().getRoleDAO(session);
 	}
 
-	private void checkCreateDBTables() {
+	private void checkCreateDBTables() throws OperationException {
 		this.userManager.checkCreateDependencies(this.cfgManager);
 
 	}

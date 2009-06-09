@@ -5,12 +5,14 @@ import java.util.HashMap;
 
 import org.apache.log4j.Logger;
 
+import ro.gagarin.BaseDAO;
+import ro.gagarin.BasicManagerFactory;
 import ro.gagarin.ConfigurationManager;
 import ro.gagarin.ManagerFactory;
-import ro.gagarin.BasicManagerFactory;
 import ro.gagarin.SessionManager;
 import ro.gagarin.config.Config;
 import ro.gagarin.config.SettingsChangeObserver;
+import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.exceptions.SessionNotFoundException;
 
 public class BasicSessionManager implements SessionManager, SettingsChangeObserver {
@@ -30,7 +32,8 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
 		LOG.debug("Creating BasicSessionManager");
 
 		// TODO: find a way to have acces to configuration and fix this null
-		ConfigurationManager cfgManager = BasicManagerFactory.getInstance().getConfigurationManager(null);
+		ConfigurationManager cfgManager = BasicManagerFactory.getInstance()
+				.getConfigurationManager(null);
 
 		cfgManager.registerForChange(this);
 		USER_SESSION_TIMEOUT = cfgManager.getLong(Config.USER_SESSION_TIMEOUT);
@@ -132,5 +135,22 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
 		}
 
 		return session;
+	}
+
+	@Override
+	public void releaseSession(Session session) {
+		synchronized (session) {
+			Class<?> key = BaseDAO.class;
+			Object property = session.getProperty(key);
+			session.setProperty(key, null);
+			if (property instanceof BaseDAO) {
+				try {
+					((BaseDAO) property).release();
+				} catch (OperationException e) {
+					LOG.error("Exception releasing the session", e);
+				}
+			}
+			session.setBusy(false);
+		}
 	}
 }

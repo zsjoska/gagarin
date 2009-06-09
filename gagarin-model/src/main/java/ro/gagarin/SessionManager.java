@@ -71,4 +71,6 @@ public interface SessionManager {
 	long getSessionCheckPeriod();
 
 	Session acquireSession(String sessionID) throws SessionNotFoundException;
+
+	void releaseSession(Session session);
 }

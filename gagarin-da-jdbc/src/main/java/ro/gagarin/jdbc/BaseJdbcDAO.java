@@ -102,14 +102,14 @@ public class BaseJdbcDAO implements BaseDAO {
 
 	}
 
-	public void release() {
+	public void release() throws OperationException {
 
 		Connection tmpConn = this.connection;
 		this.connection = null;
 
 		if (this.ourConnection) {
 
-			RuntimeException exception = null;
+			OperationException exception = null;
 			if (!this.rollback) {
 				LOG.debug("Committing connection " + tmpConn.toString());
 				try {
@@ -120,7 +120,7 @@ public class BaseJdbcDAO implements BaseDAO {
 				} catch (SQLException e) {
 					// this is the most relevant exception, so keep it then
 					// throw it
-					exception = new RuntimeException(e);
+					exception = new OperationException(ErrorCodes.DB_OP_ERROR, e);
 					LOG.error("Exception on commit:", e);
 				}
 			}
@@ -129,14 +129,14 @@ public class BaseJdbcDAO implements BaseDAO {
 				tmpConn.rollback();
 			} catch (SQLException e) {
 				if (exception == null)
-					exception = new RuntimeException(e);
+					exception = new OperationException(ErrorCodes.DB_OP_ERROR, e);
 				LOG.error("Exception on rollback:", e);
 			}
 			try {
 				tmpConn.close();
 			} catch (SQLException e) {
 				if (exception == null)
-					exception = new RuntimeException(e);
+					exception = new OperationException(ErrorCodes.DB_OP_ERROR, e);
 				LOG.error("Exception on close:", e);
 			}
 			if (exception != null)
@@ -149,7 +149,7 @@ public class BaseJdbcDAO implements BaseDAO {
 		this.rollback = true;
 	}
 
-	public void checkCreateDependencies(ConfigurationManager cfgManager) {
+	public void checkCreateDependencies(ConfigurationManager cfgManager) throws OperationException {
 
 		try {
 			ArrayList<Triple<String, String, String>> parseDBSQLFile = parseDBSQLFile(cfgManager,
@@ -180,11 +180,7 @@ public class BaseJdbcDAO implements BaseDAO {
 			}
 		} catch (SQLException e) {
 			LOG.error("Unexpected exception during the table verification", e);
-			// TODO: replace the RuntimeException with operation Exception
-			throw new RuntimeException(e);
-		} catch (OperationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new OperationException(ErrorCodes.SQL_ERROR, e);
 		}
 	}
 

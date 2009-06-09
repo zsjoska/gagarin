@@ -45,11 +45,11 @@ public class ApplicationInitializer {
 		this.factory = factory;
 	}
 
-	public static synchronized void init() throws OperationException {
+	public static synchronized boolean init() throws OperationException {
 
 		ManagerFactory factory = BasicManagerFactory.getInstance();
 		if (initRun)
-			return;
+			return false;
 		initRun = true;
 
 		LOG.info("Application initializer started");
@@ -69,6 +69,7 @@ public class ApplicationInitializer {
 		}
 
 		LOG.info("Application initializer finished");
+		return true;
 	}
 
 	private void doInit() throws FieldRequiredException, ItemNotFoundException, ItemExistsException {

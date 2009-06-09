@@ -22,8 +22,9 @@ public class BasicManagerFactory implements ManagerFactory {
 
 	static {
 		try {
-			ApplicationInitializer.init();
-			INSTANCE.setApplicationState(ApplicationState.READY);
+			if (ApplicationInitializer.init()) {
+				INSTANCE.setApplicationState(ApplicationState.READY);
+			}
 		} catch (OperationException e) {
 			INSTANCE.setApplicationState(ApplicationState.OFFLINE);
 		}

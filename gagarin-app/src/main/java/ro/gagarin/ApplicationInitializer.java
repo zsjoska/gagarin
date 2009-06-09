@@ -47,7 +47,6 @@ public class ApplicationInitializer {
 
 	public static synchronized boolean init() throws OperationException {
 
-		ManagerFactory factory = BasicManagerFactory.getInstance();
 		if (initRun)
 			return false;
 		initRun = true;

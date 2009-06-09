@@ -24,7 +24,7 @@ public class FileConfigurationManager implements ConfigurationManager {
 
 	ArrayList<SettingsChangeObserver> changeObservers = new ArrayList<SettingsChangeObserver>();
 
-	ArrayList<String> configuration = new ArrayList<String>();
+	private ArrayList<String> configuration = new ArrayList<String>();
 
 	private FileConfigurationManager() {
 		// TODO: load from file

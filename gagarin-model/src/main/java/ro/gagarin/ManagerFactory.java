@@ -16,4 +16,6 @@ public interface ManagerFactory {
 	ApplicationState getApplicationState();
 
 	void setApplicationState(ApplicationState state);
+
+	AuthenticationManager getAuthenticationManager(Session session);
 }

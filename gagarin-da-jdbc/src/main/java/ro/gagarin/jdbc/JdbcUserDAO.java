@@ -143,7 +143,6 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 		// }
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<User> getUsersWithRole(UserRole role) {
 		// try {

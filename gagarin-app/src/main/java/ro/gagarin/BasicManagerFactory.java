@@ -34,6 +34,16 @@ public class BasicManagerFactory implements ManagerFactory {
 		return INSTANCE;
 	}
 
+	@Override
+	public ApplicationState getApplicationState() {
+		return this.state;
+	}
+
+	@Override
+	public void setApplicationState(ApplicationState state) {
+		this.state = state;
+	}
+
 	/**
 	 * This method returns the {@link SessionManager} implementation selected.
 	 * 
@@ -66,12 +76,7 @@ public class BasicManagerFactory implements ManagerFactory {
 	}
 
 	@Override
-	public ApplicationState getApplicationState() {
-		return this.state;
-	}
-
-	@Override
-	public void setApplicationState(ApplicationState state) {
-		this.state = state;
+	public AuthenticationManager getAuthenticationManager(Session session) {
+		return new BasicAuthenticationManager(session);
 	}
 }

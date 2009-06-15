@@ -13,11 +13,9 @@ import org.apache.log4j.Logger;
 import ro.gagarin.BasicManagerFactory;
 import ro.gagarin.ManagerFactory;
 import ro.gagarin.SessionManager;
-import ro.gagarin.UserDAO;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.session.Session;
-import ro.gagarin.user.User;
 
 /**
  * @author zsjoska
@@ -62,12 +60,7 @@ public class Authentication {
 
 		try {
 
-			UserDAO userManager = factory.getDAOManager().getUserDAO(session);
-			User user = userManager.userLogin(username, password);
-
-			session.setUser(user);
-			LOG.info("User " + user.getId() + ":" + user.getUsername() + " was bound to session "
-					+ session.getId());
+			factory.getAuthenticationManager(session).userLogin(username, password, extra);
 			return true;
 		} finally {
 			factory.releaseSession(session);

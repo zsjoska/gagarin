@@ -1,5 +1,6 @@
 package ro.gagarin;
 
+import ro.gagarin.log.AppLog;
 import ro.gagarin.session.Session;
 
 public interface ManagerFactory {
@@ -18,4 +19,6 @@ public interface ManagerFactory {
 	void setApplicationState(ApplicationState state);
 
 	AuthenticationManager getAuthenticationManager(Session session);
+
+	AppLog getLogManager(Session session);
 }

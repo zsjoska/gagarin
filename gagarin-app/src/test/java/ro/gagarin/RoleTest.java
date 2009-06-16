@@ -126,7 +126,7 @@ public class RoleTest {
 		UserRole role2 = roleManager.getRoleByName("C_ROLE");
 		assertNotNull(role2);
 		assertNotNull(role2.getUserPermissions());
-		assertEquals(role2.getUserPermissions().size(), 2);
+		assertEquals(2, role2.getUserPermissions().size());
 
 		UserPermission perm_1 = roleManager.getPermissionByName("C_PERMISSION1");
 		assertNotNull(perm_1);

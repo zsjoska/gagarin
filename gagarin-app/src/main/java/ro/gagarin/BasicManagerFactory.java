@@ -3,6 +3,8 @@ package ro.gagarin;
 import ro.gagarin.config.FileConfigurationManager;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.JdbcDAOManager;
+import ro.gagarin.log.AppLog;
+import ro.gagarin.log.BasicLogManager;
 import ro.gagarin.session.BasicSessionManager;
 import ro.gagarin.session.Session;
 
@@ -78,5 +80,10 @@ public class BasicManagerFactory implements ManagerFactory {
 	@Override
 	public AuthenticationManager getAuthenticationManager(Session session) {
 		return new BasicAuthenticationManager(session);
+	}
+
+	@Override
+	public AppLog getLogManager(Session session) {
+		return new BasicLogManager(session);
 	}
 }

@@ -17,10 +17,14 @@ import ro.gagarin.ConfigurationManager;
 import ro.gagarin.config.Config;
 import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.OperationException;
+import ro.gagarin.log.AppLog;
 import ro.gagarin.session.Session;
 import ro.gagarin.utils.Triple;
 
 public class BaseJdbcDAO implements BaseDAO {
+
+	protected final AppLog APPLOG;
+	protected final ConfigurationManager CFG;
 
 	private static final String END = "--END";
 	private static final String CREATE = "--CREATE:";
@@ -37,12 +41,16 @@ public class BaseJdbcDAO implements BaseDAO {
 	private boolean rollback = false;
 
 	public BaseJdbcDAO(Session session) {
-		if (session == null)
-			throw new NullPointerException("attempt to initialize BaseHibernateManager with null");
+		if (session == null) {
+			CFG = null;
+			APPLOG = null;
+			throw new NullPointerException("attempt to initialize BaseJdbcDAO with null session");
+		}
 
-		ConfigurationManager cfgManager = session.getManagerFactory().getConfigurationManager(
-				session);
-		checkLoadDBDriver(cfgManager);
+		CFG = session.getManagerFactory().getConfigurationManager(session);
+		APPLOG = session.getManagerFactory().getLogManager(session);
+
+		checkLoadDBDriver(CFG);
 
 		synchronized (session) {
 			session.setBusy(true);
@@ -59,7 +67,7 @@ public class BaseJdbcDAO implements BaseDAO {
 							+ BaseJdbcDAO.class.getName() + "; found:"
 							+ property.getClass().getName());
 				}
-				this.connection = createConnection(cfgManager);
+				this.connection = createConnection(CFG);
 				this.ourConnection = true;
 				session.setProperty(BaseDAO.class, this);
 				LOG.debug("Created Connection Instance " + connection.toString());

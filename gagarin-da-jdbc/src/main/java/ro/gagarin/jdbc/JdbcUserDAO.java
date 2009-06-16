@@ -11,6 +11,7 @@ import ro.gagarin.UserDAO;
 import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.jdbc.objects.DBUser;
+import ro.gagarin.log.AppLogAction;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserRole;
@@ -25,6 +26,8 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 
 	@Override
 	public User userLogin(String username, String password) throws ItemNotFoundException {
+
+		APPLOG.action(AppLogAction.LOGIN, User.class, username, null);
 
 		DBUser user = new DBUser();
 
@@ -41,17 +44,17 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 				rs.close();
 				return user;
 			} else {
-				LOG.info("User " + username + " was not authenticated");
+				APPLOG.action(AppLogAction.LOGIN, User.class, username, "FAILED");
 			}
 		} catch (SQLException e) {
-			LOG.error("userLogin: Error Executing query", e);
+			APPLOG.error("userLogin: Error Executing query", e);
 			super.markRollback();
 		} finally {
 			if (rs != null)
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					LOG.error("userLogin: Error on close", e);
+					APPLOG.error("userLogin: Error on close", e);
 				}
 		}
 		throw new ItemNotFoundException(User.class, username + " with password");
@@ -70,13 +73,14 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 			int rows = query.executeUpdate();
 
 			if (rows == 1) {
+				APPLOG.action(AppLogAction.CREATE, User.class, user.getUsername(), null);
 				LOG.info("User " + user.getUsername() + " was created");
 				return user.getId();
 			} else {
 				LOG.info("User " + user.getUsername() + " was not created");
 			}
 		} catch (SQLException e) {
-			LOG.error("createUser: Error Executing query", e);
+			APPLOG.error("createUser: Error Executing query", e);
 			super.markRollback();
 		}
 

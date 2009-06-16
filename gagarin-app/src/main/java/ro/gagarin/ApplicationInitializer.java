@@ -38,11 +38,8 @@ public class ApplicationInitializer {
 
 	private final Session session;
 
-	private final ManagerFactory factory;
-
-	public ApplicationInitializer(Session session, ManagerFactory factory) {
+	public ApplicationInitializer(Session session) {
 		this.session = session;
-		this.factory = factory;
 	}
 
 	public static synchronized boolean init() throws OperationException {
@@ -54,9 +51,9 @@ public class ApplicationInitializer {
 		LOG.info("Application initializer started");
 
 		Session session = new Session();
+		session.setManagerFactory(BasicManagerFactory.getInstance());
 
-		ApplicationInitializer initializer = new ApplicationInitializer(session,
-				BasicManagerFactory.getInstance());
+		ApplicationInitializer initializer = new ApplicationInitializer(session);
 		try {
 
 			initializer.doInit();
@@ -64,7 +61,7 @@ public class ApplicationInitializer {
 			LOG.error("Application initializer failed for task:" + initializer.getTask(), e);
 			throw new OperationException(ErrorCodes.STARTUP_FAILED, e);
 		} finally {
-			initializer.factory.releaseSession(session);
+			initializer.session.getManagerFactory().releaseSession(session);
 		}
 
 		LOG.info("Application initializer finished");

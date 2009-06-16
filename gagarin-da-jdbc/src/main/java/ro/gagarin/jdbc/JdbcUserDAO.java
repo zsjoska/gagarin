@@ -85,7 +85,8 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 				LOG.info("User " + user.getUsername() + " was not created");
 			}
 		} catch (SQLIntegrityConstraintViolationException e) {
-			// TODO: LOG IT
+			APPLOG.error("createUser: Error Executing query", e);
+			super.markRollback();
 			throw new ItemExistsException();
 		} catch (SQLException e) {
 			APPLOG.error("createUser: Error Executing query", e);

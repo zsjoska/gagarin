@@ -20,28 +20,43 @@
 --CHECK: Users
 SELECT * FROM Users
 --CREATE:
-CREATE TABLE Users
+CREATE TABLE Users 
 (
 	id bigint, 
 	name varchar(100), 
-	userName varchar(50), 
+	userName varchar(50) NOT NULL, 
 	password varchar(50), 
 	roleid bigint,
 	
-	PRIMARY KEY (id)
+	PRIMARY KEY (id),
+	UNIQUE (userName)
 )
 --END
 
 --CHECK: UserRoles
 SELECT * FROM UserRoles
 --CREATE:
-CREATE TABLE UserRoles (id bigint, roleName varchar(50))
+CREATE TABLE UserRoles 
+(
+	id bigint, 
+	roleName varchar(50),
+
+	PRIMARY KEY (id),
+	UNIQUE (roleName)
+)
 --END
 
 --CHECK: UserPermissions
 SELECT * FROM UserPermissions
 --CREATE:
-CREATE TABLE UserPermissions (id bigint, permissionName varchar(50))
+CREATE TABLE UserPermissions 
+(
+	id bigint, 
+	permissionName varchar(50),
+
+	PRIMARY KEY (id),
+	UNIQUE (permissionName)
+)
 --END
 
 --CHECK: PermissionAssignment

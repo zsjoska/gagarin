@@ -3,6 +3,7 @@ package ro.gagarin.jdbc;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import org.apache.log4j.Logger;
 
 import ro.gagarin.UserDAO;
 import ro.gagarin.exceptions.FieldRequiredException;
+import ro.gagarin.exceptions.ItemExistsException;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.jdbc.objects.DBUser;
 import ro.gagarin.log.AppLogAction;
@@ -62,15 +64,17 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 	}
 
 	@Override
-	public long createUser(User user) throws FieldRequiredException, ItemNotFoundException {
+	public long createUser(User user) throws FieldRequiredException, ItemNotFoundException,
+			ItemExistsException {
 
 		try {
 			PreparedStatement query = getConnection().prepareStatement(
-					"INSERT INTO Users( id, username, password, roleid) VALUES (?,?,?,?)");
+					"INSERT INTO Users( id, username, name, password, roleid) VALUES (?,?,?,?,?)");
 			query.setLong(1, user.getId());
-			query.setString(2, user.getName());
-			query.setString(3, user.getPassword());
-			query.setLong(4, user.getRole().getId());
+			query.setString(2, user.getUsername());
+			query.setString(3, user.getName());
+			query.setString(4, user.getPassword());
+			query.setLong(5, user.getRole().getId());
 			int rows = query.executeUpdate();
 
 			if (rows == 1) {
@@ -80,6 +84,9 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 			} else {
 				LOG.info("User " + user.getUsername() + " was not created");
 			}
+		} catch (SQLIntegrityConstraintViolationException e) {
+			// TODO: LOG IT
+			throw new ItemExistsException();
 		} catch (SQLException e) {
 			APPLOG.error("createUser: Error Executing query", e);
 			super.markRollback();
@@ -115,37 +122,36 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 	@Override
 	public User getUserByUsername(String username) {
 
-		// try {
-		// Query query =
-		// getEM().createQuery("select u from DBUser u where u.username=:username");
-		// query.setParameter("username", username);
-		// User user = (User) query.getSingleResult();
-		// return user;
-		// } catch (NoResultException e) {
-		// return null;
-		// } catch (RuntimeException e) {
-		// super.markRollback();
-		// LOG.error("getUserByUsername", e);
-		// throw e;
-		// }
-		return null;
-	}
+		DBUser user = new DBUser();
 
-	@Override
-	public void deleteUserById(long id) {
-		// try {
-		// DBUser dbUser = getEM().find(DBUser.class, id);
-		// if (dbUser == null)
-		// return;
-		// LOG.info("Delete user:" + dbUser.getUsername() + "; id:" +
-		// dbUser.getId());
-		//
-		// getEM().remove(dbUser);
-		// } catch (RuntimeException e) {
-		// super.markRollback();
-		// LOG.error("deleteUserById", e);
-		// throw e;
-		// }
+		ResultSet rs = null;
+		try {
+			PreparedStatement query = getConnection().prepareStatement(
+					"SELECT id, username, name, password, roleid FROM Users WHERE username = ?");
+			query.setString(1, username);
+			rs = query.executeQuery();
+			if (rs.next()) {
+				user.setId(rs.getLong("id"));
+				user.setUsername(rs.getString("username"));
+				user.setName(rs.getString("name"));
+				// TODO: fill UserRole
+				rs.close();
+				return user;
+			} else {
+				LOG.info("User " + username + " was not found");
+			}
+		} catch (SQLException e) {
+			LOG.error("getUserByUsername: Error Executing query", e);
+			super.markRollback();
+		} finally {
+			if (rs != null)
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					LOG.error("getUserByUsername: Error on close", e);
+				}
+		}
+		return null;
 	}
 
 	@Override
@@ -183,7 +189,16 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 
 	@Override
 	public void deleteUser(User user) {
-		deleteUserById(user.getId());
+		try {
+			PreparedStatement query = getConnection().prepareStatement(
+					"DELETE FROM Users WHERE id = ?");
+			query.setLong(1, user.getId());
+			query.executeUpdate();
+			LOG.info("UserRole " + user.getUsername() + " was deleted");
+		} catch (SQLException e) {
+			LOG.error("deleteRole: Error Executing query", e);
+			super.markRollback();
+		}
 	}
 
 	@Override

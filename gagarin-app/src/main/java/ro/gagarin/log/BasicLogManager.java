@@ -24,7 +24,8 @@ public class BasicLogManager implements AppLog {
 
 	@Override
 	public void error(String string, Throwable t) {
-		// TODO Auto-generated method stub
+		System.err.println(string + ":" + t.getMessage());
+		t.printStackTrace();
 
 	}
 

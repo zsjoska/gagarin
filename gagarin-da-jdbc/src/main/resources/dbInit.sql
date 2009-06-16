@@ -21,7 +21,15 @@
 SELECT * FROM Users
 --CREATE:
 CREATE TABLE Users
-(id bigint, name varchar(100), userName varchar(50), password varchar(50), roleid bigint)
+(
+	id bigint, 
+	name varchar(100), 
+	userName varchar(50), 
+	password varchar(50), 
+	roleid bigint,
+	
+	PRIMARY KEY (id)
+)
 --END
 
 --CHECK: UserRoles

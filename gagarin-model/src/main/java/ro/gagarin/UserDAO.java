@@ -55,14 +55,6 @@ public interface UserDAO extends BaseDAO {
 	 */
 	User getUserByUsername(String username);
 
-	/**
-	 * Deletes a user with the given ID
-	 * 
-	 * @param id
-	 *            the ID of the user to be deleted
-	 */
-	void deleteUserById(long id);
-
 	List<User> getUsersWithRole(UserRole role);
 
 	void deleteUser(User user);

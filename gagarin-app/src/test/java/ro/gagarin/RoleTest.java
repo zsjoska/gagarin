@@ -193,7 +193,7 @@ public class RoleTest {
 		assertEquals(1, usersWithRole.size());
 		assertEquals(user.getId(), usersWithRole.get(0).getId());
 
-		userDAO.deleteUserById(user.getId());
+		userDAO.deleteUser(user);
 		roleManager.deleteRole(role);
 	}
 }

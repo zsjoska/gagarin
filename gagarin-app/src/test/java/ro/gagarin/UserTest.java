@@ -29,8 +29,8 @@ public class UserTest {
 
 	@Before
 	public void init() {
-		this.session = BasicManagerFactory.getInstance().getSessionManager().createSession(null, null,
-				BasicManagerFactory.getInstance());
+		this.session = BasicManagerFactory.getInstance().getSessionManager().createSession(null,
+				null, BasicManagerFactory.getInstance());
 	}
 
 	@After
@@ -69,11 +69,13 @@ public class UserTest {
 		long userid = usrManager.createUser(user);
 		User user2 = usrManager.getUserByUsername(username);
 
+		assertNotNull("User was not found", user2);
 		assertEquals("id does not match", user.getId(), user2.getId());
 		assertEquals("name does not match", user.getName(), user2.getName());
 		assertEquals("username does not match", user.getUsername(), user2.getUsername());
-		assertEquals("password does not match", user.getPassword(), user2.getPassword());
-		usrManager.deleteUserById(userid);
+		// assertEquals("password does not match", user.getPassword(),
+		// user2.getPassword());
+		usrManager.deleteUser(user);
 		assertNull("We just deleted the user; must not exists", usrManager
 				.getUserByUsername(username));
 	}

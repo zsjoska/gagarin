@@ -3,6 +3,7 @@ package ro.gagarin.jdbc;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -149,18 +150,35 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 
 	@Override
 	public List<User> getUsersWithRole(UserRole role) {
-		// try {
-		// Query query =
-		// getEM().createQuery("select u from DBUser u where u.role.id=:roleid");
-		// query.setParameter("roleid", role.getId());
-		// List result = query.getResultList();
-		// return result;
-		// } catch (RuntimeException e) {
-		// super.markRollback();
-		// LOG.error("getUsersWithRole", e);
-		// throw e;
-		// }
-		return null;
+		ArrayList<User> users = new ArrayList<User>();
+		ResultSet rs = null;
+		try {
+			PreparedStatement query = getConnection().prepareStatement(
+					"SELECT id, name, userName, roleid FROM Users WHERE roleid = ?");
+			query.setLong(1, role.getId());
+			rs = query.executeQuery();
+
+			while (rs.next()) {
+				DBUser user = new DBUser();
+				user.setId(rs.getLong("id"));
+				user.setName(rs.getString("name"));
+				user.setUsername(rs.getString("userName"));
+				user.setRole(role);
+				users.add(user);
+			}
+			rs.close();
+		} catch (SQLException e) {
+			LOG.error("getRolePermissions: Error Executing query", e);
+			super.markRollback();
+		} finally {
+			if (rs != null)
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					LOG.error("getRolePermissions: Error on close", e);
+				}
+		}
+		return users;
 	}
 
 	@Override

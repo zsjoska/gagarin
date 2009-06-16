@@ -2,6 +2,7 @@ package ro.gagarin;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -33,13 +34,16 @@ public class BasicAuthorizationManager implements AuthorizationManager {
 			throws PermissionDeniedException {
 
 		UserDAO userManager = session.getManagerFactory().getDAOManager().getUserDAO(session);
+		RoleDAO roleDAO = session.getManagerFactory().getDAOManager().getRoleDAO(session);
 		User user = null;
 		try {
 
+			// TODO: CHECK why to go to DB
 			user = userManager.getUserByUsername(session.getUser().getUsername());
 
-			Iterator<? extends UserPermission> iterator = user.getRole().getUserPermissions()
-					.iterator();
+			Set<UserPermission> perm = roleDAO.getRolePermissions(user.getRole());
+
+			Iterator<? extends UserPermission> iterator = perm.iterator();
 			while (iterator.hasNext()) {
 				UserPermission userPermission = iterator.next();
 				if (userPermission.getPermissionName().equals(reqPermission.name())) {
@@ -58,5 +62,4 @@ public class BasicAuthorizationManager implements AuthorizationManager {
 			}
 		}
 	}
-
 }

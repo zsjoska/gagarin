@@ -10,8 +10,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import org.apache.log4j.Logger;
-
 import ro.gagarin.BaseDAO;
 import ro.gagarin.ConfigurationManager;
 import ro.gagarin.config.Config;
@@ -30,8 +28,6 @@ public class BaseJdbcDAO implements BaseDAO {
 	private static final String CREATE = "--CREATE:";
 	private static final String CHECK = "--CHECK:";
 
-	private static final transient Logger LOG = Logger.getLogger(BaseJdbcDAO.class);
-
 	private static boolean DRIVER_LOADED;
 
 	private boolean ourConnection = false;
@@ -49,8 +45,6 @@ public class BaseJdbcDAO implements BaseDAO {
 
 		CFG = session.getManagerFactory().getConfigurationManager(session);
 		APPLOG = session.getManagerFactory().getLogManager(session, getClass());
-
-		APPLOG.debug("TEST");
 
 		checkLoadDBDriver(CFG);
 
@@ -72,7 +66,7 @@ public class BaseJdbcDAO implements BaseDAO {
 				this.connection = createConnection(CFG);
 				this.ourConnection = true;
 				session.setProperty(BaseDAO.class, this);
-				LOG.debug("Created Connection Instance " + connection.toString());
+				APPLOG.debug("Created Connection Instance " + connection.toString());
 			}
 		}
 	}
@@ -86,7 +80,7 @@ public class BaseJdbcDAO implements BaseDAO {
 			connection.setAutoCommit(false);
 			return connection;
 		} catch (SQLException e) {
-			LOG.error("Could not get DB connection for url:" + url, e);
+			APPLOG.error("Could not get DB connection for url:" + url, e);
 			throw new RuntimeException("Database is unavailable", e);
 		}
 
@@ -102,12 +96,12 @@ public class BaseJdbcDAO implements BaseDAO {
 		try {
 			// Load the JDBC driver
 			String driverName = cfgManager.getString(Config.JDBC_DB_DRIVER);
-			LOG.info("Loading DB driver " + driverName);
+			APPLOG.info("Loading DB driver " + driverName);
 			Class.forName(driverName);
 			BaseJdbcDAO.DRIVER_LOADED = true;
 		} catch (ClassNotFoundException e) {
 			BaseJdbcDAO.DRIVER_LOADED = false;
-			LOG.error("Could not load DB Driver class", e);
+			APPLOG.error("Could not load DB Driver class", e);
 		}
 
 	}
@@ -121,33 +115,33 @@ public class BaseJdbcDAO implements BaseDAO {
 
 			OperationException exception = null;
 			if (!this.rollback) {
-				LOG.debug("Committing connection " + tmpConn.toString());
+				APPLOG.debug("Committing connection " + tmpConn.toString());
 				try {
 					tmpConn.commit();
 					tmpConn.close();
-					LOG.debug("Released connection " + tmpConn.toString());
+					APPLOG.debug("Released connection " + tmpConn.toString());
 					return;
 				} catch (SQLException e) {
 					// this is the most relevant exception, so keep it then
 					// throw it
 					exception = new OperationException(ErrorCodes.DB_OP_ERROR, e);
-					LOG.error("Exception on commit:", e);
+					APPLOG.error("Exception on commit:", e);
 				}
 			}
-			LOG.debug("Rollback connection " + tmpConn.toString());
+			APPLOG.debug("Rollback connection " + tmpConn.toString());
 			try {
 				tmpConn.rollback();
 			} catch (SQLException e) {
 				if (exception == null)
 					exception = new OperationException(ErrorCodes.DB_OP_ERROR, e);
-				LOG.error("Exception on rollback:", e);
+				APPLOG.error("Exception on rollback:", e);
 			}
 			try {
 				tmpConn.close();
 			} catch (SQLException e) {
 				if (exception == null)
 					exception = new OperationException(ErrorCodes.DB_OP_ERROR, e);
-				LOG.error("Exception on close:", e);
+				APPLOG.error("Exception on close:", e);
 			}
 			if (exception != null)
 				throw exception;
@@ -165,8 +159,8 @@ public class BaseJdbcDAO implements BaseDAO {
 			ArrayList<Triple<String, String, String>> parseDBSQLFile = parseDBSQLFile(cfgManager,
 					Config.DB_INIT_SQL_FILE);
 			for (Triple<String, String, String> tuple : parseDBSQLFile) {
-				LOG.info("CHECK:" + tuple.s1);
-				LOG.info("CREATE:" + tuple.s2);
+				APPLOG.info("CHECK:" + tuple.s1);
+				APPLOG.info("CREATE:" + tuple.s2);
 			}
 
 			for (Triple<String, String, String> t : parseDBSQLFile) {
@@ -176,20 +170,20 @@ public class BaseJdbcDAO implements BaseDAO {
 					prepareStatement.execute();
 					continue;
 				} catch (SQLException e) {
-					LOG.info("Test " + t.s3 + " failed; Creating...");
+					APPLOG.info("Test " + t.s3 + " failed; Creating...");
 				}
 				try {
 					prepareStatement = getConnection().prepareStatement(t.s2);
 					prepareStatement.execute();
-					LOG.info(t.s3 + " Created.");
+					APPLOG.info(t.s3 + " Created.");
 				} catch (SQLException e) {
-					LOG.error(t.s3 + " not created.", e);
+					APPLOG.error(t.s3 + " not created.", e);
 					throw e;
 				}
 
 			}
 		} catch (SQLException e) {
-			LOG.error("Unexpected exception during the table verification", e);
+			APPLOG.error("Unexpected exception during the table verification", e);
 			throw new OperationException(ErrorCodes.SQL_ERROR, e);
 		}
 	}
@@ -247,14 +241,14 @@ public class BaseJdbcDAO implements BaseDAO {
 						"Unexpected content after " + END);
 			}
 		} catch (IOException e) {
-			LOG.error("Exception reading file", e);
+			APPLOG.error("Exception reading file", e);
 			throw new OperationException(ErrorCodes.ERROR_READING_FILE, e);
 		} finally {
 			try {
 				is.close();
 			} catch (IOException e) {
 				// log, and ignore
-				LOG.error("Exception on closing file stream for " + config.name(), e);
+				APPLOG.error("Exception on closing file stream for " + config.name(), e);
 			}
 		}
 

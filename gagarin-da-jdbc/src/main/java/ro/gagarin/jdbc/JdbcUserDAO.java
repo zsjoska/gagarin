@@ -6,8 +6,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-
 import ro.gagarin.UserDAO;
 import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ItemNotFoundException;
@@ -18,8 +16,6 @@ import ro.gagarin.user.User;
 import ro.gagarin.user.UserRole;
 
 public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
-
-	private static final transient Logger LOG = Logger.getLogger(JdbcUserDAO.class);
 
 	public JdbcUserDAO(Session session) {
 		super(session);
@@ -76,10 +72,10 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 
 			if (rows == 1) {
 				APPLOG.action(AppLogAction.CREATE, User.class, user.getUsername(), null);
-				LOG.info("User " + user.getUsername() + " was created");
+				APPLOG.info("User " + user.getUsername() + " was created");
 				return user.getId();
 			} else {
-				LOG.info("User " + user.getUsername() + " was not created");
+				APPLOG.info("User " + user.getUsername() + " was not created");
 			}
 		} catch (SQLException e) {
 			super.markRollback();
@@ -134,17 +130,17 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 				rs.close();
 				return user;
 			} else {
-				LOG.info("User " + username + " was not found");
+				APPLOG.info("User " + username + " was not found");
 			}
 		} catch (SQLException e) {
-			LOG.error("getUserByUsername: Error Executing query", e);
+			APPLOG.error("getUserByUsername: Error Executing query", e);
 			super.markRollback();
 		} finally {
 			if (rs != null)
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					LOG.error("getUserByUsername: Error on close", e);
+					APPLOG.error("getUserByUsername: Error on close", e);
 				}
 		}
 		return null;
@@ -170,14 +166,14 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 			}
 			rs.close();
 		} catch (SQLException e) {
-			LOG.error("getRolePermissions: Error Executing query", e);
+			APPLOG.error("getRolePermissions: Error Executing query", e);
 			super.markRollback();
 		} finally {
 			if (rs != null)
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					LOG.error("getRolePermissions: Error on close", e);
+					APPLOG.error("getRolePermissions: Error on close", e);
 				}
 		}
 		return users;
@@ -190,9 +186,9 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 					"DELETE FROM Users WHERE id = ?");
 			query.setLong(1, user.getId());
 			query.executeUpdate();
-			LOG.info("UserRole " + user.getUsername() + " was deleted");
+			APPLOG.info("UserRole " + user.getUsername() + " was deleted");
 		} catch (SQLException e) {
-			LOG.error("deleteRole: Error Executing query", e);
+			APPLOG.error("deleteRole: Error Executing query", e);
 			super.markRollback();
 		}
 	}

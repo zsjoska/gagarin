@@ -119,15 +119,19 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 		ResultSet rs = null;
 		try {
 			PreparedStatement query = getConnection().prepareStatement(
-					"SELECT id, username, name, password, roleid FROM Users WHERE username = ?");
+					"SELECT Users.id, username, name, password, roleid, roleName "
+							+ "FROM Users INNER JOIN UserRoles ON Users.roleid = UserRoles.id "
+							+ "WHERE username = ?");
 			query.setString(1, username);
 			rs = query.executeQuery();
 			if (rs.next()) {
 				user.setId(rs.getLong("id"));
 				user.setUsername(rs.getString("username"));
 				user.setName(rs.getString("name"));
-				// TODO: fill UserRole
-				rs.close();
+				DBUserRole role = new DBUserRole();
+				role.setId(rs.getLong("roleid"));
+				role.setRoleName(rs.getString("roleName"));
+				user.setRole(role);
 				return user;
 			} else {
 				APPLOG.info("User " + username + " was not found");

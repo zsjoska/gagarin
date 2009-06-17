@@ -73,6 +73,7 @@ public class UserTest {
 		assertEquals("id does not match", user.getId(), user2.getId());
 		assertEquals("name does not match", user.getName(), user2.getName());
 		assertEquals("username does not match", user.getUsername(), user2.getUsername());
+		assertNotNull("The role field must be filled by queries", user2.getRole());
 
 		usrManager.deleteUser(user);
 		assertNull("We just deleted the user; must not exists", usrManager

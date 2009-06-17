@@ -198,15 +198,36 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 
 	@Override
 	public List<User> getAllUsers() {
-		// try {
-		// Query query = getEM().createQuery("select u from DBUser u");
-		// List result = query.getResultList();
-		// return result;
-		// } catch (RuntimeException e) {
-		// super.markRollback();
-		// LOG.error("getAllUsers", e);
-		// throw e;
-		// }
-		return null;
+		ArrayList<User> users = new ArrayList<User>();
+		ResultSet rs = null;
+		try {
+			PreparedStatement query = getConnection().prepareStatement(
+					"SELECT Users.id, username, name, password, roleid, roleName "
+							+ "FROM Users INNER JOIN UserRoles ON Users.roleid = UserRoles.id");
+			rs = query.executeQuery();
+
+			while (rs.next()) {
+				DBUser user = new DBUser();
+				user.setId(rs.getLong("id"));
+				user.setName(rs.getString("name"));
+				user.setUsername(rs.getString("userName"));
+				DBUserRole role = new DBUserRole();
+				role.setId(rs.getLong("roleid"));
+				role.setRoleName(rs.getString("roleName"));
+				user.setRole(role);
+				users.add(user);
+			}
+		} catch (SQLException e) {
+			APPLOG.error("Error Executing query", e);
+			super.markRollback();
+		} finally {
+			if (rs != null)
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					APPLOG.error("getRolePermissions: Error on close", e);
+				}
+		}
+		return users;
 	}
 }

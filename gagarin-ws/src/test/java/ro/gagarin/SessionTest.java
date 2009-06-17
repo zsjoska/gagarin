@@ -31,6 +31,7 @@ public class SessionTest {
 			ItemNotFoundException {
 
 		ManagerFactory factory = BasicManagerFactory.getInstance();
+		session.setManagerFactory(factory);
 
 		UserDAO userManager = factory.getDAOManager().getUserDAO(session);
 		RoleDAO roleManager = factory.getDAOManager().getRoleDAO(session);
@@ -56,6 +57,7 @@ public class SessionTest {
 			DataConstraintException {
 
 		ManagerFactory factory = BasicManagerFactory.getInstance();
+		session.setManagerFactory(factory);
 
 		UserDAO userManager = factory.getDAOManager().getUserDAO(session);
 		ConfigurationManager cfgManager = factory.getConfigurationManager(session);
@@ -89,6 +91,7 @@ public class SessionTest {
 	@Test
 	public void testSessionDeletion() throws ItemNotFoundException, DataConstraintException {
 		ManagerFactory factory = BasicManagerFactory.getInstance();
+		session.setManagerFactory(factory);
 
 		UserDAO userManager = factory.getDAOManager().getUserDAO(session);
 		ConfigurationManager cfgManager = factory.getConfigurationManager(session);
@@ -119,6 +122,7 @@ public class SessionTest {
 	public void testSessionExpiration() throws InterruptedException {
 
 		ManagerFactory factory = BasicManagerFactory.getInstance();
+		session.setManagerFactory(factory);
 
 		ConfigurationManager cfgManager = factory.getConfigurationManager(session);
 		cfgManager.setConfigValue(Config.USER_SESSION_TIMEOUT, "100");

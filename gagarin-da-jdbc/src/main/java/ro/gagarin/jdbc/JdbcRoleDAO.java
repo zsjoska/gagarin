@@ -200,14 +200,31 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 
 	@Override
 	public List<UserRole> getAllRoles() {
-		// try {
-		// Query query = getEM().createQuery("select r from DBUserRole r ");
-		// return query.getResultList();
-		// } catch (RuntimeException e) {
-		// LOG.error("getAllRoles", e);
-		// throw e;
-		// }
-		return null;
+		List<UserRole> roles = new ArrayList<UserRole>();
+		ResultSet rs = null;
+		try {
+			PreparedStatement query = getConnection().prepareStatement(
+					"SELECT id, roleName FROM UserRoles");
+			rs = query.executeQuery();
+
+			while (rs.next()) {
+				DBUserRole role = new DBUserRole();
+				role.setId(rs.getLong("id"));
+				role.setRoleName(rs.getString("roleName"));
+				roles.add(role);
+			}
+		} catch (SQLException e) {
+			APPLOG.error("Error Executing query", e);
+			super.markRollback();
+		} finally {
+			if (rs != null)
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					APPLOG.error("Error on close", e);
+				}
+		}
+		return roles;
 	}
 
 	@Override

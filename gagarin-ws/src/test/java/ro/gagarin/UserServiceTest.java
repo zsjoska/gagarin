@@ -5,8 +5,7 @@ import java.util.List;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import ro.gagarin.exceptions.FieldRequiredException;
-import ro.gagarin.exceptions.ItemExistsException;
+import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.PermissionDeniedException;
 import ro.gagarin.exceptions.SessionNotFoundException;
@@ -33,7 +32,7 @@ public class UserServiceTest {
 
 	@Test
 	public void testCreateUser() throws SessionNotFoundException, ItemNotFoundException,
-			FieldRequiredException, ItemExistsException, PermissionDeniedException {
+			PermissionDeniedException, DataConstraintException {
 
 		UserService userService = new UserService();
 

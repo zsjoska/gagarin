@@ -11,8 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ro.gagarin.config.Config;
-import ro.gagarin.exceptions.FieldRequiredException;
-import ro.gagarin.exceptions.ItemExistsException;
+import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.PermissionDeniedException;
 import ro.gagarin.exceptions.SessionNotFoundException;
@@ -41,8 +40,8 @@ public class MethodAccessTest {
 	public void setUp() throws SessionNotFoundException, ItemNotFoundException {
 
 		aDummySession = new Session();
-		ConfigurationManager cfgManager = BasicManagerFactory.getInstance().getConfigurationManager(
-				aDummySession);
+		ConfigurationManager cfgManager = BasicManagerFactory.getInstance()
+				.getConfigurationManager(aDummySession);
 		String adminUser = cfgManager.getString(Config.ADMIN_USER_NAME);
 		String adminPassword = cfgManager.getString(Config.ADMIN_PASSWORD);
 
@@ -58,13 +57,15 @@ public class MethodAccessTest {
 
 	private void cleanup() {
 
-		UserDAO userDAO = BasicManagerFactory.getInstance().getDAOManager().getUserDAO(aDummySession);
+		UserDAO userDAO = BasicManagerFactory.getInstance().getDAOManager().getUserDAO(
+				aDummySession);
 		List<User> allUsers = userDAO.getAllUsers();
 		for (User user : allUsers) {
 			userDAO.deleteUser(user);
 		}
 
-		RoleDAO roleDAO = BasicManagerFactory.getInstance().getDAOManager().getRoleDAO(aDummySession);
+		RoleDAO roleDAO = BasicManagerFactory.getInstance().getDAOManager().getRoleDAO(
+				aDummySession);
 		List<UserRole> allRoles = roleDAO.getAllRoles();
 		for (UserRole userRole : allRoles) {
 			roleDAO.deleteRole(userRole);
@@ -78,8 +79,8 @@ public class MethodAccessTest {
 	}
 
 	@Test
-	public void createUserAccess() throws FieldRequiredException, ItemExistsException,
-			ItemNotFoundException, SessionNotFoundException {
+	public void createUserAccess() throws ItemNotFoundException, SessionNotFoundException,
+			DataConstraintException {
 		ManagerFactory factory = BasicManagerFactory.getInstance();
 		RoleDAO roleDAO = factory.getDAOManager().getRoleDAO(aDummySession);
 		UserDAO userDAO = factory.getDAOManager().getUserDAO(aDummySession);

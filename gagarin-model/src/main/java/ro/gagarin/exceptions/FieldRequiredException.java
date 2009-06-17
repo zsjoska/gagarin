@@ -2,7 +2,7 @@ package ro.gagarin.exceptions;
 
 import org.apache.log4j.Logger;
 
-public class FieldRequiredException extends ExceptionBase {
+public class FieldRequiredException extends DataConstraintException {
 
 	private static final transient Logger LOG = Logger.getLogger(ItemNotFoundException.class);
 
@@ -11,6 +11,12 @@ public class FieldRequiredException extends ExceptionBase {
 
 	public FieldRequiredException(String fieldname, Class<?> pojoClass) {
 		super(ErrorCodes.FIELD_REQUIRED);
+		this.message = "Field " + fieldname + " is required for " + pojoClass.getName();
+		LOG.error(message);
+	}
+
+	public FieldRequiredException(String fieldname, Class<?> pojoClass, Exception e) {
+		super(ErrorCodes.FIELD_REQUIRED, e);
 		this.message = "Field " + fieldname + " is required for " + pojoClass.getName();
 		LOG.error(message);
 	}

@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import ro.gagarin.application.objects.AppUser;
 import ro.gagarin.config.Config;
+import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.ItemExistsException;
 import ro.gagarin.exceptions.ItemNotFoundException;
@@ -49,8 +50,7 @@ public class UserTest {
 	}
 
 	@Test
-	public void createUser() throws FieldRequiredException, ItemNotFoundException,
-			ItemExistsException {
+	public void createUser() throws ItemNotFoundException, DataConstraintException {
 
 		ManagerFactory factory = BasicManagerFactory.getInstance();
 
@@ -73,16 +73,14 @@ public class UserTest {
 		assertEquals("id does not match", user.getId(), user2.getId());
 		assertEquals("name does not match", user.getName(), user2.getName());
 		assertEquals("username does not match", user.getUsername(), user2.getUsername());
-		// assertEquals("password does not match", user.getPassword(),
-		// user2.getPassword());
+
 		usrManager.deleteUser(user);
 		assertNull("We just deleted the user; must not exists", usrManager
 				.getUserByUsername(username));
 	}
 
 	@Test
-	public void usersWiththeSameID() throws FieldRequiredException, ItemExistsException,
-			ItemNotFoundException {
+	public void usersWiththeSameID() throws ItemNotFoundException, DataConstraintException {
 		ManagerFactory factory = BasicManagerFactory.getInstance();
 
 		Session brokenSession = factory.getSessionManager().createSession(null, null,
@@ -124,8 +122,7 @@ public class UserTest {
 	}
 
 	@Test
-	public void usersWiththeSameUsername() throws FieldRequiredException, ItemExistsException,
-			ItemNotFoundException {
+	public void usersWiththeSameUsername() throws ItemNotFoundException, DataConstraintException {
 		ManagerFactory factory = BasicManagerFactory.getInstance();
 
 		Session brokenSession = factory.getSessionManager().createSession(null, null,
@@ -165,7 +162,7 @@ public class UserTest {
 	}
 
 	@Test
-	public void usersWithoutUsername() throws ItemExistsException, ItemNotFoundException {
+	public void usersWithoutUsername() throws ItemNotFoundException, DataConstraintException {
 
 		ManagerFactory factory = BasicManagerFactory.getInstance();
 		UserDAO usrManager = factory.getDAOManager().getUserDAO(session);

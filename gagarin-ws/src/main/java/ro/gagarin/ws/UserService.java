@@ -9,13 +9,12 @@ import javax.jws.WebService;
 import org.apache.log4j.Logger;
 
 import ro.gagarin.AuthorizationManager;
-import ro.gagarin.ManagerFactory;
 import ro.gagarin.BasicManagerFactory;
+import ro.gagarin.ManagerFactory;
 import ro.gagarin.RoleDAO;
 import ro.gagarin.SessionManager;
 import ro.gagarin.UserDAO;
-import ro.gagarin.exceptions.FieldRequiredException;
-import ro.gagarin.exceptions.ItemExistsException;
+import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.PermissionDeniedException;
 import ro.gagarin.exceptions.SessionNotFoundException;
@@ -33,8 +32,7 @@ public class UserService {
 
 	@WebMethod
 	public Long createUser(String sessionId, WSUser user) throws SessionNotFoundException,
-			FieldRequiredException, PermissionDeniedException, ItemNotFoundException,
-			ItemExistsException {
+			PermissionDeniedException, ItemNotFoundException, DataConstraintException {
 		LOG.info("createUser " + user.getUsername());
 
 		ManagerFactory factory = BasicManagerFactory.getInstance();

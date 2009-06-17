@@ -26,10 +26,10 @@ CREATE TABLE Users
 	name varchar(100), 
 	userName varchar(50) NOT NULL, 
 	password varchar(50), 
-	roleid bigint,
+	roleid bigint NOT NULL,
 	
-	PRIMARY KEY (id),
-	UNIQUE (userName)
+	CONSTRAINT PK_USERS_id PRIMARY KEY (id),
+	CONSTRAINT UK_USERS_userName UNIQUE (userName)
 )
 --END
 
@@ -39,10 +39,10 @@ SELECT * FROM UserRoles
 CREATE TABLE UserRoles 
 (
 	id bigint, 
-	roleName varchar(50),
+	roleName varchar(50) NOT NULL,
 
-	PRIMARY KEY (id),
-	UNIQUE (roleName)
+	CONSTRAINT PK_ROLES_id PRIMARY KEY (id),
+	CONSTRAINT UK_ROLES_roleName UNIQUE (roleName)
 )
 --END
 
@@ -52,15 +52,19 @@ SELECT * FROM UserPermissions
 CREATE TABLE UserPermissions 
 (
 	id bigint, 
-	permissionName varchar(50),
+	permissionName varchar(50) NOT NULL,
 
-	PRIMARY KEY (id),
-	UNIQUE (permissionName)
+	CONSTRAINT PK_PERMISSIONS_id PRIMARY KEY (id),
+	CONSTRAINT UK_PERMISSIONS_permissionName UNIQUE (permissionName)
 )
 --END
 
 --CHECK: PermissionAssignment
 SELECT * FROM PermissionAssignment
 --CREATE:
-CREATE TABLE PermissionAssignment (role_id bigint, perm_id bigint)
+CREATE TABLE PermissionAssignment 
+(
+	role_id bigint  NOT NULL, 
+	perm_id bigint  NOT NULL
+)
 --END

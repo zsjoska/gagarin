@@ -11,8 +11,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import ro.gagarin.exceptions.FieldRequiredException;
-import ro.gagarin.exceptions.ItemExistsException;
+import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.session.Session;
 import ro.gagarin.testobjects.ATestUser;
@@ -170,8 +169,7 @@ public class RoleTest {
 	}
 
 	@Test
-	public void testGetUsersWithRole() throws FieldRequiredException, ItemNotFoundException,
-			ItemExistsException {
+	public void testGetUsersWithRole() throws DataConstraintException {
 		ManagerFactory factory = BasicManagerFactory.getInstance();
 		RoleDAO roleManager = factory.getDAOManager().getRoleDAO(session);
 		UserDAO userDAO = factory.getDAOManager().getUserDAO(session);

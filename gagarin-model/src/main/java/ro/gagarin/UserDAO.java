@@ -2,8 +2,7 @@ package ro.gagarin;
 
 import java.util.List;
 
-import ro.gagarin.exceptions.FieldRequiredException;
-import ro.gagarin.exceptions.ItemExistsException;
+import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserRole;
@@ -36,15 +35,9 @@ public interface UserDAO extends BaseDAO {
 	 * @param user
 	 *            the user and it's data to be created
 	 * @return the ID of the user created
-	 * @throws FieldRequiredException
-	 *             a required field was missing
-	 * @throws UserAlreadyExistsException
-	 *             the user or a key-field like username or email already exists
-	 * @throws ItemNotFoundException
-	 * @throws ItemExistsException
+	 * @throws DataConstraintException
 	 */
-	long createUser(User user) throws FieldRequiredException, ItemNotFoundException,
-			ItemExistsException;
+	long createUser(User user) throws DataConstraintException;
 
 	/**
 	 * Returns the user with the specified username

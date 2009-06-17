@@ -3,15 +3,13 @@ package ro.gagarin.jdbc;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
 import ro.gagarin.UserDAO;
-import ro.gagarin.exceptions.FieldRequiredException;
-import ro.gagarin.exceptions.ItemExistsException;
+import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.jdbc.objects.DBUser;
 import ro.gagarin.log.AppLogAction;
@@ -64,8 +62,7 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 	}
 
 	@Override
-	public long createUser(User user) throws FieldRequiredException, ItemNotFoundException,
-			ItemExistsException {
+	public long createUser(User user) throws DataConstraintException {
 
 		try {
 			PreparedStatement query = getConnection().prepareStatement(
@@ -84,13 +81,11 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 			} else {
 				LOG.info("User " + user.getUsername() + " was not created");
 			}
-		} catch (SQLIntegrityConstraintViolationException e) {
-			APPLOG.error("createUser: Error Executing query", e);
-			super.markRollback();
-			throw new ItemExistsException();
 		} catch (SQLException e) {
-			APPLOG.error("createUser: Error Executing query", e);
 			super.markRollback();
+			DataConstraintException x = DataConstraintException.createException(e, User.class);
+			APPLOG.error("createUser: Error Executing query", x);
+			throw x;
 		}
 
 		// HibernateUtils.requireStringField("getUsername", user);

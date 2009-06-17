@@ -8,8 +8,7 @@ import org.junit.Test;
 
 import ro.gagarin.application.objects.AppUser;
 import ro.gagarin.config.Config;
-import ro.gagarin.exceptions.FieldRequiredException;
-import ro.gagarin.exceptions.ItemExistsException;
+import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.jdbc.objects.DBUser;
@@ -28,8 +27,8 @@ public class SessionTest {
 	// TODO: add test with null session for all WS methods
 
 	@Test
-	public void testSuccessLogin() throws ItemNotFoundException, SessionNotFoundException,
-			FieldRequiredException, ItemExistsException {
+	public void testSuccessLogin() throws SessionNotFoundException, DataConstraintException,
+			ItemNotFoundException {
 
 		ManagerFactory factory = BasicManagerFactory.getInstance();
 
@@ -53,8 +52,8 @@ public class SessionTest {
 	}
 
 	@Test
-	public void testFailedLogin() throws SessionNotFoundException, FieldRequiredException,
-			ItemExistsException, ItemNotFoundException {
+	public void testFailedLogin() throws SessionNotFoundException, ItemNotFoundException,
+			DataConstraintException {
 
 		ManagerFactory factory = BasicManagerFactory.getInstance();
 
@@ -88,8 +87,7 @@ public class SessionTest {
 	}
 
 	@Test
-	public void testSessionDeletion() throws ItemNotFoundException, FieldRequiredException,
-			ItemExistsException {
+	public void testSessionDeletion() throws ItemNotFoundException, DataConstraintException {
 		ManagerFactory factory = BasicManagerFactory.getInstance();
 
 		UserDAO userManager = factory.getDAOManager().getUserDAO(session);
@@ -126,7 +124,8 @@ public class SessionTest {
 		cfgManager.setConfigValue(Config.USER_SESSION_TIMEOUT, "100");
 
 		SessionManager sessionManager = factory.getSessionManager();
-		Session session = sessionManager.createSession(null, null, BasicManagerFactory.getInstance());
+		Session session = sessionManager.createSession(null, null, BasicManagerFactory
+				.getInstance());
 		assertNotNull(session);
 		assertEquals("We just set the timeout to 100", session.getSessionTimeout(), 100);
 

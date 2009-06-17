@@ -11,9 +11,8 @@ import ro.gagarin.application.objects.AppUser;
 import ro.gagarin.application.objects.AppUserPermission;
 import ro.gagarin.application.objects.AppUserRole;
 import ro.gagarin.config.Config;
+import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ErrorCodes;
-import ro.gagarin.exceptions.FieldRequiredException;
-import ro.gagarin.exceptions.ItemExistsException;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.session.Session;
@@ -68,8 +67,7 @@ public class ApplicationInitializer {
 		return true;
 	}
 
-	private void doInit() throws FieldRequiredException, ItemNotFoundException,
-			ItemExistsException, OperationException {
+	private void doInit() throws ItemNotFoundException, OperationException, DataConstraintException {
 
 		this.setTask("CREATE_MANAGERS");
 		initManagers(this.session);
@@ -122,8 +120,8 @@ public class ApplicationInitializer {
 		return adminRole;
 	}
 
-	private void checkAdminUsers(final UserRole adminRole) throws FieldRequiredException,
-			ItemNotFoundException, ItemExistsException {
+	private void checkAdminUsers(final UserRole adminRole) throws ItemNotFoundException,
+			DataConstraintException {
 		LOG.info("Checking admin user");
 		final String adminUserName = cfgManager.getString(Config.ADMIN_USER_NAME);
 		final String adminPassword = cfgManager.getString(Config.ADMIN_PASSWORD);

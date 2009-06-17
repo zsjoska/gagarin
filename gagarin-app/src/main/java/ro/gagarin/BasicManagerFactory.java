@@ -83,7 +83,7 @@ public class BasicManagerFactory implements ManagerFactory {
 	}
 
 	@Override
-	public AppLog getLogManager(Session session) {
-		return new BasicLogManager(session);
+	public AppLog getLogManager(Session session, Class<?> aClass) {
+		return new BasicLogManager(session, aClass);
 	}
 }

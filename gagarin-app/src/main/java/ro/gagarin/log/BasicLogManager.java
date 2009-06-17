@@ -1,19 +1,35 @@
 package ro.gagarin.log;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.spi.LoggingEvent;
+
 import ro.gagarin.session.Session;
 
 public class BasicLogManager implements AppLog {
 
-	private final Session session;
+	/**
+	 * The fully qualified name of the Category class.
+	 */
+	private static final String FQCN = BasicLogManager.class.getName();
 
-	public BasicLogManager(Session session) {
+	private final Session session;
+	private final String si;
+
+	private final Logger logger;
+
+	public BasicLogManager(Session session, Class<?> aClass) {
+		// super(aClass.getName());
+		// setLevel(Level.ALL);
+		logger = Logger.getLogger(aClass);
 		this.session = session;
+		this.si = session.toString() + "# ";
 
 	}
 
 	@Override
-	public void debug(String string) {
-
+	public void debug(String message) {
+		logger.callAppenders(new LoggingEvent(FQCN, logger, Level.DEBUG, si + message, null));
 	}
 
 	@Override
@@ -24,9 +40,7 @@ public class BasicLogManager implements AppLog {
 
 	@Override
 	public void error(String string, Throwable t) {
-		System.err.println(string + ":" + t.getMessage());
-		t.printStackTrace();
-
+		// super.error(string, t);
 	}
 
 }

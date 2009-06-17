@@ -10,6 +10,7 @@ import ro.gagarin.UserDAO;
 import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.jdbc.objects.DBUser;
+import ro.gagarin.jdbc.objects.DBUserRole;
 import ro.gagarin.log.AppLogAction;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.User;
@@ -38,7 +39,6 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 			if (rs.next()) {
 				user.setId(rs.getLong("id"));
 				user.setUsername(rs.getString("username"));
-				rs.close();
 				return user;
 			} else {
 				APPLOG.action(AppLogAction.LOGIN, User.class, username, "FAILED");
@@ -168,9 +168,8 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 				user.setRole(role);
 				users.add(user);
 			}
-			rs.close();
 		} catch (SQLException e) {
-			APPLOG.error("getRolePermissions: Error Executing query", e);
+			APPLOG.error("Error Executing query", e);
 			super.markRollback();
 		} finally {
 			if (rs != null)

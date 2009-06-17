@@ -18,9 +18,6 @@ import ro.gagarin.user.UserRole;
 
 public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 
-	// private static final transient Logger LOG =
-	// Logger.getLogger(JdbcRoleDAO.class);
-
 	public JdbcRoleDAO(Session session) {
 		super(session);
 	}
@@ -39,20 +36,19 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 			if (rs.next()) {
 				role.setId(rs.getLong("id"));
 				role.setRoleName(rs.getString("roleName"));
-				rs.close();
 				return role;
 			} else {
 				APPLOG.info("UserRole " + roleName + " was not found");
 			}
 		} catch (SQLException e) {
-			APPLOG.error("getRoleByName: Error Executing query", e);
+			APPLOG.error("Error Executing query", e);
 			super.markRollback();
 		} finally {
 			if (rs != null)
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					APPLOG.error("getRoleByName: Error on close", e);
+					APPLOG.error("Error on close", e);
 				}
 		}
 		return null;
@@ -70,7 +66,7 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 			APPLOG.info("UserRole " + role.getRoleName() + " was created");
 			return role.getId();
 		} catch (SQLException e) {
-			APPLOG.error("createPermission: Error Executing query", e);
+			APPLOG.error("Error Executing query", e);
 			super.markRollback();
 			// TODO: throw exception to signal the error
 		}
@@ -90,7 +86,7 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 			APPLOG.info("UserPermission " + perm.getPermissionName() + " was created");
 			return perm.getId();
 		} catch (SQLException e) {
-			APPLOG.error("createPermission: Error Executing query", e);
+			APPLOG.error("Error Executing query", e);
 			super.markRollback();
 			// TODO: throw exception to signal the error
 		}
@@ -115,16 +111,15 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 				permission.setPermissionName(rs.getString("permissionName"));
 				permissions.add(permission);
 			}
-			rs.close();
 		} catch (SQLException e) {
-			APPLOG.error("getRoleByName: Error Executing query", e);
+			APPLOG.error("Error Executing query", e);
 			super.markRollback();
 		} finally {
 			if (rs != null)
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					APPLOG.error("getRoleByName: Error on close", e);
+					APPLOG.error("Error on close", e);
 				}
 		}
 		return permissions;
@@ -153,7 +148,7 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 			query.executeUpdate();
 			APPLOG.info("UserRole " + role.getRoleName() + " was deleted");
 		} catch (SQLException e) {
-			APPLOG.error("deleteRole: Error Executing query", e);
+			APPLOG.error("Error Executing query", e);
 			super.markRollback();
 		}
 	}
@@ -171,20 +166,19 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 			if (rs.next()) {
 				perm.setId(rs.getLong("id"));
 				perm.setPermissionName(rs.getString("permissionName"));
-				rs.close();
 				return perm;
 			} else {
 				APPLOG.info("UserPermission " + permissionName + " was not found");
 			}
 		} catch (SQLException e) {
-			APPLOG.error("getPermissionByName: Error Executing query", e);
+			APPLOG.error("Error Executing query", e);
 			super.markRollback();
 		} finally {
 			if (rs != null)
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					APPLOG.error("getPermissionByName: Error on close", e);
+					APPLOG.error("Error on close", e);
 				}
 		}
 		return null;
@@ -199,7 +193,7 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 			query.executeUpdate();
 			APPLOG.info("UserRole " + perm.getPermissionName() + " was deleted");
 		} catch (SQLException e) {
-			APPLOG.error("deletePermission: Error Executing query", e);
+			APPLOG.error("Error Executing query", e);
 			super.markRollback();
 		}
 	}
@@ -268,7 +262,7 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 			APPLOG.info("UserPermission " + perm.getPermissionName() + " was assigned to role "
 					+ role.getRoleName());
 		} catch (SQLException e) {
-			APPLOG.error("createPermission: Error Executing query", e);
+			APPLOG.error("Error Executing query", e);
 			super.markRollback();
 		}
 
@@ -309,16 +303,15 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 				permission.setPermissionName(rs.getString("permissionName"));
 				perms.add(permission);
 			}
-			rs.close();
 		} catch (SQLException e) {
-			APPLOG.error("getRolePermissions: Error Executing query", e);
+			APPLOG.error("Error Executing query", e);
 			super.markRollback();
 		} finally {
 			if (rs != null)
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					APPLOG.error("getRolePermissions: Error on close", e);
+					APPLOG.error("Error on close", e);
 				}
 		}
 		return perms;
@@ -341,16 +334,15 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 				role.setRoleName(rs.getString("roleName"));
 				roles.add(role);
 			}
-			rs.close();
 		} catch (SQLException e) {
-			APPLOG.error("getRolePermissions: Error Executing query", e);
+			APPLOG.error("Error Executing query", e);
 			super.markRollback();
 		} finally {
 			if (rs != null)
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					APPLOG.error("getRolePermissions: Error on close", e);
+					APPLOG.error("Error on close", e);
 				}
 		}
 		return roles;

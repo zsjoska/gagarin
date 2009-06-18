@@ -39,6 +39,7 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 			if (rs.next()) {
 				user.setId(rs.getLong("id"));
 				user.setUsername(rs.getString("username"));
+				// TODO: getMore fields
 				return user;
 			} else {
 				APPLOG.action(AppLogAction.LOGIN, User.class, username, "FAILED");
@@ -68,47 +69,17 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 			query.setString(3, user.getName());
 			query.setString(4, user.getPassword());
 			query.setLong(5, user.getRole().getId());
-			int rows = query.executeUpdate();
+			query.executeUpdate();
 
-			if (rows == 1) {
-				APPLOG.action(AppLogAction.CREATE, User.class, user.getUsername(), null);
-				APPLOG.info("User " + user.getUsername() + " was created");
-				return user.getId();
-			} else {
-				APPLOG.info("User " + user.getUsername() + " was not created");
-			}
+			APPLOG.action(AppLogAction.CREATE, User.class, user.getUsername(), null);
+			APPLOG.info("User " + user.getUsername() + " was created");
+			return user.getId();
 		} catch (SQLException e) {
 			super.markRollback();
 			DataConstraintException x = DataConstraintException.createException(e, User.class);
 			APPLOG.error("createUser: Error Executing query", x);
 			throw x;
 		}
-
-		// HibernateUtils.requireStringField("getUsername", user);
-		// HibernateUtils.requireStringField("getId", user);
-		//
-		// try {
-		// DBUserRole dbRole = JdbcRoleDAO.findOrCreateRole(getEM(),
-		// user.getRole());
-		// if (dbRole == null) {
-		// throw new ItemNotFoundException(UserRole.class, "" +
-		// user.getRole().getId());
-		// }
-		// DBUser dbUser = new DBUser(user);
-		// dbUser.setRole(dbRole);
-		//
-		// getEM().persist(dbUser);
-		// getEM().flush();
-		//
-		// LOG.info("Created user:" + user.getUsername() + "; id:" +
-		// user.getId());
-		// return user.getId();
-		// } catch (RuntimeException e) {
-		// markRollback();
-		// LOG.error("createUser", e);
-		// throw e;
-		// }
-		return 0;
 	}
 
 	@Override

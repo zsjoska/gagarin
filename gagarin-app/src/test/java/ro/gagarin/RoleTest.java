@@ -26,7 +26,6 @@ import ro.gagarin.user.UserRole;
 /**
  * Unit test for simple App.
  */
-
 public class RoleTest {
 
 	private Session session = null;
@@ -323,4 +322,6 @@ public class RoleTest {
 		roleManager = factory.getDAOManager().getRoleDAO(session);
 		assertNull("Transaction rolback test", roleManager.getRoleByName("createRoleWithSameID"));
 	}
+
+	// TODO: create tests for empty values
 }

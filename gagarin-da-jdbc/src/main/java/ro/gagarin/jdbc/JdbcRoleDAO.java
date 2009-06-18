@@ -119,20 +119,6 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 				}
 		}
 		return permissions;
-
-		// try {
-		// Query query =
-		// getEM().createQuery("select p from DBUserPermission p");
-		// List<UserPermission> resultList = query.getResultList();
-		// return resultList;
-		//
-		// } catch (NoResultException e) {
-		// return null;
-		// } catch (RuntimeException e) {
-		// LOG.error("getAllPermissions", e);
-		// throw e;
-		// }
-
 	}
 
 	@Override
@@ -277,26 +263,8 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 		} catch (SQLException e) {
 			APPLOG.error("Error Executing query", e);
 			super.markRollback();
+			// TODO: add exception handling
 		}
-
-		// try {
-		// DBUserRole dbRole = getEM().find(DBUserRole.class, role.getId());
-		// if (dbRole == null)
-		// throw new ItemNotFoundException(UserRole.class,
-		// role.getId().toString());
-		//
-		// DBUserPermission dbPerm = getEM().find(DBUserPermission.class,
-		// perm.getId());
-		// if (dbPerm == null)
-		// throw new ItemNotFoundException(UserPermission.class,
-		// perm.getId().toString());
-		//
-		// dbRole.getUserPermissions().add(dbPerm);
-		// dbPerm.getUserRoles().add(dbRole);
-		// } catch (RuntimeException e) {
-		// LOG.error("assignPermissionToRole", e);
-		// throw e;
-		// }
 	}
 
 	@Override

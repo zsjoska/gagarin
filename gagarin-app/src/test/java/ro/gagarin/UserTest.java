@@ -26,6 +26,8 @@ import ro.gagarin.user.UserRole;
 public class UserTest {
 	private String username = "User_" + System.nanoTime();
 
+	private static final ManagerFactory FACTORY = BasicManagerFactory.getInstance();
+
 	private Session session = null;
 
 	@Before
@@ -82,13 +84,11 @@ public class UserTest {
 
 	@Test
 	public void usersWiththeSameID() throws ItemNotFoundException, DataConstraintException {
-		ManagerFactory factory = BasicManagerFactory.getInstance();
 
-		Session brokenSession = factory.getSessionManager().createSession(null, null,
-				BasicManagerFactory.getInstance());
+		Session brokenSession = FACTORY.getSessionManager().createSession(null, null, FACTORY);
 
-		UserDAO usrManager = factory.getDAOManager().getUserDAO(brokenSession);
-		RoleDAO roleManager = factory.getDAOManager().getRoleDAO(brokenSession);
+		UserDAO usrManager = FACTORY.getDAOManager().getUserDAO(brokenSession);
+		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(brokenSession);
 
 		UserRole adminRole = roleManager.getRoleByName(configManager
 				.getString(Config.ADMIN_ROLE_NAME));
@@ -113,25 +113,22 @@ public class UserTest {
 			usrManager.createUser(user2);
 			fail("the userid is the same; thus this item must not be created");
 		} catch (ItemExistsException e) {
-			e.printStackTrace();
+			assertEquals("Wrong field info", "ID", e.getFieldName());
+			assertEquals("Wrong class info", "User", e.getClassName());
 		} finally {
-			factory.releaseSession(brokenSession);
+			FACTORY.releaseSession(brokenSession);
 		}
 
-		usrManager = factory.getDAOManager().getUserDAO(session);
+		usrManager = FACTORY.getDAOManager().getUserDAO(session);
 		assertNull("Transaction rolback test", usrManager.getUserByUsername("UserName1"));
 
 	}
 
 	@Test
 	public void usersWiththeSameUsername() throws ItemNotFoundException, DataConstraintException {
-		ManagerFactory factory = BasicManagerFactory.getInstance();
 
-		Session brokenSession = factory.getSessionManager().createSession(null, null,
-				BasicManagerFactory.getInstance());
-
-		UserDAO usrManager = factory.getDAOManager().getUserDAO(brokenSession);
-		RoleDAO roleManager = factory.getDAOManager().getRoleDAO(brokenSession);
+		UserDAO usrManager = FACTORY.getDAOManager().getUserDAO(session);
+		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
 
 		UserRole adminRole = roleManager.getRoleByName(configManager
 				.getString(Config.ADMIN_ROLE_NAME));
@@ -154,12 +151,13 @@ public class UserTest {
 			usrManager.createUser(user2);
 			fail("the username is the same; thus this item must not be created");
 		} catch (ItemExistsException e) {
-			e.printStackTrace();
+			assertEquals("Wrong field info", "USERNAME", e.getFieldName());
+			assertEquals("Wrong class info", "User", e.getClassName());
 		} finally {
-			factory.releaseSession(brokenSession);
+			FACTORY.releaseSession(session);
 		}
 
-		usrManager = factory.getDAOManager().getUserDAO(session);
+		usrManager = FACTORY.getDAOManager().getUserDAO(session);
 		assertNull("Transaction rolback test", usrManager.getUserByUsername("UserName2"));
 
 	}
@@ -167,9 +165,11 @@ public class UserTest {
 	@Test
 	public void usersWithoutUsername() throws ItemNotFoundException, DataConstraintException {
 
-		ManagerFactory factory = BasicManagerFactory.getInstance();
-		UserDAO usrManager = factory.getDAOManager().getUserDAO(session);
-		RoleDAO roleManager = factory.getDAOManager().getRoleDAO(session);
+		Session brokenSession = FACTORY.getSessionManager().createSession(null, null,
+				BasicManagerFactory.getInstance());
+
+		UserDAO usrManager = FACTORY.getDAOManager().getUserDAO(brokenSession);
+		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(brokenSession);
 
 		UserRole adminRole = roleManager.getRoleByName(configManager
 				.getString(Config.ADMIN_ROLE_NAME));
@@ -182,7 +182,10 @@ public class UserTest {
 			usrManager.createUser(user1);
 			fail("the username was empty; thus this item must not be created");
 		} catch (FieldRequiredException e) {
-			System.out.println(e.getMessage());
+			assertEquals("Wrong field info", "USERNAME", e.getFieldName());
+			assertEquals("Wrong class info", "User", e.getClassName());
+		} finally {
+			FACTORY.releaseSession(brokenSession);
 		}
 
 	}

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 import ro.gagarin.RoleDAO;
+import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.jdbc.objects.DBUserPermission;
 import ro.gagarin.jdbc.objects.DBUserRole;
@@ -55,7 +56,7 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 	}
 
 	@Override
-	public long createRole(UserRole role) {
+	public long createRole(UserRole role) throws DataConstraintException {
 		try {
 			PreparedStatement query = getConnection().prepareStatement(
 					"INSERT INTO UserRoles( id, roleName) VALUES (?,?)");
@@ -68,14 +69,12 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 		} catch (SQLException e) {
 			APPLOG.error("Error Executing query", e);
 			super.markRollback();
-			// TODO: throw exception to signal the error
+			throw DataConstraintException.createException(e, UserRole.class);
 		}
-		APPLOG.error("UserPermission " + role.getRoleName() + " was not created");
-		return 0;
 	}
 
 	@Override
-	public long createPermission(UserPermission perm) {
+	public long createPermission(UserPermission perm) throws DataConstraintException {
 
 		try {
 			PreparedStatement query = getConnection().prepareStatement(
@@ -88,11 +87,8 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 		} catch (SQLException e) {
 			APPLOG.error("Error Executing query", e);
 			super.markRollback();
-			// TODO: throw exception to signal the error
+			throw DataConstraintException.createException(e, UserPermission.class);
 		}
-
-		// // TODO: requireStringField(user.getUsername(), "username");
-		return -1;
 	}
 
 	@Override

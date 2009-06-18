@@ -3,6 +3,7 @@ package ro.gagarin;
 import java.util.List;
 import java.util.Set;
 
+import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
@@ -11,9 +12,9 @@ public interface RoleDAO extends BaseDAO {
 
 	UserRole getRoleByName(String roleName);
 
-	long createRole(UserRole role);
+	long createRole(UserRole role) throws DataConstraintException;
 
-	long createPermission(UserPermission perm);
+	long createPermission(UserPermission perm) throws DataConstraintException;
 
 	List<UserPermission> getAllPermissions();
 

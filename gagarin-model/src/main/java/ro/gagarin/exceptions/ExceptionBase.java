@@ -5,7 +5,6 @@ public class ExceptionBase extends Exception {
 	private static final long serialVersionUID = 5402532633664769260L;
 
 	private final int errorCode;
-
 	private final String detail;
 
 	public ExceptionBase(int errorCode) {

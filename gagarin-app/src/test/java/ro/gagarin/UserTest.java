@@ -114,8 +114,9 @@ public class UserTest {
 			fail("the userid is the same; thus this item must not be created");
 		} catch (ItemExistsException e) {
 			e.printStackTrace();
+		} finally {
+			factory.releaseSession(brokenSession);
 		}
-		factory.releaseSession(brokenSession);
 
 		usrManager = factory.getDAOManager().getUserDAO(session);
 		assertNull("Transaction rolback test", usrManager.getUserByUsername("UserName1"));
@@ -154,8 +155,9 @@ public class UserTest {
 			fail("the username is the same; thus this item must not be created");
 		} catch (ItemExistsException e) {
 			e.printStackTrace();
+		} finally {
+			factory.releaseSession(brokenSession);
 		}
-		factory.releaseSession(brokenSession);
 
 		usrManager = factory.getDAOManager().getUserDAO(session);
 		assertNull("Transaction rolback test", usrManager.getUserByUsername("UserName2"));

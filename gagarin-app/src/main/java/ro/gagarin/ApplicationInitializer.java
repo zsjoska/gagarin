@@ -106,7 +106,8 @@ public class ApplicationInitializer {
 
 	}
 
-	private UserRole checkCreateAdminRole(final String adminRoleName) {
+	private UserRole checkCreateAdminRole(final String adminRoleName)
+			throws DataConstraintException {
 		LOG.info("Checking admin role existence");
 		UserRole adminRole = roleManager.getRoleByName(adminRoleName);
 		if (adminRole == null) {
@@ -165,7 +166,7 @@ public class ApplicationInitializer {
 		}
 	}
 
-	private void checkCreatePermissionList() {
+	private void checkCreatePermissionList() throws DataConstraintException {
 		LOG.info("Checking Permission List");
 		PermissionEnum[] values = PermissionEnum.values();
 		for (PermissionEnum permission : values) {

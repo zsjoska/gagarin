@@ -251,6 +251,14 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 	@Override
 	public void assignPermissionToRole(UserRole role, UserPermission perm)
 			throws ItemNotFoundException {
+		if (role == null) {
+			markRollback();
+			throw new ItemNotFoundException(UserRole.class, "null");
+		}
+		if (perm == null) {
+			markRollback();
+			throw new ItemNotFoundException(UserPermission.class, "null");
+		}
 
 		try {
 			PreparedStatement query = getConnection().prepareStatement(

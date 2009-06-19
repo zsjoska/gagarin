@@ -13,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ro.gagarin.exceptions.DataConstraintException;
+import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.ItemExistsException;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.session.Session;
@@ -28,22 +29,23 @@ import ro.gagarin.user.UserRole;
  */
 public class RoleTest {
 
+	private static final ManagerFactory FACTORY = BasicManagerFactory.getInstance();
+
 	private Session session = null;
 
 	@Before
 	public void init() {
-		this.session = BasicManagerFactory.getInstance().getSessionManager().createSession(null,
-				null, BasicManagerFactory.getInstance());
+		this.session = FACTORY.getSessionManager().createSession(null, null, FACTORY);
 	}
 
 	@After
 	public void close() {
-		BasicManagerFactory.getInstance().releaseSession(session);
+		FACTORY.releaseSession(session);
 	}
 
 	@Test
 	public void createGetDeleteSimpleRole() throws DataConstraintException {
-		RoleDAO roleManager = BasicManagerFactory.getInstance().getDAOManager().getRoleDAO(session);
+		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
 		ATestUserRole role = new ATestUserRole();
 		role.setRoleName("A_ROLE");
 		roleManager.createRole(role);
@@ -60,7 +62,7 @@ public class RoleTest {
 
 	@Test
 	public void createGetDeleteSimplePermission() throws DataConstraintException {
-		RoleDAO roleManager = BasicManagerFactory.getInstance().getDAOManager().getRoleDAO(session);
+		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
 
 		ATestUserPermission perm = new ATestUserPermission();
 		perm.setPermissionName("A_PERMISSION");
@@ -78,7 +80,7 @@ public class RoleTest {
 
 	@Test
 	public void createRoleWithPermission() throws ItemNotFoundException, DataConstraintException {
-		RoleDAO roleManager = BasicManagerFactory.getInstance().getDAOManager().getRoleDAO(session);
+		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
 		ATestUserRole role = new ATestUserRole();
 		role.setRoleName("C_ROLE");
 
@@ -108,7 +110,7 @@ public class RoleTest {
 
 	@Test
 	public void createRoleWith2Permissions() throws ItemNotFoundException, DataConstraintException {
-		RoleDAO roleManager = BasicManagerFactory.getInstance().getDAOManager().getRoleDAO(session);
+		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
 		ATestUserRole role = new ATestUserRole();
 		role.setRoleName("C_ROLE");
 
@@ -152,7 +154,7 @@ public class RoleTest {
 
 	@Test
 	public void addPermissionToRole() throws ItemNotFoundException, DataConstraintException {
-		RoleDAO roleManager = BasicManagerFactory.getInstance().getDAOManager().getRoleDAO(session);
+		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
 		UserRole role = roleManager.getRoleByName("B_ROLE");
 		if (role == null) {
 			ATestUserRole role2 = new ATestUserRole();
@@ -172,9 +174,8 @@ public class RoleTest {
 
 	@Test
 	public void testGetUsersWithRole() throws DataConstraintException {
-		ManagerFactory factory = BasicManagerFactory.getInstance();
-		RoleDAO roleManager = factory.getDAOManager().getRoleDAO(session);
-		UserDAO userDAO = factory.getDAOManager().getUserDAO(session);
+		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
+		UserDAO userDAO = FACTORY.getDAOManager().getUserDAO(session);
 
 		ATestUserRole role = new ATestUserRole();
 		role.setRoleName("A_ROLE");
@@ -199,12 +200,10 @@ public class RoleTest {
 
 	@Test
 	public void createRoleWithSameID() throws DataConstraintException {
-		ManagerFactory factory = BasicManagerFactory.getInstance();
 
-		Session brokenSession = factory.getSessionManager().createSession(null, null,
-				BasicManagerFactory.getInstance());
+		Session brokenSession = FACTORY.getSessionManager().createSession(null, null, FACTORY);
 
-		RoleDAO roleManager = factory.getDAOManager().getRoleDAO(brokenSession);
+		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(brokenSession);
 
 		ATestUserRole role = new ATestUserRole();
 		role.setRoleName("createRoleWithSameID");
@@ -222,21 +221,19 @@ public class RoleTest {
 			assertEquals("Wrong field info", "ID", e.getFieldName());
 			assertEquals("Wrong class info", "UserRole", e.getClassName());
 		} finally {
-			factory.releaseSession(brokenSession);
+			FACTORY.releaseSession(brokenSession);
 		}
 
-		roleManager = factory.getDAOManager().getRoleDAO(session);
+		roleManager = FACTORY.getDAOManager().getRoleDAO(session);
 		assertNull("Transaction rolback test", roleManager.getRoleByName("createRoleWithSameID"));
 	}
 
 	@Test
 	public void createRoleWithSameName() throws DataConstraintException {
-		ManagerFactory factory = BasicManagerFactory.getInstance();
 
-		Session brokenSession = factory.getSessionManager().createSession(null, null,
-				BasicManagerFactory.getInstance());
+		Session brokenSession = FACTORY.getSessionManager().createSession(null, null, FACTORY);
 
-		RoleDAO roleManager = factory.getDAOManager().getRoleDAO(brokenSession);
+		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(brokenSession);
 
 		ATestUserRole role = new ATestUserRole();
 		role.setRoleName("createRoleWithSameName");
@@ -253,21 +250,19 @@ public class RoleTest {
 			assertEquals("Wrong field info", "ROLENAME", e.getFieldName());
 			assertEquals("Wrong class info", "UserRole", e.getClassName());
 		} finally {
-			factory.releaseSession(brokenSession);
+			FACTORY.releaseSession(brokenSession);
 		}
 
-		roleManager = factory.getDAOManager().getRoleDAO(session);
+		roleManager = FACTORY.getDAOManager().getRoleDAO(session);
 		assertNull("Transaction rolback test", roleManager.getRoleByName("createRoleWithSameID"));
 	}
 
 	@Test
 	public void createPermissionWithSameID() throws DataConstraintException {
-		ManagerFactory factory = BasicManagerFactory.getInstance();
 
-		Session brokenSession = factory.getSessionManager().createSession(null, null,
-				BasicManagerFactory.getInstance());
+		Session brokenSession = FACTORY.getSessionManager().createSession(null, null, FACTORY);
 
-		RoleDAO roleManager = factory.getDAOManager().getRoleDAO(brokenSession);
+		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(brokenSession);
 
 		ATestUserPermission perm = new ATestUserPermission();
 		perm.setPermissionName("createPermissionWithSameID");
@@ -285,21 +280,19 @@ public class RoleTest {
 			assertEquals("Wrong field info", "ID", e.getFieldName());
 			assertEquals("Wrong class info", "UserPermission", e.getClassName());
 		} finally {
-			factory.releaseSession(brokenSession);
+			FACTORY.releaseSession(brokenSession);
 		}
 
-		roleManager = factory.getDAOManager().getRoleDAO(session);
+		roleManager = FACTORY.getDAOManager().getRoleDAO(session);
 		assertNull("Transaction rolback test", roleManager.getRoleByName("createRoleWithSameID"));
 	}
 
 	@Test
 	public void createPermissionWithSameName() throws DataConstraintException {
-		ManagerFactory factory = BasicManagerFactory.getInstance();
 
-		Session brokenSession = factory.getSessionManager().createSession(null, null,
-				BasicManagerFactory.getInstance());
+		Session brokenSession = FACTORY.getSessionManager().createSession(null, null, FACTORY);
 
-		RoleDAO roleManager = factory.getDAOManager().getRoleDAO(brokenSession);
+		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(brokenSession);
 
 		ATestUserPermission perm = new ATestUserPermission();
 		perm.setPermissionName("createPermissionWithSameName");
@@ -316,12 +309,95 @@ public class RoleTest {
 			assertEquals("Wrong field info", "PERMISSIONNAME", e.getFieldName());
 			assertEquals("Wrong class info", "UserPermission", e.getClassName());
 		} finally {
-			factory.releaseSession(brokenSession);
+			FACTORY.releaseSession(brokenSession);
 		}
 
-		roleManager = factory.getDAOManager().getRoleDAO(session);
+		roleManager = FACTORY.getDAOManager().getRoleDAO(session);
 		assertNull("Transaction rolback test", roleManager.getRoleByName("createRoleWithSameID"));
 	}
 
-	// TODO: create tests for empty values
+	@Test
+	public void testNullRoleName() throws DataConstraintException {
+		Session brokenSession = FACTORY.getSessionManager().createSession(null, null, FACTORY);
+
+		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(brokenSession);
+
+		ATestUserRole role = new ATestUserRole();
+
+		try {
+			roleManager.createRole(role);
+			fail("the rolename was empty; thus this item must not be created");
+		} catch (FieldRequiredException e) {
+			assertEquals("Wrong field info", "ROLENAME", e.getFieldName());
+			assertEquals("Wrong class info", "UserRole", e.getClassName());
+		} finally {
+			FACTORY.releaseSession(brokenSession);
+		}
+
+	}
+
+	@Test
+	public void testNullPermissionName() throws DataConstraintException {
+		Session brokenSession = FACTORY.getSessionManager().createSession(null, null, FACTORY);
+
+		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(brokenSession);
+
+		ATestUserPermission perm = new ATestUserPermission();
+
+		try {
+			roleManager.createPermission(perm);
+			fail("the permission name was empty; thus this item must not be created");
+		} catch (FieldRequiredException e) {
+			assertEquals("Wrong field info", "PERMISSIONNAME", e.getFieldName());
+			assertEquals("Wrong class info", "UserPermission", e.getClassName());
+		} finally {
+			FACTORY.releaseSession(brokenSession);
+		}
+
+	}
+
+	@Test
+	public void testNullPermissionAssignment() throws DataConstraintException {
+		Session brokenSession = FACTORY.getSessionManager().createSession(null, null, FACTORY);
+
+		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(brokenSession);
+
+		ATestUserRole role = new ATestUserRole();
+		role.setRoleName("testNullPermissionAssignment");
+		roleManager.createRole(role);
+		assertNotNull(roleManager.getRoleByName("testNullPermissionAssignment"));
+
+		try {
+			roleManager.assignPermissionToRole(role, null);
+			fail("the permission was null; thus this item must not be assigned");
+		} catch (ItemNotFoundException e) {
+			assertEquals("wrong class info", "UserPermission", e.getClassName());
+		} finally {
+			FACTORY.getSessionManager().releaseSession(brokenSession);
+		}
+	}
+
+	@Test
+	public void testNullRoleAssignment() throws DataConstraintException {
+		Session brokenSession = FACTORY.getSessionManager().createSession(null, null, FACTORY);
+
+		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(brokenSession);
+
+		ATestUserPermission perm = new ATestUserPermission();
+		perm.setPermissionName("testNullRoleAssignment");
+		roleManager.createPermission(perm);
+		assertNotNull(roleManager.getPermissionByName("testNullRoleAssignment"));
+
+		try {
+			roleManager.assignPermissionToRole(null, perm);
+			fail("the permission was null; thus this item must not be assigned");
+		} catch (ItemNotFoundException e) {
+			assertEquals("wrong class info", "UserRole", e.getClassName());
+		} finally {
+			FACTORY.getSessionManager().releaseSession(brokenSession);
+		}
+	}
+
+	// TODO: create test for assign null and to null
+
 }

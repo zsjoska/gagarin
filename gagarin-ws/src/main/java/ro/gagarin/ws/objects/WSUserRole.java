@@ -17,10 +17,6 @@ public class WSUserRole extends BaseEntity implements UserRole {
 	public WSUserRole() {
 	}
 
-	public Long getId() {
-		return super.getId();
-	}
-
 	public void setRoleName(String roleName) {
 		this.roleName = roleName;
 	}

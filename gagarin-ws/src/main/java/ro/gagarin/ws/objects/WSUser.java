@@ -17,12 +17,11 @@ public class WSUser extends BaseEntity implements User {
 	}
 
 	public WSUser(User user) {
-
-	}
-
-	@Override
-	public Long getId() {
-		return super.getId();
+		this.setId(user.getId());
+		this.setName(user.getName());
+		this.setPassword(user.getPassword());
+		this.setRole(user.getRole());
+		this.setUsername(user.getUsername());
 	}
 
 	@Override

@@ -9,6 +9,7 @@ public class AppUserRole extends BaseEntity implements UserRole {
 	private String roleName;
 
 	public AppUserRole(UserRole role) {
+		this.setId(role.getId());
 		this.roleName = role.getRoleName();
 	}
 

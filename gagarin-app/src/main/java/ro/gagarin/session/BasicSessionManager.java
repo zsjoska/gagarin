@@ -90,7 +90,7 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
 	public void destroySession(Session session) {
 		LOG.info("Destroy session " + session.getId());
 		synchronized (session) {
-			BasicManagerFactory.getInstance().releaseSession(session);
+			session.getManagerFactory().releaseSession(session);
 			this.sessions.remove(session.getSessionString());
 		}
 	}

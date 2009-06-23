@@ -29,6 +29,9 @@ import ro.gagarin.ws.objects.WSUserRole;
  * Unit test for simple App.
  */
 public class MethodAccessTest {
+
+	private static final transient ManagerFactory FACTORY = BasicManagerFactory.getInstance();
+
 	private static Authentication authentication = new Authentication();
 	private static UserService userService = new UserService();
 
@@ -40,8 +43,7 @@ public class MethodAccessTest {
 	public void setUp() throws SessionNotFoundException, ItemNotFoundException {
 
 		aDummySession = new Session();
-		ConfigurationManager cfgManager = BasicManagerFactory.getInstance()
-				.getConfigurationManager(aDummySession);
+		ConfigurationManager cfgManager = FACTORY.getConfigurationManager(aDummySession);
 		String adminUser = cfgManager.getString(Config.ADMIN_USER_NAME);
 		String adminPassword = cfgManager.getString(Config.ADMIN_PASSWORD);
 
@@ -52,20 +54,18 @@ public class MethodAccessTest {
 	public void shutdown() {
 		authentication.logout(session);
 		cleanup();
-		BasicManagerFactory.getInstance().releaseSession(aDummySession);
+		FACTORY.releaseSession(aDummySession);
 	}
 
 	private void cleanup() {
 
-		UserDAO userDAO = BasicManagerFactory.getInstance().getDAOManager().getUserDAO(
-				aDummySession);
+		UserDAO userDAO = FACTORY.getDAOManager().getUserDAO(aDummySession);
 		List<User> allUsers = userDAO.getAllUsers();
 		for (User user : allUsers) {
 			userDAO.deleteUser(user);
 		}
 
-		RoleDAO roleDAO = BasicManagerFactory.getInstance().getDAOManager().getRoleDAO(
-				aDummySession);
+		RoleDAO roleDAO = FACTORY.getDAOManager().getRoleDAO(aDummySession);
 		List<UserRole> allRoles = roleDAO.getAllRoles();
 		for (UserRole userRole : allRoles) {
 			roleDAO.deleteRole(userRole);
@@ -81,9 +81,8 @@ public class MethodAccessTest {
 	@Test
 	public void createUserAccess() throws ItemNotFoundException, SessionNotFoundException,
 			DataConstraintException {
-		ManagerFactory factory = BasicManagerFactory.getInstance();
-		RoleDAO roleDAO = factory.getDAOManager().getRoleDAO(aDummySession);
-		UserDAO userDAO = factory.getDAOManager().getUserDAO(aDummySession);
+		RoleDAO roleDAO = FACTORY.getDAOManager().getRoleDAO(aDummySession);
+		UserDAO userDAO = FACTORY.getDAOManager().getUserDAO(aDummySession);
 		List<UserPermission> allPermissions = roleDAO.getAllPermissions();
 		assertTrue(allPermissions.size() > 3);
 		WSUserRole role1 = new WSUserRole();
@@ -96,10 +95,10 @@ public class MethodAccessTest {
 		userDAO.createUser(weakUser);
 
 		// have it committed so other sessions to have access to it
-		factory.releaseSession(aDummySession);
+		FACTORY.releaseSession(aDummySession);
 		// and recreate objects
-		roleDAO = factory.getDAOManager().getRoleDAO(aDummySession);
-		userDAO = factory.getDAOManager().getUserDAO(aDummySession);
+		roleDAO = FACTORY.getDAOManager().getRoleDAO(aDummySession);
+		userDAO = FACTORY.getDAOManager().getUserDAO(aDummySession);
 
 		authentication.login(session, "weakUser", "password", null);
 		WSUser notCreated = new WSUser();
@@ -125,10 +124,10 @@ public class MethodAccessTest {
 		assertEquals(1, left.size());
 
 		// have it committed so other sessions to have access to it
-		factory.releaseSession(aDummySession);
+		FACTORY.releaseSession(aDummySession);
 		// and recreate objects
-		roleDAO = factory.getDAOManager().getRoleDAO(aDummySession);
-		userDAO = factory.getDAOManager().getUserDAO(aDummySession);
+		roleDAO = FACTORY.getDAOManager().getRoleDAO(aDummySession);
+		userDAO = FACTORY.getDAOManager().getUserDAO(aDummySession);
 
 		notCreated.setRole(role2);
 		try {

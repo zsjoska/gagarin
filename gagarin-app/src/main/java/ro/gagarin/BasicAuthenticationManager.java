@@ -12,15 +12,17 @@ public class BasicAuthenticationManager implements AuthenticationManager {
 
 	private final Session session;
 
+	private ManagerFactory factory;
+
 	public BasicAuthenticationManager(Session session) {
 		this.session = session;
+		this.factory = session.getManagerFactory();
 	}
 
 	@Override
 	public User userLogin(String username, String password, String[] extra)
 			throws ItemNotFoundException {
-		UserDAO userDAO = BasicManagerFactory.getInstance().getDAOManager()
-				.getUserDAO(this.session);
+		UserDAO userDAO = factory.getDAOManager().getUserDAO(this.session);
 		User user = userDAO.userLogin(username, password);
 
 		// TODO: change it a bit to look more important

@@ -32,21 +32,19 @@ public class UserTest {
 
 	@Before
 	public void init() {
-		this.session = BasicManagerFactory.getInstance().getSessionManager().createSession(null,
-				null, BasicManagerFactory.getInstance());
+		this.session = FACTORY.getSessionManager().createSession(null, null, FACTORY);
 	}
 
 	@After
 	public void close() {
-		BasicManagerFactory.getInstance().releaseSession(session);
+		FACTORY.releaseSession(session);
 	}
 
-	private ConfigurationManager configManager = BasicManagerFactory.getInstance()
-			.getConfigurationManager(session);
+	private ConfigurationManager configManager = FACTORY.getConfigurationManager(session);
 
 	@Test
 	public void getUserByNameInexistent() {
-		UserDAO usrManager = BasicManagerFactory.getInstance().getDAOManager().getUserDAO(session);
+		UserDAO usrManager = FACTORY.getDAOManager().getUserDAO(session);
 		User user = usrManager.getUserByUsername(username);
 		assertNull("The user could not exists", user);
 	}
@@ -54,10 +52,8 @@ public class UserTest {
 	@Test
 	public void createUser() throws ItemNotFoundException, DataConstraintException {
 
-		ManagerFactory factory = BasicManagerFactory.getInstance();
-
-		UserDAO usrManager = factory.getDAOManager().getUserDAO(session);
-		RoleDAO roleManager = factory.getDAOManager().getRoleDAO(session);
+		UserDAO usrManager = FACTORY.getDAOManager().getUserDAO(session);
+		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
 
 		UserRole adminRole = roleManager.getRoleByName(configManager
 				.getString(Config.ADMIN_ROLE_NAME));
@@ -165,8 +161,7 @@ public class UserTest {
 	@Test
 	public void usersWithoutUsername() throws ItemNotFoundException, DataConstraintException {
 
-		Session brokenSession = FACTORY.getSessionManager().createSession(null, null,
-				BasicManagerFactory.getInstance());
+		Session brokenSession = FACTORY.getSessionManager().createSession(null, null, FACTORY);
 
 		UserDAO usrManager = FACTORY.getDAOManager().getUserDAO(brokenSession);
 		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(brokenSession);

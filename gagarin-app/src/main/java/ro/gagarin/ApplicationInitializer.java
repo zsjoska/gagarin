@@ -95,7 +95,7 @@ public class ApplicationInitializer {
 	}
 
 	private void initManagers(Session session) {
-		ManagerFactory factory = BasicManagerFactory.getInstance();
+		ManagerFactory factory = session.getManagerFactory();
 		this.cfgManager = factory.getConfigurationManager(session);
 		this.userManager = factory.getDAOManager().getUserDAO(session);
 		this.roleManager = factory.getDAOManager().getRoleDAO(session);

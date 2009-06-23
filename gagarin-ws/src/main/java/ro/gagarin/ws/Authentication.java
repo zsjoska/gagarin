@@ -25,19 +25,19 @@ import ro.gagarin.session.Session;
 public class Authentication {
 
 	private static final transient Logger LOG = Logger.getLogger(Authentication.class);
+	private static final transient ManagerFactory FACTORY = BasicManagerFactory.getInstance();
 
 	@WebMethod
 	public String createSession(String language, String reason) {
 
-		SessionManager sessionManager = BasicManagerFactory.getInstance().getSessionManager();
+		SessionManager sessionManager = FACTORY.getSessionManager();
 
 		if (language == null) {
 			// TODO move this to the configuration
 			language = "en_us";
 		}
 
-		Session session = sessionManager.createSession(language, reason, BasicManagerFactory
-				.getInstance());
+		Session session = sessionManager.createSession(language, reason, FACTORY);
 		LOG.info("Session created:" + session.getId() + "; reason:" + session.getReason()
 				+ "; language:" + session.getLanguage());
 
@@ -51,26 +51,24 @@ public class Authentication {
 
 		LOG.info("Login User " + username + "; extra:" + Arrays.toString(extra));
 
-		ManagerFactory factory = BasicManagerFactory.getInstance();
-
-		SessionManager sessionManager = factory.getSessionManager();
+		SessionManager sessionManager = FACTORY.getSessionManager();
 		Session session = sessionManager.acquireSession(sessionID);
 		if (session == null)
 			throw new SessionNotFoundException(sessionID);
 
 		try {
 
-			factory.getAuthenticationManager(session).userLogin(username, password, extra);
+			FACTORY.getAuthenticationManager(session).userLogin(username, password, extra);
 			return true;
 		} finally {
-			factory.releaseSession(session);
+			FACTORY.releaseSession(session);
 		}
 	}
 
 	@WebMethod
 	public void logout(String sessionId) {
 		LOG.info("Session logout " + sessionId);
-		SessionManager sessionManager = BasicManagerFactory.getInstance().getSessionManager();
+		SessionManager sessionManager = FACTORY.getSessionManager();
 		sessionManager.logout(sessionId);
 	}
 }

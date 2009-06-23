@@ -68,7 +68,7 @@ public class UserTest {
 		user.setUsername(username);
 		user.setPassword("password" + username);
 		user.setRole(adminRole);
-		long userid = usrManager.createUser(user);
+		usrManager.createUser(user);
 		User user2 = usrManager.getUserByUsername(username);
 
 		assertNotNull("User was not found", user2);

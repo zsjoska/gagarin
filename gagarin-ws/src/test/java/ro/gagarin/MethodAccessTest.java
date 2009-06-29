@@ -43,6 +43,7 @@ public class MethodAccessTest {
 	public void setUp() throws SessionNotFoundException, ItemNotFoundException {
 
 		aDummySession = new Session();
+		aDummySession.setManagerFactory(FACTORY);
 		ConfigurationManager cfgManager = FACTORY.getConfigurationManager(aDummySession);
 		String adminUser = cfgManager.getString(Config.ADMIN_USER_NAME);
 		String adminPassword = cfgManager.getString(Config.ADMIN_PASSWORD);
@@ -81,8 +82,13 @@ public class MethodAccessTest {
 	@Test
 	public void createUserAccess() throws ItemNotFoundException, SessionNotFoundException,
 			DataConstraintException {
+
 		RoleDAO roleDAO = FACTORY.getDAOManager().getRoleDAO(aDummySession);
 		UserDAO userDAO = FACTORY.getDAOManager().getUserDAO(aDummySession);
+
+		// long id =
+		// createUserRoleWithPermissions(aDummySession,"weakUser","weak" );
+
 		List<UserPermission> allPermissions = roleDAO.getAllPermissions();
 		assertTrue(allPermissions.size() > 3);
 		WSUserRole role1 = new WSUserRole();

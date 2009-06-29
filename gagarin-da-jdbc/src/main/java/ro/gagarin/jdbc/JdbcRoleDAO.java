@@ -211,41 +211,40 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 
 	@Override
 	public List<UserPermission> substractUsersRolePermissions(UserRole main, UserRole substract) {
-		// try {
-		// // DBUserRole dbMain = getEM().find(DBUserRole.class, main.getId());
-		// // DBUserRole dbSubstract = getEM().find(DBUserRole.class,
-		// // substract.getId());
-		// // Query query = getEM()
-		// // .createQuery(
-		// //
-		// "select r from DBUserPermission r where r.id=:subRoleid and r not in (select p from DBUserPermission p where p.id=:mainRoleid)"
-		// )
-		// // .setParameter("mainRoleid",
-		// // main.getId()).setParameter("subRoleid",
-		// // substract.getId());
-		// // Query query = getEM()
-		// // .createQuery(
-		// // ""
-		// // +
-		// //
-		// "select r.userPermissions as p from DBUserRole r where r.id=:subRoleid and (p not in ("
-		// // +
-		// //
-		// "select q.userPermissions as s from DBUserRole q where q.id=:mainRoleid))"
-		// );
-		// // query.setParameter("subRoleid", substract.getId());
-		// // query.setParameter("mainRoleid", main.getId());
-		// Query query = getEM()
-		// .createQuery(
-		// "select q.userPermission from DBRoleAssignment q where q.userRole.id=:mainRoleid"
-		// );
-		// query.setParameter("mainRoleid", main.getId());
-		// return query.getResultList();
-		// } catch (RuntimeException e) {
-		// LOG.error("substractUsersRolePermissions", e);
-		// throw e;
-		// }
-		return null;
+
+		ArrayList<UserPermission> perms = new ArrayList<UserPermission>();
+
+		ResultSet rs = null;
+		try {
+			PreparedStatement query = getConnection()
+					.prepareStatement(
+							"SELECT id, permissionName FROM UserPermissions INNER JOIN PermissionAssignment ON UserPermissions.id = PermissionAssignment.perm_id WHERE PermissionAssignment.role_id = ? AND id NOT IN "
+									+ "("
+									+ "SELECT id FROM UserPermissions INNER JOIN PermissionAssignment ON UserPermissions.id = PermissionAssignment.perm_id WHERE PermissionAssignment.role_id = ?"
+									+ ")");
+
+			query.setLong(1, main.getId());
+			query.setLong(2, substract.getId());
+			rs = query.executeQuery();
+			while (rs.next()) {
+				DBUserPermission role = new DBUserPermission();
+				role.setId(rs.getLong("id"));
+				role.setPermissionName(rs.getString("permissionName"));
+				perms.add(role);
+			}
+		} catch (SQLException e) {
+			APPLOG.error("Error Executing query", e);
+			super.markRollback();
+			// TODO: throw exception to signal error
+		} finally {
+			if (rs != null)
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					APPLOG.error("Error on close", e);
+				}
+		}
+		return perms;
 	}
 
 	@Override

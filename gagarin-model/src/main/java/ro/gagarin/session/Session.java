@@ -26,6 +26,7 @@ public class Session extends BaseEntity {
 	private ManagerFactory managerFactory;
 
 	public Session() {
+		// TODO: make the reason mandatory
 	}
 
 	public Session(ManagerFactory managerFactory) {

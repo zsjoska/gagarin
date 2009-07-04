@@ -2,6 +2,9 @@ package ro.gagarin.log;
 
 public interface AppLog {
 
+	String SUCCESS = "SUCCESS";
+	String FAILED = "FAILED";
+
 	void debug(String message);
 
 	void debug(String message, Throwable t);

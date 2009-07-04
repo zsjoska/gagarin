@@ -57,7 +57,7 @@ public interface UserDAO extends BaseDAO {
 
 	List<User> getUsersWithRole(UserRole role) throws OperationException;
 
-	void deleteUser(User user) throws OperationException;
+	void deleteUser(User user) throws OperationException, DataConstraintException;
 
 	List<User> getAllUsers() throws OperationException;
 

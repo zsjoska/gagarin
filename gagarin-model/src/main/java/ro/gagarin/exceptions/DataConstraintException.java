@@ -32,6 +32,8 @@ public class DataConstraintException extends ExceptionBase {
 		if (matcher.matches()) {
 			return new ItemExistsException(aClass, constrait2Field(matcher.group(1)), e);
 		}
+
+		// TODO: quite interesting could be throwing the nothing
 		return null;
 
 	}

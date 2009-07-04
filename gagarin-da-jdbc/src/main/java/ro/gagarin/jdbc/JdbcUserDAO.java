@@ -13,6 +13,9 @@ import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.objects.DBUser;
 import ro.gagarin.jdbc.objects.DBUserRole;
+import ro.gagarin.jdbc.user.CreateUserSQL;
+import ro.gagarin.jdbc.user.DeleteUserSQL;
+import ro.gagarin.log.AppLog;
 import ro.gagarin.log.AppLogAction;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.User;
@@ -73,31 +76,28 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 	public long createUser(User user) throws DataConstraintException, OperationException,
 			ItemNotFoundException {
 
-		if (user.getRole() == null) {
-			APPLOG.error("The roleid is not completed");
-			markRollback();
-			throw new FieldRequiredException("ROLE", User.class);
-		}
-
 		try {
-			PreparedStatement query = getConnection().prepareStatement(
-					"INSERT INTO Users( id, username, name, password, roleid) VALUES (?,?,?,?,?)");
-			query.setLong(1, user.getId());
-			query.setString(2, user.getUsername());
-			query.setString(3, user.getName());
-			query.setString(4, user.getPassword());
-			query.setLong(5, user.getRole().getId());
-			query.executeUpdate();
+			if (user.getRole() == null) {
+				APPLOG.error("The roleid is not completed");
+				markRollback();
+				throw new FieldRequiredException("ROLE", User.class);
+			}
 
-			APPLOG.action(AppLogAction.CREATE, User.class, user.getUsername(), null);
+			new CreateUserSQL(this, user).execute();
+
+			APPLOG.action(AppLogAction.CREATE, User.class, user.getUsername(), AppLog.SUCCESS);
 			APPLOG.info("User " + user.getUsername() + " was created");
 			return user.getId();
-		} catch (SQLException e) {
-			super.markRollback();
-			DataConstraintException x = DataConstraintException.createException(e, User.class);
-			APPLOG.error("createUser: Error Executing query", x);
-			throw x;
+		} catch (OperationException e) {
+			APPLOG.error("Could not create user:" + user2String(user), e);
+			APPLOG.action(AppLogAction.CREATE, User.class, user.getUsername(), AppLog.FAILED);
+			throw e;
 		}
+	}
+
+	private String user2String(User user) {
+		// TODO Auto-generated method stub
+		return user.getUsername();
 	}
 
 	@Override
@@ -172,16 +172,16 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 	}
 
 	@Override
-	public void deleteUser(User user) throws OperationException {
+	public void deleteUser(User user) throws OperationException, DataConstraintException {
+
 		try {
-			PreparedStatement query = getConnection().prepareStatement(
-					"DELETE FROM Users WHERE id = ?");
-			query.setLong(1, user.getId());
-			query.executeUpdate();
-			APPLOG.info("UserRole " + user.getUsername() + " was deleted");
-		} catch (SQLException e) {
-			APPLOG.error("deleteRole: Error Executing query", e);
-			super.markRollback();
+			new DeleteUserSQL(this, user).execute();
+			APPLOG.action(AppLogAction.DELETE, User.class, user.getUsername(), AppLog.SUCCESS);
+			APPLOG.info("User " + user.getUsername() + " was deleted");
+		} catch (OperationException e) {
+			APPLOG.error("Could not delete user:" + user2String(user), e);
+			APPLOG.action(AppLogAction.DELETE, User.class, user.getUsername(), AppLog.FAILED);
+			throw e;
 		}
 	}
 

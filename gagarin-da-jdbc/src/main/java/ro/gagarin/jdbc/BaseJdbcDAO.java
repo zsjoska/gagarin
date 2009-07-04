@@ -157,6 +157,7 @@ public class BaseJdbcDAO implements BaseDAO {
 	}
 
 	public void markRollback() {
+		APPLOG.error("Marking the DB Session to Rollback!");
 		this.rollback = true;
 	}
 
@@ -265,5 +266,9 @@ public class BaseJdbcDAO implements BaseDAO {
 
 	public Session getSession() {
 		return session;
+	}
+
+	public AppLog getLogger() {
+		return APPLOG;
 	}
 }

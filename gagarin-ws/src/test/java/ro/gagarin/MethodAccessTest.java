@@ -41,7 +41,8 @@ public class MethodAccessTest {
 	private Session aDummySession;
 
 	@Before
-	public void setUp() throws SessionNotFoundException, ItemNotFoundException, OperationException {
+	public void setUp() throws SessionNotFoundException, ItemNotFoundException, OperationException,
+			DataConstraintException {
 
 		cleanup();
 
@@ -55,13 +56,13 @@ public class MethodAccessTest {
 	}
 
 	@After
-	public void shutdown() throws OperationException {
+	public void shutdown() throws OperationException, DataConstraintException {
 		authentication.logout(session);
 		FACTORY.releaseSession(aDummySession);
 		cleanup();
 	}
 
-	private void cleanup() throws OperationException {
+	private void cleanup() throws OperationException, DataConstraintException {
 
 		Session cleanupSession = new Session();
 		cleanupSession.setManagerFactory(FACTORY);

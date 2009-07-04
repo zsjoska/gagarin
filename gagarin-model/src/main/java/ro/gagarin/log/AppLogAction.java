@@ -1,5 +1,5 @@
 package ro.gagarin.log;
 
 public enum AppLogAction {
-	CREATE, LOGIN
+	CREATE, LOGIN, DELETE
 }

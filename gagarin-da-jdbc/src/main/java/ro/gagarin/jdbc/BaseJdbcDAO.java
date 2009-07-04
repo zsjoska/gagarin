@@ -35,6 +35,7 @@ public class BaseJdbcDAO implements BaseDAO {
 	private Connection connection;
 
 	private boolean rollback = false;
+	private final Session session;
 
 	public BaseJdbcDAO(Session session) throws OperationException {
 		if (session == null) {
@@ -42,6 +43,8 @@ public class BaseJdbcDAO implements BaseDAO {
 			APPLOG = null;
 			throw new NullPointerException("attempt to initialize BaseJdbcDAO with null session");
 		}
+
+		this.session = session;
 
 		CFG = session.getManagerFactory().getConfigurationManager(session);
 		APPLOG = session.getManagerFactory().getLogManager(session, getClass());
@@ -258,5 +261,9 @@ public class BaseJdbcDAO implements BaseDAO {
 
 		return list;
 
+	}
+
+	public Session getSession() {
+		return session;
 	}
 }

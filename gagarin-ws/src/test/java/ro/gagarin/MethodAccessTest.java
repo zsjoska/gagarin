@@ -18,7 +18,9 @@ import ro.gagarin.exceptions.PermissionDeniedException;
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
+import ro.gagarin.user.User;
 import ro.gagarin.user.UserPermission;
+import ro.gagarin.user.UserRole;
 import ro.gagarin.ws.Authentication;
 import ro.gagarin.ws.UserService;
 import ro.gagarin.ws.objects.WSUser;
@@ -39,7 +41,9 @@ public class MethodAccessTest {
 	private Session aDummySession;
 
 	@Before
-	public void setUp() throws SessionNotFoundException, ItemNotFoundException {
+	public void setUp() throws SessionNotFoundException, ItemNotFoundException, OperationException {
+
+		cleanup();
 
 		aDummySession = new Session();
 		aDummySession.setManagerFactory(FACTORY);
@@ -53,17 +57,28 @@ public class MethodAccessTest {
 	@After
 	public void shutdown() throws OperationException {
 		authentication.logout(session);
-		cleanup();
 		FACTORY.releaseSession(aDummySession);
+		cleanup();
 	}
 
 	private void cleanup() throws OperationException {
 
-		UserDAO userDAO = FACTORY.getDAOManager().getUserDAO(aDummySession);
-		// userDAO.deleteUser(userDAO.getUserByUsername("weakUser"));
+		Session cleanupSession = new Session();
+		cleanupSession.setManagerFactory(FACTORY);
 
-		RoleDAO roleDAO = FACTORY.getDAOManager().getRoleDAO(aDummySession);
-		roleDAO.deleteRole(roleDAO.getRoleByName("weak"));
+		UserDAO userDAO = FACTORY.getDAOManager().getUserDAO(cleanupSession);
+		RoleDAO roleDAO = FACTORY.getDAOManager().getRoleDAO(cleanupSession);
+
+		User user = userDAO.getUserByUsername("weakUser");
+		if (user != null)
+			userDAO.deleteUser(user);
+		UserRole role = roleDAO.getRoleByName("weak");
+		if (role != null)
+			roleDAO.deleteRole(role);
+		role = roleDAO.getRoleByName("stronger");
+		if (role != null)
+			roleDAO.deleteRole(role);
+		FACTORY.releaseSession(cleanupSession);
 
 	}
 

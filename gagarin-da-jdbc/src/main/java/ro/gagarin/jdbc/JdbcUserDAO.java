@@ -70,12 +70,13 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 	}
 
 	@Override
-	public long createUser(User user) throws DataConstraintException, OperationException {
+	public long createUser(User user) throws DataConstraintException, OperationException,
+			ItemNotFoundException {
 
 		if (user.getRole() == null) {
 			APPLOG.error("The roleid is not completed");
 			markRollback();
-			throw new FieldRequiredException("roleid", User.class);
+			throw new FieldRequiredException("ROLE", User.class);
 		}
 
 		try {

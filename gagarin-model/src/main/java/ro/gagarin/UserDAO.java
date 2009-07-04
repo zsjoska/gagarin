@@ -40,8 +40,10 @@ public interface UserDAO extends BaseDAO {
 	 * @return the ID of the user created
 	 * @throws DataConstraintException
 	 * @throws OperationException
+	 * @throws ItemNotFoundException
 	 */
-	long createUser(User user) throws DataConstraintException, OperationException;
+	long createUser(User user) throws DataConstraintException, OperationException,
+			ItemNotFoundException;
 
 	/**
 	 * Returns the user with the specified username
@@ -58,4 +60,6 @@ public interface UserDAO extends BaseDAO {
 	void deleteUser(User user) throws OperationException;
 
 	List<User> getAllUsers() throws OperationException;
+
+	void markRollback();
 }

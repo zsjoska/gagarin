@@ -14,7 +14,7 @@ public class UserServiceTest {
 
 	@BeforeClass
 	public static void setUp() throws SessionNotFoundException_Exception,
-			ItemNotFoundException_Exception {
+			ItemNotFoundException_Exception, OperationException_Exception {
 		AuthenticationService service = new AuthenticationService();
 		api = service.getAuthenticationPort();
 		session = api.createSession(null, null);
@@ -29,12 +29,16 @@ public class UserServiceTest {
 	@Test
 	public void createUser() throws SessionNotFoundException_Exception,
 			PermissionDeniedException_Exception, ItemNotFoundException_Exception,
-			DataConstraintException_Exception {
+			DataConstraintException_Exception, OperationException_Exception {
 		UserServiceService service = new UserServiceService();
 		UserService userAPI = service.getUserServicePort();
+		WsUserRole role = new WsUserRole();
+		role.setRoleName("ADMIN_ROLE");
+
 		WsUser user = new WsUser();
 		user.setUsername("wsUser1");
 		user.setPassword("wspassword1");
+		user.setRole(role);
 		userAPI.createUser(session, user);
 	}
 }

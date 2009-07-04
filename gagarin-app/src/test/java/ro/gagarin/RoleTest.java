@@ -178,7 +178,8 @@ public class RoleTest {
 	}
 
 	@Test
-	public void testGetUsersWithRole() throws DataConstraintException, OperationException {
+	public void testGetUsersWithRole() throws DataConstraintException, OperationException,
+			ItemNotFoundException {
 		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
 		UserDAO userDAO = FACTORY.getDAOManager().getUserDAO(session);
 

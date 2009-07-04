@@ -15,12 +15,14 @@ import ro.gagarin.RoleDAO;
 import ro.gagarin.SessionManager;
 import ro.gagarin.UserDAO;
 import ro.gagarin.exceptions.DataConstraintException;
+import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.exceptions.PermissionDeniedException;
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
+import ro.gagarin.user.User;
 import ro.gagarin.user.UserRole;
 import ro.gagarin.ws.objects.WSUser;
 import ro.gagarin.ws.objects.WSUserPermission;
@@ -47,6 +49,23 @@ public class UserService {
 
 			// the session user must have CREATE_USER permission
 			permissionManager.requiresPermission(session, PermissionEnum.CREATE_USER);
+
+			// check user fields
+			if (user.getRole() == null) {
+				userManager.markRollback();
+				throw new FieldRequiredException("ROLE", User.class);
+			}
+
+			UserRole role = user.getRole();
+			if (role.getId() == null && role.getRoleName() != null) {
+				RoleDAO roleDAO = FACTORY.getDAOManager().getRoleDAO(session);
+				role = roleDAO.getRoleByName(role.getRoleName());
+				if (role == null) {
+					userManager.markRollback();
+					throw new ItemNotFoundException(UserRole.class, user.getRole().getRoleName());
+				}
+				user.setRole(role);
+			}
 
 			// the created user's permission list must not exceed session user's
 			// permissions

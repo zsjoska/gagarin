@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ItemNotFoundException;
+import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.exceptions.PermissionDeniedException;
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.user.UserRole;
@@ -25,14 +26,15 @@ public class UserServiceTest {
 	private static String session;
 
 	@BeforeClass
-	public static void startup() throws SessionNotFoundException, ItemNotFoundException {
+	public static void startup() throws SessionNotFoundException, ItemNotFoundException,
+			OperationException {
 		session = authentication.createSession(null, null);
 		authentication.login(session, "admin", "password", null);
 	}
 
 	@Test
 	public void testCreateUser() throws SessionNotFoundException, ItemNotFoundException,
-			PermissionDeniedException, DataConstraintException {
+			PermissionDeniedException, DataConstraintException, OperationException {
 
 		UserService userService = new UserService();
 
@@ -47,7 +49,8 @@ public class UserServiceTest {
 	}
 
 	@Test
-	public void testCreateRole() throws SessionNotFoundException, PermissionDeniedException {
+	public void testCreateRole() throws SessionNotFoundException, PermissionDeniedException,
+			OperationException {
 		UserService userService = new UserService();
 		List<WSUserPermission> list = userService.getAllPermissionList(session);
 		UserRole role = userService.createRoleWithPermissions(session,

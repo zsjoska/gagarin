@@ -17,7 +17,8 @@ public class BasicAuthorizationManager implements AuthorizationManager {
 	private static final transient Logger LOG = Logger.getLogger(BasicAuthorizationManager.class);
 
 	@Override
-	public void checkUserRole(Session session, User user) throws PermissionDeniedException {
+	public void checkUserRole(Session session, User user) throws PermissionDeniedException,
+			OperationException {
 		User sessionUser = session.getUser();
 		RoleDAO roleManager = session.getManagerFactory().getDAOManager().getRoleDAO(session);
 		List<UserPermission> leftList = roleManager.substractUsersRolePermissions(user.getRole(),
@@ -31,7 +32,7 @@ public class BasicAuthorizationManager implements AuthorizationManager {
 
 	@Override
 	public void requiresPermission(Session session, PermissionEnum reqPermission)
-			throws PermissionDeniedException {
+			throws PermissionDeniedException, OperationException {
 
 		UserDAO userManager = session.getManagerFactory().getDAOManager().getUserDAO(session);
 		RoleDAO roleDAO = session.getManagerFactory().getDAOManager().getRoleDAO(session);

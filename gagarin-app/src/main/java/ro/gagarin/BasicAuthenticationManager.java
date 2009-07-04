@@ -3,6 +3,7 @@ package ro.gagarin;
 import org.apache.log4j.Logger;
 
 import ro.gagarin.exceptions.ItemNotFoundException;
+import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.User;
 
@@ -21,7 +22,7 @@ public class BasicAuthenticationManager implements AuthenticationManager {
 
 	@Override
 	public User userLogin(String username, String password, String[] extra)
-			throws ItemNotFoundException {
+			throws ItemNotFoundException, OperationException {
 		UserDAO userDAO = factory.getDAOManager().getUserDAO(this.session);
 		User user = userDAO.userLogin(username, password);
 

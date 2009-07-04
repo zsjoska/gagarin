@@ -94,7 +94,7 @@ public class ApplicationInitializer {
 
 	}
 
-	private void initManagers(Session session) {
+	private void initManagers(Session session) throws OperationException {
 		ManagerFactory factory = session.getManagerFactory();
 		this.cfgManager = factory.getConfigurationManager(session);
 		this.userManager = factory.getDAOManager().getUserDAO(session);
@@ -107,7 +107,7 @@ public class ApplicationInitializer {
 	}
 
 	private UserRole checkCreateAdminRole(final String adminRoleName)
-			throws DataConstraintException {
+			throws DataConstraintException, OperationException {
 		LOG.info("Checking admin role existence");
 		UserRole adminRole = roleManager.getRoleByName(adminRoleName);
 		if (adminRole == null) {
@@ -122,7 +122,7 @@ public class ApplicationInitializer {
 	}
 
 	private void checkAdminUsers(final UserRole adminRole) throws ItemNotFoundException,
-			DataConstraintException {
+			DataConstraintException, OperationException {
 		LOG.info("Checking admin user");
 		final String adminUserName = cfgManager.getString(Config.ADMIN_USER_NAME);
 		final String adminPassword = cfgManager.getString(Config.ADMIN_PASSWORD);
@@ -141,7 +141,8 @@ public class ApplicationInitializer {
 		}
 	}
 
-	private void checkAdminRolePermissionList(UserRole adminRole) throws ItemNotFoundException {
+	private void checkAdminRolePermissionList(UserRole adminRole) throws ItemNotFoundException,
+			OperationException {
 		LOG.info("Checking AdminRolePermissionList to include all permissions");
 		Set<UserPermission> grantedPermissions = roleManager.getRolePermissions(adminRole);
 		if (grantedPermissions == null) {
@@ -166,7 +167,7 @@ public class ApplicationInitializer {
 		}
 	}
 
-	private void checkCreatePermissionList() throws DataConstraintException {
+	private void checkCreatePermissionList() throws DataConstraintException, OperationException {
 		LOG.info("Checking Permission List");
 		PermissionEnum[] values = PermissionEnum.values();
 		for (PermissionEnum permission : values) {

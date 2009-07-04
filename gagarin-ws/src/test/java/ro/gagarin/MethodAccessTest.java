@@ -13,13 +13,12 @@ import org.junit.Test;
 import ro.gagarin.config.Config;
 import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ItemNotFoundException;
+import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.exceptions.PermissionDeniedException;
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
-import ro.gagarin.user.User;
 import ro.gagarin.user.UserPermission;
-import ro.gagarin.user.UserRole;
 import ro.gagarin.ws.Authentication;
 import ro.gagarin.ws.UserService;
 import ro.gagarin.ws.objects.WSUser;
@@ -52,36 +51,25 @@ public class MethodAccessTest {
 	}
 
 	@After
-	public void shutdown() {
+	public void shutdown() throws OperationException {
 		authentication.logout(session);
 		cleanup();
 		FACTORY.releaseSession(aDummySession);
 	}
 
-	private void cleanup() {
+	private void cleanup() throws OperationException {
 
 		UserDAO userDAO = FACTORY.getDAOManager().getUserDAO(aDummySession);
-		List<User> allUsers = userDAO.getAllUsers();
-		for (User user : allUsers) {
-			userDAO.deleteUser(user);
-		}
+		// userDAO.deleteUser(userDAO.getUserByUsername("weakUser"));
 
 		RoleDAO roleDAO = FACTORY.getDAOManager().getRoleDAO(aDummySession);
-		List<UserRole> allRoles = roleDAO.getAllRoles();
-		for (UserRole userRole : allRoles) {
-			roleDAO.deleteRole(userRole);
-		}
-
-		List<UserPermission> allPermissions = roleDAO.getAllPermissions();
-		for (UserPermission userPermission : allPermissions) {
-			roleDAO.deletePermission(userPermission);
-		}
+		roleDAO.deleteRole(roleDAO.getRoleByName("weak"));
 
 	}
 
 	@Test
 	public void createUserAccess() throws ItemNotFoundException, SessionNotFoundException,
-			DataConstraintException {
+			DataConstraintException, OperationException {
 
 		RoleDAO roleDAO = FACTORY.getDAOManager().getRoleDAO(aDummySession);
 		UserDAO userDAO = FACTORY.getDAOManager().getUserDAO(aDummySession);
@@ -103,6 +91,9 @@ public class MethodAccessTest {
 		// have it committed so other sessions to have access to it
 		FACTORY.releaseSession(aDummySession);
 		// and recreate objects
+
+		// TODO: it must be a bug allowing this
+		// should not be allowed so simple to reuse a session
 		roleDAO = FACTORY.getDAOManager().getRoleDAO(aDummySession);
 		userDAO = FACTORY.getDAOManager().getUserDAO(aDummySession);
 

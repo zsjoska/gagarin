@@ -1,11 +1,12 @@
 package ro.gagarin;
 
+import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.session.Session;
 
 public interface DAOManager {
 
-	RoleDAO getRoleDAO(Session session);
+	RoleDAO getRoleDAO(Session session) throws OperationException;
 
-	UserDAO getUserDAO(Session session);
+	UserDAO getUserDAO(Session session) throws OperationException;
 
 }

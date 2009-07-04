@@ -91,16 +91,20 @@ public class FileConfigurationManager implements ConfigurationManager {
 		String filename = getString(fileConfig);
 		File file = new File(filename);
 		try {
-			return new FileInputStream(file);
+			InputStream is = new FileInputStream(file);
+			LOG.info("Loaded file " + file.getAbsolutePath());
+			return is;
 		} catch (FileNotFoundException e) {
 			// ignore it as for now
 		}
 		InputStream is = this.getClass().getResourceAsStream(filename);
 		if (is != null) {
+			LOG.info("Loaded classpath file " + filename);
 			return is;
 		}
 		is = this.getClass().getResourceAsStream('/' + filename);
 		if (is != null) {
+			LOG.info("Loaded classpath file /" + filename);
 			return is;
 		}
 

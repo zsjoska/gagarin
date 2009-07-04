@@ -3,6 +3,7 @@ package ro.gagarin.jdbc;
 import ro.gagarin.DAOManager;
 import ro.gagarin.RoleDAO;
 import ro.gagarin.UserDAO;
+import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.session.Session;
 
 public class JdbcDAOManager implements DAOManager {
@@ -18,7 +19,7 @@ public class JdbcDAOManager implements DAOManager {
 		return INSTANCE;
 	}
 
-	public RoleDAO getRoleDAO(Session session) {
+	public RoleDAO getRoleDAO(Session session) throws OperationException {
 		return new JdbcRoleDAO(session);
 	}
 
@@ -26,8 +27,9 @@ public class JdbcDAOManager implements DAOManager {
 	 * This method returns the {@link UserDAO} implementation selected.
 	 * 
 	 * @return the configured {@link UserDAO} implementation
+	 * @throws OperationException
 	 */
-	public UserDAO getUserDAO(Session session) {
+	public UserDAO getUserDAO(Session session) throws OperationException {
 		return new JdbcUserDAO(session);
 	}
 

@@ -11,6 +11,7 @@ import java.util.Set;
 import ro.gagarin.RoleDAO;
 import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ItemNotFoundException;
+import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.objects.DBUserPermission;
 import ro.gagarin.jdbc.objects.DBUserRole;
 import ro.gagarin.session.Session;
@@ -19,12 +20,14 @@ import ro.gagarin.user.UserRole;
 
 public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 
-	public JdbcRoleDAO(Session session) {
+	public JdbcRoleDAO(Session session) throws OperationException {
 		super(session);
 	}
 
 	@Override
-	public DBUserRole getRoleByName(String roleName) {
+	public DBUserRole getRoleByName(String roleName) throws OperationException {
+
+		APPLOG.debug("getRoleByName for " + roleName);
 
 		DBUserRole role = new DBUserRole();
 
@@ -37,6 +40,7 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 			if (rs.next()) {
 				role.setId(rs.getLong("id"));
 				role.setRoleName(rs.getString("roleName"));
+				APPLOG.debug(role.toString());
 				return role;
 			} else {
 				APPLOG.info("UserRole " + roleName + " was not found");
@@ -56,7 +60,7 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 	}
 
 	@Override
-	public long createRole(UserRole role) throws DataConstraintException {
+	public long createRole(UserRole role) throws DataConstraintException, OperationException {
 		try {
 			PreparedStatement query = getConnection().prepareStatement(
 					"INSERT INTO UserRoles( id, roleName) VALUES (?,?)");
@@ -74,7 +78,8 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 	}
 
 	@Override
-	public long createPermission(UserPermission perm) throws DataConstraintException {
+	public long createPermission(UserPermission perm) throws DataConstraintException,
+			OperationException {
 
 		try {
 			PreparedStatement query = getConnection().prepareStatement(
@@ -92,7 +97,7 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 	}
 
 	@Override
-	public List<UserPermission> getAllPermissions() {
+	public List<UserPermission> getAllPermissions() throws OperationException {
 
 		List<UserPermission> permissions = new ArrayList<UserPermission>();
 
@@ -122,7 +127,7 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 	}
 
 	@Override
-	public void deleteRole(UserRole role) {
+	public void deleteRole(UserRole role) throws OperationException {
 		try {
 			PreparedStatement query = getConnection().prepareStatement(
 					"DELETE FROM UserRoles WHERE id = ?");
@@ -136,7 +141,7 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 	}
 
 	@Override
-	public UserPermission getPermissionByName(String permissionName) {
+	public UserPermission getPermissionByName(String permissionName) throws OperationException {
 		DBUserPermission perm = new DBUserPermission();
 
 		ResultSet rs = null;
@@ -167,7 +172,7 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 	}
 
 	@Override
-	public void deletePermission(UserPermission perm) {
+	public void deletePermission(UserPermission perm) throws OperationException {
 		try {
 			PreparedStatement query = getConnection().prepareStatement(
 					"DELETE FROM UserPermissions WHERE id = ?");
@@ -181,7 +186,7 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 	}
 
 	@Override
-	public List<UserRole> getAllRoles() {
+	public List<UserRole> getAllRoles() throws OperationException {
 		List<UserRole> roles = new ArrayList<UserRole>();
 		ResultSet rs = null;
 		try {
@@ -210,7 +215,8 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 	}
 
 	@Override
-	public List<UserPermission> substractUsersRolePermissions(UserRole main, UserRole substract) {
+	public List<UserPermission> substractUsersRolePermissions(UserRole main, UserRole substract)
+			throws OperationException {
 
 		ArrayList<UserPermission> perms = new ArrayList<UserPermission>();
 
@@ -249,7 +255,7 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 
 	@Override
 	public void assignPermissionToRole(UserRole role, UserPermission perm)
-			throws ItemNotFoundException {
+			throws ItemNotFoundException, OperationException {
 		if (role == null) {
 			markRollback();
 			throw new ItemNotFoundException(UserRole.class, "null");
@@ -275,7 +281,7 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 	}
 
 	@Override
-	public Set<UserPermission> getRolePermissions(UserRole role) {
+	public Set<UserPermission> getRolePermissions(UserRole role) throws OperationException {
 		HashSet<UserPermission> perms = new HashSet<UserPermission>();
 		ResultSet rs = null;
 		try {
@@ -306,7 +312,7 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 	}
 
 	@Override
-	public Set<UserRole> getPermissionRoles(UserPermission perm) {
+	public Set<UserRole> getPermissionRoles(UserPermission perm) throws OperationException {
 		HashSet<UserRole> roles = new HashSet<UserRole>();
 		ResultSet rs = null;
 		try {

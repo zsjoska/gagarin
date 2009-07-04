@@ -4,6 +4,7 @@ import java.util.List;
 
 import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ItemNotFoundException;
+import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserRole;
 
@@ -26,8 +27,10 @@ public interface UserDAO extends BaseDAO {
 	 * @return the user identified by the given credentials
 	 * @throws ItemNotFoundException
 	 *             if the user was not found or the password does not match
+	 * @throws OperationException
 	 */
-	User userLogin(String username, String password) throws ItemNotFoundException;
+	User userLogin(String username, String password) throws ItemNotFoundException,
+			OperationException;
 
 	/**
 	 * Creates a user
@@ -36,8 +39,9 @@ public interface UserDAO extends BaseDAO {
 	 *            the user and it's data to be created
 	 * @return the ID of the user created
 	 * @throws DataConstraintException
+	 * @throws OperationException
 	 */
-	long createUser(User user) throws DataConstraintException;
+	long createUser(User user) throws DataConstraintException, OperationException;
 
 	/**
 	 * Returns the user with the specified username
@@ -45,12 +49,13 @@ public interface UserDAO extends BaseDAO {
 	 * @param username
 	 *            the username of the requested user
 	 * @return the user object for the given username
+	 * @throws OperationException
 	 */
-	User getUserByUsername(String username);
+	User getUserByUsername(String username) throws OperationException;
 
-	List<User> getUsersWithRole(UserRole role);
+	List<User> getUsersWithRole(UserRole role) throws OperationException;
 
-	void deleteUser(User user);
+	void deleteUser(User user) throws OperationException;
 
-	List<User> getAllUsers();
+	List<User> getAllUsers() throws OperationException;
 }

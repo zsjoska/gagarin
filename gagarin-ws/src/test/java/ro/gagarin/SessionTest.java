@@ -4,21 +4,27 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
+import java.util.List;
+
+import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import ro.gagarin.application.objects.AppUser;
 import ro.gagarin.config.Config;
 import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ItemNotFoundException;
+import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.jdbc.objects.DBUser;
 import ro.gagarin.session.Session;
+import ro.gagarin.user.UserRole;
 import ro.gagarin.ws.Authentication;
 
 /**
  * Unit test for simple App.
  */
 public class SessionTest {
+	private static final transient Logger LOG = Logger.getLogger(SessionTest.class);
 
 	private static final ManagerFactory FACTORY = BasicManagerFactory.getInstance();
 
@@ -31,13 +37,20 @@ public class SessionTest {
 
 	@Test
 	public void testSuccessLogin() throws SessionNotFoundException, DataConstraintException,
-			ItemNotFoundException {
+			ItemNotFoundException, OperationException {
 
 		session.setManagerFactory(FACTORY);
 
 		UserDAO userManager = FACTORY.getDAOManager().getUserDAO(session);
 		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
 		ConfigurationManager cfgManager = FACTORY.getConfigurationManager(session);
+
+		List<UserRole> allRoles = roleManager.getAllRoles();
+		LOG.debug("Roles in system:");
+		for (UserRole userRole : allRoles) {
+			LOG.debug(userRole.getRoleName());
+		}
+		LOG.debug("End roles listing");
 
 		AppUser user = new AppUser();
 		user.setUsername("1" + username);
@@ -56,7 +69,7 @@ public class SessionTest {
 
 	@Test
 	public void testFailedLogin() throws SessionNotFoundException, ItemNotFoundException,
-			DataConstraintException {
+			DataConstraintException, OperationException {
 
 		session.setManagerFactory(FACTORY);
 
@@ -90,7 +103,8 @@ public class SessionTest {
 	}
 
 	@Test
-	public void testSessionDeletion() throws ItemNotFoundException, DataConstraintException {
+	public void testSessionDeletion() throws ItemNotFoundException, DataConstraintException,
+			OperationException {
 		session.setManagerFactory(FACTORY);
 
 		UserDAO userManager = FACTORY.getDAOManager().getUserDAO(session);

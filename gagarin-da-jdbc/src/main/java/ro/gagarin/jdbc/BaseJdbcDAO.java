@@ -36,7 +36,7 @@ public class BaseJdbcDAO implements BaseDAO {
 
 	private boolean rollback = false;
 
-	public BaseJdbcDAO(Session session) {
+	public BaseJdbcDAO(Session session) throws OperationException {
 		if (session == null) {
 			CFG = null;
 			APPLOG = null;
@@ -87,7 +87,10 @@ public class BaseJdbcDAO implements BaseDAO {
 
 	}
 
-	protected Connection getConnection() {
+	protected Connection getConnection() throws OperationException {
+		if (this.rollback)
+			throw new OperationException(ErrorCodes.DB_OP_ERROR,
+					"The connection was marked to rollback");
 		return this.connection;
 	}
 

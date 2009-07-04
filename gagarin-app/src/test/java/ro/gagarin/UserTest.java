@@ -15,6 +15,7 @@ import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.ItemExistsException;
 import ro.gagarin.exceptions.ItemNotFoundException;
+import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.session.Session;
 import ro.gagarin.testobjects.ATestUser;
 import ro.gagarin.user.User;
@@ -43,14 +44,15 @@ public class UserTest {
 	private ConfigurationManager configManager = FACTORY.getConfigurationManager(session);
 
 	@Test
-	public void getUserByNameInexistent() {
+	public void getUserByNameInexistent() throws OperationException {
 		UserDAO usrManager = FACTORY.getDAOManager().getUserDAO(session);
 		User user = usrManager.getUserByUsername(username);
 		assertNull("The user could not exists", user);
 	}
 
 	@Test
-	public void createUser() throws ItemNotFoundException, DataConstraintException {
+	public void createUser() throws ItemNotFoundException, DataConstraintException,
+			OperationException {
 
 		UserDAO usrManager = FACTORY.getDAOManager().getUserDAO(session);
 		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
@@ -79,7 +81,8 @@ public class UserTest {
 	}
 
 	@Test
-	public void usersWiththeSameID() throws ItemNotFoundException, DataConstraintException {
+	public void usersWiththeSameID() throws ItemNotFoundException, DataConstraintException,
+			OperationException {
 
 		Session brokenSession = FACTORY.getSessionManager().createSession(null, null, FACTORY);
 
@@ -121,7 +124,8 @@ public class UserTest {
 	}
 
 	@Test
-	public void usersWiththeSameUsername() throws ItemNotFoundException, DataConstraintException {
+	public void usersWiththeSameUsername() throws ItemNotFoundException, DataConstraintException,
+			OperationException {
 
 		UserDAO usrManager = FACTORY.getDAOManager().getUserDAO(session);
 		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
@@ -159,7 +163,8 @@ public class UserTest {
 	}
 
 	@Test
-	public void usersWithoutUsername() throws ItemNotFoundException, DataConstraintException {
+	public void usersWithoutUsername() throws ItemNotFoundException, DataConstraintException,
+			OperationException {
 
 		Session brokenSession = FACTORY.getSessionManager().createSession(null, null, FACTORY);
 
@@ -184,4 +189,7 @@ public class UserTest {
 		}
 
 	}
+
+	// TODO: create tests with empty role
+	// TODO: create tests with invalid role
 }

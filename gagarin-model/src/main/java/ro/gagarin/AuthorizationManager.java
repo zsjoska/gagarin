@@ -1,5 +1,6 @@
 package ro.gagarin;
 
+import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.exceptions.PermissionDeniedException;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
@@ -8,8 +9,9 @@ import ro.gagarin.user.User;
 public interface AuthorizationManager {
 
 	void requiresPermission(Session session, PermissionEnum create_user)
-			throws PermissionDeniedException;
+			throws PermissionDeniedException, OperationException;
 
-	void checkUserRole(Session session, User user) throws PermissionDeniedException;
+	void checkUserRole(Session session, User user) throws PermissionDeniedException,
+			OperationException;
 
 }

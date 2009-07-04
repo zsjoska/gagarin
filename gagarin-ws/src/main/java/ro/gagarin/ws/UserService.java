@@ -16,6 +16,7 @@ import ro.gagarin.SessionManager;
 import ro.gagarin.UserDAO;
 import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ItemNotFoundException;
+import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.exceptions.PermissionDeniedException;
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.session.Session;
@@ -33,7 +34,8 @@ public class UserService {
 
 	@WebMethod
 	public Long createUser(String sessionId, WSUser user) throws SessionNotFoundException,
-			PermissionDeniedException, ItemNotFoundException, DataConstraintException {
+			PermissionDeniedException, ItemNotFoundException, DataConstraintException,
+			OperationException {
 		LOG.info("createUser " + user.getUsername());
 
 		SessionManager sessionManager = FACTORY.getSessionManager();
@@ -61,7 +63,7 @@ public class UserService {
 
 	@WebMethod
 	public List<WSUserRole> getRoleList(String sessionId) throws SessionNotFoundException,
-			PermissionDeniedException {
+			PermissionDeniedException, OperationException {
 
 		SessionManager sessionManager = FACTORY.getSessionManager();
 		Session session = sessionManager.acquireSession(sessionId);
@@ -86,7 +88,7 @@ public class UserService {
 
 	@WebMethod
 	public WSUserRole createRoleWithPermissions(String sessionId, String[] strings)
-			throws SessionNotFoundException, PermissionDeniedException {
+			throws SessionNotFoundException, PermissionDeniedException, OperationException {
 
 		SessionManager sessionManager = FACTORY.getSessionManager();
 		Session session = sessionManager.acquireSession(sessionId);

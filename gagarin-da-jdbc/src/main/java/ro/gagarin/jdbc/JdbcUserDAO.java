@@ -8,7 +8,9 @@ import java.util.List;
 
 import ro.gagarin.UserDAO;
 import ro.gagarin.exceptions.DataConstraintException;
+import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.ItemNotFoundException;
+import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.objects.DBUser;
 import ro.gagarin.jdbc.objects.DBUserRole;
 import ro.gagarin.log.AppLogAction;
@@ -18,12 +20,13 @@ import ro.gagarin.user.UserRole;
 
 public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 
-	public JdbcUserDAO(Session session) {
+	public JdbcUserDAO(Session session) throws OperationException {
 		super(session);
 	}
 
 	@Override
-	public User userLogin(String username, String password) throws ItemNotFoundException {
+	public User userLogin(String username, String password) throws ItemNotFoundException,
+			OperationException {
 
 		APPLOG.action(AppLogAction.LOGIN, User.class, username, null);
 
@@ -31,15 +34,23 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 
 		ResultSet rs = null;
 		try {
+			// PreparedStatement query = getConnection().prepareStatement(
+			// "SELECT id,username,password FROM Users WHERE username = ? and password = ?");
 			PreparedStatement query = getConnection().prepareStatement(
-					"SELECT id,username,password FROM Users WHERE username = ? and password = ?");
+					"SELECT Users.id, username, name, password, roleid, roleName "
+							+ "FROM Users INNER JOIN UserRoles ON Users.roleid = UserRoles.id "
+							+ "WHERE username = ? and password = ?");
 			query.setString(1, username);
 			query.setString(2, password);
 			rs = query.executeQuery();
 			if (rs.next()) {
 				user.setId(rs.getLong("id"));
 				user.setUsername(rs.getString("username"));
-				// TODO: getMore fields
+				user.setName(rs.getString("name"));
+				DBUserRole role = new DBUserRole();
+				role.setId(rs.getLong("roleid"));
+				role.setRoleName(rs.getString("roleName"));
+				user.setRole(role);
 				return user;
 			} else {
 				APPLOG.action(AppLogAction.LOGIN, User.class, username, "FAILED");
@@ -59,7 +70,13 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 	}
 
 	@Override
-	public long createUser(User user) throws DataConstraintException {
+	public long createUser(User user) throws DataConstraintException, OperationException {
+
+		if (user.getRole() == null) {
+			APPLOG.error("The roleid is not completed");
+			markRollback();
+			throw new FieldRequiredException("roleid", User.class);
+		}
 
 		try {
 			PreparedStatement query = getConnection().prepareStatement(
@@ -83,7 +100,7 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 	}
 
 	@Override
-	public User getUserByUsername(String username) {
+	public User getUserByUsername(String username) throws OperationException {
 
 		DBUser user = new DBUser();
 
@@ -122,7 +139,7 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 	}
 
 	@Override
-	public List<User> getUsersWithRole(UserRole role) {
+	public List<User> getUsersWithRole(UserRole role) throws OperationException {
 		ArrayList<User> users = new ArrayList<User>();
 		ResultSet rs = null;
 		try {
@@ -154,7 +171,7 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 	}
 
 	@Override
-	public void deleteUser(User user) {
+	public void deleteUser(User user) throws OperationException {
 		try {
 			PreparedStatement query = getConnection().prepareStatement(
 					"DELETE FROM Users WHERE id = ?");
@@ -168,7 +185,7 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 	}
 
 	@Override
-	public List<User> getAllUsers() {
+	public List<User> getAllUsers() throws OperationException {
 		ArrayList<User> users = new ArrayList<User>();
 		ResultSet rs = null;
 		try {

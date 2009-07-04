@@ -16,6 +16,7 @@ import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.ItemExistsException;
 import ro.gagarin.exceptions.ItemNotFoundException;
+import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.session.Session;
 import ro.gagarin.testobjects.ATestUser;
 import ro.gagarin.testobjects.ATestUserPermission;
@@ -44,7 +45,7 @@ public class RoleTest {
 	}
 
 	@Test
-	public void createGetDeleteSimpleRole() throws DataConstraintException {
+	public void createGetDeleteSimpleRole() throws DataConstraintException, OperationException {
 		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
 		ATestUserRole role = new ATestUserRole();
 		role.setRoleName("A_ROLE");
@@ -61,7 +62,8 @@ public class RoleTest {
 	}
 
 	@Test
-	public void createGetDeleteSimplePermission() throws DataConstraintException {
+	public void createGetDeleteSimplePermission() throws DataConstraintException,
+			OperationException {
 		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
 
 		ATestUserPermission perm = new ATestUserPermission();
@@ -79,7 +81,8 @@ public class RoleTest {
 	}
 
 	@Test
-	public void createRoleWithPermission() throws ItemNotFoundException, DataConstraintException {
+	public void createRoleWithPermission() throws ItemNotFoundException, DataConstraintException,
+			OperationException {
 		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
 		ATestUserRole role = new ATestUserRole();
 		role.setRoleName("C_ROLE");
@@ -109,7 +112,8 @@ public class RoleTest {
 	}
 
 	@Test
-	public void createRoleWith2Permissions() throws ItemNotFoundException, DataConstraintException {
+	public void createRoleWith2Permissions() throws ItemNotFoundException, DataConstraintException,
+			OperationException {
 		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
 		ATestUserRole role = new ATestUserRole();
 		role.setRoleName("C_ROLE");
@@ -153,7 +157,8 @@ public class RoleTest {
 	}
 
 	@Test
-	public void addPermissionToRole() throws ItemNotFoundException, DataConstraintException {
+	public void addPermissionToRole() throws ItemNotFoundException, DataConstraintException,
+			OperationException {
 		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
 		UserRole role = roleManager.getRoleByName("B_ROLE");
 		if (role == null) {
@@ -173,7 +178,7 @@ public class RoleTest {
 	}
 
 	@Test
-	public void testGetUsersWithRole() throws DataConstraintException {
+	public void testGetUsersWithRole() throws DataConstraintException, OperationException {
 		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
 		UserDAO userDAO = FACTORY.getDAOManager().getUserDAO(session);
 
@@ -199,7 +204,7 @@ public class RoleTest {
 	}
 
 	@Test
-	public void createRoleWithSameID() throws DataConstraintException {
+	public void createRoleWithSameID() throws DataConstraintException, OperationException {
 
 		Session brokenSession = FACTORY.getSessionManager().createSession(null, null, FACTORY);
 
@@ -229,7 +234,7 @@ public class RoleTest {
 	}
 
 	@Test
-	public void createRoleWithSameName() throws DataConstraintException {
+	public void createRoleWithSameName() throws DataConstraintException, OperationException {
 
 		Session brokenSession = FACTORY.getSessionManager().createSession(null, null, FACTORY);
 
@@ -258,7 +263,7 @@ public class RoleTest {
 	}
 
 	@Test
-	public void createPermissionWithSameID() throws DataConstraintException {
+	public void createPermissionWithSameID() throws DataConstraintException, OperationException {
 
 		Session brokenSession = FACTORY.getSessionManager().createSession(null, null, FACTORY);
 
@@ -288,7 +293,7 @@ public class RoleTest {
 	}
 
 	@Test
-	public void createPermissionWithSameName() throws DataConstraintException {
+	public void createPermissionWithSameName() throws DataConstraintException, OperationException {
 
 		Session brokenSession = FACTORY.getSessionManager().createSession(null, null, FACTORY);
 
@@ -317,7 +322,7 @@ public class RoleTest {
 	}
 
 	@Test
-	public void testNullRoleName() throws DataConstraintException {
+	public void testNullRoleName() throws DataConstraintException, OperationException {
 		Session brokenSession = FACTORY.getSessionManager().createSession(null, null, FACTORY);
 
 		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(brokenSession);
@@ -337,7 +342,7 @@ public class RoleTest {
 	}
 
 	@Test
-	public void testNullPermissionName() throws DataConstraintException {
+	public void testNullPermissionName() throws DataConstraintException, OperationException {
 		Session brokenSession = FACTORY.getSessionManager().createSession(null, null, FACTORY);
 
 		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(brokenSession);
@@ -357,7 +362,7 @@ public class RoleTest {
 	}
 
 	@Test
-	public void testNullPermissionAssignment() throws DataConstraintException {
+	public void testNullPermissionAssignment() throws DataConstraintException, OperationException {
 		Session brokenSession = FACTORY.getSessionManager().createSession(null, null, FACTORY);
 
 		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(brokenSession);
@@ -378,7 +383,7 @@ public class RoleTest {
 	}
 
 	@Test
-	public void testNullRoleAssignment() throws DataConstraintException {
+	public void testNullRoleAssignment() throws DataConstraintException, OperationException {
 		Session brokenSession = FACTORY.getSessionManager().createSession(null, null, FACTORY);
 
 		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(brokenSession);

@@ -24,4 +24,15 @@ public class DBUserRole extends BaseEntity implements UserRole {
 	public String getRoleName() {
 		return roleName;
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("id: ");
+		sb.append(getId());
+		sb.append("; roleName: ");
+		sb.append(this.roleName);
+		return sb.toString();
+	}
+
 }

@@ -28,6 +28,7 @@ public interface UserDAO extends BaseDAO {
 	 * @throws ItemNotFoundException
 	 *             if the user was not found or the password does not match
 	 * @throws OperationException
+	 * @throws DataConstraintException
 	 */
 	User userLogin(String username, String password) throws ItemNotFoundException,
 			OperationException;

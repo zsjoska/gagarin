@@ -1,5 +1,6 @@
 package ro.gagarin.jdbc;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
@@ -12,7 +13,7 @@ public abstract class UpdateQuery {
 
 	private final BaseJdbcDAO dao;
 	private final Class<?> objectClass;
-	private final AppLog LOG;
+	protected final AppLog LOG;
 
 	public UpdateQuery(BaseJdbcDAO dao, Class<?> objectClass) {
 		this.dao = dao;
@@ -31,14 +32,8 @@ public abstract class UpdateQuery {
 			String sqlString = getSQL();
 			stmnt = this.dao.getConnection().prepareStatement(sqlString);
 			fillParameters(stmnt);
-			try {
-				doExecute(stmnt);
-				success = true;
-			} catch (SQLException e) {
-				// this exception should be converted to our nice exceptions
-				LOG.error("Error executing the query", e);
-				throw DataConstraintException.createException(e, objectClass);
-			}
+			doExecute(stmnt);
+			success = true;
 		} catch (OperationException e) {
 			LOG.error("Error executing the query", e);
 			throw e;
@@ -73,7 +68,17 @@ public abstract class UpdateQuery {
 		}
 	}
 
-	protected void doExecute(PreparedStatement stmnt) throws SQLException {
-		stmnt.executeUpdate();
+	protected void doExecute(PreparedStatement stmnt) throws DataConstraintException {
+		try {
+			stmnt.executeUpdate();
+		} catch (SQLException e) {
+			// this exception should be converted to our nice exceptions
+			LOG.error("Error executing the query", e);
+			throw DataConstraintException.createException(e, objectClass);
+		}
+	}
+
+	protected Connection getConnection() throws OperationException {
+		return dao.getConnection();
 	}
 }

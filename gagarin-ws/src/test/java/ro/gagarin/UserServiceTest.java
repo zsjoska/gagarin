@@ -27,7 +27,7 @@ public class UserServiceTest {
 
 	@BeforeClass
 	public static void startup() throws SessionNotFoundException, ItemNotFoundException,
-			OperationException {
+			OperationException, DataConstraintException {
 		session = authentication.createSession(null, null);
 		authentication.login(session, "admin", "password", null);
 	}

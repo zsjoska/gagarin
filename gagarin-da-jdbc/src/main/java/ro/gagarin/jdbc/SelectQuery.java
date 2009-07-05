@@ -20,5 +20,5 @@ public abstract class SelectQuery extends UpdateQuery {
 		}
 	}
 
-	protected abstract void useResult(ResultSet resultSet) throws SQLException;
+	protected abstract void useResult(ResultSet rs) throws SQLException;
 }

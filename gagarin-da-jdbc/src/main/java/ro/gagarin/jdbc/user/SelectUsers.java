@@ -1,0 +1,57 @@
+package ro.gagarin.jdbc.user;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+import ro.gagarin.exceptions.DataConstraintException;
+import ro.gagarin.exceptions.OperationException;
+import ro.gagarin.jdbc.BaseJdbcDAO;
+import ro.gagarin.jdbc.SelectQuery;
+import ro.gagarin.jdbc.objects.DBUser;
+import ro.gagarin.jdbc.objects.DBUserRole;
+import ro.gagarin.user.User;
+
+public class SelectUsers extends SelectQuery {
+
+	private ArrayList<User> users = null;
+
+	public SelectUsers(BaseJdbcDAO dao) {
+		super(dao, User.class);
+	}
+
+	@Override
+	protected void useResult(ResultSet rs) throws SQLException {
+		this.users = new ArrayList<User>();
+		while (rs.next()) {
+			DBUser user = new DBUser();
+			user.setId(rs.getLong("id"));
+			user.setName(rs.getString("name"));
+			user.setUsername(rs.getString("userName"));
+			DBUserRole role = new DBUserRole();
+			role.setId(rs.getLong("roleid"));
+			role.setRoleName(rs.getString("roleName"));
+			user.setRole(role);
+			users.add(user);
+		}
+	}
+
+	@Override
+	protected void fillParameters(PreparedStatement stmnt) throws SQLException {
+	}
+
+	@Override
+	protected String getSQL() {
+		return "SELECT Users.id, username, name, password, roleid, roleName "
+				+ "FROM Users INNER JOIN UserRoles ON Users.roleid = UserRoles.id";
+	}
+
+	public static ArrayList<User> execute(BaseJdbcDAO dao) throws OperationException,
+			DataConstraintException {
+		SelectUsers q = new SelectUsers(dao);
+		q.execute();
+		return q.users;
+	}
+
+}

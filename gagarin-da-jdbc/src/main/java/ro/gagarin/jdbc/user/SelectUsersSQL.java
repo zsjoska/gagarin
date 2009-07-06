@@ -10,17 +10,15 @@ import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.BaseJdbcDAO;
 import ro.gagarin.jdbc.SelectQuery;
 import ro.gagarin.jdbc.objects.DBUser;
+import ro.gagarin.jdbc.objects.DBUserRole;
 import ro.gagarin.user.User;
-import ro.gagarin.user.UserRole;
 
-public class GetUsersWithRole extends SelectQuery {
+public class SelectUsersSQL extends SelectQuery {
 
-	private final UserRole role;
 	private ArrayList<User> users = null;
 
-	public GetUsersWithRole(BaseJdbcDAO dao, UserRole role) {
-		super(dao, UserRole.class);
-		this.role = role;
+	public SelectUsersSQL(BaseJdbcDAO dao) {
+		super(dao, User.class);
 	}
 
 	@Override
@@ -31,6 +29,9 @@ public class GetUsersWithRole extends SelectQuery {
 			user.setId(rs.getLong("id"));
 			user.setName(rs.getString("name"));
 			user.setUsername(rs.getString("userName"));
+			DBUserRole role = new DBUserRole();
+			role.setId(rs.getLong("roleid"));
+			role.setRoleName(rs.getString("roleName"));
 			user.setRole(role);
 			users.add(user);
 		}
@@ -38,19 +39,19 @@ public class GetUsersWithRole extends SelectQuery {
 
 	@Override
 	protected void fillParameters(PreparedStatement stmnt) throws SQLException {
-		stmnt.setLong(1, role.getId());
 	}
 
 	@Override
 	protected String getSQL() {
-		return "SELECT id, name, userName, roleid FROM Users WHERE roleid = ?";
+		return "SELECT Users.id, username, name, password, roleid, roleName "
+				+ "FROM Users INNER JOIN UserRoles ON Users.roleid = UserRoles.id";
 	}
 
-	public static ArrayList<User> execute(BaseJdbcDAO dao, UserRole role)
-			throws OperationException, DataConstraintException {
-		GetUsersWithRole query = new GetUsersWithRole(dao, role);
-		query.execute();
-
-		return query.users;
+	public static ArrayList<User> execute(BaseJdbcDAO dao) throws OperationException,
+			DataConstraintException {
+		SelectUsersSQL q = new SelectUsersSQL(dao);
+		q.execute();
+		return q.users;
 	}
+
 }

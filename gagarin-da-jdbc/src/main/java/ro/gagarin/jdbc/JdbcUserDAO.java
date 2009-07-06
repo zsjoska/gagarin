@@ -13,10 +13,10 @@ import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.user.CreateUserSQL;
 import ro.gagarin.jdbc.user.DeleteUserSQL;
-import ro.gagarin.jdbc.user.GetUsersWithRole;
-import ro.gagarin.jdbc.user.SelectUserByUsername;
-import ro.gagarin.jdbc.user.SelectUserByUsernamePassword;
-import ro.gagarin.jdbc.user.SelectUsers;
+import ro.gagarin.jdbc.user.GetUsersWithRoleSQL;
+import ro.gagarin.jdbc.user.SelectUserByUsernameSQL;
+import ro.gagarin.jdbc.user.SelectUserByUsernamePasswordSQL;
+import ro.gagarin.jdbc.user.SelectUsersSQL;
 import ro.gagarin.log.AppLog;
 import ro.gagarin.log.AppLogAction;
 import ro.gagarin.session.Session;
@@ -35,7 +35,7 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 
 		try {
 
-			User user = SelectUserByUsernamePassword.execute(this, username, password);
+			User user = SelectUserByUsernamePasswordSQL.execute(this, username, password);
 			if (user == null) {
 				throw new ItemNotFoundException(User.class, username + " with password");
 			}
@@ -83,7 +83,7 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 	public User getUserByUsername(String username) throws OperationException {
 
 		try {
-			User user = SelectUserByUsername.execute(this, username);
+			User user = SelectUserByUsernameSQL.execute(this, username);
 			return user;
 		} catch (OperationException e) {
 			throw e;
@@ -96,7 +96,7 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 	public List<User> getUsersWithRole(UserRole role) throws OperationException {
 
 		try {
-			ArrayList<User> users = GetUsersWithRole.execute(this, role);
+			ArrayList<User> users = GetUsersWithRoleSQL.execute(this, role);
 			return users;
 		} catch (OperationException e) {
 			throw e;
@@ -122,7 +122,7 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 	@Override
 	public List<User> getAllUsers() throws OperationException {
 		try {
-			ArrayList<User> users = SelectUsers.execute(this);
+			ArrayList<User> users = SelectUsersSQL.execute(this);
 			return users;
 		} catch (OperationException e) {
 			throw e;

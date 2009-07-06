@@ -1,5 +1,8 @@
 package ro.gagarin.jdbc;
 
+import static ro.gagarin.utils.ConversionUtils.perm2String;
+import static ro.gagarin.utils.ConversionUtils.role2String;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,10 +13,17 @@ import java.util.Set;
 
 import ro.gagarin.RoleDAO;
 import ro.gagarin.exceptions.DataConstraintException;
+import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.objects.DBUserPermission;
 import ro.gagarin.jdbc.objects.DBUserRole;
+import ro.gagarin.jdbc.role.CreatePermissionSQL;
+import ro.gagarin.jdbc.role.CreateRoleSQL;
+import ro.gagarin.jdbc.role.SelectPermissionsSQL;
+import ro.gagarin.jdbc.role.SelectRoleByNameSQL;
+import ro.gagarin.log.AppLog;
+import ro.gagarin.log.AppLogAction;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
@@ -25,55 +35,33 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 	}
 
 	@Override
-	public DBUserRole getRoleByName(String roleName) throws OperationException {
+	public UserRole getRoleByName(String roleName) throws OperationException {
 
-		APPLOG.debug("getRoleByName for " + roleName);
-
-		DBUserRole role = new DBUserRole();
-
-		ResultSet rs = null;
 		try {
-			PreparedStatement query = getConnection().prepareStatement(
-					"SELECT id, roleName FROM UserRoles WHERE roleName = ?");
-			query.setString(1, roleName);
-			rs = query.executeQuery();
-			if (rs.next()) {
-				role.setId(rs.getLong("id"));
-				role.setRoleName(rs.getString("roleName"));
-				APPLOG.debug(role.toString());
-				return role;
-			} else {
-				APPLOG.info("UserRole " + roleName + " was not found");
-			}
-		} catch (SQLException e) {
-			APPLOG.error("Error Executing query", e);
-			super.markRollback();
-		} finally {
-			if (rs != null)
-				try {
-					rs.close();
-				} catch (SQLException e) {
-					APPLOG.error("Error on close", e);
-				}
+			UserRole role = SelectRoleByNameSQL.execute(this, roleName);
+			return role;
+		} catch (OperationException e) {
+			throw e;
+		} catch (DataConstraintException e) {
+			throw new OperationException(ErrorCodes.DB_OP_ERROR, e);
 		}
-		return null;
+
 	}
 
 	@Override
 	public long createRole(UserRole role) throws DataConstraintException, OperationException {
-		try {
-			PreparedStatement query = getConnection().prepareStatement(
-					"INSERT INTO UserRoles( id, roleName) VALUES (?,?)");
-			query.setLong(1, role.getId());
-			query.setString(2, role.getRoleName());
-			query.executeUpdate();
 
-			APPLOG.info("UserRole " + role.getRoleName() + " was created");
+		try {
+
+			new CreateRoleSQL(this, role).execute();
+
+			APPLOG.action(AppLogAction.CREATE, UserRole.class, role.getRoleName(), AppLog.SUCCESS);
+			APPLOG.info("Role " + role.getRoleName() + " was created");
 			return role.getId();
-		} catch (SQLException e) {
-			APPLOG.error("Error Executing query", e);
-			super.markRollback();
-			throw DataConstraintException.createException(e, UserRole.class);
+		} catch (OperationException e) {
+			APPLOG.error("Could not create role:" + role2String(role), e);
+			APPLOG.action(AppLogAction.CREATE, UserRole.class, role.getRoleName(), AppLog.FAILED);
+			throw e;
 		}
 	}
 
@@ -82,48 +70,31 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 			OperationException {
 
 		try {
-			PreparedStatement query = getConnection().prepareStatement(
-					"INSERT INTO UserPermissions( id, permissionName) VALUES (?,?)");
-			query.setLong(1, perm.getId());
-			query.setString(2, perm.getPermissionName());
-			query.executeUpdate();
-			APPLOG.info("UserPermission " + perm.getPermissionName() + " was created");
+
+			new CreatePermissionSQL(this, perm).execute();
+
+			APPLOG.action(AppLogAction.CREATE, UserPermission.class, perm.getPermissionName(),
+					AppLog.SUCCESS);
+			APPLOG.info("Permission " + perm.getPermissionName() + " was created");
 			return perm.getId();
-		} catch (SQLException e) {
-			APPLOG.error("Error Executing query", e);
-			super.markRollback();
-			throw DataConstraintException.createException(e, UserPermission.class);
+		} catch (OperationException e) {
+			APPLOG.error("Could not create permission:" + perm2String(perm), e);
+			APPLOG.action(AppLogAction.CREATE, UserPermission.class, perm.getPermissionName(),
+					AppLog.FAILED);
+			throw e;
 		}
 	}
 
 	@Override
 	public List<UserPermission> getAllPermissions() throws OperationException {
 
-		List<UserPermission> permissions = new ArrayList<UserPermission>();
-
-		ResultSet rs = null;
+		List<UserPermission> permissions;
 		try {
-			PreparedStatement query = getConnection().prepareStatement(
-					"SELECT id, permissionName FROM UserPermissions");
-			rs = query.executeQuery();
-			while (rs.next()) {
-				DBUserPermission permission = new DBUserPermission();
-				permission.setId(rs.getLong("id"));
-				permission.setPermissionName(rs.getString("permissionName"));
-				permissions.add(permission);
-			}
-		} catch (SQLException e) {
-			APPLOG.error("Error Executing query", e);
-			super.markRollback();
-		} finally {
-			if (rs != null)
-				try {
-					rs.close();
-				} catch (SQLException e) {
-					APPLOG.error("Error on close", e);
-				}
+			permissions = SelectPermissionsSQL.execute(this);
+			return permissions;
+		} catch (DataConstraintException e) {
+			throw new OperationException(ErrorCodes.DB_OP_ERROR, e);
 		}
-		return permissions;
 	}
 
 	@Override

@@ -19,14 +19,16 @@ import ro.gagarin.user.User;
  * @author zsido
  * 
  */
-public class SelectUserByUsername extends SelectQuery {
+public class SelectUserByUsernamePasswordSQL extends SelectQuery {
 
 	private DBUser user;
 	private final String username;
+	private final String password;
 
-	public SelectUserByUsername(BaseJdbcDAO dao, String username) {
+	public SelectUserByUsernamePasswordSQL(BaseJdbcDAO dao, String username, String password) {
 		super(dao, User.class);
 		this.username = username;
+		this.password = password;
 	}
 
 	@Override
@@ -49,6 +51,7 @@ public class SelectUserByUsername extends SelectQuery {
 	@Override
 	protected void fillParameters(PreparedStatement stmnt) throws SQLException {
 		stmnt.setString(1, username);
+		stmnt.setString(2, password);
 
 	}
 
@@ -56,13 +59,17 @@ public class SelectUserByUsername extends SelectQuery {
 	protected String getSQL() {
 		return "SELECT Users.id, username, name, password, roleid, roleName "
 				+ "FROM Users INNER JOIN UserRoles ON Users.roleid = UserRoles.id "
-				+ "WHERE username = ?";
+				+ "WHERE username = ? and password = ?";
 	}
 
-	public static User execute(BaseJdbcDAO dao, String username) throws OperationException,
-			DataConstraintException {
-		SelectUserByUsername select = new SelectUserByUsername(dao, username);
+	public static User execute(BaseJdbcDAO dao, String username, String password)
+			throws OperationException, DataConstraintException {
+
+		SelectUserByUsernamePasswordSQL select = new SelectUserByUsernamePasswordSQL(dao, username,
+				password);
 		select.execute();
 		return select.user;
+
 	}
+
 }

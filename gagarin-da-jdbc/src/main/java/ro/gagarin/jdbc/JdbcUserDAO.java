@@ -14,8 +14,8 @@ import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.user.CreateUserSQL;
 import ro.gagarin.jdbc.user.DeleteUserSQL;
 import ro.gagarin.jdbc.user.GetUsersWithRoleSQL;
-import ro.gagarin.jdbc.user.SelectUserByUsernameSQL;
 import ro.gagarin.jdbc.user.SelectUserByUsernamePasswordSQL;
+import ro.gagarin.jdbc.user.SelectUserByUsernameSQL;
 import ro.gagarin.jdbc.user.SelectUsersSQL;
 import ro.gagarin.log.AppLog;
 import ro.gagarin.log.AppLogAction;
@@ -46,9 +46,6 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 		} catch (OperationException e) {
 			APPLOG.action(AppLogAction.LOGIN, User.class, username, AppLog.FAILED);
 			throw e;
-		} catch (DataConstraintException e) {
-			APPLOG.action(AppLogAction.LOGIN, User.class, username, AppLog.FAILED);
-			throw new OperationException(ErrorCodes.DB_OP_ERROR, e);
 		} catch (ItemNotFoundException e) {
 			APPLOG.action(AppLogAction.LOGIN, User.class, username, AppLog.FAILED);
 			throw e;
@@ -82,14 +79,8 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 	@Override
 	public User getUserByUsername(String username) throws OperationException {
 
-		try {
-			User user = SelectUserByUsernameSQL.execute(this, username);
-			return user;
-		} catch (OperationException e) {
-			throw e;
-		} catch (DataConstraintException e) {
-			throw new OperationException(ErrorCodes.DB_OP_ERROR, e);
-		}
+		User user = SelectUserByUsernameSQL.execute(this, username);
+		return user;
 	}
 
 	@Override
@@ -121,13 +112,7 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 
 	@Override
 	public List<User> getAllUsers() throws OperationException {
-		try {
-			ArrayList<User> users = SelectUsersSQL.execute(this);
-			return users;
-		} catch (OperationException e) {
-			throw e;
-		} catch (DataConstraintException e) {
-			throw new OperationException(ErrorCodes.DB_OP_ERROR, e);
-		}
+		ArrayList<User> users = SelectUsersSQL.execute(this);
+		return users;
 	}
 }

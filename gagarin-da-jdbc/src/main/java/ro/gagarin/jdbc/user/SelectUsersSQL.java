@@ -5,7 +5,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.BaseJdbcDAO;
 import ro.gagarin.jdbc.SelectQuery;
@@ -47,8 +46,7 @@ public class SelectUsersSQL extends SelectQuery {
 				+ "FROM Users INNER JOIN UserRoles ON Users.roleid = UserRoles.id";
 	}
 
-	public static ArrayList<User> execute(BaseJdbcDAO dao) throws OperationException,
-			DataConstraintException {
+	public static ArrayList<User> execute(BaseJdbcDAO dao) throws OperationException {
 		SelectUsersSQL q = new SelectUsersSQL(dao);
 		q.execute();
 		return q.users;

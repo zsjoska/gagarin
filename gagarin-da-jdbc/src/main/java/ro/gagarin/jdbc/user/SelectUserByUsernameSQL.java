@@ -7,7 +7,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.BaseJdbcDAO;
 import ro.gagarin.jdbc.SelectQuery;
@@ -59,8 +58,7 @@ public class SelectUserByUsernameSQL extends SelectQuery {
 				+ "WHERE username = ?";
 	}
 
-	public static User execute(BaseJdbcDAO dao, String username) throws OperationException,
-			DataConstraintException {
+	public static User execute(BaseJdbcDAO dao, String username) throws OperationException {
 		SelectUserByUsernameSQL select = new SelectUserByUsernameSQL(dao, username);
 		select.execute();
 		return select.user;

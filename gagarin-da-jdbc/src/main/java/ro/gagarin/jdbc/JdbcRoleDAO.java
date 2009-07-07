@@ -3,10 +3,6 @@ package ro.gagarin.jdbc;
 import static ro.gagarin.utils.ConversionUtils.perm2String;
 import static ro.gagarin.utils.ConversionUtils.role2String;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -15,13 +11,13 @@ import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.OperationException;
-import ro.gagarin.jdbc.objects.DBUserPermission;
-import ro.gagarin.jdbc.objects.DBUserRole;
 import ro.gagarin.jdbc.role.AssignPermissionToRoleSQL;
 import ro.gagarin.jdbc.role.CreatePermissionSQL;
 import ro.gagarin.jdbc.role.CreateRoleSQL;
 import ro.gagarin.jdbc.role.DeletePermissionSQL;
 import ro.gagarin.jdbc.role.DeleteRoleSQL;
+import ro.gagarin.jdbc.role.GetPermissionRolesSQL;
+import ro.gagarin.jdbc.role.GetRolePermissionsSQL;
 import ro.gagarin.jdbc.role.SelectPermissionByNameSQL;
 import ro.gagarin.jdbc.role.SelectPermissionsSQL;
 import ro.gagarin.jdbc.role.SelectRoleByNameSQL;
@@ -177,63 +173,11 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 
 	@Override
 	public Set<UserPermission> getRolePermissions(UserRole role) throws OperationException {
-		HashSet<UserPermission> perms = new HashSet<UserPermission>();
-		ResultSet rs = null;
-		try {
-			PreparedStatement query = getConnection()
-					.prepareStatement(
-							"SELECT id, permissionName FROM UserPermissions INNER JOIN PermissionAssignment ON id = perm_id WHERE role_id = ?");
-			query.setLong(1, role.getId());
-			rs = query.executeQuery();
-
-			while (rs.next()) {
-				DBUserPermission permission = new DBUserPermission();
-				permission.setId(rs.getLong("id"));
-				permission.setPermissionName(rs.getString("permissionName"));
-				perms.add(permission);
-			}
-		} catch (SQLException e) {
-			APPLOG.error("Error Executing query", e);
-			super.markRollback();
-		} finally {
-			if (rs != null)
-				try {
-					rs.close();
-				} catch (SQLException e) {
-					APPLOG.error("Error on close", e);
-				}
-		}
-		return perms;
+		return GetRolePermissionsSQL.execute(this, role);
 	}
 
 	@Override
 	public Set<UserRole> getPermissionRoles(UserPermission perm) throws OperationException {
-		HashSet<UserRole> roles = new HashSet<UserRole>();
-		ResultSet rs = null;
-		try {
-			PreparedStatement query = getConnection()
-					.prepareStatement(
-							"SELECT id, roleName FROM UserRoles INNER JOIN PermissionAssignment ON id = role_id WHERE perm_id = ?");
-			query.setLong(1, perm.getId());
-			rs = query.executeQuery();
-
-			while (rs.next()) {
-				DBUserRole role = new DBUserRole();
-				role.setId(rs.getLong("id"));
-				role.setRoleName(rs.getString("roleName"));
-				roles.add(role);
-			}
-		} catch (SQLException e) {
-			APPLOG.error("Error Executing query", e);
-			super.markRollback();
-		} finally {
-			if (rs != null)
-				try {
-					rs.close();
-				} catch (SQLException e) {
-					APPLOG.error("Error on close", e);
-				}
-		}
-		return roles;
+		return GetPermissionRolesSQL.execute(this, perm);
 	}
 }

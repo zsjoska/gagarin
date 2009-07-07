@@ -39,9 +39,7 @@ public class BasicAuthorizationManager implements AuthorizationManager {
 		User user = null;
 		try {
 
-			// TODO: CHECK why to go to DB
-			user = userManager.getUserByUsername(session.getUser().getUsername());
-
+			user = session.getUser();
 			Set<UserPermission> perm = roleDAO.getRolePermissions(user.getRole());
 
 			Iterator<? extends UserPermission> iterator = perm.iterator();

@@ -53,6 +53,7 @@ public class BasicAuthorizationManager implements AuthorizationManager {
 			}
 			throw new PermissionDeniedException(user.getUsername(), reqPermission.name());
 		} finally {
+			// TODO: this release thing was the old school, no need anymore
 			try {
 				userManager.release();
 			} catch (OperationException e) {

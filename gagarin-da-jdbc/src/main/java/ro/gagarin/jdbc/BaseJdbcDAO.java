@@ -52,7 +52,6 @@ public class BaseJdbcDAO implements BaseDAO {
 		checkLoadDBDriver(CFG);
 
 		synchronized (session) {
-			session.setBusy(true);
 			Object property = session.getProperty(BaseDAO.class);
 			if (property instanceof BaseJdbcDAO) {
 

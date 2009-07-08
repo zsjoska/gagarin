@@ -34,32 +34,21 @@ public class BasicAuthorizationManager implements AuthorizationManager {
 	public void requiresPermission(Session session, PermissionEnum reqPermission)
 			throws PermissionDeniedException, OperationException {
 
-		UserDAO userManager = session.getManagerFactory().getDAOManager().getUserDAO(session);
 		RoleDAO roleDAO = session.getManagerFactory().getDAOManager().getRoleDAO(session);
 		User user = null;
-		try {
 
-			user = session.getUser();
-			Set<UserPermission> perm = roleDAO.getRolePermissions(user.getRole());
+		user = session.getUser();
+		Set<UserPermission> perm = roleDAO.getRolePermissions(user.getRole());
 
-			Iterator<? extends UserPermission> iterator = perm.iterator();
-			while (iterator.hasNext()) {
-				UserPermission userPermission = iterator.next();
-				if (userPermission.getPermissionName().equals(reqPermission.name())) {
-					LOG.debug(reqPermission.name() + " was found for user " + user.getUsername());
-					return;
-				}
-
+		Iterator<? extends UserPermission> iterator = perm.iterator();
+		while (iterator.hasNext()) {
+			UserPermission userPermission = iterator.next();
+			if (userPermission.getPermissionName().equals(reqPermission.name())) {
+				LOG.debug(reqPermission.name() + " was found for user " + user.getUsername());
+				return;
 			}
-			throw new PermissionDeniedException(user.getUsername(), reqPermission.name());
-		} finally {
-			// TODO: this release thing was the old school, no need anymore
-			try {
-				userManager.release();
-			} catch (OperationException e) {
-				LOG.error("Exception releasing the manger", e);
-				throw new PermissionDeniedException(user.getUsername(), reqPermission.name());
-			}
+
 		}
+		throw new PermissionDeniedException(user.getUsername(), reqPermission.name());
 	}
 }

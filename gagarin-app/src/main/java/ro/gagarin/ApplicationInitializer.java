@@ -49,8 +49,7 @@ public class ApplicationInitializer {
 
 		LOG.info("Application initializer started");
 
-		Session session = new Session();
-		session.setManagerFactory(BasicManagerFactory.getInstance());
+		Session session = prepareInitSession();
 
 		ApplicationInitializer initializer = new ApplicationInitializer(session);
 		try {
@@ -65,6 +64,16 @@ public class ApplicationInitializer {
 
 		LOG.info("Application initializer finished");
 		return true;
+	}
+
+	private static Session prepareInitSession() {
+		Session session = new Session();
+		session.setManagerFactory(BasicManagerFactory.getInstance());
+		session.setBusy(true, new Throwable("Session leak notice"));
+		AppUser user = new AppUser();
+		user.setUsername("SYSINIT");
+		session.setUser(user);
+		return session;
 	}
 
 	private void doInit() throws ItemNotFoundException, OperationException, DataConstraintException {

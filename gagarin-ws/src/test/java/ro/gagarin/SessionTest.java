@@ -17,6 +17,7 @@ import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.jdbc.objects.DBUser;
 import ro.gagarin.session.Session;
+import ro.gagarin.testutil.TUtil;
 import ro.gagarin.user.UserRole;
 import ro.gagarin.ws.Authentication;
 
@@ -39,7 +40,7 @@ public class SessionTest {
 	public void testSuccessLogin() throws SessionNotFoundException, DataConstraintException,
 			ItemNotFoundException, OperationException {
 
-		session.setManagerFactory(FACTORY);
+		session = TUtil.createTestSession();
 
 		UserDAO userManager = FACTORY.getDAOManager().getUserDAO(session);
 		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
@@ -71,7 +72,7 @@ public class SessionTest {
 	public void testFailedLogin() throws SessionNotFoundException, ItemNotFoundException,
 			DataConstraintException, OperationException {
 
-		session.setManagerFactory(FACTORY);
+		session = TUtil.createTestSession();
 
 		UserDAO userManager = FACTORY.getDAOManager().getUserDAO(session);
 		ConfigurationManager cfgManager = FACTORY.getConfigurationManager(session);
@@ -105,7 +106,7 @@ public class SessionTest {
 	@Test
 	public void testSessionDeletion() throws ItemNotFoundException, DataConstraintException,
 			OperationException {
-		session.setManagerFactory(FACTORY);
+		session = TUtil.createTestSession();
 
 		UserDAO userManager = FACTORY.getDAOManager().getUserDAO(session);
 		ConfigurationManager cfgManager = FACTORY.getConfigurationManager(session);
@@ -133,15 +134,15 @@ public class SessionTest {
 	}
 
 	@Test
-	public void testSessionExpiration() throws InterruptedException {
+	public void testSessionExpiration() throws InterruptedException, SessionNotFoundException {
 
-		session.setManagerFactory(FACTORY);
+		session = FACTORY.getSessionManager().createSession(null, null, FACTORY);
 
 		ConfigurationManager cfgManager = FACTORY.getConfigurationManager(session);
 		cfgManager.setConfigValue(Config.USER_SESSION_TIMEOUT, "100");
 
 		SessionManager sessionManager = FACTORY.getSessionManager();
-		Session session = sessionManager.createSession(null, null, FACTORY);
+		Session session = FACTORY.getSessionManager().createSession(null, null, FACTORY);
 		assertNotNull(session);
 		assertEquals("We just set the timeout to 100", session.getSessionTimeout(), 100);
 

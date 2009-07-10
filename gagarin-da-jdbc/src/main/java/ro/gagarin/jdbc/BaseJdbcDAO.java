@@ -43,6 +43,10 @@ public class BaseJdbcDAO implements BaseDAO {
 			APPLOG = null;
 			throw new NullPointerException("attempt to initialize BaseJdbcDAO with null session");
 		}
+		if (!session.isBusy()) {
+			throw new OperationException(ErrorCodes.ERROR_WILD_SESSION,
+					"The session was not marked busy");
+		}
 
 		this.session = session;
 

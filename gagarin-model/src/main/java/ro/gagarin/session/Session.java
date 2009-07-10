@@ -91,7 +91,7 @@ public class Session extends BaseEntity {
 		if (this.user == null) {
 			return "<unbound>:" + getId();
 		}
-		return this.getUser().getName() + ":" + this.getId();
+		return this.getUser().getUsername() + ":" + this.getId();
 	}
 
 	public void setSessionString(String id) {

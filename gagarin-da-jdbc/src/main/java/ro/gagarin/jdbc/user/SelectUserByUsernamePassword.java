@@ -38,6 +38,8 @@ public class SelectUserByUsernamePassword extends SelectQuery {
 			user.setId(rs.getLong("id"));
 			user.setUsername(rs.getString("username"));
 			user.setName(rs.getString("name"));
+			user.setEmail(rs.getString("email"));
+			user.setPhone(rs.getString("phone"));
 			DBUserRole role = new DBUserRole();
 			role.setId(rs.getLong("roleid"));
 			role.setRoleName(rs.getString("roleName"));
@@ -57,7 +59,7 @@ public class SelectUserByUsernamePassword extends SelectQuery {
 
 	@Override
 	protected String getSQL() {
-		return "SELECT Users.id, username, name, password, roleid, roleName "
+		return "SELECT Users.id, username, name, email, phone, password, roleid, roleName "
 				+ "FROM Users INNER JOIN UserRoles ON Users.roleid = UserRoles.id "
 				+ "WHERE username = ? and password = ?";
 	}

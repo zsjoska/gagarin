@@ -89,7 +89,7 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 		ResultSet rs = null;
 		try {
 			PreparedStatement query = getConnection().prepareStatement(
-					"SELECT Users.id, username, name, password, roleid, roleName "
+					"SELECT Users.id, username, name, email, phone, password, roleid, roleName "
 							+ "FROM Users INNER JOIN UserRoles ON Users.roleid = UserRoles.id "
 							+ "WHERE username = ?");
 			query.setString(1, username);
@@ -98,6 +98,8 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 				user.setId(rs.getLong("id"));
 				user.setUsername(rs.getString("username"));
 				user.setName(rs.getString("name"));
+				user.setEmail(rs.getString("email"));
+				user.setPhone(rs.getString("phone"));
 				DBUserRole role = new DBUserRole();
 				role.setId(rs.getLong("roleid"));
 				role.setRoleName(rs.getString("roleName"));
@@ -172,7 +174,7 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 		ResultSet rs = null;
 		try {
 			PreparedStatement query = getConnection().prepareStatement(
-					"SELECT Users.id, username, name, password, roleid, roleName "
+					"SELECT Users.id, username, name, email, phone, password, roleid, roleName "
 							+ "FROM Users INNER JOIN UserRoles ON Users.roleid = UserRoles.id");
 			rs = query.executeQuery();
 
@@ -180,6 +182,8 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 				DBUser user = new DBUser();
 				user.setId(rs.getLong("id"));
 				user.setName(rs.getString("name"));
+				user.setEmail(rs.getString("email"));
+				user.setPhone(rs.getString("phone"));
 				user.setUsername(rs.getString("userName"));
 				DBUserRole role = new DBUserRole();
 				role.setId(rs.getLong("roleid"));

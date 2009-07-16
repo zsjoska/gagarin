@@ -10,6 +10,8 @@ public class WSUser extends BaseEntity implements User {
 
 	private String username;
 	private String name;
+	private String email;
+	private String phone;
 	private String password;
 	private WSUserRole role;
 
@@ -22,6 +24,8 @@ public class WSUser extends BaseEntity implements User {
 		this.setPassword(user.getPassword());
 		this.setRole(user.getRole());
 		this.setUsername(user.getUsername());
+		this.setEmail(user.getEmail());
+		this.setPhone(user.getPhone());
 	}
 
 	@Override
@@ -67,5 +71,21 @@ public class WSUser extends BaseEntity implements User {
 		} else {
 			this.role = new WSUserRole(role);
 		}
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 }

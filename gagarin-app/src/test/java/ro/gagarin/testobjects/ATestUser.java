@@ -11,6 +11,8 @@ public class ATestUser extends BaseEntity implements User {
 	private String username;
 	private String password;
 	private String name;
+	private String email;
+	private String phone;
 	private UserRole role;
 
 	public ATestUser(User user) {
@@ -19,6 +21,8 @@ public class ATestUser extends BaseEntity implements User {
 		this.password = user.getPassword();
 		this.name = user.getName();
 		this.role = user.getRole();
+		this.email = user.getEmail();
+		this.phone = user.getPhone();
 	}
 
 	public ATestUser() {
@@ -55,4 +59,21 @@ public class ATestUser extends BaseEntity implements User {
 	public UserRole getRole() {
 		return role;
 	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
 }

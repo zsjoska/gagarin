@@ -28,13 +28,15 @@ public class CreateUserSQL extends UpdateQuery {
 		stmnt.setLong(1, user.getId());
 		stmnt.setString(2, user.getUsername());
 		stmnt.setString(3, user.getName());
-		stmnt.setString(4, user.getPassword());
-		stmnt.setLong(5, user.getRole().getId());
+		stmnt.setString(4, user.getEmail());
+		stmnt.setString(5, user.getPhone());
+		stmnt.setString(6, user.getPassword());
+		stmnt.setLong(7, user.getRole().getId());
 	}
 
 	@Override
 	protected String getSQL() {
-		return "INSERT INTO Users( id, username, name, password, roleid) VALUES (?,?,?,?,?)";
+		return "INSERT INTO Users( id, username, name, email, phone, password, roleid) VALUES (?,?,?,?,?,?,?)";
 	}
 
 }

@@ -25,6 +25,8 @@ CREATE TABLE Users
 	id bigint, 
 	name varchar(100), 
 	userName varchar(50) NOT NULL, 
+	email varchar(50), 
+	phone varchar(50), 
 	password varchar(50), 
 	roleid bigint NOT NULL,
 	

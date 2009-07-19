@@ -70,3 +70,17 @@ CREATE TABLE PermissionAssignment
 	perm_id bigint  NOT NULL
 )
 --END
+
+--CHECK: Config
+SELECT * FROM Config
+--CREATE:
+CREATE TABLE Config 
+(
+	id bigint, 
+	configName varchar(50) NOT NULL,
+	configValue varchar(50),
+
+	CONSTRAINT PK_CONFIG_id PRIMARY KEY (id),
+	CONSTRAINT UK_CONFIG_configName UNIQUE (configName)
+)
+--END

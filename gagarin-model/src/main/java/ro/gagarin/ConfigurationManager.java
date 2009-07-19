@@ -47,8 +47,10 @@ public interface ConfigurationManager {
 	 */
 	void setConfigValue(Config config, String value);
 
-	String getString(Config admin_role_name);
+	String getString(Config config);
 
 	InputStream getConfigFileStream(Config file) throws OperationException;
+
+	boolean isDefined(Config config);
 
 }

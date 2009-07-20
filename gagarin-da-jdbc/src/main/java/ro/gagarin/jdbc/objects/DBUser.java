@@ -11,6 +11,8 @@ public class DBUser extends BaseEntity implements User {
 	private String username;
 	private String password;
 	private String name;
+	private String email;
+	private String phone;
 	private UserRole role;
 
 	public DBUser(User user) {
@@ -18,6 +20,8 @@ public class DBUser extends BaseEntity implements User {
 		this.username = user.getUsername();
 		this.password = user.getPassword();
 		this.name = user.getName();
+		this.email = user.getEmail();
+		this.phone = user.getPhone();
 	}
 
 	public DBUser() {
@@ -57,5 +61,21 @@ public class DBUser extends BaseEntity implements User {
 
 	public UserRole getRole() {
 		return role;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 }

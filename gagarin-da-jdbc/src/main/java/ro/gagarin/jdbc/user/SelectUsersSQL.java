@@ -27,6 +27,8 @@ public class SelectUsersSQL extends SelectQuery {
 			DBUser user = new DBUser();
 			user.setId(rs.getLong("id"));
 			user.setName(rs.getString("name"));
+			user.setEmail(rs.getString("email"));
+			user.setPhone(rs.getString("phone"));
 			user.setUsername(rs.getString("userName"));
 			DBUserRole role = new DBUserRole();
 			role.setId(rs.getLong("roleid"));
@@ -42,7 +44,7 @@ public class SelectUsersSQL extends SelectQuery {
 
 	@Override
 	protected String getSQL() {
-		return "SELECT Users.id, username, name, password, roleid, roleName "
+		return "SELECT Users.id, username, name, email, phone, password, roleid, roleName "
 				+ "FROM Users INNER JOIN UserRoles ON Users.roleid = UserRoles.id";
 	}
 

@@ -66,6 +66,8 @@ public class UserTest {
 		user.setName("Name Of User");
 		user.setUsername(username);
 		user.setPassword("password" + username);
+		user.setEmail(username + "@gagarin.ro");
+		user.setPhone("any kind of phone");
 		user.setRole(adminRole);
 		usrManager.createUser(user);
 		User user2 = usrManager.getUserByUsername(username);
@@ -73,6 +75,8 @@ public class UserTest {
 		assertNotNull("User was not found", user2);
 		assertEquals("id does not match", user.getId(), user2.getId());
 		assertEquals("name does not match", user.getName(), user2.getName());
+		assertEquals("email does not match", user.getEmail(), user2.getEmail());
+		assertEquals("phone does not match", user.getPhone(), user2.getPhone());
 		assertEquals("username does not match", user.getUsername(), user2.getUsername());
 		assertNotNull("The role field must be filled by queries", user2.getRole());
 

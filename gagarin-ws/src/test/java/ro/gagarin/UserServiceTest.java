@@ -10,6 +10,7 @@ import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.exceptions.PermissionDeniedException;
 import ro.gagarin.exceptions.SessionNotFoundException;
+import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
 import ro.gagarin.ws.Authentication;
 import ro.gagarin.ws.UserService;
@@ -50,10 +51,12 @@ public class UserServiceTest {
 
 	@Test
 	public void testCreateRole() throws SessionNotFoundException, PermissionDeniedException,
-			OperationException {
+			OperationException, ItemNotFoundException {
 		UserService userService = new UserService();
-		List<WSUserPermission> list = userService.getAllPermissionList(session);
-		UserRole role = userService.createRoleWithPermissions(session,
-				new String[] { "CREATE_USER" });
+
+		UserRole role = userService.createRoleWithPermissions(session, "WONDER_ROLE",
+				new UserPermission[] { new WSUserPermission("CREATE_USER") });
+		userService.getRolePermissions(session, new WSUserRole("WONDER_ROLE"));
+
 	}
 }

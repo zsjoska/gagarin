@@ -1,5 +1,9 @@
 package ro.gagarin.utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
@@ -21,4 +25,21 @@ public class ConversionUtils {
 		return perm.getPermissionName();
 	}
 
+	public static List<UserPermission> matchPermissions(List<UserPermission> allPermissions,
+			UserPermission[] permissions) throws ItemNotFoundException {
+		ArrayList<UserPermission> perms = new ArrayList<UserPermission>();
+		for (UserPermission reqPermission : permissions) {
+			UserPermission mPerm = null;
+			for (UserPermission aDBPermission : allPermissions) {
+				if (aDBPermission.getPermissionName().equalsIgnoreCase(
+						reqPermission.getPermissionName())) {
+					mPerm = aDBPermission;
+				}
+			}
+			if (mPerm == null)
+				throw new ItemNotFoundException(UserPermission.class, reqPermission
+						.getPermissionName());
+		}
+		return perms;
+	}
 }

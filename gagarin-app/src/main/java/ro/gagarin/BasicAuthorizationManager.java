@@ -12,6 +12,7 @@ import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserPermission;
+import ro.gagarin.user.UserRole;
 
 public class BasicAuthorizationManager implements AuthorizationManager {
 	private static final transient Logger LOG = Logger.getLogger(BasicAuthorizationManager.class);
@@ -50,5 +51,19 @@ public class BasicAuthorizationManager implements AuthorizationManager {
 
 		}
 		throw new PermissionDeniedException(user.getUsername(), reqPermission.name());
+	}
+
+	@Override
+	public void checkUserHasThePermissions(Session session, List<UserPermission> matched)
+			throws OperationException, PermissionDeniedException {
+		UserRole role = session.getUser().getRole();
+		RoleDAO roleDAO = session.getManagerFactory().getDAOManager().getRoleDAO(session);
+		Set<UserPermission> loginUserPermissions = roleDAO.getRolePermissions(role);
+		for (UserPermission p : matched) {
+			if (!loginUserPermissions.contains(p)) {
+				throw new PermissionDeniedException(session.getUser().getUsername(), p
+						.getPermissionName());
+			}
+		}
 	}
 }

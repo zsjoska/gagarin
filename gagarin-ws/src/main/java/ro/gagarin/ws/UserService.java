@@ -23,7 +23,9 @@ import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.User;
+import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
+import ro.gagarin.utils.ConversionUtils;
 import ro.gagarin.ws.objects.WSUser;
 import ro.gagarin.ws.objects.WSUserPermission;
 import ro.gagarin.ws.objects.WSUserRole;
@@ -106,8 +108,9 @@ public class UserService {
 	}
 
 	@WebMethod
-	public WSUserRole createRoleWithPermissions(String sessionId, String[] strings)
-			throws SessionNotFoundException, PermissionDeniedException, OperationException {
+	public WSUserRole createRoleWithPermissions(String sessionId, String roleName,
+			UserPermission[] permissions) throws SessionNotFoundException,
+			PermissionDeniedException, OperationException, ItemNotFoundException {
 
 		SessionManager sessionManager = FACTORY.getSessionManager();
 		Session session = sessionManager.acquireSession(sessionId);
@@ -118,7 +121,10 @@ public class UserService {
 
 			// the session user must have LIST_ROLES permission
 			permissionManager.requiresPermission(session, PermissionEnum.LIST_ROLES);
-
+			List<UserPermission> allPermissions = roleManager.getAllPermissions();
+			List<UserPermission> matched = ConversionUtils.matchPermissions(allPermissions,
+					permissions);
+			permissionManager.checkUserHasThePermissions(session, matched);
 			return null;
 
 		} finally {
@@ -130,5 +136,10 @@ public class UserService {
 	public List<WSUserPermission> getAllPermissionList(String session) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public void getRolePermissions(String session, WSUserRole wsUserRole) {
+		// TODO Auto-generated method stub
+
 	}
 }

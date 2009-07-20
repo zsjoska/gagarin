@@ -10,7 +10,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import ro.gagarin.config.Config;
 import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.OperationException;
@@ -48,11 +47,6 @@ public class MethodAccessTest {
 		cleanup();
 
 		aDummySession = TUtil.createTestSession();
-
-		ConfigurationManager cfgManager = FACTORY.getConfigurationManager(aDummySession);
-		String adminUser = cfgManager.getString(Config.ADMIN_USER_NAME);
-		String adminPassword = cfgManager.getString(Config.ADMIN_PASSWORD);
-
 		this.session = authentication.createSession(null, null);
 	}
 

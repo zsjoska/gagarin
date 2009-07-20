@@ -7,7 +7,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.BaseJdbcDAO;
 import ro.gagarin.jdbc.SelectQuery;
@@ -19,13 +18,13 @@ import ro.gagarin.user.User;
  * @author zsido
  * 
  */
-public class SelectUserByUsernamePassword extends SelectQuery {
+public class SelectUserByUsernamePasswordSQL extends SelectQuery {
 
 	private DBUser user;
 	private final String username;
 	private final String password;
 
-	public SelectUserByUsernamePassword(BaseJdbcDAO dao, String username, String password) {
+	public SelectUserByUsernamePasswordSQL(BaseJdbcDAO dao, String username, String password) {
 		super(dao, User.class);
 		this.username = username;
 		this.password = password;
@@ -38,8 +37,6 @@ public class SelectUserByUsernamePassword extends SelectQuery {
 			user.setId(rs.getLong("id"));
 			user.setUsername(rs.getString("username"));
 			user.setName(rs.getString("name"));
-			user.setEmail(rs.getString("email"));
-			user.setPhone(rs.getString("phone"));
 			DBUserRole role = new DBUserRole();
 			role.setId(rs.getLong("roleid"));
 			role.setRoleName(rs.getString("roleName"));
@@ -59,15 +56,15 @@ public class SelectUserByUsernamePassword extends SelectQuery {
 
 	@Override
 	protected String getSQL() {
-		return "SELECT Users.id, username, name, email, phone, password, roleid, roleName "
+		return "SELECT Users.id, username, name, password, roleid, roleName "
 				+ "FROM Users INNER JOIN UserRoles ON Users.roleid = UserRoles.id "
 				+ "WHERE username = ? and password = ?";
 	}
 
 	public static User execute(BaseJdbcDAO dao, String username, String password)
-			throws OperationException, DataConstraintException {
+			throws OperationException {
 
-		SelectUserByUsernamePassword select = new SelectUserByUsernamePassword(dao, username,
+		SelectUserByUsernamePasswordSQL select = new SelectUserByUsernamePasswordSQL(dao, username,
 				password);
 		select.execute();
 		return select.user;

@@ -10,13 +10,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import ro.gagarin.config.Config;
 import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.exceptions.PermissionDeniedException;
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.session.Session;
+import ro.gagarin.testutil.TUtil;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserPermission;
@@ -46,12 +46,7 @@ public class MethodAccessTest {
 
 		cleanup();
 
-		aDummySession = new Session();
-		aDummySession.setManagerFactory(FACTORY);
-		ConfigurationManager cfgManager = FACTORY.getConfigurationManager(aDummySession);
-		String adminUser = cfgManager.getString(Config.ADMIN_USER_NAME);
-		String adminPassword = cfgManager.getString(Config.ADMIN_PASSWORD);
-
+		aDummySession = TUtil.createTestSession();
 		this.session = authentication.createSession(null, null);
 	}
 
@@ -64,8 +59,7 @@ public class MethodAccessTest {
 
 	private void cleanup() throws OperationException, DataConstraintException {
 
-		Session cleanupSession = new Session();
-		cleanupSession.setManagerFactory(FACTORY);
+		Session cleanupSession = TUtil.createTestSession();
 
 		UserDAO userDAO = FACTORY.getDAOManager().getUserDAO(cleanupSession);
 		RoleDAO roleDAO = FACTORY.getDAOManager().getRoleDAO(cleanupSession);
@@ -108,8 +102,7 @@ public class MethodAccessTest {
 		FACTORY.releaseSession(aDummySession);
 		// and recreate objects
 
-		// TODO: it must be a bug allowing this
-		// should not be allowed so simple to reuse a session
+		aDummySession = TUtil.createTestSession();
 		roleDAO = FACTORY.getDAOManager().getRoleDAO(aDummySession);
 		userDAO = FACTORY.getDAOManager().getUserDAO(aDummySession);
 
@@ -139,6 +132,9 @@ public class MethodAccessTest {
 		// have it committed so other sessions to have access to it
 		FACTORY.releaseSession(aDummySession);
 		// and recreate objects
+
+		aDummySession = TUtil.createTestSession();
+
 		roleDAO = FACTORY.getDAOManager().getRoleDAO(aDummySession);
 		userDAO = FACTORY.getDAOManager().getUserDAO(aDummySession);
 

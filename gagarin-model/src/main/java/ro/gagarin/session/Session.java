@@ -24,6 +24,7 @@ public class Session extends BaseEntity {
 
 	HashMap<String, Object> properties = new HashMap<String, Object>();
 	private ManagerFactory managerFactory;
+	private Throwable t;
 
 	public Session() {
 		// TODO: make the reason mandatory
@@ -90,7 +91,7 @@ public class Session extends BaseEntity {
 		if (this.user == null) {
 			return "<unbound>:" + getId();
 		}
-		return this.getUser().getName() + ":" + this.getId();
+		return this.getUser().getUsername() + ":" + this.getId();
 	}
 
 	public void setSessionString(String id) {
@@ -109,8 +110,9 @@ public class Session extends BaseEntity {
 		return this.properties.get(owner.getName());
 	}
 
-	public void setBusy(boolean busy) {
+	public void setBusy(boolean busy, Throwable t) {
 		this.busy = busy;
+		this.t = t;
 	}
 
 	public boolean isBusy() {
@@ -123,5 +125,10 @@ public class Session extends BaseEntity {
 
 	public ManagerFactory getManagerFactory() {
 		return this.managerFactory;
+	}
+
+	public Throwable getCreationStacktrace() {
+
+		return this.t;
 	}
 }

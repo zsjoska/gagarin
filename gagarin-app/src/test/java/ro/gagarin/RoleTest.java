@@ -17,10 +17,12 @@ import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.ItemExistsException;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.OperationException;
+import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.session.Session;
 import ro.gagarin.testobjects.ATestUser;
 import ro.gagarin.testobjects.ATestUserPermission;
 import ro.gagarin.testobjects.ATestUserRole;
+import ro.gagarin.testutil.TUtil;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
@@ -35,8 +37,8 @@ public class RoleTest {
 	private Session session = null;
 
 	@Before
-	public void init() {
-		this.session = FACTORY.getSessionManager().createSession(null, null, FACTORY);
+	public void init() throws SessionNotFoundException {
+		this.session = TUtil.createTestSession();
 	}
 
 	@After
@@ -205,9 +207,10 @@ public class RoleTest {
 	}
 
 	@Test
-	public void createRoleWithSameID() throws DataConstraintException, OperationException {
+	public void createRoleWithSameID() throws DataConstraintException, OperationException,
+			SessionNotFoundException {
 
-		Session brokenSession = FACTORY.getSessionManager().createSession(null, null, FACTORY);
+		Session brokenSession = TUtil.createTestSession();
 
 		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(brokenSession);
 
@@ -235,9 +238,10 @@ public class RoleTest {
 	}
 
 	@Test
-	public void createRoleWithSameName() throws DataConstraintException, OperationException {
+	public void createRoleWithSameName() throws DataConstraintException, OperationException,
+			SessionNotFoundException {
 
-		Session brokenSession = FACTORY.getSessionManager().createSession(null, null, FACTORY);
+		Session brokenSession = TUtil.createTestSession();
 
 		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(brokenSession);
 
@@ -264,9 +268,10 @@ public class RoleTest {
 	}
 
 	@Test
-	public void createPermissionWithSameID() throws DataConstraintException, OperationException {
+	public void createPermissionWithSameID() throws DataConstraintException, OperationException,
+			SessionNotFoundException {
 
-		Session brokenSession = FACTORY.getSessionManager().createSession(null, null, FACTORY);
+		Session brokenSession = TUtil.createTestSession();
 
 		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(brokenSession);
 
@@ -296,7 +301,7 @@ public class RoleTest {
 	@Test
 	public void createPermissionWithSameName() throws DataConstraintException, OperationException {
 
-		Session brokenSession = FACTORY.getSessionManager().createSession(null, null, FACTORY);
+		Session brokenSession = TUtil.createTestSession();
 
 		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(brokenSession);
 
@@ -324,7 +329,7 @@ public class RoleTest {
 
 	@Test
 	public void testNullRoleName() throws DataConstraintException, OperationException {
-		Session brokenSession = FACTORY.getSessionManager().createSession(null, null, FACTORY);
+		Session brokenSession = TUtil.createTestSession();
 
 		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(brokenSession);
 
@@ -344,7 +349,7 @@ public class RoleTest {
 
 	@Test
 	public void testNullPermissionName() throws DataConstraintException, OperationException {
-		Session brokenSession = FACTORY.getSessionManager().createSession(null, null, FACTORY);
+		Session brokenSession = TUtil.createTestSession();
 
 		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(brokenSession);
 
@@ -364,7 +369,7 @@ public class RoleTest {
 
 	@Test
 	public void testNullPermissionAssignment() throws DataConstraintException, OperationException {
-		Session brokenSession = FACTORY.getSessionManager().createSession(null, null, FACTORY);
+		Session brokenSession = TUtil.createTestSession();
 
 		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(brokenSession);
 
@@ -385,7 +390,7 @@ public class RoleTest {
 
 	@Test
 	public void testNullRoleAssignment() throws DataConstraintException, OperationException {
-		Session brokenSession = FACTORY.getSessionManager().createSession(null, null, FACTORY);
+		Session brokenSession = TUtil.createTestSession();
 
 		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(brokenSession);
 

@@ -17,6 +17,10 @@ public class WSUserPermission extends BaseEntity implements UserPermission {
 		this.permissionName = perm.getPermissionName();
 	}
 
+	public WSUserPermission(String string) {
+		this.setPermissionName(string);
+	}
+
 	public void setPermissionName(String permissionName) {
 		this.permissionName = permissionName;
 	}

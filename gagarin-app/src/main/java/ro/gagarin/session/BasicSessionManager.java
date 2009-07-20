@@ -90,6 +90,9 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
 	public void destroySession(Session session) {
 		LOG.info("Destroy session " + session.getId());
 		synchronized (session) {
+			if (session.isBusy()) {
+				LOG.error("Unreleased session being destroyed:", session.getCreationStacktrace());
+			}
 			session.getManagerFactory().releaseSession(session);
 			this.sessions.remove(session.getSessionString());
 		}
@@ -130,7 +133,7 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
 				LOG.info("The requested session is busy:" + sessionId);
 				throw new SessionNotFoundException(session);
 			}
-			session.setBusy(true);
+			session.setBusy(true, new Exception("Session Creation"));
 			session.setExpires(System.currentTimeMillis() + session.getSessionTimeout());
 		}
 
@@ -150,7 +153,7 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
 					LOG.error("Exception releasing the session", e);
 				}
 			}
-			session.setBusy(false);
+			session.setBusy(false, null);
 		}
 	}
 }

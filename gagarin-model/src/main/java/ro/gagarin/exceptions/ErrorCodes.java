@@ -11,5 +11,6 @@ public class ErrorCodes {
 	public static final int STARTUP_FAILED = 7;
 	public static final int SQL_ERROR = 8;
 	public static final int DB_OP_ERROR = 9;
+	public static final int ERROR_WILD_SESSION = 10;
 
 }

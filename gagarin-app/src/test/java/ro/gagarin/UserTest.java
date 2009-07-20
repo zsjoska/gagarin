@@ -18,6 +18,7 @@ import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.session.Session;
 import ro.gagarin.testobjects.ATestUser;
+import ro.gagarin.testutil.TUtil;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserRole;
 
@@ -33,7 +34,7 @@ public class UserTest {
 
 	@Before
 	public void init() {
-		this.session = FACTORY.getSessionManager().createSession(null, null, FACTORY);
+		this.session = TUtil.createTestSession();
 	}
 
 	@After
@@ -88,7 +89,7 @@ public class UserTest {
 	public void usersWiththeSameID() throws ItemNotFoundException, DataConstraintException,
 			OperationException {
 
-		Session brokenSession = FACTORY.getSessionManager().createSession(null, null, FACTORY);
+		Session brokenSession = TUtil.createTestSession();
 
 		UserDAO usrManager = FACTORY.getDAOManager().getUserDAO(brokenSession);
 		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(brokenSession);
@@ -161,6 +162,7 @@ public class UserTest {
 			FACTORY.releaseSession(session);
 		}
 
+		session = TUtil.createTestSession();
 		usrManager = FACTORY.getDAOManager().getUserDAO(session);
 		assertNull("Transaction rolback test", usrManager.getUserByUsername("UserName2"));
 
@@ -170,7 +172,7 @@ public class UserTest {
 	public void usersWithoutUsername() throws ItemNotFoundException, DataConstraintException,
 			OperationException {
 
-		Session brokenSession = FACTORY.getSessionManager().createSession(null, null, FACTORY);
+		Session brokenSession = TUtil.createTestSession();
 
 		UserDAO usrManager = FACTORY.getDAOManager().getUserDAO(brokenSession);
 		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(brokenSession);

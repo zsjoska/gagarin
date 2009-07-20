@@ -5,6 +5,7 @@ import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.JdbcDAOManager;
 import ro.gagarin.log.AppLog;
 import ro.gagarin.log.BasicLogManager;
+import ro.gagarin.scheduler.BasicScheduleManager;
 import ro.gagarin.session.BasicSessionManager;
 import ro.gagarin.session.Session;
 
@@ -85,5 +86,11 @@ public class BasicManagerFactory implements ManagerFactory {
 	@Override
 	public AppLog getLogManager(Session session, Class<?> aClass) {
 		return new BasicLogManager(session, aClass);
+	}
+
+	@Override
+	public ScheduleManager getScheduleManager() {
+		// TODO Auto-generated method stub
+		return new BasicScheduleManager();
 	}
 }

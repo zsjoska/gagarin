@@ -21,4 +21,6 @@ public interface ManagerFactory {
 	AuthenticationManager getAuthenticationManager(Session session);
 
 	AppLog getLogManager(Session session, Class<?> name);
+
+	ScheduleManager getScheduleManager();
 }

@@ -16,6 +16,12 @@ public abstract class ScheduledJob extends BaseEntity implements Runnable {
 		this.period = period;
 	}
 
+	public ScheduledJob(String name, long initialWait) {
+		this.name = name;
+		this.initialWait = initialWait;
+		this.period = 0;
+	}
+
 	public String getName() {
 		return name;
 	}

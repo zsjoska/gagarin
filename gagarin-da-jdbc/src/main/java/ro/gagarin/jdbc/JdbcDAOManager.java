@@ -1,6 +1,8 @@
 package ro.gagarin.jdbc;
 
+import ro.gagarin.ConfigDAO;
 import ro.gagarin.DAOManager;
+import ro.gagarin.JdbcConfigDAO;
 import ro.gagarin.RoleDAO;
 import ro.gagarin.UserDAO;
 import ro.gagarin.exceptions.OperationException;
@@ -31,6 +33,11 @@ public class JdbcDAOManager implements DAOManager {
 	 */
 	public UserDAO getUserDAO(Session session) throws OperationException {
 		return new JdbcUserDAO(session);
+	}
+
+	@Override
+	public ConfigDAO getConfigDAO(Session session) throws OperationException {
+		return new JdbcConfigDAO(session);
 	}
 
 }

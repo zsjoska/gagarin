@@ -1,10 +1,11 @@
 package ro.gagarin.scheduler;
 
+import ro.gagarin.session.Session;
 import ro.gagarin.user.BaseEntity;
 
-public abstract class ScheduledJob extends BaseEntity implements Runnable {
+public abstract class ScheduledJob extends BaseEntity {
 
-	private static final long serialVersionUID = -238225317665931596L;
+	protected static final long serialVersionUID = -238225317665931596L;
 
 	private final String name;
 	private final long initialWait;
@@ -15,6 +16,14 @@ public abstract class ScheduledJob extends BaseEntity implements Runnable {
 		this.initialWait = initialWait;
 		this.period = period;
 	}
+
+	public ScheduledJob(String name, long initialWait) {
+		this.name = name;
+		this.initialWait = initialWait;
+		this.period = 0;
+	}
+
+	abstract public void execute(Session session) throws Exception;
 
 	public String getName() {
 		return name;

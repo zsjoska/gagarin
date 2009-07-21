@@ -7,7 +7,6 @@ import ro.gagarin.BasicManagerFactory;
 import ro.gagarin.ManagerFactory;
 import ro.gagarin.ScheduleManager;
 import ro.gagarin.log.AppLog;
-import ro.gagarin.scheduler.ScheduledJob;
 import ro.gagarin.session.Session;
 
 public class BasicScheduleManager implements ScheduleManager {
@@ -30,7 +29,7 @@ public class BasicScheduleManager implements ScheduleManager {
 			AppLog log = FACTORY.getLogManager(session, BasicScheduleManager.class);
 			try {
 				log.debug("Executing job " + job.getName() + "#" + job.getId());
-				job.run();
+				job.execute(session);
 				log.debug("Finished job " + job.getName() + "#" + job.getId());
 			} catch (Exception e) {
 				log.error("Exception executing job " + job.getName() + "#" + job.getId(), e);
@@ -48,6 +47,10 @@ public class BasicScheduleManager implements ScheduleManager {
 
 	@Override
 	public long scheduleJob(ScheduledJob job) {
+		if (job.getPeriod() == 0) {
+			timer.schedule(new RunableJob(job), job.getInitialWait());
+			return job.getId();
+		}
 		timer.schedule(new RunableJob(job), job.getInitialWait(), job.getPeriod());
 		return job.getId();
 	}

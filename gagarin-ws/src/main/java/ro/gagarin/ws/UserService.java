@@ -109,7 +109,7 @@ public class UserService {
 
 	@WebMethod
 	public WSUserRole createRoleWithPermissions(String sessionId, String roleName,
-			UserPermission[] permissions) throws SessionNotFoundException,
+			WSUserPermission[] permissions) throws SessionNotFoundException,
 			PermissionDeniedException, OperationException, ItemNotFoundException {
 
 		SessionManager sessionManager = FACTORY.getSessionManager();
@@ -122,8 +122,8 @@ public class UserService {
 			// the session user must have LIST_ROLES permission
 			permissionManager.requiresPermission(session, PermissionEnum.LIST_ROLES);
 			List<UserPermission> allPermissions = roleManager.getAllPermissions();
-			List<UserPermission> matched = ConversionUtils.matchPermissions(allPermissions,
-					permissions);
+			List<UserPermission> matched;
+			matched = ConversionUtils.matchPermissions(allPermissions, permissions);
 			permissionManager.checkUserHasThePermissions(session, matched);
 			return null;
 

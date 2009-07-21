@@ -62,6 +62,20 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
 	}
 
 	@Override
+	public String getString(Config config) {
+		// local config has precedence
+		if (localConfig.isDefined(config)) {
+			return localConfig.getString(config);
+		}
+		if (super.isDefined(config)) {
+			return super.getString(config);
+		}
+
+		// this will return the default value
+		return localConfig.getString(config);
+	}
+
+	@Override
 	public InputStream getConfigFileStream(Config file) throws OperationException {
 		return localConfig.getConfigFileStream(file);
 	}

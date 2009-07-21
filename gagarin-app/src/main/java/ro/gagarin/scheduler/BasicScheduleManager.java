@@ -6,6 +6,8 @@ import java.util.TimerTask;
 import ro.gagarin.BasicManagerFactory;
 import ro.gagarin.ManagerFactory;
 import ro.gagarin.ScheduleManager;
+import ro.gagarin.SessionManager;
+import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.log.AppLog;
 import ro.gagarin.session.Session;
 
@@ -26,10 +28,11 @@ public class BasicScheduleManager implements ScheduleManager {
 		@Override
 		public void run() {
 			Session session = createSession();
+
 			AppLog log = FACTORY.getLogManager(session, BasicScheduleManager.class);
 			try {
 				log.debug("Executing job " + job.getName() + "#" + job.getId());
-				job.execute(session);
+				job.execute(session, log);
 				log.debug("Finished job " + job.getName() + "#" + job.getId());
 			} catch (Exception e) {
 				log.error("Exception executing job " + job.getName() + "#" + job.getId(), e);
@@ -39,7 +42,14 @@ public class BasicScheduleManager implements ScheduleManager {
 		}
 
 		private Session createSession() {
-			Session session = FACTORY.getSessionManager().createSession(null, "SCHEDULER", FACTORY);
+			SessionManager sessionManager = FACTORY.getSessionManager();
+			Session session = sessionManager.createSession(null, "SCHEDULER", FACTORY);
+			try {
+				sessionManager.acquireSession(session.getSessionString());
+			} catch (SessionNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			return session;
 		}
 

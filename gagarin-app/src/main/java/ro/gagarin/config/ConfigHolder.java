@@ -73,6 +73,7 @@ public class ConfigHolder {
 				}
 			}
 		}
+
 		for (Integer i : changed) {
 			notifyConfigChange(Config.values()[i], configuration.get(i));
 		}

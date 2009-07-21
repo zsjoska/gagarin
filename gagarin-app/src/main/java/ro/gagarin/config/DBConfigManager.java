@@ -1,13 +1,14 @@
 package ro.gagarin.config;
 
 import java.io.InputStream;
-import java.util.HashMap;
+import java.util.ArrayList;
 
 import ro.gagarin.BasicManagerFactory;
 import ro.gagarin.ConfigDAO;
 import ro.gagarin.ConfigurationManager;
 import ro.gagarin.ManagerFactory;
 import ro.gagarin.exceptions.OperationException;
+import ro.gagarin.log.AppLog;
 import ro.gagarin.scheduler.ScheduledJob;
 import ro.gagarin.session.Session;
 
@@ -29,13 +30,13 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
 		}
 
 		@Override
-		public void execute(Session session) throws Exception {
+		public void execute(Session session, AppLog log) throws Exception {
 			ConfigDAO configDAO = FACTORY.getDAOManager().getConfigDAO(session);
 			long lastUpdateTime = configDAO.getLastUpdateTime();
 			if (lastUpdateTime > INSTANCE.getLastUpdateTime()) {
 				long lastQuery = System.currentTimeMillis();
-				HashMap<String, String> cfgValues = configDAO.listConfigurations();
-				INSTANCE.importConfigMap(cfgValues);
+				ArrayList<ConfigEntry> cfgValues = configDAO.listConfigurations();
+				INSTANCE.importConfigMap(cfgValues, log);
 				INSTANCE.setLastUpdateTime(lastQuery);
 			}
 		}
@@ -48,8 +49,19 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
 		this.localConfig = localCfg;
 	}
 
-	public void importConfigMap(HashMap<String, String> cfgValues) {
-		// TODO Auto-generated method stub
+	public void importConfigMap(ArrayList<ConfigEntry> cfgValues, AppLog log) {
+		ArrayList<String> cfgs = new ArrayList<String>(Config.values().length);
+		for (ConfigEntry configEntry : cfgValues) {
+			System.err.println(configEntry.getConfigName() + "=" + configEntry.getConfigValue());
+			try {
+				Config cfg = Config.valueOf(configEntry.getConfigName());
+				cfgs.add(cfg.ordinal(), configEntry.getConfigValue());
+			} catch (Exception e) {
+				log.error("Could not interpret config " + configEntry.getConfigName() + "="
+						+ configEntry.getConfigValue());
+			}
+		}
+		importConfig(cfgs);
 	}
 
 	public void setLastUpdateTime(long lastQuery) {
@@ -78,6 +90,10 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
 	@Override
 	public InputStream getConfigFileStream(Config file) throws OperationException {
 		return localConfig.getConfigFileStream(file);
+	}
+
+	public static DBConfigManager getInstance() {
+		return INSTANCE;
 	}
 
 }

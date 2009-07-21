@@ -8,12 +8,12 @@ import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.BaseJdbcDAO;
 import ro.gagarin.jdbc.SelectQuery;
 
-public class GetSingleConfigValueSQL extends SelectQuery {
+public class GetConfigValueSQL extends SelectQuery {
 
 	private final String config;
 	private String lastUpdateTime = null;
 
-	public GetSingleConfigValueSQL(BaseJdbcDAO dao, String config) {
+	public GetConfigValueSQL(BaseJdbcDAO dao, String config) {
 		super(dao, null);
 		this.config = config;
 	}
@@ -37,7 +37,7 @@ public class GetSingleConfigValueSQL extends SelectQuery {
 	}
 
 	public static String execute(BaseJdbcDAO dao, Config lastUpdateTime) throws OperationException {
-		GetSingleConfigValueSQL q = new GetSingleConfigValueSQL(dao, lastUpdateTime.name());
+		GetConfigValueSQL q = new GetConfigValueSQL(dao, lastUpdateTime.name());
 		q.execute();
 		return q.lastUpdateTime;
 	}

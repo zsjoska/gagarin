@@ -1,5 +1,6 @@
 package ro.gagarin.scheduler;
 
+import ro.gagarin.log.AppLog;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.BaseEntity;
 
@@ -23,7 +24,7 @@ public abstract class ScheduledJob extends BaseEntity {
 		this.period = 0;
 	}
 
-	abstract public void execute(Session session) throws Exception;
+	abstract public void execute(Session session, AppLog log) throws Exception;
 
 	public String getName() {
 		return name;

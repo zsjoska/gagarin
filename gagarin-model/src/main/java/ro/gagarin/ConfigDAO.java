@@ -1,13 +1,15 @@
 package ro.gagarin;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 
+import ro.gagarin.config.ConfigEntry;
+import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.OperationException;
 
 public interface ConfigDAO extends BaseDAO {
 
-	long getLastUpdateTime() throws OperationException;
+	long getLastUpdateTime() throws OperationException, DataConstraintException;
 
-	HashMap<String, String> listConfigurations();
+	ArrayList<ConfigEntry> listConfigurations() throws OperationException;
 
 }

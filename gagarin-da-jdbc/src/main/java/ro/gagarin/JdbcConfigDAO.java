@@ -1,11 +1,16 @@
 package ro.gagarin;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 
 import ro.gagarin.config.Config;
-import ro.gagarin.config.GetSingleConfigValueSQL;
+import ro.gagarin.config.ConfigEntry;
+import ro.gagarin.config.GetConfigValueSQL;
+import ro.gagarin.config.GetConfigsSQL;
+import ro.gagarin.config.InsertConfigValueSQL;
+import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.BaseJdbcDAO;
+import ro.gagarin.jdbc.objects.DBConfig;
 import ro.gagarin.session.Session;
 
 public class JdbcConfigDAO extends BaseJdbcDAO implements ConfigDAO {
@@ -15,14 +20,22 @@ public class JdbcConfigDAO extends BaseJdbcDAO implements ConfigDAO {
 	}
 
 	@Override
-	public long getLastUpdateTime() throws OperationException {
-		String value = GetSingleConfigValueSQL.execute(this, Config._LAST_UPDATE_TIME_);
+	public long getLastUpdateTime() throws OperationException, DataConstraintException {
+		String value = GetConfigValueSQL.execute(this, Config._LAST_UPDATE_TIME_);
+		if (value == null) {
+			long updateTime = System.currentTimeMillis();
+			DBConfig config = new DBConfig();
+			config.setConfigName(Config._LAST_UPDATE_TIME_.name());
+			config.setConfigValue("" + updateTime);
+			new InsertConfigValueSQL(this, config).execute();
+			return updateTime;
+		}
 		return 0;
 	}
 
 	@Override
-	public HashMap<String, String> listConfigurations() {
-		// TODO Auto-generated method stub
-		return null;
+	public ArrayList<ConfigEntry> listConfigurations() throws OperationException {
+
+		return GetConfigsSQL.execute(this);
 	}
 }

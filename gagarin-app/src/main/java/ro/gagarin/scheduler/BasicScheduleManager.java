@@ -29,7 +29,7 @@ public class BasicScheduleManager implements ScheduleManager {
 			AppLog log = FACTORY.getLogManager(session, BasicScheduleManager.class);
 			try {
 				log.debug("Executing job " + job.getName() + "#" + job.getId());
-				job.run();
+				job.execute(session);
 				log.debug("Finished job " + job.getName() + "#" + job.getId());
 			} catch (Exception e) {
 				log.error("Exception executing job " + job.getName() + "#" + job.getId(), e);

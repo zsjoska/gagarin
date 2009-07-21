@@ -9,4 +9,6 @@ public interface DAOManager {
 
 	UserDAO getUserDAO(Session session) throws OperationException;
 
+	ConfigDAO getConfigDAO(Session session) throws OperationException;
+
 }

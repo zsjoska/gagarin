@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import org.junit.Test;
 
 import ro.gagarin.scheduler.ScheduledJob;
+import ro.gagarin.session.Session;
 
 public class SchedulerTest {
 
@@ -18,7 +19,7 @@ public class SchedulerTest {
 		final ArrayList<Long> xTimes = new ArrayList<Long>();
 		scheduleManager.scheduleJob(new ScheduledJob("testSingleExecution", 10) {
 			@Override
-			public void run() {
+			public void execute(Session session) {
 				xTimes.add(System.currentTimeMillis());
 			}
 		});
@@ -33,7 +34,7 @@ public class SchedulerTest {
 		long start = System.currentTimeMillis();
 		scheduleManager.scheduleJob(new ScheduledJob("testMultipleExecution", 10, 35) {
 			@Override
-			public void run() {
+			public void execute(Session session) {
 				xTimes.add(System.currentTimeMillis());
 			}
 		});
@@ -49,7 +50,7 @@ public class SchedulerTest {
 		ScheduleManager scheduleManager = FACTORY.getScheduleManager();
 		scheduleManager.scheduleJob(new ScheduledJob("testExceptionExecution", 10) {
 			@Override
-			public void run() {
+			public void execute(Session session) {
 				throw new RuntimeException("Test Exception");
 			}
 		});

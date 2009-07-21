@@ -40,7 +40,18 @@ public enum Config {
 	/**
 	 * Location of the file containing the database initialization script
 	 */
-	DB_INIT_SQL_FILE("dbInit.sql");
+	DB_INIT_SQL_FILE("dbInit.sql"),
+
+	/**
+	 * The period of time for checking DB configuration changes
+	 */
+	DB_CONFIG_CHECK_PERIOD("120000"),
+
+	/**
+	 * Dummy configuration entry for storing the last modification time of the
+	 * configuration
+	 */
+	_LAST_UPDATE_TIME_(null);
 
 	private final String defValue;
 

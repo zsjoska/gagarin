@@ -67,6 +67,10 @@ public class BasicManagerFactory implements ManagerFactory {
 	 * @return the configured {@link ConfigurationManager} implementation
 	 */
 	public ConfigurationManager getConfigurationManager(Session session) {
+		// if (state != ApplicationState.INIT) {
+		// return new DBConfigManager(session,
+		// FileConfigurationManager.getInstance());
+		// }
 		return FileConfigurationManager.getInstance();
 	}
 

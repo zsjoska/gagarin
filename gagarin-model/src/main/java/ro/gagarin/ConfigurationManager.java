@@ -5,6 +5,7 @@ import java.io.InputStream;
 import ro.gagarin.config.Config;
 import ro.gagarin.config.SettingsChangeObserver;
 import ro.gagarin.exceptions.OperationException;
+import ro.gagarin.session.Session;
 
 /**
  * Base interface for the application to interact with the application
@@ -40,17 +41,22 @@ public interface ConfigurationManager {
 	/**
 	 * Modifies a configuration value and notifies the change observers.
 	 * 
+	 * @param session
+	 *            an active session to be used for config change
 	 * @param config
 	 *            configuration key
 	 * @param value
 	 *            configuration value
+	 * @throws OperationException
 	 */
-	void setConfigValue(Config config, String value);
+	void setConfigValue(Session session, Config config, String value) throws OperationException;
 
 	String getString(Config config);
 
 	InputStream getConfigFileStream(Config file) throws OperationException;
 
 	boolean isDefined(Config config);
+
+	String[] exportConfig();
 
 }

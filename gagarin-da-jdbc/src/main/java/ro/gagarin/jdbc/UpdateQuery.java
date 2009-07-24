@@ -32,6 +32,7 @@ public abstract class UpdateQuery {
 			String sqlString = getSQL();
 			stmnt = this.dao.getConnection().prepareStatement(sqlString);
 			fillParameters(stmnt);
+			LOG.debug("Executing SQL:" + sqlString);
 			doExecute(stmnt);
 			success = true;
 		} catch (OperationException e) {

@@ -23,6 +23,8 @@ public class BasicManagerFactory implements ManagerFactory {
 
 	private ApplicationState state = ApplicationState.INIT;
 
+	private ConfigurationManager configurationManager = FileConfigurationManager.getInstance();
+
 	static {
 		try {
 			if (ApplicationInitializer.init()) {
@@ -67,11 +69,11 @@ public class BasicManagerFactory implements ManagerFactory {
 	 * @return the configured {@link ConfigurationManager} implementation
 	 */
 	public ConfigurationManager getConfigurationManager(Session session) {
+		return this.configurationManager;
 		// if (state != ApplicationState.INIT) {
 		// return new DBConfigManager(session,
 		// FileConfigurationManager.getInstance());
 		// }
-		return FileConfigurationManager.getInstance();
 	}
 
 	public AuthorizationManager getAuthorizationManager(Session session) {
@@ -94,7 +96,10 @@ public class BasicManagerFactory implements ManagerFactory {
 
 	@Override
 	public ScheduleManager getScheduleManager() {
-		// TODO Auto-generated method stub
 		return new BasicScheduleManager();
+	}
+
+	public void setConfigurationManager(ConfigurationManager configurationManager) {
+		this.configurationManager = configurationManager;
 	}
 }

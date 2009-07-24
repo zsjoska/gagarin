@@ -7,7 +7,9 @@ import ro.gagarin.config.ConfigEntry;
 import ro.gagarin.config.GetConfigValueSQL;
 import ro.gagarin.config.GetConfigsSQL;
 import ro.gagarin.config.InsertConfigValueSQL;
+import ro.gagarin.config.UpdateConfigValueSQL;
 import ro.gagarin.exceptions.DataConstraintException;
+import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.BaseJdbcDAO;
 import ro.gagarin.jdbc.objects.DBConfig;
@@ -21,7 +23,7 @@ public class JdbcConfigDAO extends BaseJdbcDAO implements ConfigDAO {
 
 	@Override
 	public long getLastUpdateTime() throws OperationException, DataConstraintException {
-		String value = GetConfigValueSQL.execute(this, Config._LAST_UPDATE_TIME_);
+		String value = GetConfigValueSQL.execute(this, Config._LAST_UPDATE_TIME_.name());
 		if (value == null) {
 			long updateTime = System.currentTimeMillis();
 			DBConfig config = new DBConfig();
@@ -30,12 +32,33 @@ public class JdbcConfigDAO extends BaseJdbcDAO implements ConfigDAO {
 			new InsertConfigValueSQL(this, config).execute();
 			return updateTime;
 		}
-		return 0;
+		try {
+			Long longValue = Long.valueOf(value);
+			return longValue;
+		} catch (Exception e) {
+			throw new OperationException(ErrorCodes.CONFIG_ENTRY_INVALID, e);
+		}
+
 	}
 
 	@Override
 	public ArrayList<ConfigEntry> listConfigurations() throws OperationException {
 
 		return GetConfigsSQL.execute(this);
+	}
+
+	@Override
+	public void setConfigValue(ConfigEntry cfg) throws OperationException, DataConstraintException {
+		DBConfig config = new DBConfig(cfg);
+		String value = GetConfigValueSQL.execute(this, cfg.getConfigName());
+		if (value == null) {
+			new InsertConfigValueSQL(this, config).execute();
+		} else if (!value.equals(cfg.getConfigValue())) {
+			new UpdateConfigValueSQL(this, config).execute();
+		}
+		config = new DBConfig();
+		config.setConfigName(Config._LAST_UPDATE_TIME_.name());
+		config.setConfigValue("" + System.currentTimeMillis());
+		new UpdateConfigValueSQL(this, config).execute();
 	}
 }

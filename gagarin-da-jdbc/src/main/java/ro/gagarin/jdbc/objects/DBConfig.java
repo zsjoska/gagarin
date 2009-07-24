@@ -8,6 +8,15 @@ public class DBConfig extends BaseEntity implements ConfigEntry {
 	private String configName;
 	private String configValue;
 
+	public DBConfig() {
+	}
+
+	public DBConfig(ConfigEntry cfg) {
+		this.setId(cfg.getId());
+		this.configName = cfg.getConfigName();
+		this.configValue = cfg.getConfigValue();
+	}
+
 	public String getConfigName() {
 		return configName;
 	}

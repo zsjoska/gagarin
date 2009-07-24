@@ -13,6 +13,9 @@ import ro.gagarin.session.Session;
 
 public class BasicScheduleManager implements ScheduleManager {
 
+	// TODO: implement a stronger scheduler which support later change on
+	// execution period
+
 	private static final ManagerFactory FACTORY = BasicManagerFactory.getInstance();
 
 	private static Timer timer = new Timer("TIMER", true);

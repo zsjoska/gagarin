@@ -12,4 +12,6 @@ public interface ConfigDAO extends BaseDAO {
 
 	ArrayList<ConfigEntry> listConfigurations() throws OperationException;
 
+	void setConfigValue(ConfigEntry cfg) throws OperationException, DataConstraintException;
+
 }

@@ -51,7 +51,9 @@ public enum Config {
 	 * Dummy configuration entry for storing the last modification time of the
 	 * configuration
 	 */
-	_LAST_UPDATE_TIME_(null);
+	_LAST_UPDATE_TIME_(null),
+
+	_TEST_DB_ONLY_("_TEST_DB_ONLY_");
 
 	private final String defValue;
 

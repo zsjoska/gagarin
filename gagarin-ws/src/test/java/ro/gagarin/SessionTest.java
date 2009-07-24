@@ -134,12 +134,19 @@ public class SessionTest {
 	}
 
 	@Test
-	public void testSessionExpiration() throws InterruptedException, SessionNotFoundException {
+	public void testSessionExpiration() throws InterruptedException, SessionNotFoundException,
+			OperationException {
 
 		session = FACTORY.getSessionManager().createSession(null, null, FACTORY);
+		FACTORY.getSessionManager().acquireSession(session.getSessionString());
 
 		ConfigurationManager cfgManager = FACTORY.getConfigurationManager(session);
-		cfgManager.setConfigValue(Config.USER_SESSION_TIMEOUT, "100");
+		cfgManager.setConfigValue(session, Config.USER_SESSION_TIMEOUT, "100");
+		FACTORY.releaseSession(session);
+
+		long toWait = cfgManager.getLong(Config.DB_CONFIG_CHECK_PERIOD);
+		LOG.info("Waiting DB config import for " + toWait);
+		Thread.sleep(toWait);
 
 		SessionManager sessionManager = FACTORY.getSessionManager();
 		Session session = FACTORY.getSessionManager().createSession(null, null, FACTORY);

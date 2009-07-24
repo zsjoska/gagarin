@@ -36,8 +36,8 @@ public class GetConfigValueSQL extends SelectQuery {
 		return "SELECT configValue FROM Config WHERE configName = ?";
 	}
 
-	public static String execute(BaseJdbcDAO dao, Config lastUpdateTime) throws OperationException {
-		GetConfigValueSQL q = new GetConfigValueSQL(dao, lastUpdateTime.name());
+	public static String execute(BaseJdbcDAO dao, String lastUpdateTime) throws OperationException {
+		GetConfigValueSQL q = new GetConfigValueSQL(dao, lastUpdateTime);
 		q.execute();
 		return q.lastUpdateTime;
 	}

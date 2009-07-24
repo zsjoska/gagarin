@@ -11,6 +11,7 @@ import ro.gagarin.application.objects.AppUser;
 import ro.gagarin.application.objects.AppUserPermission;
 import ro.gagarin.application.objects.AppUserRole;
 import ro.gagarin.config.Config;
+import ro.gagarin.config.DBConfigManager;
 import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.ItemNotFoundException;
@@ -47,7 +48,8 @@ public class ApplicationInitializer {
 			return false;
 		initRun = true;
 
-		LOG.info("Application initializer started");
+		LOG
+				.info("---------------------------- Application initializer started ------------------------");
 
 		Session session = prepareInitSession();
 
@@ -62,7 +64,8 @@ public class ApplicationInitializer {
 			initializer.session.getManagerFactory().releaseSession(session);
 		}
 
-		LOG.info("Application initializer finished");
+		LOG
+				.info("---------------------------- Application initializer finished ----------------------------");
 		return true;
 	}
 
@@ -98,6 +101,9 @@ public class ApplicationInitializer {
 
 		this.setTask("CHK_CREATE_ADMIN_USERS");
 		checkAdminUsers(adminRole);
+
+		this.setTask("CHANGE_CFG_MANAGER");
+		session.getManagerFactory().setConfigurationManager(DBConfigManager.getInstance());
 
 		this.setTask("DONE");
 

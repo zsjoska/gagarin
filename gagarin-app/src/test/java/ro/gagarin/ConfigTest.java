@@ -1,19 +1,64 @@
 package ro.gagarin;
 
+import static org.junit.Assert.assertEquals;
+
+import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import ro.gagarin.config.Config;
 import ro.gagarin.config.DBConfigManager;
+import ro.gagarin.config.FileConfigurationManager;
+import ro.gagarin.session.Session;
+import ro.gagarin.testutil.TUtil;
 
 public class ConfigTest {
+
+	private static final ManagerFactory FACTORY = BasicManagerFactory.getInstance();
+	private static final transient Logger LOG = Logger.getLogger(ConfigTest.class);
+
 	@Test
-	public void testDBConfig() throws Exception {
-		DBConfigManager instance = DBConfigManager.getInstance();
-		String string;
-		string = instance.getString(Config.JDBC_CONNECTION_URL);
-		System.err.println(string);
-		Thread.sleep(20000);
-		string = instance.getString(Config.JDBC_CONNECTION_URL);
-		System.err.println(string);
+	public void testLocalConfigPriority() throws Exception {
+
+		Session session = TUtil.createTestSession();
+		DBConfigManager dbCfgMgr = DBConfigManager.getInstance();
+
+		try {
+			dbCfgMgr.setConfigValue(session, Config.SESSION_CHECK_PERIOD, "1000");
+		} finally {
+			FACTORY.releaseSession(session);
+		}
+		assertEquals("The config should not change", FileConfigurationManager.getInstance()
+				.getLong(Config.SESSION_CHECK_PERIOD), dbCfgMgr
+				.getLong(Config.SESSION_CHECK_PERIOD));
+		long sleeptime = dbCfgMgr.getLong(Config.DB_CONFIG_CHECK_PERIOD);
+		LOG.info("Waiting for DB Import " + sleeptime);
+		Thread.sleep(sleeptime);
+		assertEquals("The config should not change because this config is defined locally",
+				FileConfigurationManager.getInstance().getLong(Config.SESSION_CHECK_PERIOD),
+				dbCfgMgr.getLong(Config.SESSION_CHECK_PERIOD));
+	}
+
+	@Test
+	public void testDBConfigChange() throws Exception {
+
+		Session session = TUtil.createTestSession();
+		DBConfigManager dbCfgMgr = DBConfigManager.getInstance();
+
+		String aNewValue = String.valueOf(System.nanoTime());
+		String oldValue = dbCfgMgr.getString(Config._TEST_DB_ONLY_);
+		try {
+
+			dbCfgMgr.setConfigValue(session, Config._TEST_DB_ONLY_, aNewValue);
+		} finally {
+			FACTORY.releaseSession(session);
+		}
+
+		assertEquals("The config should not change", oldValue, dbCfgMgr
+				.getString(Config._TEST_DB_ONLY_));
+		long sleeptime = dbCfgMgr.getLong(Config.DB_CONFIG_CHECK_PERIOD);
+		LOG.info("Waiting for DB Import " + sleeptime);
+		Thread.sleep(sleeptime);
+		assertEquals("The config should change", aNewValue, dbCfgMgr
+				.getString(Config._TEST_DB_ONLY_));
 	}
 }

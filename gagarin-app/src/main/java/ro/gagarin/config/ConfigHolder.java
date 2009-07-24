@@ -4,6 +4,9 @@ import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 
+import ro.gagarin.exceptions.OperationException;
+import ro.gagarin.session.Session;
+
 public class ConfigHolder {
 
 	// TODO make it private
@@ -20,10 +23,11 @@ public class ConfigHolder {
 	}
 
 	public void registerForChange(SettingsChangeObserver observer) {
-		this.changeObservers.add(observer);
+		this.getChangeObservers().add(observer);
 	}
 
-	public void setConfigValue(Config config, String value) {
+	public void setConfigValue(Session session, Config config, String value)
+			throws OperationException {
 		configuration.add(config.ordinal(), value);
 		notifyConfigChange(config, value);
 	}
@@ -55,12 +59,16 @@ public class ConfigHolder {
 		return configuration.get(config.ordinal()) != null;
 	}
 
-	public void importConfig(ArrayList<String> newCfg) {
+	public void importConfig(String[] newCfg) {
 		ArrayList<Integer> changed = new ArrayList<Integer>();
-		for (int i = 0; i < newCfg.size(); i++) {
+		for (int i = 0; i < newCfg.length; i++) {
+
+			String newValue = newCfg[i];
+			if (newValue == null)
+				continue;
+
 			String oldValue = null;
 			oldValue = configuration.get(i);
-			String newValue = newCfg.get(i);
 			if (oldValue != null) {
 				if (!oldValue.equals(newValue)) {
 					changed.add(i);
@@ -81,7 +89,7 @@ public class ConfigHolder {
 
 	private void notifyConfigChange(Config config, String value) {
 		LOG.info("Config Change:" + config.name() + "=" + value + "; propagating...");
-		for (SettingsChangeObserver observer : changeObservers) {
+		for (SettingsChangeObserver observer : getChangeObservers()) {
 			try {
 				observer.configChanged(config, value);
 			} catch (Exception e) {
@@ -89,5 +97,22 @@ public class ConfigHolder {
 						+ observer.getClass().getName(), e);
 			}
 		}
+	}
+
+	public String[] exportConfig() {
+		String[] configs = new String[Config.values().length];
+		int i = 0;
+		for (String string : this.configuration) {
+			configs[i++] = string;
+		}
+		return configs;
+	}
+
+	protected void setChangeObservers(ArrayList<SettingsChangeObserver> changeObservers) {
+		this.changeObservers = changeObservers;
+	}
+
+	protected ArrayList<SettingsChangeObserver> getChangeObservers() {
+		return changeObservers;
 	}
 }

@@ -7,12 +7,16 @@ import ro.gagarin.BasicManagerFactory;
 import ro.gagarin.ConfigDAO;
 import ro.gagarin.ConfigurationManager;
 import ro.gagarin.ManagerFactory;
+import ro.gagarin.exceptions.DataConstraintException;
+import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.OperationException;
+import ro.gagarin.jdbc.objects.DBConfig;
 import ro.gagarin.log.AppLog;
 import ro.gagarin.scheduler.ScheduledJob;
 import ro.gagarin.session.Session;
 
-public class DBConfigManager extends ConfigHolder implements ConfigurationManager {
+public class DBConfigManager extends ConfigHolder implements ConfigurationManager,
+		SettingsChangeObserver {
 	private static ManagerFactory FACTORY = BasicManagerFactory.getInstance();
 	private static final DBConfigManager INSTANCE = new DBConfigManager(FileConfigurationManager
 			.getInstance());
@@ -20,6 +24,11 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
 	static {
 		ConfigurationManager cfgManager = FACTORY.getConfigurationManager(null);
 		long period = cfgManager.getLong(Config.DB_CONFIG_CHECK_PERIOD);
+
+		// TODO: the listeners for the old configuration manager must be
+		// imported and notified as some config values will be changed
+
+		INSTANCE.registerForChange(INSTANCE);
 		FACTORY.getScheduleManager().scheduleJob(
 				new DBConfigManager.ConfigImportJob("DB_CONFIG_IMPORT", period, period));
 	}
@@ -33,6 +42,7 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
 		public void execute(Session session, AppLog log) throws Exception {
 			ConfigDAO configDAO = FACTORY.getDAOManager().getConfigDAO(session);
 			long lastUpdateTime = configDAO.getLastUpdateTime();
+			log.debug("DBLUT = " + lastUpdateTime + " CacheLUT=" + INSTANCE.getLastUpdateTime());
 			if (lastUpdateTime > INSTANCE.getLastUpdateTime()) {
 				long lastQuery = System.currentTimeMillis();
 				ArrayList<ConfigEntry> cfgValues = configDAO.listConfigurations();
@@ -47,18 +57,29 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
 
 	private DBConfigManager(ConfigurationManager localCfg) {
 		this.localConfig = localCfg;
+		this.importConfig(localCfg.exportConfig());
+		if (localCfg instanceof ConfigHolder) {
+			ConfigHolder castCfg = (ConfigHolder) localCfg;
+			this.setChangeObservers(castCfg.getChangeObservers());
+		}
+
 	}
 
 	public void importConfigMap(ArrayList<ConfigEntry> cfgValues, AppLog log) {
-		ArrayList<String> cfgs = new ArrayList<String>(Config.values().length);
+		String cfgs[] = new String[Config.values().length];
+
 		for (ConfigEntry configEntry : cfgValues) {
-			System.err.println(configEntry.getConfigName() + "=" + configEntry.getConfigValue());
+
 			try {
 				Config cfg = Config.valueOf(configEntry.getConfigName());
-				cfgs.add(cfg.ordinal(), configEntry.getConfigValue());
+
+				// don't import entries defined locally
+				if (!localConfig.isDefined(cfg)) {
+					cfgs[cfg.ordinal()] = configEntry.getConfigValue();
+				}
 			} catch (Exception e) {
 				log.error("Could not interpret config " + configEntry.getConfigName() + "="
-						+ configEntry.getConfigValue());
+						+ configEntry.getConfigValue(), e);
 			}
 		}
 		importConfig(cfgs);
@@ -94,6 +115,29 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
 
 	public static DBConfigManager getInstance() {
 		return INSTANCE;
+	}
+
+	@Override
+	public void setConfigValue(Session session, Config config, String value)
+			throws OperationException {
+
+		ConfigDAO configDAO = FACTORY.getDAOManager().getConfigDAO(session);
+		DBConfig cfg = new DBConfig();
+		cfg.setConfigName(config.name());
+		cfg.setConfigValue(value);
+		try {
+			configDAO.setConfigValue(cfg);
+		} catch (DataConstraintException e) {
+			LOG.error("Error setting config " + config + "=" + value, e);
+			throw new OperationException(ErrorCodes.DB_OP_ERROR, e);
+		}
+	}
+
+	@Override
+	public boolean configChanged(Config config, String value) {
+		// TODO handle changes of Config.DB_CONFIG_CHECK_PERIOD and update the
+		// timer execution rate
+		return false;
 	}
 
 }

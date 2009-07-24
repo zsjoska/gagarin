@@ -23,4 +23,7 @@ public interface ManagerFactory {
 	AppLog getLogManager(Session session, Class<?> name);
 
 	ScheduleManager getScheduleManager();
+
+	void setConfigurationManager(ConfigurationManager configurationManager);
+
 }

@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.ArrayList;
 
 import ro.gagarin.ConfigurationManager;
 import ro.gagarin.exceptions.ErrorCodes;
@@ -22,12 +21,12 @@ public class FileConfigurationManager extends ConfigHolder implements Configurat
 
 		// TODO: load from file
 
-		ArrayList<String> newCfg = new ArrayList<String>();
-		newCfg.add(Config.USER_SESSION_TIMEOUT.ordinal(), "100000");
-		newCfg.add(Config.SESSION_CHECK_PERIOD.ordinal(), "10000");
-		newCfg.add(Config.ADMIN_ROLE_NAME.ordinal(), "ADMIN_ROLE");
-		newCfg.add(Config.ADMIN_USER_NAME.ordinal(), "admin");
-		newCfg.add(Config.ADMIN_PASSWORD.ordinal(), "password");
+		String[] newCfg = new String[Config.values().length];
+		// newCfg[Config.USER_SESSION_TIMEOUT.ordinal()] = "100000";
+		newCfg[Config.SESSION_CHECK_PERIOD.ordinal()] = "10000";
+		newCfg[Config.ADMIN_ROLE_NAME.ordinal()] = "ADMIN_ROLE";
+		newCfg[Config.ADMIN_USER_NAME.ordinal()] = "admin";
+		newCfg[Config.ADMIN_PASSWORD.ordinal()] = "password";
 		super.importConfig(newCfg);
 	}
 

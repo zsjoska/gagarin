@@ -79,6 +79,15 @@ public class BasicLogManager implements AppLog {
 	}
 
 	@Override
+	public void warn(String message) {
+		if (logger.getLoggerRepository().isDisabled(Level.WARN_INT))
+			return;
+		if (Level.WARN.isGreaterOrEqual(logger.getEffectiveLevel())) {
+			logger.callAppenders(new LoggingEvent(FQCN, logger, Level.WARN, si + message, null));
+		}
+	}
+
+	@Override
 	public void action(AppLogAction action, Class<?> classInAction, String id, String detail) {
 		System.err.println(session + "@ " + action.name() + "# " + id + ": "
 				+ classInAction.getSimpleName() + ": " + detail);

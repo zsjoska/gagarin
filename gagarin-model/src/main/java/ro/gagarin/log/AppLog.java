@@ -17,6 +17,8 @@ public interface AppLog {
 
 	void error(String message);
 
+	void warn(String message);
+
 	void action(AppLogAction action, Class<?> classInAction, String id, String detail);
 
 }

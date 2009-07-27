@@ -25,9 +25,6 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
 		ConfigurationManager cfgManager = FACTORY.getConfigurationManager(null);
 		long period = cfgManager.getLong(Config.DB_CONFIG_CHECK_PERIOD);
 
-		// TODO: the listeners for the old configuration manager must be
-		// imported and notified as some config values will be changed
-
 		INSTANCE.registerForChange(INSTANCE);
 		FACTORY.getScheduleManager().scheduleJob(
 				new DBConfigManager.ConfigImportJob("DB_CONFIG_IMPORT", period, period));
@@ -57,7 +54,6 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
 
 	private DBConfigManager(ConfigurationManager localCfg) {
 		this.localConfig = localCfg;
-		this.importConfig(localCfg.exportConfig());
 		if (localCfg instanceof ConfigHolder) {
 			ConfigHolder castCfg = (ConfigHolder) localCfg;
 			this.setChangeObservers(castCfg.getChangeObservers());
@@ -65,7 +61,7 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
 
 	}
 
-	public void importConfigMap(ArrayList<ConfigEntry> cfgValues, AppLog log) {
+	private void importConfigMap(ArrayList<ConfigEntry> cfgValues, AppLog log) {
 		String cfgs[] = new String[Config.values().length];
 
 		for (ConfigEntry configEntry : cfgValues) {

@@ -13,6 +13,7 @@
 		<module>../gagarin-app</module>
 		<module>../gagarin-da-jdbc</module>
 		<module>../gagarin-wsclient</module>
+		<module>../gagarin-adminui</module>
 	</modules>
 	<build>
 		<plugins>

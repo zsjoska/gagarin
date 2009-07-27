@@ -50,12 +50,16 @@ public class UserServiceTest {
 
 	@Test
 	public void testCreateRole() throws SessionNotFoundException, PermissionDeniedException,
-			OperationException, ItemNotFoundException {
+			OperationException, ItemNotFoundException, DataConstraintException {
 		UserService userService = new UserService();
 
 		UserRole role = userService.createRoleWithPermissions(session, "WONDER_ROLE",
 				new WSUserPermission[] { new WSUserPermission("CREATE_USER") });
-		userService.getRolePermissions(session, new WSUserRole("WONDER_ROLE"));
+		List<WSUserPermission> rolePermissions = userService.getRolePermissions(session,
+				new WSUserRole("WONDER_ROLE"));
+		for (WSUserPermission aPermission : rolePermissions) {
+			System.err.println(aPermission.getPermissionName());
+		}
 
 	}
 }

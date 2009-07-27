@@ -11,6 +11,7 @@ import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.OperationException;
+import ro.gagarin.jdbc.objects.DBUser;
 import ro.gagarin.jdbc.user.CreateUserSQL;
 import ro.gagarin.jdbc.user.DeleteUserSQL;
 import ro.gagarin.jdbc.user.GetUsersWithRoleSQL;
@@ -59,16 +60,24 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 
 		try {
 			if (user.getRole() == null) {
+				APPLOG.error("The role is not completed");
+				markRollback();
+				throw new FieldRequiredException("ROLE", User.class);
+			}
+			if (user.getRole().getId() == null) {
 				APPLOG.error("The roleid is not completed");
 				markRollback();
 				throw new FieldRequiredException("ROLE", User.class);
 			}
 
-			new CreateUserSQL(this, user).execute();
+			DBUser dbUser = new DBUser(user);
+			dbUser.setId(DBUser.getNextId());
+
+			new CreateUserSQL(this, dbUser).execute();
 
 			APPLOG.action(AppLogAction.CREATE, User.class, user.getUsername(), AppLog.SUCCESS);
 			APPLOG.info("User " + user.getUsername() + " was created");
-			return user.getId();
+			return dbUser.getId();
 		} catch (OperationException e) {
 			APPLOG.error("Could not create user:" + user2String(user), e);
 			APPLOG.action(AppLogAction.CREATE, User.class, user.getUsername(), AppLog.FAILED);

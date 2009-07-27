@@ -27,6 +27,7 @@ public class JdbcConfigDAO extends BaseJdbcDAO implements ConfigDAO {
 		if (value == null) {
 			long updateTime = System.currentTimeMillis();
 			DBConfig config = new DBConfig();
+			config.setId(DBConfig.getNextId());
 			config.setConfigName(Config._LAST_UPDATE_TIME_.name());
 			config.setConfigValue("" + updateTime);
 			new InsertConfigValueSQL(this, config).execute();
@@ -50,6 +51,7 @@ public class JdbcConfigDAO extends BaseJdbcDAO implements ConfigDAO {
 	@Override
 	public void setConfigValue(ConfigEntry cfg) throws OperationException, DataConstraintException {
 		DBConfig config = new DBConfig(cfg);
+		config.setId(DBConfig.getNextId());
 		String value = GetConfigValueSQL.execute(this, cfg.getConfigName());
 		if (value == null) {
 			new InsertConfigValueSQL(this, config).execute();
@@ -59,6 +61,7 @@ public class JdbcConfigDAO extends BaseJdbcDAO implements ConfigDAO {
 		config = new DBConfig();
 		config.setConfigName(Config._LAST_UPDATE_TIME_.name());
 		config.setConfigValue("" + System.currentTimeMillis());
+		config.setId(DBConfig.getNextId());
 		new UpdateConfigValueSQL(this, config).execute();
 	}
 }

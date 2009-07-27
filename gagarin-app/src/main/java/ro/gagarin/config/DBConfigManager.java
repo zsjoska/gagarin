@@ -121,6 +121,15 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
 	public void setConfigValue(Session session, Config config, String value)
 			throws OperationException {
 
+		// local config has precedence...
+		if (localConfig.isDefined(config)) {
+			AppLog log = session.getManagerFactory().getLogManager(session, DBConfigManager.class);
+			log.error("Changing the local config will not be persisted! " + config.name() + "="
+					+ value);
+			localConfig.setConfigValue(session, config, value);
+			return;
+		}
+
 		ConfigDAO configDAO = FACTORY.getDAOManager().getConfigDAO(session);
 		DBConfig cfg = new DBConfig();
 		cfg.setConfigName(config.name());

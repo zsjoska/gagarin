@@ -51,7 +51,7 @@ public class RoleTest {
 		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
 		ATestUserRole role = new ATestUserRole();
 		role.setRoleName("A_ROLE");
-		roleManager.createRole(role);
+		role.setId(roleManager.createRole(role));
 
 		UserRole role2 = roleManager.getRoleByName("A_ROLE");
 		assertNotNull(role2);
@@ -70,7 +70,7 @@ public class RoleTest {
 
 		ATestUserPermission perm = new ATestUserPermission();
 		perm.setPermissionName("A_PERMISSION");
-		roleManager.createPermission(perm);
+		perm.setId(roleManager.createPermission(perm));
 
 		UserPermission perm2 = roleManager.getPermissionByName("A_PERMISSION");
 		assertNotNull(perm2);
@@ -92,8 +92,8 @@ public class RoleTest {
 		ATestUserPermission perm = new ATestUserPermission();
 		perm.setPermissionName("C_PERMISSION");
 
-		roleManager.createPermission(perm);
-		roleManager.createRole(role);
+		perm.setId(roleManager.createPermission(perm));
+		role.setId(roleManager.createRole(role));
 		roleManager.assignPermissionToRole(role, perm);
 
 		UserRole role2 = roleManager.getRoleByName("C_ROLE");
@@ -125,9 +125,9 @@ public class RoleTest {
 		ATestUserPermission perm2 = new ATestUserPermission();
 		perm2.setPermissionName("C_PERMISSION2");
 
-		roleManager.createPermission(perm1);
-		roleManager.createPermission(perm2);
-		roleManager.createRole(role);
+		perm1.setId(roleManager.createPermission(perm1));
+		perm2.setId(roleManager.createPermission(perm2));
+		role.setId(roleManager.createRole(role));
 
 		roleManager.assignPermissionToRole(role, perm1);
 		roleManager.assignPermissionToRole(role, perm2);
@@ -166,7 +166,7 @@ public class RoleTest {
 		if (role == null) {
 			ATestUserRole role2 = new ATestUserRole();
 			role2.setRoleName("B_ROLE");
-			roleManager.createRole(role2);
+			role2.setId(roleManager.createRole(role2));
 			role = role2;
 		}
 
@@ -175,7 +175,7 @@ public class RoleTest {
 		ATestUserPermission permission = new ATestUserPermission();
 		permission.setPermissionName("PERM" + rolePermissions.size());
 
-		roleManager.createPermission(permission);
+		permission.setId(roleManager.createPermission(permission));
 		roleManager.assignPermissionToRole(role, permission);
 	}
 
@@ -187,14 +187,14 @@ public class RoleTest {
 
 		ATestUserRole role = new ATestUserRole();
 		role.setRoleName("A_ROLE");
-		roleManager.createRole(role);
+		role.setId(roleManager.createRole(role));
 
 		ATestUser user = new ATestUser();
 		user.setName("name");
 		user.setUsername("username");
 		user.setPassword("password");
 		user.setRole(role);
-		userDAO.createUser(user);
+		user.setId(userDAO.createUser(user));
 
 		List<User> usersWithRole = userDAO.getUsersWithRole(role);
 
@@ -204,37 +204,6 @@ public class RoleTest {
 
 		userDAO.deleteUser(user);
 		roleManager.deleteRole(role);
-	}
-
-	@Test
-	public void createRoleWithSameID() throws DataConstraintException, OperationException,
-			SessionNotFoundException {
-
-		Session brokenSession = TUtil.createTestSession();
-
-		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(brokenSession);
-
-		ATestUserRole role = new ATestUserRole();
-		role.setRoleName("createRoleWithSameID");
-		roleManager.createRole(role);
-
-		assertNotNull(roleManager.getRoleByName("createRoleWithSameID"));
-
-		ATestUserRole role2 = new ATestUserRole();
-		role2.setRoleName("createRoleWithSameID2");
-		role2.setId(role.getId());
-		try {
-			roleManager.createRole(role2);
-			fail("The role id is the same thus this item must not be created");
-		} catch (ItemExistsException e) {
-			assertEquals("Wrong field info", "ID", e.getFieldName());
-			assertEquals("Wrong class info", "UserRole", e.getClassName());
-		} finally {
-			FACTORY.releaseSession(brokenSession);
-		}
-
-		roleManager = FACTORY.getDAOManager().getRoleDAO(session);
-		assertNull("Transaction rolback test", roleManager.getRoleByName("createRoleWithSameID"));
 	}
 
 	@Test
@@ -259,37 +228,6 @@ public class RoleTest {
 		} catch (ItemExistsException e) {
 			assertEquals("Wrong field info", "ROLENAME", e.getFieldName());
 			assertEquals("Wrong class info", "UserRole", e.getClassName());
-		} finally {
-			FACTORY.releaseSession(brokenSession);
-		}
-
-		roleManager = FACTORY.getDAOManager().getRoleDAO(session);
-		assertNull("Transaction rolback test", roleManager.getRoleByName("createRoleWithSameID"));
-	}
-
-	@Test
-	public void createPermissionWithSameID() throws DataConstraintException, OperationException,
-			SessionNotFoundException {
-
-		Session brokenSession = TUtil.createTestSession();
-
-		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(brokenSession);
-
-		ATestUserPermission perm = new ATestUserPermission();
-		perm.setPermissionName("createPermissionWithSameID");
-		roleManager.createPermission(perm);
-
-		assertNotNull(roleManager.getPermissionByName("createPermissionWithSameID"));
-
-		ATestUserPermission perm2 = new ATestUserPermission();
-		perm2.setPermissionName("createPermissionWithSameID2");
-		perm2.setId(perm.getId());
-		try {
-			roleManager.createPermission(perm2);
-			fail("The permission id is the same thus this item must not be created");
-		} catch (ItemExistsException e) {
-			assertEquals("Wrong field info", "ID", e.getFieldName());
-			assertEquals("Wrong class info", "UserPermission", e.getClassName());
 		} finally {
 			FACTORY.releaseSession(brokenSession);
 		}

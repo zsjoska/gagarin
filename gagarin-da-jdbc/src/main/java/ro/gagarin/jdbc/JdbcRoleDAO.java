@@ -11,6 +11,8 @@ import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.OperationException;
+import ro.gagarin.jdbc.objects.DBUserPermission;
+import ro.gagarin.jdbc.objects.DBUserRole;
 import ro.gagarin.jdbc.role.AssignPermissionToRoleSQL;
 import ro.gagarin.jdbc.role.CreatePermissionSQL;
 import ro.gagarin.jdbc.role.CreateRoleSQL;
@@ -48,11 +50,14 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 
 		try {
 
-			new CreateRoleSQL(this, role).execute();
+			DBUserRole dbUserRole = new DBUserRole(role);
+			dbUserRole.setId(DBUserRole.getNextId());
+
+			new CreateRoleSQL(this, dbUserRole).execute();
 
 			APPLOG.action(AppLogAction.CREATE, UserRole.class, role.getRoleName(), AppLog.SUCCESS);
 			APPLOG.info("Role " + role.getRoleName() + " was created");
-			return role.getId();
+			return dbUserRole.getId();
 		} catch (OperationException e) {
 			APPLOG.error("Could not create role:" + role2String(role), e);
 			APPLOG.action(AppLogAction.CREATE, UserRole.class, role.getRoleName(), AppLog.FAILED);
@@ -66,12 +71,15 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 
 		try {
 
-			new CreatePermissionSQL(this, perm).execute();
+			DBUserPermission dbUserPermission = new DBUserPermission(perm);
+			dbUserPermission.setId(DBUserPermission.getNextId());
+
+			new CreatePermissionSQL(this, dbUserPermission).execute();
 
 			APPLOG.action(AppLogAction.CREATE, UserPermission.class, perm.getPermissionName(),
 					AppLog.SUCCESS);
 			APPLOG.info("Permission " + perm.getPermissionName() + " was created");
-			return perm.getId();
+			return dbUserPermission.getId();
 		} catch (OperationException e) {
 			APPLOG.error("Could not create permission:" + perm2String(perm), e);
 			APPLOG.action(AppLogAction.CREATE, UserPermission.class, perm.getPermissionName(),
@@ -176,7 +184,11 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 
 	@Override
 	public Set<UserPermission> getRolePermissions(UserRole role) throws OperationException {
-		return GetRolePermissionsSQL.execute(this, role);
+		UserRole foundRole = role;
+		if (role.getId() == null && role.getRoleName() != null) {
+			foundRole = this.getRoleByName(role.getRoleName());
+		}
+		return GetRolePermissionsSQL.execute(this, foundRole);
 	}
 
 	@Override

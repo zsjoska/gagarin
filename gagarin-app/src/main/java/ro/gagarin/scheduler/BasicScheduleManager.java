@@ -60,6 +60,9 @@ public class BasicScheduleManager implements ScheduleManager {
 
 	@Override
 	public long scheduleJob(ScheduledJob job) {
+
+		job.setId(ScheduledJob.getNextId());
+
 		if (job.getPeriod() == 0) {
 			timer.schedule(new RunableJob(job), job.getInitialWait());
 			return job.getId();

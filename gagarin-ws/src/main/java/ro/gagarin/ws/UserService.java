@@ -2,6 +2,7 @@ package ro.gagarin.ws;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
@@ -29,6 +30,7 @@ import ro.gagarin.utils.ConversionUtils;
 import ro.gagarin.ws.objects.WSUser;
 import ro.gagarin.ws.objects.WSUserPermission;
 import ro.gagarin.ws.objects.WSUserRole;
+import ro.gagarin.ws.util.WSConversionUtils;
 
 @WebService
 public class UserService {
@@ -110,22 +112,32 @@ public class UserService {
 	@WebMethod
 	public WSUserRole createRoleWithPermissions(String sessionId, String roleName,
 			WSUserPermission[] permissions) throws SessionNotFoundException,
-			PermissionDeniedException, OperationException, ItemNotFoundException {
+			PermissionDeniedException, OperationException, ItemNotFoundException,
+			DataConstraintException {
 
 		SessionManager sessionManager = FACTORY.getSessionManager();
 		Session session = sessionManager.acquireSession(sessionId);
-		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
-		AuthorizationManager permissionManager = FACTORY.getAuthorizationManager(session);
 
 		try {
+			RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
+			AuthorizationManager permissionManager = FACTORY.getAuthorizationManager(session);
 
-			// the session user must have LIST_ROLES permission
-			permissionManager.requiresPermission(session, PermissionEnum.LIST_ROLES);
+			// the session user must have LIST_PERMISSIONS permission
+			permissionManager.requiresPermission(session, PermissionEnum.LIST_PERMISSIONS);
 			List<UserPermission> allPermissions = roleManager.getAllPermissions();
 			List<UserPermission> matched;
 			matched = ConversionUtils.matchPermissions(allPermissions, permissions);
 			permissionManager.checkUserHasThePermissions(session, matched);
-			return null;
+
+			WSUserRole role = new WSUserRole();
+			role.setRoleName(roleName);
+			role.setId(roleManager.createRole(role));
+
+			for (UserPermission userPermission : matched) {
+				roleManager.assignPermissionToRole(role, userPermission);
+			}
+
+			return role;
 
 		} finally {
 			FACTORY.releaseSession(session);
@@ -133,13 +145,64 @@ public class UserService {
 	}
 
 	@WebMethod
-	public List<WSUserPermission> getAllPermissionList(String session) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<WSUserPermission> getAllPermissionList(String sessionId)
+			throws SessionNotFoundException, OperationException, PermissionDeniedException {
+		SessionManager sessionManager = FACTORY.getSessionManager();
+		Session session = sessionManager.acquireSession(sessionId);
+
+		try {
+			RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
+			AuthorizationManager permissionManager = FACTORY.getAuthorizationManager(session);
+
+			// the session user must have LIST_PERMISSIONS permission
+			permissionManager.requiresPermission(session, PermissionEnum.LIST_PERMISSIONS);
+
+			List<UserPermission> allPermissions = roleManager.getAllPermissions();
+			return WSConversionUtils.convertToWSPermissionList(allPermissions);
+
+		} finally {
+			FACTORY.releaseSession(session);
+		}
 	}
 
-	public void getRolePermissions(String session, WSUserRole wsUserRole) {
-		// TODO Auto-generated method stub
+	@WebMethod
+	public List<WSUserPermission> getRolePermissions(String sessionId, WSUserRole wsUserRole)
+			throws SessionNotFoundException, OperationException, PermissionDeniedException {
+		SessionManager sessionManager = FACTORY.getSessionManager();
+		Session session = sessionManager.acquireSession(sessionId);
 
+		try {
+			RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
+			AuthorizationManager permissionManager = FACTORY.getAuthorizationManager(session);
+
+			// the session user must have LIST_PERMISSIONS permission
+			permissionManager.requiresPermission(session, PermissionEnum.LIST_PERMISSIONS);
+
+			Set<UserPermission> permissions = roleManager.getRolePermissions(wsUserRole);
+			return WSConversionUtils.convertToWSPermissionList(permissions);
+
+		} finally {
+			FACTORY.releaseSession(session);
+		}
+	}
+
+	@WebMethod
+	public void deleteRole(String sessionId, UserRole role) throws OperationException,
+			PermissionDeniedException, SessionNotFoundException {
+		SessionManager sessionManager = FACTORY.getSessionManager();
+		Session session = sessionManager.acquireSession(sessionId);
+
+		try {
+			RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
+			AuthorizationManager permissionManager = FACTORY.getAuthorizationManager(session);
+
+			// the session user must have LIST_PERMISSIONS permission
+			permissionManager.requiresPermission(session, PermissionEnum.DELETE_ROLE);
+
+			roleManager.deleteRole(role);
+
+		} finally {
+			FACTORY.releaseSession(session);
+		}
 	}
 }

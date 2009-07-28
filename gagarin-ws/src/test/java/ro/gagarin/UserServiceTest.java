@@ -1,5 +1,7 @@
 package ro.gagarin;
 
+import static org.junit.Assert.fail;
+
 import java.util.List;
 
 import org.junit.BeforeClass;
@@ -10,6 +12,7 @@ import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.exceptions.PermissionDeniedException;
 import ro.gagarin.exceptions.SessionNotFoundException;
+import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.UserRole;
 import ro.gagarin.ws.Authentication;
 import ro.gagarin.ws.UserService;
@@ -50,12 +53,31 @@ public class UserServiceTest {
 
 	@Test
 	public void testCreateRole() throws SessionNotFoundException, PermissionDeniedException,
-			OperationException, ItemNotFoundException {
+			OperationException, ItemNotFoundException, DataConstraintException {
 		UserService userService = new UserService();
 
-		UserRole role = userService.createRoleWithPermissions(session, "WONDER_ROLE",
-				new WSUserPermission[] { new WSUserPermission("CREATE_USER") });
-		userService.getRolePermissions(session, new WSUserRole("WONDER_ROLE"));
+		WSUserPermission[] perms = new WSUserPermission[] {
+				new WSUserPermission(PermissionEnum.CREATE_USER.name()),
+				new WSUserPermission(PermissionEnum.CREATE_ROLE.name()) };
 
+		UserRole role = userService.createRoleWithPermissions(session, "WONDER_ROLE", perms);
+		List<WSUserPermission> rolePermissions = userService.getRolePermissions(session,
+				new WSUserRole("WONDER_ROLE"));
+		try {
+			for (WSUserPermission perm : perms) {
+				WSUserPermission found = null;
+				for (WSUserPermission p : rolePermissions) {
+					if (perm.getPermissionName().equalsIgnoreCase(p.getPermissionName())) {
+						found = p;
+					}
+				}
+				if (found == null) {
+					fail(perm.getPermissionName() + " was not found");
+				}
+
+			}
+		} finally {
+			userService.deleteRole(session, role);
+		}
 	}
 }

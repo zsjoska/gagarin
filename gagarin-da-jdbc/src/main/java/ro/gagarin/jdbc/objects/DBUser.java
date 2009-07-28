@@ -22,6 +22,7 @@ public class DBUser extends BaseEntity implements User {
 		this.name = user.getName();
 		this.email = user.getEmail();
 		this.phone = user.getPhone();
+		this.role = user.getRole();
 	}
 
 	public DBUser() {

@@ -69,7 +69,8 @@ public class UserTest {
 		user.setEmail(username + "@gagarin.ro");
 		user.setPhone("any kind of phone");
 		user.setRole(adminRole);
-		usrManager.createUser(user);
+		user.setId(usrManager.createUser(user));
+
 		User user2 = usrManager.getUserByUsername(username);
 
 		assertNotNull("User was not found", user2);
@@ -85,48 +86,50 @@ public class UserTest {
 				.getUserByUsername(username));
 	}
 
-	@Test
-	public void usersWiththeSameID() throws ItemNotFoundException, DataConstraintException,
-			OperationException {
-
-		Session brokenSession = TUtil.createTestSession();
-
-		UserDAO usrManager = FACTORY.getDAOManager().getUserDAO(brokenSession);
-		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(brokenSession);
-
-		UserRole adminRole = roleManager.getRoleByName(configManager
-				.getString(Config.ADMIN_ROLE_NAME));
-
-		ATestUser user1 = new ATestUser();
-		user1.setUsername("UserName1");
-		user1.setPassword("password");
-		user1.setRole(adminRole);
-
-		ATestUser user2 = new ATestUser();
-		user2.setUsername("UserName2");
-		user2.setPassword("password");
-		user2.setRole(adminRole);
-
-		user2.setId(user1.getId());
-
-		usrManager.createUser(user1);
-
-		assertNotNull(usrManager.getUserByUsername("UserName1"));
-
-		try {
-			usrManager.createUser(user2);
-			fail("the userid is the same; thus this item must not be created");
-		} catch (ItemExistsException e) {
-			assertEquals("Wrong field info", "ID", e.getFieldName());
-			assertEquals("Wrong class info", "User", e.getClassName());
-		} finally {
-			FACTORY.releaseSession(brokenSession);
-		}
-
-		usrManager = FACTORY.getDAOManager().getUserDAO(session);
-		assertNull("Transaction rolback test", usrManager.getUserByUsername("UserName1"));
-
-	}
+	// @Test
+	// public void usersWiththeSameID() throws ItemNotFoundException,
+	// DataConstraintException,
+	// OperationException {
+	//
+	// Session brokenSession = TUtil.createTestSession();
+	//
+	// UserDAO usrManager = FACTORY.getDAOManager().getUserDAO(brokenSession);
+	// RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(brokenSession);
+	//
+	// UserRole adminRole = roleManager.getRoleByName(configManager
+	// .getString(Config.ADMIN_ROLE_NAME));
+	//
+	// ATestUser user1 = new ATestUser();
+	// user1.setUsername("UserName1");
+	// user1.setPassword("password");
+	// user1.setRole(adminRole);
+	//
+	// ATestUser user2 = new ATestUser();
+	// user2.setUsername("UserName2");
+	// user2.setPassword("password");
+	// user2.setRole(adminRole);
+	//
+	// user2.setId(user1.getId());
+	//
+	// usrManager.createUser(user1);
+	//
+	// assertNotNull(usrManager.getUserByUsername("UserName1"));
+	//
+	// try {
+	// usrManager.createUser(user2);
+	// fail("the userid is the same; thus this item must not be created");
+	// } catch (ItemExistsException e) {
+	// assertEquals("Wrong field info", "ID", e.getFieldName());
+	// assertEquals("Wrong class info", "User", e.getClassName());
+	// } finally {
+	// FACTORY.releaseSession(brokenSession);
+	// }
+	//
+	// usrManager = FACTORY.getDAOManager().getUserDAO(session);
+	// assertNull("Transaction rolback test",
+	// usrManager.getUserByUsername("UserName1"));
+	//
+	// }
 
 	@Test
 	public void usersWiththeSameUsername() throws ItemNotFoundException, DataConstraintException,

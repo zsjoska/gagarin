@@ -91,12 +91,12 @@ public class MethodAccessTest {
 		assertTrue(allPermissions.size() > 3);
 		WSUserRole role1 = new WSUserRole();
 		role1.setRoleName("weak");
-		roleDAO.createRole(role1);
+		role1.setId(roleDAO.createRole(role1));
 		WSUser weakUser = new WSUser();
 		weakUser.setUsername("weakUser");
 		weakUser.setPassword("password");
 		weakUser.setRole(role1);
-		userDAO.createUser(weakUser);
+		weakUser.setId(userDAO.createUser(weakUser));
 
 		// have it committed so other sessions to have access to it
 		FACTORY.releaseSession(aDummySession);
@@ -122,7 +122,7 @@ public class MethodAccessTest {
 				allPermissions));
 		WSUserRole role2 = new WSUserRole();
 		role2.setRoleName("stronger");
-		roleDAO.createRole(role2);
+		role2.setId(roleDAO.createRole(role2));
 		roleDAO.assignPermissionToRole(role2, findPermission(PermissionEnum.LIST_ROLES,
 				allPermissions));
 

@@ -129,8 +129,8 @@ public class ApplicationInitializer {
 			LOG.info("No admin role was found, creating role with " + adminRoleName);
 			AppUserRole aRole = new AppUserRole();
 			aRole.setRoleName(adminRoleName);
+			aRole.setId(roleManager.createRole(aRole));
 			adminRole = aRole;
-			roleManager.createRole(adminRole);
 			LOG.info("Admin role created.");
 		}
 		return adminRole;

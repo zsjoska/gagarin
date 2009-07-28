@@ -205,4 +205,25 @@ public class UserService {
 			FACTORY.releaseSession(session);
 		}
 	}
+
+	@WebMethod
+	public List<WSUser> getUsers(String sessionId) throws OperationException,
+			SessionNotFoundException, PermissionDeniedException {
+		SessionManager sessionManager = FACTORY.getSessionManager();
+		Session session = sessionManager.acquireSession(sessionId);
+
+		try {
+			UserDAO userDAO = FACTORY.getDAOManager().getUserDAO(session);
+			AuthorizationManager permissionManager = FACTORY.getAuthorizationManager(session);
+
+			// the session user must have LIST_USERS permission
+			permissionManager.requiresPermission(session, PermissionEnum.LIST_USERS);
+
+			List<User> allUsers = userDAO.getAllUsers();
+			return WSConversionUtils.convertToWSUserList(allUsers);
+
+		} finally {
+			FACTORY.releaseSession(session);
+		}
+	}
 }

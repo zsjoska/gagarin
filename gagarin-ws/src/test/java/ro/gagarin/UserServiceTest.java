@@ -80,4 +80,16 @@ public class UserServiceTest {
 			userService.deleteRole(session, role);
 		}
 	}
+
+	@Test
+	public void testListUsers() throws OperationException, SessionNotFoundException,
+			PermissionDeniedException {
+
+		UserService userService = new UserService();
+
+		List<WSUser> users = userService.getUsers(session);
+		for (WSUser wsUser : users) {
+			System.err.println(wsUser.getUsername());
+		}
+	}
 }

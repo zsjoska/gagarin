@@ -34,11 +34,14 @@ public class ConversionUtils {
 				if (aDBPermission.getPermissionName().equalsIgnoreCase(
 						reqPermission.getPermissionName())) {
 					mPerm = aDBPermission;
+					break;
 				}
 			}
 			if (mPerm == null)
 				throw new ItemNotFoundException(UserPermission.class, reqPermission
 						.getPermissionName());
+
+			perms.add(mPerm);
 		}
 		return perms;
 	}

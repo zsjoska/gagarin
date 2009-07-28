@@ -165,6 +165,7 @@ public class UserService {
 		}
 	}
 
+	@WebMethod
 	public List<WSUserPermission> getRolePermissions(String sessionId, WSUserRole wsUserRole)
 			throws SessionNotFoundException, OperationException, PermissionDeniedException {
 		SessionManager sessionManager = FACTORY.getSessionManager();
@@ -179,6 +180,26 @@ public class UserService {
 
 			Set<UserPermission> permissions = roleManager.getRolePermissions(wsUserRole);
 			return WSConversionUtils.convertToWSPermissionList(permissions);
+
+		} finally {
+			FACTORY.releaseSession(session);
+		}
+	}
+
+	@WebMethod
+	public void deleteRole(String sessionId, UserRole role) throws OperationException,
+			PermissionDeniedException, SessionNotFoundException {
+		SessionManager sessionManager = FACTORY.getSessionManager();
+		Session session = sessionManager.acquireSession(sessionId);
+
+		try {
+			RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
+			AuthorizationManager permissionManager = FACTORY.getAuthorizationManager(session);
+
+			// the session user must have LIST_PERMISSIONS permission
+			permissionManager.requiresPermission(session, PermissionEnum.DELETE_ROLE);
+
+			roleManager.deleteRole(role);
 
 		} finally {
 			FACTORY.releaseSession(session);

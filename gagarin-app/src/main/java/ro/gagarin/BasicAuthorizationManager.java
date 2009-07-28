@@ -60,7 +60,13 @@ public class BasicAuthorizationManager implements AuthorizationManager {
 		RoleDAO roleDAO = session.getManagerFactory().getDAOManager().getRoleDAO(session);
 		Set<UserPermission> loginUserPermissions = roleDAO.getRolePermissions(role);
 		for (UserPermission p : matched) {
-			if (!loginUserPermissions.contains(p)) {
+			UserPermission found = null;
+			for (UserPermission userPermission : loginUserPermissions) {
+				if (!userPermission.getPermissionName().equalsIgnoreCase(p.getPermissionName())) {
+					found = userPermission;
+				}
+			}
+			if (found == null) {
 				throw new PermissionDeniedException(session.getUser().getUsername(), p
 						.getPermissionName());
 			}

@@ -16,8 +16,9 @@ class Boot {
     LiftRules.addToPackages("ro.gagarin")
 
     // Build SiteMap
-    val entries = Menu(Loc("Home", List("index"), "Home")) :: Nil
-    LiftRules.setSiteMap(SiteMap(entries:_*))
+    val entries = SiteMap( Menu(Loc("Home", List("index"), "Home")),
+    					   Menu(Loc("Login1", List("login"), "Login2")))
+    LiftRules.setSiteMap(entries)
   }
 }
 

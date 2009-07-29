@@ -1,0 +1,12 @@
+<lift:surround with="default" at="content">
+	<h2>Welcome to your project!</h2>
+	<p><lift:login.login form="POST">
+	Username: <login:username />
+		<br />
+	Password: <login:password />
+		<br />
+	<login:submit />
+		<br />
+	</lift:login.login></p>
+</lift:surround>
+

@@ -187,7 +187,7 @@ public class UserService {
 	}
 
 	@WebMethod
-	public void deleteRole(String sessionId, UserRole role) throws OperationException,
+	public void deleteRole(String sessionId, WSUserRole role) throws OperationException,
 			PermissionDeniedException, SessionNotFoundException {
 		SessionManager sessionManager = FACTORY.getSessionManager();
 		Session session = sessionManager.acquireSession(sessionId);

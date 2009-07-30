@@ -77,7 +77,7 @@ public class UserServiceTest {
 
 			}
 		} finally {
-			userService.deleteRole(session, role);
+			userService.deleteRole(session, new WSUserRole(role));
 		}
 	}
 

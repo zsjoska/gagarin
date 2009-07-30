@@ -1,7 +1,9 @@
 <projectDescription>
   <name>gagarin-adminui</name>
   <comment/>
-  <projects/>
+  <projects>
+    <project>gagarin-wsclient</project>
+  </projects>
   <buildSpec>
     <buildCommand>
       <name>ch.epfl.lamp.sdt.core.scalabuilder</name>

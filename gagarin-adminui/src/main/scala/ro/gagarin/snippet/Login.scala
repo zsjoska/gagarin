@@ -18,7 +18,7 @@ class Login {
          "username" -> text("", (x)=> (u=x)),
          "password" -> password("", (x) =>(p=x)),
          "submit" -> submit("Login", () => {
-           val session = WSClient.getWSClient("http://localhost:8080/ws/").getAuthentication().createSession(null, null)
+           val session = WSClient.getWSClient("http://localhost:8080/gagarin-ws/ws/").getAuthentication().createSession(null, null)
            notice("Logged in " + u + "("+p+")" + " session=" + session)
            redirectTo("/") })
     )

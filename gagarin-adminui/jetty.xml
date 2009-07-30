@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE Configure PUBLIC "-//Mort Bay Consulting//DTD Configure//EN" "http://jetty.mortbay.org/configure.dtd">
+<Configure id="Server" class="org.mortbay.jetty.Server">
+    <!-- =========================================================== -->
+    <!-- Set handler Collection Structure                            -->
+    <!-- =========================================================== -->
+    <Set name="handler">
+        <!-- the collection of handlers that will handle the request -->
+        <New id="Handlers"
+            class="org.mortbay.jetty.handler.HandlerCollection">
+            <Set name="handlers">
+                <Array type="org.mortbay.jetty.Handler">
+                    <Item>
+                        <New id="WebHandler"
+                            class="org.mortbay.jetty.webapp.WebAppContext" />
+                    </Item>
+                </Array>
+            </Set>
+        </New>
+    </Set>
+    <Ref id="WebHandler">
+        <Set name="contextPath">/gagarin-ws</Set>
+        <Set name="war">target/gagarin-ws.war</Set>
+    </Ref>
+ </Configure>

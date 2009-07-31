@@ -45,7 +45,7 @@ public enum Config {
 	/**
 	 * The period of time for checking DB configuration changes
 	 */
-	DB_CONFIG_CHECK_PERIOD("1200"),
+	DB_CONFIG_CHECK_PERIOD("120000"),
 
 	/**
 	 * Dummy configuration entry for storing the last modification time of the

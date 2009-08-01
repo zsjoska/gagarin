@@ -17,12 +17,19 @@ import ro.gagarin.session.Session;
 
 public class DBConfigManager extends ConfigHolder implements ConfigurationManager,
 		SettingsChangeObserver {
+
+	// TODO: there is a problem with the configuration implementation in the
+	// following scenario:
+	// the config is only in the DB
+	// runtime, the config is added to the file
+	// Problem: DBConfig observers are not notified
+
 	private static ManagerFactory FACTORY = BasicManagerFactory.getInstance();
 	private static final DBConfigManager INSTANCE = new DBConfigManager(FileConfigurationManager
 			.getInstance());
 
 	static {
-		ConfigurationManager cfgManager = FACTORY.getConfigurationManager(null);
+		ConfigurationManager cfgManager = FACTORY.getConfigurationManager();
 		long period = cfgManager.getLong(Config.DB_CONFIG_CHECK_PERIOD);
 
 		INSTANCE.registerForChange(INSTANCE);

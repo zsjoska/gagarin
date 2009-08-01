@@ -50,7 +50,7 @@ public class BaseJdbcDAO implements BaseDAO {
 
 		this.session = session;
 
-		CFG = session.getManagerFactory().getConfigurationManager(session);
+		CFG = session.getManagerFactory().getConfigurationManager();
 		APPLOG = session.getManagerFactory().getLogManager(session, getClass());
 
 		checkLoadDBDriver(CFG);

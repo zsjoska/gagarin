@@ -44,7 +44,7 @@ public class SessionTest {
 
 		UserDAO userManager = FACTORY.getDAOManager().getUserDAO(session);
 		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
-		ConfigurationManager cfgManager = FACTORY.getConfigurationManager(session);
+		ConfigurationManager cfgManager = FACTORY.getConfigurationManager();
 
 		List<UserRole> allRoles = roleManager.getAllRoles();
 		LOG.debug("Roles in system:");
@@ -75,7 +75,7 @@ public class SessionTest {
 		session = TUtil.createTestSession();
 
 		UserDAO userManager = FACTORY.getDAOManager().getUserDAO(session);
-		ConfigurationManager cfgManager = FACTORY.getConfigurationManager(session);
+		ConfigurationManager cfgManager = FACTORY.getConfigurationManager();
 		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
 
 		DBUser user = new DBUser();
@@ -109,7 +109,7 @@ public class SessionTest {
 		session = TUtil.createTestSession();
 
 		UserDAO userManager = FACTORY.getDAOManager().getUserDAO(session);
-		ConfigurationManager cfgManager = FACTORY.getConfigurationManager(session);
+		ConfigurationManager cfgManager = FACTORY.getConfigurationManager();
 		RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
 
 		DBUser user = new DBUser();
@@ -140,7 +140,7 @@ public class SessionTest {
 		session = FACTORY.getSessionManager().createSession(null, null, FACTORY);
 		FACTORY.getSessionManager().acquireSession(session.getSessionString());
 
-		ConfigurationManager cfgManager = FACTORY.getConfigurationManager(session);
+		ConfigurationManager cfgManager = FACTORY.getConfigurationManager();
 		cfgManager.setConfigValue(session, Config.USER_SESSION_TIMEOUT, "100");
 		FACTORY.releaseSession(session);
 

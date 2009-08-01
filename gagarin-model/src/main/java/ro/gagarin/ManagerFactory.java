@@ -4,7 +4,7 @@ import ro.gagarin.log.AppLog;
 import ro.gagarin.session.Session;
 
 public interface ManagerFactory {
-	ConfigurationManager getConfigurationManager(Session session);
+	ConfigurationManager getConfigurationManager();
 
 	DAOManager getDAOManager();
 

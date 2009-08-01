@@ -31,9 +31,8 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
 	private BasicSessionManager() {
 		LOG.debug("Creating BasicSessionManager");
 
-		// TODO: find a way to have acces to configuration and fix this null
 		ConfigurationManager cfgManager;
-		cfgManager = BasicManagerFactory.getInstance().getConfigurationManager(null);
+		cfgManager = BasicManagerFactory.getInstance().getConfigurationManager();
 		cfgManager.registerForChange(this);
 		USER_SESSION_TIMEOUT = cfgManager.getLong(Config.USER_SESSION_TIMEOUT);
 		SESSION_CHECK_PERIOD = cfgManager.getLong(Config.SESSION_CHECK_PERIOD);

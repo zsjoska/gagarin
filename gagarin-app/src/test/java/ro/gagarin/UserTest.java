@@ -42,7 +42,7 @@ public class UserTest {
 		FACTORY.releaseSession(session);
 	}
 
-	private ConfigurationManager configManager = FACTORY.getConfigurationManager(session);
+	private ConfigurationManager configManager = FACTORY.getConfigurationManager();
 
 	@Test
 	public void getUserByNameInexistent() throws OperationException {

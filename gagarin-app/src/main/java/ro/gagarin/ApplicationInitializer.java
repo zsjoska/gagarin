@@ -111,7 +111,7 @@ public class ApplicationInitializer {
 
 	private void initManagers(Session session) throws OperationException {
 		ManagerFactory factory = session.getManagerFactory();
-		this.cfgManager = factory.getConfigurationManager(session);
+		this.cfgManager = factory.getConfigurationManager();
 		this.userManager = factory.getDAOManager().getUserDAO(session);
 		this.roleManager = factory.getDAOManager().getRoleDAO(session);
 	}

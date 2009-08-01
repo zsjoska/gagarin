@@ -22,7 +22,7 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
 			.getInstance());
 
 	static {
-		ConfigurationManager cfgManager = FACTORY.getConfigurationManager(null);
+		ConfigurationManager cfgManager = FACTORY.getConfigurationManager();
 		long period = cfgManager.getLong(Config.DB_CONFIG_CHECK_PERIOD);
 
 		INSTANCE.registerForChange(INSTANCE);

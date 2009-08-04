@@ -10,10 +10,23 @@ import _root_.net.liftweb.util.Helpers._
 import _root_.net.liftweb.util._
 import _root_.ro.gagarin.wsclient.WSClient
 import _root_.ro.gagarin.model.WebServiceClient._
-
-object SessionId extends SessionVar("")
+import _root_.ro.gagarin.model.{wsSessionId, SessionInfo}
 
 class Login {
+    def userinfo(in: NodeSeq): NodeSeq  = {
+      if(wsSessionId.is != null){
+        <span>
+        Welcome { wsSessionId.user.getName() }
+        {
+    	link("login", () => {
+    	  // TODO: logout the WS session too
+    	  wsSessionId.set(null)
+    	}, <span>Logout</span>)
+    	}
+        </span>
+      } else NodeSeq.Empty
+    }
+
   def login (in: NodeSeq): NodeSeq  = {
     var u:String = null
     var p: String = null
@@ -23,10 +36,10 @@ class Login {
          "submit" -> submit("Login", () => {
            try{
 	           val session = getAuthentication.createSession(null, null)
-	           getAuthentication.login(session, u, p, null);
-	           SessionId.set(session)
+	           val user = getAuthentication.login(session, u, p, null)
+	           wsSessionId.set(SessionInfo(session,user))
                notice("Logged in " + u + "("+p+")" + " session=" + session)
-               redirectTo("/") 
+               // redirectTo("/") 
            } catch {
              case e: ItemNotFoundException_Exception => {
 	           notice("Login failed")

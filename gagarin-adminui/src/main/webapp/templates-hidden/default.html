@@ -8,8 +8,9 @@
 		<script id="jquery" src="/classpath/jquery.js" type="text/javascript"></script>
 	</head>
 	<body>
-		<lift:bind name="content" />
+		<lift:login.userinfo />
 		<lift:Menu.builder />
+		<lift:bind name="content" />
 		<lift:msgs/>
 	</body>
 </html>

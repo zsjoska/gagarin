@@ -17,8 +17,14 @@ class Boot {
 
     // Build SiteMap
     val entries = SiteMap( Menu(Loc("Home", List("index"), "Home")),
-    					   Menu(Loc("Login1", List("login"), "Login2")))
+    					   Menu(Loc("login", List("login"), "Login"))
+    					)
     LiftRules.setSiteMap(entries)
+    
+//	LiftRules.addDispatchBefore {
+//	         case RequestMatcher(_, ParsePath("login" :: page , _, _),_,_)  if !LoginStuff.is && page.head != "validate" =>
+//	         ignore => Full(RedirectResponse("/login/validate"))
+//	      }    
   }
 }
 

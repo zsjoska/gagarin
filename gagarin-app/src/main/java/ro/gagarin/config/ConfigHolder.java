@@ -12,7 +12,10 @@ public class ConfigHolder {
 	// TODO make it private
 	protected static final transient Logger LOG = Logger.getLogger(ConfigHolder.class);
 
-	private ArrayList<SettingsChangeObserver> changeObservers = new ArrayList<SettingsChangeObserver>();
+	/**
+	 * The change observers, a single static instance
+	 */
+	private static ArrayList<SettingsChangeObserver> changeObservers = new ArrayList<SettingsChangeObserver>();
 
 	private ArrayList<String> configuration = new ArrayList<String>(Config.values().length);
 
@@ -23,7 +26,7 @@ public class ConfigHolder {
 	}
 
 	public void registerForChange(SettingsChangeObserver observer) {
-		this.getChangeObservers().add(observer);
+		getChangeObservers().add(observer);
 	}
 
 	public void setConfigValue(Session session, Config config, String value)
@@ -108,11 +111,7 @@ public class ConfigHolder {
 		return configs;
 	}
 
-	protected void setChangeObservers(ArrayList<SettingsChangeObserver> changeObservers) {
-		this.changeObservers = changeObservers;
-	}
-
-	protected ArrayList<SettingsChangeObserver> getChangeObservers() {
+	protected static ArrayList<SettingsChangeObserver> getChangeObservers() {
 		return changeObservers;
 	}
 }

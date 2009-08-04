@@ -61,11 +61,6 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
 
 	private DBConfigManager(ConfigurationManager localCfg) {
 		this.localConfig = localCfg;
-		if (localCfg instanceof ConfigHolder) {
-			ConfigHolder castCfg = (ConfigHolder) localCfg;
-			this.setChangeObservers(castCfg.getChangeObservers());
-		}
-
 	}
 
 	private void importConfigMap(ArrayList<ConfigEntry> cfgValues, AppLog log) {

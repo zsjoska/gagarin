@@ -19,9 +19,9 @@ class Login {
         Welcome { wsSessionId.user.getName() }
         {
     	link("login", () => {
-    	  // TODO: logout the WS session too
+    	  getAuthentication.logout(wsSessionId.session)
     	  wsSessionId.set(null)
-    	}, <span>Logout</span>)
+    	}, Text("Logout"))
     	}
         </span>
       } else NodeSeq.Empty
@@ -39,7 +39,7 @@ class Login {
 	           val user = getAuthentication.login(session, u, p, null)
 	           wsSessionId.set(SessionInfo(session,user))
                notice("Logged in " + u + "("+p+")" + " session=" + session)
-               // redirectTo("/") 
+               // redirectTo("/index") 
            } catch {
              case e: ItemNotFoundException_Exception => {
 	           notice("Login failed")

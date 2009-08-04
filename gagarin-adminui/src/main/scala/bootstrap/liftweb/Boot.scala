@@ -17,14 +17,29 @@ class Boot {
 
     // Build SiteMap
     val entries = SiteMap( Menu(Loc("Home", List("index"), "Home")),
-    					   Menu(Loc("login", List("login"), "Login"))
+    					   Menu(Loc("login", List("login"), "Login")),
+    					   Menu(Loc("users", List("users"), "Users"),
+	    					   Menu(Loc("listUsers", List("users"), "List Users")),
+	    					   Menu(Loc("newUser", List("newUser"), "New User")),
+	    					   Menu(Loc("editUser", List("editUser"), "Edit User"))
+    					   )
     					)
     LiftRules.setSiteMap(entries)
     
-//	LiftRules.addDispatchBefore {
-//	         case RequestMatcher(_, ParsePath("login" :: page , _, _),_,_)  if !LoginStuff.is && page.head != "validate" =>
-//	         ignore => Full(RedirectResponse("/login/validate"))
-//	      }    
+    LiftRules.dispatch.prepend(NamedPF("Login Validation") {
+        case Req("*" :: page , "", _)
+          if page.head != "login"  => 
+          () => {
+            println(">>>>>>>>>>>>>>>>>>"+page.head)
+            Full(RedirectResponse("/login"))
+          }
+      })
+                                        
+//    LiftRules.dispatch.prepend(NamedPF("Login Validation") {
+//        case Req("login" :: page , "", _)
+//          if !LoginStuff.is && page.head != "validate" =>
+//          () => Full(RedirectResponse("/login/validate"))
+//      })
   }
 }
 

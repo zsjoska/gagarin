@@ -1,0 +1,15 @@
+<lift:surround with="default" at="content">
+	<p><lift:users.newUser form="POST">
+	Username: <user:username />
+		<br />
+	Password: <user:password />
+		<br />
+	Name: <user:name />
+		<br />
+	Role: <user:role />
+		<br />
+		<user:submit />
+		<br />
+		</lift:users.newUser></p>
+</lift:surround>
+

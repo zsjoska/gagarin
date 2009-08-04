@@ -135,7 +135,6 @@
 				<executions>
 					<execution>
 						<id>run-jetty</id>
-						<phase>test-compile</phase>
 						<goals>
 							<goal>run</goal>
 						</goals>

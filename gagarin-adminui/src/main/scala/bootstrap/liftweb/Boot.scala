@@ -17,15 +17,16 @@ class Boot {
     LiftRules.addToPackages("ro.gagarin")
 
     // check for login on the pages
-    def loginRequires(l: Boolean) = If(()=>(wsSessionId==null)==l, () => RedirectResponse("/login"))
+  	def requiresLogin = If(()=>wsSessionId.is!=null, () => RedirectResponse("/login"))
+    def loggedIn = If(()=>wsSessionId.is==null, () => RedirectResponse("/"))
     
     // Build SiteMap
-    val entries = SiteMap( Menu(Loc("Home", List("index"), "Home", loginRequires(true))),
-    					   Menu(Loc("login", List("login"), "Login", loginRequires(false))),
-    					   Menu(Loc("users", List("users"), "Users", loginRequires(true)),
-	    					   Menu(Loc("listUsers", List("users"), "List Users", loginRequires(true))),
-	    					   Menu(Loc("newUser", List("newUser"), "New User", loginRequires(true))),
-	    					   Menu(Loc("editUser", List("editUser"), "Edit User", loginRequires(true)))
+    val entries = SiteMap( Menu(Loc("Home", List("index"), "Home", requiresLogin)),
+    					   Menu(Loc("login", List("login"), "Login", loggedIn)),
+    					   Menu(Loc("users", List("users"), "Users", requiresLogin),
+	    					   Menu(Loc("listUsers", List("users"), "List Users", requiresLogin)),
+	    					   Menu(Loc("newUser", List("newUser"), "New User", requiresLogin)),
+	    					   Menu(Loc("editUser", List("editUser"), "Edit User", requiresLogin))
     					   )
     					)
     LiftRules.setSiteMap(entries)

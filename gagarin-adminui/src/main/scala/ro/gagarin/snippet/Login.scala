@@ -39,7 +39,6 @@ class Login {
 	           val user = getAuthentication.login(session, u, p, null)
 	           wsSessionId.set(SessionInfo(session,user))
                notice("Logged in " + u + "("+p+")" + " session=" + session)
-               // redirectTo("/index") 
            } catch {
              case e: ItemNotFoundException_Exception => {
 	           notice("Login failed")

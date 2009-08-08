@@ -21,34 +21,27 @@ class Roles {
    	  val roles = Buffer(getUserService.getRoleList(wsSessionId.session))
       <span>
       <table>
-      {roles.flatMap( u => <tr>
-                      		<td>{link("editRole", () => {selectedRole.set(u)}, Text(u.getRoleName()))}</td>
-                      	   </tr>)}
+      {roles.flatMap( u => 
+        <tr>
+          <td>{link("editRole", () => {selectedRole.set(u)}, Text(u.getRoleName()))}</td>
+        </tr>)}
       </table>
       </span>
    	  
       
     }
     
-  def newUser (in: NodeSeq): NodeSeq  = {
-	val user = new WsUser();
+  def newRole (in: NodeSeq): NodeSeq  = {
+	var roleName = "";
     val roles = Buffer(getUserService.getRoleList(wsSessionId.session)).map(x => (x.getId().toString,x.getRoleName()))
-    bind("user", in, 
-         "username" -> text("", (x)=> user.setUsername(x)),
-         "password" -> password("", (x) => user.setPassword(x)),
-         "name" -> text("", (x) => user.setName(x)),
-         "email" -> text("", (x) => user.setEmail(x)),
-         "phone" -> text("", (x) => user.setPhone(x)),
-         "role" -> select(roles,Empty,(x) => {
-           val role = new WsUserRole()
-           role.setId(x.toLong)
-           user.setRole(role)
-         }),
-//         "role1" -> text("", (x) => user.setRole(wsSessionId.user.getRole())),
+    bind("role", in, 
+         "roleName" -> text("", (x)=> roleName=x),
          "submit" -> submit("Create", () => {
-        	 	getUserService.createUser(wsSessionId.session, user)
-                redirectTo("/users") 
-              })
+           // TODO: create Scala wrappers for WS methods
+           // TODO: add a list of roles to initialize with
+           getUserService.createRoleWithPermissions(wsSessionId.session, roleName,new java.util.ArrayList[WsUserPermission]() )
+           redirectTo("/roles") 
+         })
     )
   } 
     

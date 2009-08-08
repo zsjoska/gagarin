@@ -1,19 +1,9 @@
 <lift:surround with="default" at="content">
-	<p><lift:users.newUser form="POST">
-	Username: <user:username />
+	<p><lift:roles.newRole form="POST">
+	Role Name: <role:roleName />
 		<br />
-	Password: <user:password />
+	<role:submit />
 		<br />
-	Name: <user:name />
-		<br />
-	Email: <user:email />
-		<br />
-	Phone: <user:phone />
-		<br />
-	Role: <user:role />
-		<br />
-		<user:submit />
-		<br />
-		</lift:users.newUser></p>
+	</lift:roles.newRole></p>
 </lift:surround>
 

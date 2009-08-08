@@ -30,12 +30,12 @@ class Login {
   def login (in: NodeSeq): NodeSeq  = {
     var u:String = null
     var p: String = null
+    val session = getAuthentication.createSession(null, null)
     bind("login", in, 
          "username" -> text("", (x)=> (u=x)),
          "password" -> password("", (x) =>(p=x)),
          "submit" -> submit("Login", () => {
            try{
-	           val session = getAuthentication.createSession(null, null)
 	           val user = getAuthentication.login(session, u, p, null)
 	           wsSessionId.set(SessionInfo(session,user))
                notice("Logged in " + u + "("+p+")" + " session=" + session)

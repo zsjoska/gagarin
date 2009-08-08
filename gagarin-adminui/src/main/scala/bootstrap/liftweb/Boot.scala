@@ -24,9 +24,12 @@ class Boot {
     val entries = SiteMap( Menu(Loc("Home", List("index"), "Home", requiresLogin)),
     					   Menu(Loc("login", List("login"), "Login", loggedIn)),
     					   Menu(Loc("users", List("users"), "Users", requiresLogin),
-	    					   Menu(Loc("listUsers", List("users"), "List Users", requiresLogin)),
 	    					   Menu(Loc("newUser", List("newUser"), "New User", requiresLogin)),
-	    					   Menu(Loc("editUser", List("editUser"), "Edit User", requiresLogin))
+	    					   Menu(Loc("editUser", List("editUser"), "Edit User", Hidden, requiresLogin))
+    					   ),
+    					   Menu(Loc("roles", List("roles"), "Roles", requiresLogin),
+	    					   Menu(Loc("newRole", List("newRole"), "New Role", requiresLogin)),
+	    					   Menu(Loc("editRole", List("editRole"), "Edit Role", Hidden, requiresLogin))
     					   )
     					)
     LiftRules.setSiteMap(entries)

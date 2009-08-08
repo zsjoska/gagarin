@@ -13,17 +13,16 @@ import _root_.ro.gagarin.model.WebServiceClient._
 import _root_.ro.gagarin.model.{wsSessionId, SessionInfo}
 import _root_.scala.collection.jcl.Buffer
 
-class Users {
+class Roles {
   
-  private object selectedUser extends RequestVar[WsUser](null)
+  private object selectedRole extends RequestVar[WsUserRole](null)
   
     def list(in: NodeSeq): NodeSeq  = {
-   	  val users = Buffer(getUserService.getUsers(wsSessionId.session))
+   	  val roles = Buffer(getUserService.getRoleList(wsSessionId.session))
       <span>
       <table>
-      {users.flatMap( u => <tr>
-                      		<td>{link("editUser", () => {selectedUser.set(u)}, Text(u.getUsername()))}</td>
-                      		<td>{Text(u.getName())}</td>
+      {roles.flatMap( u => <tr>
+                      		<td>{link("editRole", () => {selectedRole.set(u)}, Text(u.getRoleName()))}</td>
                       	   </tr>)}
       </table>
       </span>
@@ -55,19 +54,20 @@ class Users {
     
 
   def editUser (in: NodeSeq): NodeSeq  = {
-	val user = selectedUser
-    bind("user", in, 
-         "username" -> text(user.getUsername(), (x)=> user.setUsername(x)),
-         "password" -> password("", (x) => user.setPassword(x)),
-         "name" -> text( if(user.getName() != null) user.getName() else "", (x) => user.setName(x)),
-         "email" -> text( if(user.getEmail()!=null) user.getEmail else "", (x) => user.setEmail(x)),
-         "phone" -> text( if(user.getPhone() != null) user.getPhone() else "", (x) => user.setPhone(x)),
-         "role" -> text( if(user.getRole().getRoleName() != null) user.getRole().getRoleName() else "", (x) => user.setRole(wsSessionId.user.getRole())),
-         "submit" -> submit("Update", () => {
-        	 	// getUserService.createUser(wsSessionId.session, user)
-                redirectTo("/users") 
-              })
-    )
+    Text("")
+//	val user = selectedUser
+//    bind("user", in, 
+//         "username" -> text(user.getUsername(), (x)=> user.setUsername(x)),
+//         "password" -> password("", (x) => user.setPassword(x)),
+//         "name" -> text( if(user.getName() != null) user.getName() else "", (x) => user.setName(x)),
+//         "email" -> text( if(user.getEmail()!=null) user.getEmail else "", (x) => user.setEmail(x)),
+//         "phone" -> text( if(user.getPhone() != null) user.getPhone() else "", (x) => user.setPhone(x)),
+//         "role" -> text( if(user.getRole().getRoleName() != null) user.getRole().getRoleName() else "", (x) => user.setRole(wsSessionId.user.getRole())),
+//         "submit" -> submit("Update", () => {
+//        	 	// getUserService.createUser(wsSessionId.session, user)
+//                redirectTo("/users") 
+//              })
+//    )
   } 
 }
 

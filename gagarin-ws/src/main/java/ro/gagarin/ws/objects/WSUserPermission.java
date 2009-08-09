@@ -29,4 +29,11 @@ public class WSUserPermission extends BaseEntity implements UserPermission {
 		return permissionName;
 	}
 
+	@Override
+	public String toString() {
+		return "WSUserPermission [permissionName=" + permissionName
+				+ ", getId()=" + getId() + "]";
+	}
+
+	
 }

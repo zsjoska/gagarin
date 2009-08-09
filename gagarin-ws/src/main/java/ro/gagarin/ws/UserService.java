@@ -1,6 +1,7 @@
 package ro.gagarin.ws;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -121,6 +122,8 @@ public class UserService {
 		try {
 			RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
 			AuthorizationManager permissionManager = FACTORY.getAuthorizationManager(session);
+			
+			LOG.debug("Create role:" + roleName + " with permissions " + Arrays.toString(permissions));
 
 			// the session user must have LIST_PERMISSIONS permission
 			permissionManager.requiresPermission(session, PermissionEnum.LIST_PERMISSIONS);

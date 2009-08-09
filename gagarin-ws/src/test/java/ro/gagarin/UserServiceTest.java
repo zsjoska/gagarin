@@ -56,9 +56,16 @@ public class UserServiceTest {
 			OperationException, ItemNotFoundException, DataConstraintException {
 		UserService userService = new UserService();
 
+		// check that ID is enough
+		List<WSUserPermission> allPermissionList = userService.getAllPermissionList(session);
+		WSUserPermission permByID = new WSUserPermission();
+		permByID.setId(allPermissionList.get(0).getId());
+
+		// check that name is enough
 		WSUserPermission[] perms = new WSUserPermission[] {
-				new WSUserPermission(PermissionEnum.CREATE_USER.name()),
-				new WSUserPermission(PermissionEnum.CREATE_ROLE.name()) };
+				new WSUserPermission(PermissionEnum.DELETE_ROLE.name()),
+				new WSUserPermission(PermissionEnum.CREATE_ROLE.name()),
+				permByID};
 
 		UserRole role = userService.createRoleWithPermissions(session, "WONDER_ROLE", perms);
 		List<WSUserPermission> rolePermissions = userService.getRolePermissions(session,
@@ -67,7 +74,10 @@ public class UserServiceTest {
 			for (WSUserPermission perm : perms) {
 				WSUserPermission found = null;
 				for (WSUserPermission p : rolePermissions) {
-					if (perm.getPermissionName().equalsIgnoreCase(p.getPermissionName())) {
+					if (perm.getPermissionName()!= null && perm.getPermissionName().equalsIgnoreCase(p.getPermissionName())) {
+						found = p;
+					}
+					if (perm.getId()!= null && perm.getId().equals(p.getId())) {
 						found = p;
 					}
 				}

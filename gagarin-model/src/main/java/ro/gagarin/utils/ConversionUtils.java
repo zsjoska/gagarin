@@ -36,6 +36,10 @@ public class ConversionUtils {
 					mPerm = aDBPermission;
 					break;
 				}
+				if (aDBPermission.getId().equals(reqPermission.getId())) {
+					mPerm = aDBPermission;
+					break;
+				}
 			}
 			if (mPerm == null)
 				throw new ItemNotFoundException(UserPermission.class, reqPermission

@@ -33,13 +33,21 @@ class Roles {
     
   def newRole (in: NodeSeq): NodeSeq  = {
 	var roleName = "";
-    val roles = Buffer(getUserService.getRoleList(wsSessionId.session)).map(x => (x.getId().toString,x.getRoleName()))
+    val permissions = Buffer(getUserService.getAllPermissionList(wsSessionId.session)).map(x => (x.getId().toString,x.getPermissionName()))
+    permissions.foreach( x => println(x) )
+    val permList = new java.util.ArrayList[WsUserPermission]();
     bind("role", in, 
          "roleName" -> text("", (x)=> roleName=x),
+         "permissions" -> select(permissions,Empty,(x) => {
+           println(x)
+           val perm = new WsUserPermission()
+           perm.setId(x.toLong)
+           permList.add(perm)
+         }),
          "submit" -> submit("Create", () => {
            // TODO: create Scala wrappers for WS methods
            // TODO: add a list of roles to initialize with
-           getUserService.createRoleWithPermissions(wsSessionId.session, roleName,new java.util.ArrayList[WsUserPermission]() )
+           getUserService.createRoleWithPermissions(wsSessionId.session, roleName, permList)
            redirectTo("/roles") 
          })
     )

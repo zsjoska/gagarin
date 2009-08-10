@@ -10,7 +10,7 @@ import _root_.net.liftweb.util.Helpers._
 import _root_.net.liftweb.util._
 import _root_.ro.gagarin.wsclient.WSClient
 import _root_.ro.gagarin.model.WebServiceClient._
-import _root_.ro.gagarin.model.{wsSessionId, SessionInfo}
+import _root_.ro.gagarin.model.{wsSession, SessionInfo}
 import _root_.scala.collection.jcl.Buffer
 
 class Users {
@@ -18,7 +18,7 @@ class Users {
   private object selectedUser extends RequestVar[WsUser](null)
   
     def list(in: NodeSeq): NodeSeq  = {
-   	  val users = Buffer(getUserService.getUsers(wsSessionId.session))
+   	  val users = Buffer(getUserService.getUsers(wsSession.session))
       <span>
       <table>
       {users.flatMap( u => <tr>
@@ -33,7 +33,7 @@ class Users {
     
   def newUser (in: NodeSeq): NodeSeq  = {
 	val user = new WsUser();
-    val roles = Buffer(getUserService.getRoleList(wsSessionId.session)).map(x => (x.getId().toString,x.getRoleName()))
+    val roles = Buffer(getUserService.getRoleList(wsSession.session)).map(x => (x.getId().toString,x.getRoleName()))
     bind("user", in, 
          "username" -> text("", (x)=> user.setUsername(x)),
          "password" -> password("", (x) => user.setPassword(x)),
@@ -46,7 +46,7 @@ class Users {
            user.setRole(role)
          }),
          "submit" -> submit("Create", () => {
-        	 	getUserService.createUser(wsSessionId.session, user)
+        	 	getUserService.createUser(wsSession.session, user)
                 redirectTo("/users") 
               })
     )
@@ -61,7 +61,7 @@ class Users {
          "name" -> text( if(user.getName() != null) user.getName() else "", (x) => user.setName(x)),
          "email" -> text( if(user.getEmail()!=null) user.getEmail else "", (x) => user.setEmail(x)),
          "phone" -> text( if(user.getPhone() != null) user.getPhone() else "", (x) => user.setPhone(x)),
-         "role" -> text( if(user.getRole().getRoleName() != null) user.getRole().getRoleName() else "", (x) => user.setRole(wsSessionId.user.getRole())),
+         "role" -> text( if(user.getRole().getRoleName() != null) user.getRole().getRoleName() else "", (x) => user.setRole(wsSession.user.getRole())),
          "submit" -> submit("Update", () => {
         	 	// getUserService.createUser(wsSessionId.session, user)
                 redirectTo("/users") 

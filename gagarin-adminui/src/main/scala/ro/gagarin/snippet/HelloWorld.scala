@@ -1,11 +1,11 @@
 package ro.gagarin.snippet
 
-import _root_.ro.gagarin.model.wsSessionId
+import _root_.ro.gagarin.model.wsSession
 
 class HelloWorld {
 	
   def howdy = <span>Welcome to helloworld at {
-    wsSessionId.is
+    wsSession.is
   }</span>
 }
 

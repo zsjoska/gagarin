@@ -5,7 +5,7 @@ import _root_.net.liftweb.http._
 import _root_.net.liftweb.sitemap._
 import _root_.net.liftweb.sitemap.Loc._
 import Helpers._
-import _root_.ro.gagarin.model.{wsSessionId, SessionInfo}
+import _root_.ro.gagarin.model.{wsSession, SessionInfo}
 
 /**
   * A class that's instantiated early and run.  It allows the application
@@ -17,8 +17,8 @@ class Boot {
     LiftRules.addToPackages("ro.gagarin")
 
     // check for login on the pages
-  	def requiresLogin = If(()=>wsSessionId.is!=null, () => RedirectResponse("/login"))
-    def loggedIn = If(()=>wsSessionId.is==null, () => RedirectResponse("/"))
+  	def requiresLogin = If(()=>wsSession.is!=null, () => RedirectResponse("/login"))
+    def loggedIn = If(()=>wsSession.is==null, () => RedirectResponse("/"))
     
     // Build SiteMap
     val entries = SiteMap( Menu(Loc("Home", List("index"), "Home", requiresLogin)),

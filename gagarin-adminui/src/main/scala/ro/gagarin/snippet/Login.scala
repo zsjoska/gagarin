@@ -10,17 +10,17 @@ import _root_.net.liftweb.util.Helpers._
 import _root_.net.liftweb.util._
 import _root_.ro.gagarin.wsclient.WSClient
 import _root_.ro.gagarin.model.WebServiceClient._
-import _root_.ro.gagarin.model.{wsSessionId, SessionInfo}
+import _root_.ro.gagarin.model.{wsSession, SessionInfo}
 
 class Login {
     def userinfo(in: NodeSeq): NodeSeq  = {
-      if(wsSessionId.is != null){
+      if(wsSession.is != null){
         <span>
-        Welcome { wsSessionId.user.getName() }
+        Welcome { wsSession.user.getName() }
         {
     	link("login", () => {
-    	  getAuthentication.logout(wsSessionId.session)
-    	  wsSessionId.set(null)
+    	  getAuthentication.logout(wsSession.session)
+    	  wsSession.set(null)
     	}, Text("Logout"))
     	}
         </span>
@@ -37,7 +37,7 @@ class Login {
          "submit" -> submit("Login", () => {
            try{
 	           val user = getAuthentication.login(session, u, p, null)
-	           wsSessionId.set(SessionInfo(session,user))
+	           wsSession.set(SessionInfo(session,user))
                notice("Logged in " + u + "("+p+")" + " session=" + session)
            } catch {
              case e: ItemNotFoundException_Exception => {

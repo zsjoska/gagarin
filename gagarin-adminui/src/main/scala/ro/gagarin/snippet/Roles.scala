@@ -10,7 +10,7 @@ import _root_.net.liftweb.util.Helpers._
 import _root_.net.liftweb.util._
 import _root_.ro.gagarin.wsclient.WSClient
 import _root_.ro.gagarin.model.WebServiceClient._
-import _root_.ro.gagarin.model.{wsSessionId, SessionInfo}
+import _root_.ro.gagarin.model.{wsSession, SessionInfo}
 import _root_.scala.collection.jcl.Buffer
 
 class Roles {
@@ -18,7 +18,7 @@ class Roles {
   private object selectedRole extends RequestVar[WsUserRole](null)
   
     def list(in: NodeSeq): NodeSeq  = {
-   	  val roles = Buffer(getUserService.getRoleList(wsSessionId.session))
+   	  val roles = Buffer(getUserService.getRoleList(wsSession.session))
       <span>
       <table>
       {roles.flatMap( u => 
@@ -33,7 +33,7 @@ class Roles {
     
   def newRole (in: NodeSeq): NodeSeq  = {
 	var roleName = "";
-    val permissions = Buffer(getUserService.getAllPermissionList(wsSessionId.session)).map(x => (x.getId().toString,x.getPermissionName()))
+    val permissions = Buffer(getUserService.getAllPermissionList(wsSession.session)).map(x => (x.getId().toString,x.getPermissionName()))
     val permList = new java.util.ArrayList[WsUserPermission]();
     bind("role", in, 
          "roleName" -> text("", (x)=> roleName=x),
@@ -43,7 +43,7 @@ class Roles {
            permList.add(perm)
          }) % ("size" -> "20"),
          "submit" -> submit("Create", () => {
-           getUserService.createRoleWithPermissions(wsSessionId.session, roleName, permList)
+           getUserService.createRoleWithPermissions(wsSession.session, roleName, permList)
            redirectTo("/roles") 
          })
     )
@@ -52,8 +52,8 @@ class Roles {
 
   def editRole (in: NodeSeq): NodeSeq  = {
     val role = selectedRole
-    val permissions = Buffer(getUserService.getAllPermissionList(wsSessionId.session)).map(x => (x.getId().toString,x.getPermissionName()))
-    val permList = Buffer(getUserService.getRolePermissions(wsSessionId.session, role)).map( x => x.getId().toString);
+    val permissions = Buffer(getUserService.getAllPermissionList(wsSession.session)).map(x => (x.getId().toString,x.getPermissionName()))
+    val permList = Buffer(getUserService.getRolePermissions(wsSession.session, role)).map( x => x.getId().toString);
     bind("role", in, 
          "roleName" -> text(role.getRoleName, (x)=> role.setRoleName(x) ),
          "permissions" -> multiSelect(permissions, permList,(x) => {

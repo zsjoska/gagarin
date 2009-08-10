@@ -4,4 +4,4 @@ import _root_.net.liftweb.http.SessionVar
 
 case class SessionInfo(session: String, user: WsUser) 
 
-object wsSessionId extends SessionVar[SessionInfo](null)
+object wsSession extends SessionVar[SessionInfo](null)

@@ -45,7 +45,6 @@ class Users {
            role.setId(x.toLong)
            user.setRole(role)
          }),
-//         "role1" -> text("", (x) => user.setRole(wsSessionId.user.getRole())),
          "submit" -> submit("Create", () => {
         	 	getUserService.createUser(wsSessionId.session, user)
                 redirectTo("/users") 

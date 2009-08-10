@@ -34,19 +34,15 @@ class Roles {
   def newRole (in: NodeSeq): NodeSeq  = {
 	var roleName = "";
     val permissions = Buffer(getUserService.getAllPermissionList(wsSessionId.session)).map(x => (x.getId().toString,x.getPermissionName()))
-    permissions.foreach( x => println(x) )
     val permList = new java.util.ArrayList[WsUserPermission]();
     bind("role", in, 
          "roleName" -> text("", (x)=> roleName=x),
-         "permissions" -> select(permissions,Empty,(x) => {
-           println(x)
+         "permissions" -> multiSelect(permissions, Seq.empty,(x) => {
            val perm = new WsUserPermission()
            perm.setId(x.toLong)
            permList.add(perm)
-         }),
+         }) % ("size" -> "20"),
          "submit" -> submit("Create", () => {
-           // TODO: create Scala wrappers for WS methods
-           // TODO: add a list of roles to initialize with
            getUserService.createRoleWithPermissions(wsSessionId.session, roleName, permList)
            redirectTo("/roles") 
          })
@@ -54,21 +50,19 @@ class Roles {
   } 
     
 
-  def editUser (in: NodeSeq): NodeSeq  = {
-    Text("")
-//	val user = selectedUser
-//    bind("user", in, 
-//         "username" -> text(user.getUsername(), (x)=> user.setUsername(x)),
-//         "password" -> password("", (x) => user.setPassword(x)),
-//         "name" -> text( if(user.getName() != null) user.getName() else "", (x) => user.setName(x)),
-//         "email" -> text( if(user.getEmail()!=null) user.getEmail else "", (x) => user.setEmail(x)),
-//         "phone" -> text( if(user.getPhone() != null) user.getPhone() else "", (x) => user.setPhone(x)),
-//         "role" -> text( if(user.getRole().getRoleName() != null) user.getRole().getRoleName() else "", (x) => user.setRole(wsSessionId.user.getRole())),
-//         "submit" -> submit("Update", () => {
-//        	 	// getUserService.createUser(wsSessionId.session, user)
-//                redirectTo("/users") 
-//              })
-//    )
+  def editRole (in: NodeSeq): NodeSeq  = {
+    val role = selectedRole
+    val permissions = Buffer(getUserService.getAllPermissionList(wsSessionId.session)).map(x => (x.getId().toString,x.getPermissionName()))
+    val permList = Buffer(getUserService.getRolePermissions(wsSessionId.session, role)).map( x => x.getId().toString);
+    bind("role", in, 
+         "roleName" -> text(role.getRoleName, (x)=> role.setRoleName(x) ),
+         "permissions" -> multiSelect(permissions, permList,(x) => {
+         }) % ("size" -> "20"),
+         "submit" -> submit("Update", () => {
+           // getUserService.createRoleWithPermissions(wsSessionId.session, roleName, permList)
+           redirectTo("/roles") 
+         })
+    )
   } 
 }
 

@@ -36,7 +36,7 @@ public class UserServiceTest {
 		role.setRoleName("ADMIN_ROLE");
 
 		WsUser user = new WsUser();
-		user.setUsername("wsUser1");
+		user.setUsername("wsUser1" + System.nanoTime());
 		user.setPassword("wspassword1");
 		user.setRole(role);
 		userAPI.createUser(session, user);

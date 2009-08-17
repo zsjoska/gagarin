@@ -51,8 +51,8 @@ public class Scheduler {
 	}
 
 	public synchronized RunableJob waitNextJob() throws InterruptedException {
-		RunableJob nextJob;
-		long toWait;
+		RunableJob nextJob = null;
+		long toWait = Long.MAX_VALUE;
 		synchronized (this) {
 
 			nextJob = this.getNextJob();
@@ -66,15 +66,16 @@ public class Scheduler {
 
 			if (nextRun == 0) {
 				// this job has no left execution; remove it and forget it
-				this.jobStore.remove(nextJob);
+				this.jobStore.remove(nextJob.getId());
 				return null;
 			}
 
 			toWait = nextRun - System.currentTimeMillis();
 			if (toWait < 10) {
-				this.jobStore.remove(nextJob);
+				this.jobStore.remove(nextJob.getId());
 			} else {
 				this.wait(toWait);
+				return null;
 			}
 		}
 		if (toWait < 10) {

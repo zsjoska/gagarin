@@ -73,6 +73,9 @@ public class ApplicationInitializer {
 		Session session = new Session();
 		session.setManagerFactory(BasicManagerFactory.getInstance());
 		session.setBusy(true, new Throwable("Session leak notice"));
+		session.setReason("SYSINIT");
+		session.setSessionString(System.currentTimeMillis() + "-" + System.nanoTime());
+		
 		AppUser user = new AppUser();
 		user.setUsername("SYSINIT");
 		session.setUser(user);

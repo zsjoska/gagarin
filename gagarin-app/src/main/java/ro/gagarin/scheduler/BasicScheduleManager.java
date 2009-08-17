@@ -6,68 +6,44 @@ import java.util.TimerTask;
 import ro.gagarin.BasicManagerFactory;
 import ro.gagarin.ManagerFactory;
 import ro.gagarin.ScheduleManager;
-import ro.gagarin.SessionManager;
-import ro.gagarin.exceptions.SessionNotFoundException;
-import ro.gagarin.log.AppLog;
-import ro.gagarin.session.Session;
 
+@Deprecated
 public class BasicScheduleManager implements ScheduleManager {
 
 	// TODO: implement a stronger scheduler which support later change on
 	// execution period
 
-	private static final ManagerFactory FACTORY = BasicManagerFactory.getInstance();
+	private static final ManagerFactory FACTORY = BasicManagerFactory
+			.getInstance();
 
 	private static Timer timer = new Timer("TIMER", true);
 
-	private static class RunableJob extends TimerTask {
-
-		private final ScheduledJob job;
-
-		public RunableJob(ScheduledJob job) {
-			this.job = job;
-		}
-
-		@Override
-		public void run() {
-			Session session = createSession();
-
-			AppLog log = FACTORY.getLogManager(session, BasicScheduleManager.class);
-			try {
-				log.debug("Executing job " + job.getName() + "#" + job.getId());
-				job.execute(session, log);
-				log.debug("Finished job " + job.getName() + "#" + job.getId());
-			} catch (Exception e) {
-				log.error("Exception executing job " + job.getName() + "#" + job.getId(), e);
-			}
-			FACTORY.releaseSession(session);
-			FACTORY.getSessionManager().destroySession(session);
-		}
-
-		private Session createSession() {
-			SessionManager sessionManager = FACTORY.getSessionManager();
-			Session session = sessionManager.createSession(null, "SCHEDULER", FACTORY);
-			try {
-				sessionManager.acquireSession(session.getSessionString());
-			} catch (SessionNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return session;
-		}
-
-	}
 
 	@Override
-	public long scheduleJob(ScheduledJob job) {
+	public long scheduleJob(final ScheduledJob job) {
+
+		final RunableJob rJob = new RunableJob(job);
+		TimerTask tt = new TimerTask() {
+
+			@Override
+			public void run() {
+				rJob.run();
+			}
+		};
 
 		job.setId(ScheduledJob.getNextId());
 
 		if (job.getPeriod() == 0) {
-			timer.schedule(new RunableJob(job), job.getInitialWait());
+			timer.schedule(tt, job.getInitialWait());
 			return job.getId();
 		}
-		timer.schedule(new RunableJob(job), job.getInitialWait(), job.getPeriod());
+		timer.schedule(tt, job.getInitialWait(), job.getPeriod());
 		return job.getId();
+	}
+
+
+	@Override
+	public void updateJobRate(Long id, Long rate) {
+		throw new RuntimeException("this is not supported");
 	}
 }

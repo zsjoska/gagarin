@@ -6,6 +6,7 @@ import ro.gagarin.jdbc.JdbcDAOManager;
 import ro.gagarin.log.AppLog;
 import ro.gagarin.log.BasicLogManager;
 import ro.gagarin.scheduler.BasicScheduleManager;
+import ro.gagarin.scheduler.DefaultScheduleManager;
 import ro.gagarin.session.BasicSessionManager;
 import ro.gagarin.session.Session;
 
@@ -96,7 +97,7 @@ public class BasicManagerFactory implements ManagerFactory {
 
 	@Override
 	public ScheduleManager getScheduleManager() {
-		return new BasicScheduleManager();
+		return new DefaultScheduleManager();
 	}
 
 	public void setConfigurationManager(ConfigurationManager configurationManager) {

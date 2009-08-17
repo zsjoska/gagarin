@@ -15,8 +15,8 @@ import ro.gagarin.log.AppLog;
 import ro.gagarin.scheduler.ScheduledJob;
 import ro.gagarin.session.Session;
 
-public class DBConfigManager extends ConfigHolder implements ConfigurationManager,
-		SettingsChangeObserver {
+public class DBConfigManager extends ConfigHolder implements
+		ConfigurationManager, SettingsChangeObserver {
 
 	// TODO: there is a problem with the configuration implementation in the
 	// following scenario:
@@ -25,16 +25,18 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
 	// Problem: DBConfig observers are not notified
 
 	private static ManagerFactory FACTORY = BasicManagerFactory.getInstance();
-	private static final DBConfigManager INSTANCE = new DBConfigManager(FileConfigurationManager
-			.getInstance());
+	private static final DBConfigManager INSTANCE = new DBConfigManager(
+			FileConfigurationManager.getInstance());
+	private  ConfigImportJob configImportJob;
 
 	static {
 		ConfigurationManager cfgManager = FACTORY.getConfigurationManager();
 		long period = cfgManager.getLong(Config.DB_CONFIG_CHECK_PERIOD);
 
 		INSTANCE.registerForChange(INSTANCE);
-		FACTORY.getScheduleManager().scheduleJob(
-				new DBConfigManager.ConfigImportJob("DB_CONFIG_IMPORT", period, period));
+		INSTANCE.configImportJob = new DBConfigManager.ConfigImportJob(
+				"DB_CONFIG_IMPORT", period, period);
+		FACTORY.getScheduleManager().scheduleJob(INSTANCE.configImportJob);
 	}
 
 	public static class ConfigImportJob extends ScheduledJob {
@@ -46,10 +48,12 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
 		public void execute(Session session, AppLog log) throws Exception {
 			ConfigDAO configDAO = FACTORY.getDAOManager().getConfigDAO(session);
 			long lastUpdateTime = configDAO.getLastUpdateTime();
-			log.debug("DBLUT = " + lastUpdateTime + " CacheLUT=" + INSTANCE.getLastUpdateTime());
+			log.debug("DBLUT = " + lastUpdateTime + " CacheLUT="
+					+ INSTANCE.getLastUpdateTime());
 			if (lastUpdateTime > INSTANCE.getLastUpdateTime()) {
 				long lastQuery = System.currentTimeMillis();
-				ArrayList<ConfigEntry> cfgValues = configDAO.listConfigurations();
+				ArrayList<ConfigEntry> cfgValues = configDAO
+						.listConfigurations();
 				INSTANCE.importConfigMap(cfgValues, log);
 				INSTANCE.setLastUpdateTime(lastQuery);
 			}
@@ -76,7 +80,8 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
 					cfgs[cfg.ordinal()] = configEntry.getConfigValue();
 				}
 			} catch (Exception e) {
-				log.error("Could not interpret config " + configEntry.getConfigName() + "="
+				log.error("Could not interpret config "
+						+ configEntry.getConfigName() + "="
 						+ configEntry.getConfigValue(), e);
 			}
 		}
@@ -107,7 +112,8 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
 	}
 
 	@Override
-	public InputStream getConfigFileStream(Config file) throws OperationException {
+	public InputStream getConfigFileStream(Config file)
+			throws OperationException {
 		return localConfig.getConfigFileStream(file);
 	}
 
@@ -121,9 +127,10 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
 
 		// local config has precedence...
 		if (localConfig.isDefined(config)) {
-			AppLog log = session.getManagerFactory().getLogManager(session, DBConfigManager.class);
-			log.error("Changing the local config will not be persisted! " + config.name() + "="
-					+ value);
+			AppLog log = session.getManagerFactory().getLogManager(session,
+					DBConfigManager.class);
+			log.error("Changing the local config will not be persisted! "
+					+ config.name() + "=" + value);
 			localConfig.setConfigValue(session, config, value);
 			return;
 		}
@@ -142,8 +149,13 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
 
 	@Override
 	public boolean configChanged(Config config, String value) {
-		// TODO handle changes of Config.DB_CONFIG_CHECK_PERIOD and update the
-		// timer execution rate
+		switch (config) {
+		case DB_CONFIG_CHECK_PERIOD:
+			FACTORY.getScheduleManager().updateJobRate(configImportJob.getId(), Long.valueOf(value));
+			return true;
+		default:
+			break;
+		}
 		return false;
 	}
 

@@ -7,15 +7,21 @@ public class SchedulerThread extends Thread {
 	public SchedulerThread(Scheduler parent) {
 		this.parent = parent;
 	}
-	
+
 	@Override
 	public void run() {
-		
-		while(!parent.shutdown()){
-			RunableJob nextJob = parent.waitNextJob();
-			nextJob.run();
-			parent.releaseJob(nextJob);
+		try {
+			while (!parent.shutdown()) {
+				RunableJob nextJob = parent.waitNextJob();
+				if (nextJob == null) {
+					continue;
+				}
+				nextJob.run();
+				parent.releaseJob(nextJob);
+			}
+		} catch (InterruptedException e) {
+			// TODO: handle exception
 		}
-		
+
 	}
 }

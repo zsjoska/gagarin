@@ -14,13 +14,25 @@ class RunableJob {
 
 	private final ScheduledJob job;
 
+	private int toExecute;
+
+	private long lastRun;
+
 	public RunableJob(ScheduledJob job) {
 		this.job = job;
+		this.lastRun = (System.currentTimeMillis() + job.getInitialWait())
+		- job.getPeriod();
+		if (job.getPeriod() == 0) {
+			// once to be executed
+			this.toExecute = 1;
+		} else {
+			this.toExecute = -1;
+		}
 	}
 
 	public void run() {
 		Session session = createSession();
-
+		System.out.println("toExecute:"+this.toExecute);
 		AppLog log = FACTORY.getLogManager(session, BasicScheduleManager.class);
 		try {
 			log.debug("Executing job " + job.getName() + "#" + job.getId());
@@ -48,8 +60,20 @@ class RunableJob {
 	}
 
 	public long getNextRun() {
-		// TODO Auto-generated method stub
+		// negative is infinite, positive is to be executed
+		if (toExecute < 0 || toExecute > 0) {
+			return this.lastRun + this.job.getPeriod();
+		}
 		return 0;
+	}
+
+	public Long getId() {
+		return this.job.getId();
+	}
+
+	public void markExecuted() {
+		if (this.toExecute > 0)
+			this.toExecute--;
 	}
 
 }

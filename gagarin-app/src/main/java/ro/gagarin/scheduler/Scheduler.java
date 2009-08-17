@@ -1,13 +1,13 @@
 package ro.gagarin.scheduler;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.HashMap;
 
 public class Scheduler {
 
-	private ArrayList<SchedulerThread> threads;
+	private ArrayList<SchedulerThread> threads = new ArrayList<SchedulerThread>();
 	private final int threadCount;
-	private LinkedList<RunableJob> x;
+	private HashMap<Long, RunableJob> jobStore = new HashMap<Long, RunableJob>();
 
 	public Scheduler() {
 		this(10);
@@ -31,10 +31,10 @@ public class Scheduler {
 
 	public RunableJob getNextJob() {
 		long minNextRun = Long.MAX_VALUE;
-		RunableJob nextJob = null; 
-		for (RunableJob job : this.x) {
+		RunableJob nextJob = null;
+		for (RunableJob job : this.jobStore.values()) {
 			long nextRun = job.getNextRun();
-			if(nextRun < minNextRun){
+			if (nextRun < minNextRun) {
 				minNextRun = nextRun;
 				nextJob = job;
 			}
@@ -43,30 +43,56 @@ public class Scheduler {
 	}
 
 	public void releaseJob(RunableJob nextJob) {
-		
-		
+		synchronized (this) {
+			nextJob.markExecuted();
+			this.jobStore.put(nextJob.getId(), nextJob);
+			this.notifyAll();
+		}
 	}
 
 	public synchronized RunableJob waitNextJob() throws InterruptedException {
 		RunableJob nextJob;
 		long toWait;
 		synchronized (this) {
+
 			nextJob = this.getNextJob();
-			toWait = nextJob.getNextRun() - System.currentTimeMillis();
-			if(toWait < 10){
-				this.x.remove(nextJob);
+			if (nextJob == null) {
+				// no jobs to execute
+				this.wait();
+				return null;
+			}
+
+			long nextRun = nextJob.getNextRun();
+
+			if (nextRun == 0) {
+				// this job has no left execution; remove it and forget it
+				this.jobStore.remove(nextJob);
+				return null;
+			}
+
+			toWait = nextRun - System.currentTimeMillis();
+			if (toWait < 10) {
+				this.jobStore.remove(nextJob);
 			} else {
 				this.wait(toWait);
 			}
 		}
-		if(toWait <10){
-			if(toWait > 0){
+		if (toWait < 10) {
+			if (toWait > 0) {
 				Thread.sleep(toWait);
 			}
 			return nextJob;
 		}
-		
+
 		return null;
 	}
 
+	public long scheduleJob(ScheduledJob job) {
+		job.setId(ScheduledJob.getNextId());
+		synchronized (this) {
+			this.jobStore.put(job.getId(), new RunableJob(job));
+			this.notifyAll();
+		}
+		return job.getId();
+	}
 }

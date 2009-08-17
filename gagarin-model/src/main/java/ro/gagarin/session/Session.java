@@ -89,9 +89,10 @@ public class Session extends BaseEntity {
 	@Override
 	public String toString() {
 		if (this.user == null) {
-			return this.reason + ":" + getId();
+			return this.reason + ":" + getSessionString();
 		}
-		return this.getUser().getUsername() + ":" + this.getId();
+		return this.getUser().getUsername() + "@" + this.reason + ":"
+				+ this.getSessionString();
 	}
 
 	public void setSessionString(String id) {

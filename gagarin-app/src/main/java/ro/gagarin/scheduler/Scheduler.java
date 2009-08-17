@@ -46,7 +46,7 @@ public class Scheduler {
 		synchronized (this) {
 			nextJob.markExecuted();
 			this.jobStore.put(nextJob.getId(), nextJob);
-			this.notifyAll();
+			this.notify();
 		}
 	}
 
@@ -92,8 +92,16 @@ public class Scheduler {
 		job.setId(ScheduledJob.getNextId());
 		synchronized (this) {
 			this.jobStore.put(job.getId(), new RunableJob(job));
-			this.notifyAll();
+			this.notify();
 		}
 		return job.getId();
+	}
+
+	public synchronized void updateJobRate(Long id, Long rate) {
+		RunableJob job = this.jobStore.get(id);
+		if(job != null){
+			job.setPeriod(rate);
+			this.notify();
+		}
 	}
 }

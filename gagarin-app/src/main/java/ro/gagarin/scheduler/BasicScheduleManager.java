@@ -6,11 +6,8 @@ import java.util.TimerTask;
 import ro.gagarin.BasicManagerFactory;
 import ro.gagarin.ManagerFactory;
 import ro.gagarin.ScheduleManager;
-import ro.gagarin.SessionManager;
-import ro.gagarin.exceptions.SessionNotFoundException;
-import ro.gagarin.log.AppLog;
-import ro.gagarin.session.Session;
 
+@Deprecated
 public class BasicScheduleManager implements ScheduleManager {
 
 	// TODO: implement a stronger scheduler which support later change on
@@ -42,5 +39,11 @@ public class BasicScheduleManager implements ScheduleManager {
 		}
 		timer.schedule(tt, job.getInitialWait(), job.getPeriod());
 		return job.getId();
+	}
+
+
+	@Override
+	public void updateJobRate(Long id, Long rate) {
+		throw new RuntimeException("this is not supported");
 	}
 }

@@ -19,8 +19,11 @@ class RunableJob {
 
 	private long lastRun;
 
+	private long period;
+
 	public RunableJob(ScheduledJob job) {
 		this.job = job;
+		this.period = job.getPeriod();
 		this.lastRun = (System.currentTimeMillis() + job.getInitialWait())
 		- job.getPeriod();
 		if (job.getPeriod() == 0) {
@@ -36,7 +39,7 @@ class RunableJob {
 		// TODO: move this session creation to the constructor and set the right timeout for the session
 		Session session = createSession();
 		
-		AppLog log = FACTORY.getLogManager(session, BasicScheduleManager.class);
+		AppLog log = FACTORY.getLogManager(session, RunableJob.class);
 		try {
 			log.debug("Executing job " + job.getName() + "#" + job.getId());
 			job.execute(session, log);
@@ -68,7 +71,7 @@ class RunableJob {
 	public long getNextRun() {
 		// negative is infinite, positive is to be executed
 		if (toExecute < 0 || toExecute > 0) {
-			return this.lastRun + this.job.getPeriod();
+			return this.lastRun + this.period;
 		}
 		return 0;
 	}
@@ -78,9 +81,17 @@ class RunableJob {
 	}
 
 	public void markExecuted() {
-		this.lastRun += this.job.getPeriod();
+		this.lastRun += this.period;
 		if (this.toExecute > 0)
 			this.toExecute--;
+	}
+
+	public void setPeriod(long period) {
+		this.period = period;
+	}
+
+	public long getPeriod() {
+		return period;
 	}
 
 }

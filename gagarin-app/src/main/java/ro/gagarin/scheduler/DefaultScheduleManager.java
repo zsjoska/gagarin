@@ -16,4 +16,9 @@ public class DefaultScheduleManager implements ScheduleManager {
 		return defaultScheduler.scheduleJob(job);
 	}
 
+	@Override
+	public void updateJobRate(Long id, Long rate) {
+		defaultScheduler.updateJobRate(id, rate);
+	}
+
 }

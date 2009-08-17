@@ -2,7 +2,7 @@ package ro.gagarin.scheduler;
 
 import ro.gagarin.ScheduleManager;
 
-public class QuartzScheduleManager implements ScheduleManager {
+public class DefaultScheduleManager implements ScheduleManager {
 
 	private static Scheduler defaultScheduler;
 
@@ -13,7 +13,7 @@ public class QuartzScheduleManager implements ScheduleManager {
 
 	@Override
 	public long scheduleJob(ScheduledJob job) {
-		return 0;
+		return defaultScheduler.scheduleJob(job);
 	}
 
 }

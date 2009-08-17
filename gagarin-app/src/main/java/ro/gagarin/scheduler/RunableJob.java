@@ -3,6 +3,7 @@ package ro.gagarin.scheduler;
 import ro.gagarin.BasicManagerFactory;
 import ro.gagarin.ManagerFactory;
 import ro.gagarin.SessionManager;
+import ro.gagarin.application.objects.AppUser;
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.log.AppLog;
 import ro.gagarin.session.Session;
@@ -35,7 +36,6 @@ class RunableJob {
 		// TODO: move this session creation to the constructor and set the right timeout for the session
 		Session session = createSession();
 		
-		System.out.println("toExecute:"+this.toExecute);
 		AppLog log = FACTORY.getLogManager(session, BasicScheduleManager.class);
 		try {
 			log.debug("Executing job " + job.getName() + "#" + job.getId());
@@ -51,8 +51,11 @@ class RunableJob {
 
 	private Session createSession() {
 		SessionManager sessionManager = FACTORY.getSessionManager();
-		Session session = sessionManager.createSession(null, "SCHEDULER",
+		Session session = sessionManager.createSession(null, job.getName(),
 				FACTORY);
+		AppUser user = new AppUser();
+		user.setUsername("SCHEDULER");
+		session.setUser(user);
 		try {
 			sessionManager.acquireSession(session.getSessionString());
 		} catch (SessionNotFoundException e) {

@@ -20,8 +20,8 @@ public class SchedulerTest {
 	public void testSingleRunScheduler() throws Exception {
 
 		final ArrayList<Long> xTimes = new ArrayList<Long>();
-
-		ScheduledJob job = new ScheduledJob("Test1", 10) {
+		
+		ScheduledJob job = new ScheduledJob("testSingleRunScheduler", 10) {
 			public void execute(Session session, AppLog log) throws Exception {
 				xTimes.add(System.currentTimeMillis());
 			}
@@ -47,7 +47,7 @@ public class SchedulerTest {
 		final ArrayList<Long> xTimes = new ArrayList<Long>();
 		final int count = 10;
 
-		ScheduledJob job = new ScheduledJob("Test1", 0, 10, count) {
+		ScheduledJob job = new ScheduledJob("testMultiRunScheduler", 0, 10, count) {
 			public void execute(Session session, AppLog log) throws Exception {
 				xTimes.add(System.currentTimeMillis());
 			}
@@ -71,19 +71,18 @@ public class SchedulerTest {
 			oldXtime = x;
 			sum += x - schedTime;
 		}
-		System.out.println(sum);
 		assertEquals(
 				"The sum of deltas does not integrates in the expected interval",
-				10*count * (count - 1) / 2, sum, 5 * count);
+				10 * count * (count - 1) / 2, sum, 5 * count);
 
 	}
 
-	// @Test
-	public void testSingleExecution() throws Exception {
+	@Test
+	public void testSingleExecutionManager() throws Exception {
 		ScheduleManager scheduleManager = FACTORY.getScheduleManager();
 		final ArrayList<Long> xTimes = new ArrayList<Long>();
 		scheduleManager
-				.scheduleJob(new ScheduledJob("testSingleExecution", 10) {
+				.scheduleJob(new ScheduledJob("testSingleExecutionManager", 10) {
 					@Override
 					public void execute(Session session, AppLog log) {
 						xTimes.add(System.currentTimeMillis());
@@ -93,12 +92,12 @@ public class SchedulerTest {
 		assertEquals("Only one time execution was expected", 1, xTimes.size());
 	}
 
-	// @Test
-	public void testMultipleExecution() throws Exception {
+	@Test
+	public void testMultipleExecutionManager() throws Exception {
 		ScheduleManager scheduleManager = FACTORY.getScheduleManager();
 		final ArrayList<Long> xTimes = new ArrayList<Long>();
 		long start = System.currentTimeMillis();
-		scheduleManager.scheduleJob(new ScheduledJob("testMultipleExecution",
+		scheduleManager.scheduleJob(new ScheduledJob("testMultipleExecutionManager",
 				10, 35) {
 			@Override
 			public void execute(Session session, AppLog log) {
@@ -107,12 +106,11 @@ public class SchedulerTest {
 		});
 		Thread.sleep(100);
 		for (Long l : xTimes) {
-			System.out.println(l - start);
 		}
 		assertEquals("Only 2 times of execution was expected", 3, xTimes.size());
 	}
 
-	// @Test
+	@Test
 	public void testExceptionExecution() throws Exception {
 		ScheduleManager scheduleManager = FACTORY.getScheduleManager();
 		scheduleManager.scheduleJob(new ScheduledJob("testExceptionExecution",

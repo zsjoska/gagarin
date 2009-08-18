@@ -43,15 +43,13 @@ public class SessionTest {
 
 	// TODO: add test with null session for all WS methods
 
-	@BeforeClass
-	public static void startup() {
+	public void speedUpConfigCheck() {
 		DBConfigManager.getInstance().configChanged(
 				Config.DB_CONFIG_CHECK_PERIOD,
 				"" + LOCAL_DB_CONFIG_CHECK_PERIOD);
 	}
 
-	@AfterClass
-	public static void shutdown() {
+	public void resetConfigCheck() {
 		DBConfigManager dbConfig = DBConfigManager.getInstance();
 		dbConfig.configChanged(Config.DB_CONFIG_CHECK_PERIOD, ""
 				+ dbConfig.getLong(Config.DB_CONFIG_CHECK_PERIOD));
@@ -162,6 +160,8 @@ public class SessionTest {
 	public void testSessionExpiration() throws InterruptedException,
 			SessionNotFoundException, OperationException {
 
+		speedUpConfigCheck();
+		
 		session = FACTORY.getSessionManager()
 				.createSession(null, null, FACTORY);
 		FACTORY.getSessionManager().acquireSession(session.getSessionString());
@@ -196,5 +196,6 @@ public class SessionTest {
 		}
 
 		FACTORY.releaseSession(session);
+		resetConfigCheck();
 	}
 }

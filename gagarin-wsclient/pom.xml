@@ -8,6 +8,7 @@
 	</parent>
 	<artifactId>gagarin-wsclient</artifactId>
 	<name>gagarin-wsclient</name>
+	<url>../../../${project.name}/target/site</url>
 	<build>
 		<plugins>
 			<plugin>

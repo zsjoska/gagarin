@@ -8,7 +8,7 @@
 	</parent>
 	<artifactId>gagarin-model</artifactId>
 	<name>gagarin-model</name>
-	<url>../../../gagarin-model/target/site</url>
+	<url>../../../${project.name}/target/site</url>
 	<dependencies>
 		<dependency>
 			<groupId>log4j</groupId>

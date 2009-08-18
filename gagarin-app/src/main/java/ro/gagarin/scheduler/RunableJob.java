@@ -26,12 +26,15 @@ class RunableJob {
 			// once to be executed
 			this.toExecute = 1;
 		} else {
-			this.toExecute = -1;
+			this.toExecute = job.getCount();
 		}
 	}
 
 	public void run() {
+		
+		// TODO: move this session creation to the constructor and set the right timeout for the session
 		Session session = createSession();
+		
 		System.out.println("toExecute:"+this.toExecute);
 		AppLog log = FACTORY.getLogManager(session, BasicScheduleManager.class);
 		try {
@@ -72,6 +75,7 @@ class RunableJob {
 	}
 
 	public void markExecuted() {
+		this.lastRun += this.job.getPeriod();
 		if (this.toExecute > 0)
 			this.toExecute--;
 	}

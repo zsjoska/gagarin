@@ -71,6 +71,7 @@ public class Scheduler {
 			}
 
 			toWait = nextRun - System.currentTimeMillis();
+			System.out.println("@"+System.currentTimeMillis() + "#" + nextRun);
 			if (toWait < 10) {
 				this.jobStore.remove(nextJob.getId());
 			} else {

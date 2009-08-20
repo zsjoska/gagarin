@@ -9,7 +9,7 @@
 	<artifactId>gagarin-ws</artifactId>
 	<packaging>war</packaging>
 	<name>gagarin-ws</name>
-	<url>../../../${project.name}/target/site</url>
+	<url>../../${project.name}/target/site</url>
 	<build>
 		<plugins>
 			<plugin>

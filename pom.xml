@@ -7,11 +7,11 @@
 	<packaging>pom</packaging>
 	<name>gagarin</name>
 	<modules>
-		<module>../gagarin-ws</module>
-		<module>../gagarin-model</module>
-		<module>../gagarin-app</module>
-		<module>../gagarin-da-jdbc</module>
-		<module>../gagarin-wsclient</module>
+		<module>gagarin-ws</module>
+		<module>gagarin-model</module>
+		<module>gagarin-app</module>
+		<module>gagarin-da-jdbc</module>
+		<module>gagarin-wsclient</module>
 	</modules>
 	<build>
 		<plugins>
@@ -79,6 +79,10 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>cobertura-maven-plugin</artifactId>
+			</plugin>
+		    <plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</reporting>

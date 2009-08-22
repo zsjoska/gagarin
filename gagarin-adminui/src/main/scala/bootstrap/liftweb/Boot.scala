@@ -30,7 +30,9 @@ class Boot {
     					   Menu(Loc("roles", List("roles"), "Roles", requiresLogin),
 	    					   Menu(Loc("newRole", List("newRole"), "New Role", requiresLogin)),
 	    					   Menu(Loc("editRole", List("editRole"), "Edit Role", Hidden, requiresLogin))
-    					   )
+    					   ),
+    					   Menu(Loc("config", List("config"), "Config", requiresLogin)),
+    					   Menu(Loc("logs", List("logs"), "Logs", requiresLogin))
     					)
     LiftRules.setSiteMap(entries)
   }

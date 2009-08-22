@@ -129,6 +129,7 @@
 				<version>6.1.16</version>
 				<configuration>
 					<jettyConfig>jetty.xml</jettyConfig>
+					<reload>automatic</reload>
 					<scanIntervalSeconds>5</scanIntervalSeconds>
 					<contextPath>/gagarin-adminui</contextPath>
 				</configuration>

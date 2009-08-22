@@ -6,7 +6,6 @@ import ro.gagarin.BasicManagerFactory;
 import ro.gagarin.ManagerFactory;
 import ro.gagarin.SessionManager;
 import ro.gagarin.application.objects.AppUser;
-import ro.gagarin.config.DBConfigManager;
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.log.AppLog;
 import ro.gagarin.session.Session;

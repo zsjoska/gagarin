@@ -46,14 +46,15 @@
 					<stopPort>9999</stopPort>
 					<webApp>${project.build.directory}/gagarin-ws.war</webApp>
 					<contextPath>/gagarin-ws</contextPath>
-					<connectors>
-						<connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
-							<port>9090</port>
-							<maxIdleTime>60000</maxIdleTime>
-						</connector>
-					</connectors>
 				</configuration>
 				<executions>
+					<execution>
+						<id>ensure-jetty-stopped</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>stop</goal>
+						</goals>
+					</execution>
 					<execution>
 						<id>start-jetty</id>
 						<phase>generate-sources</phase>
@@ -64,13 +65,6 @@
 					<execution>
 						<id>stop-jetty</id>
 						<phase>post-integration-test</phase>
-						<goals>
-							<goal>stop</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>stop2-jetty</id>
-						<phase>post-site</phase>
 						<goals>
 							<goal>stop</goal>
 						</goals>
@@ -87,8 +81,8 @@
 						</goals>
 						<configuration>
 							<wsdlUrls>
-								<wsdlUrl>http://localhost:9090/gagarin-ws/ws/AuthService?wsdl</wsdlUrl>
-								<wsdlUrl>http://localhost:9090/gagarin-ws/ws/UserService?wsdl</wsdlUrl>
+								<wsdlUrl>http://localhost:8080/gagarin-ws/ws/AuthService?wsdl</wsdlUrl>
+								<wsdlUrl>http://localhost:8080/gagarin-ws/ws/UserService?wsdl</wsdlUrl>
 							</wsdlUrls>
 							<packageName>ro.gagarin</packageName>
 							<verbose>true</verbose>

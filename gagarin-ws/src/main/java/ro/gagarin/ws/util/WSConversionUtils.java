@@ -4,8 +4,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import ro.gagarin.config.ConfigEntry;
+import ro.gagarin.jdbc.objects.WSLogEntry;
+import ro.gagarin.log.LogEntry;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserPermission;
+import ro.gagarin.ws.objects.WSConfig;
 import ro.gagarin.ws.objects.WSUser;
 import ro.gagarin.ws.objects.WSUserPermission;
 
@@ -24,6 +28,22 @@ public class WSConversionUtils {
 		ArrayList<WSUser> list = new ArrayList<WSUser>();
 		for (User user : allUsers) {
 			list.add(new WSUser(user));
+		}
+		return list;
+	}
+
+	public static List<WSConfig> toWSConfigList(List<ConfigEntry> configValues) {
+		ArrayList<WSConfig> list = new ArrayList<WSConfig>();
+		for (ConfigEntry configEntry : configValues) {
+			list.add(new WSConfig(configEntry));
+		}
+		return list;
+	}
+
+	public static List<WSLogEntry> toWSLogList(List<LogEntry> logValues) {
+		ArrayList<WSLogEntry> list = new ArrayList<WSLogEntry>();
+		for (LogEntry logEntry : logValues) {
+			list.add(new WSLogEntry(logEntry));
 		}
 		return list;
 	}

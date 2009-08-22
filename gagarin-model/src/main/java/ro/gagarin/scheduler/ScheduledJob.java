@@ -40,7 +40,7 @@ public abstract class ScheduledJob extends BaseEntity {
 	}
 
 	abstract public void execute(Session session, AppLog log) throws Exception;
-
+	
 	public String getName() {
 		return name;
 	}

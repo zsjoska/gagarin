@@ -4,8 +4,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import ro.gagarin.ConfigurationManager;
+import ro.gagarin.application.objects.AppConfig;
 import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.OperationException;
 
@@ -57,4 +60,23 @@ public class FileConfigurationManager extends ConfigHolder implements Configurat
 		throw new OperationException(ErrorCodes.ERROR_READING_FILE, "File not found:" + filename);
 	}
 
+	public List<ConfigEntry> getConfigValues() {
+		ArrayList<ConfigEntry> cfgList = new ArrayList<ConfigEntry>();
+		for (Config cfg : Config.values()) {
+			// do not export internal config controls
+			if (cfg.name().startsWith("_"))
+				continue;
+			AppConfig cfgObj = new AppConfig();
+			cfgObj.setConfigName(cfg.name());
+			cfgObj.setConfigValue(getString(cfg));
+			if(isDefined(cfg)){
+				cfgObj.setConfigScope(ConfigScope.LOCAL);
+			} else {
+				cfgObj.setConfigScope(ConfigScope.DEFAULT);
+			}
+			
+			cfgList.add(cfgObj);
+		}
+		return cfgList;
+	}
 }

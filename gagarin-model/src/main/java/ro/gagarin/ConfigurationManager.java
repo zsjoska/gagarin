@@ -1,8 +1,10 @@
 package ro.gagarin;
 
 import java.io.InputStream;
+import java.util.List;
 
 import ro.gagarin.config.Config;
+import ro.gagarin.config.ConfigEntry;
 import ro.gagarin.config.SettingsChangeObserver;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.session.Session;
@@ -49,7 +51,8 @@ public interface ConfigurationManager {
 	 *            configuration value
 	 * @throws OperationException
 	 */
-	void setConfigValue(Session session, Config config, String value) throws OperationException;
+	void setConfigValue(Session session, Config config, String value)
+			throws OperationException;
 
 	String getString(Config config);
 
@@ -58,5 +61,10 @@ public interface ConfigurationManager {
 	boolean isDefined(Config config);
 
 	String[] exportConfig();
+
+	List<ConfigEntry> getConfigValues();
+
+	void setConfigValue(Session session, ConfigEntry config)
+			throws OperationException;
 
 }

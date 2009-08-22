@@ -10,14 +10,16 @@ import ro.gagarin.session.Session;
 public class ConfigHolder {
 
 	// TODO make it private
-	protected static final transient Logger LOG = Logger.getLogger(ConfigHolder.class);
+	protected static final transient Logger LOG = Logger
+			.getLogger(ConfigHolder.class);
 
 	/**
 	 * The change observers, a single static instance
 	 */
 	private static ArrayList<SettingsChangeObserver> changeObservers = new ArrayList<SettingsChangeObserver>();
 
-	private ArrayList<String> configuration = new ArrayList<String>(Config.values().length);
+	private ArrayList<String> configuration = new ArrayList<String>(Config
+			.values().length);
 
 	public ConfigHolder() {
 		for (int i = 0; i < Config.values().length; i++) {
@@ -41,7 +43,8 @@ public class ConfigHolder {
 			strValue = this.configuration.get(config.ordinal());
 		}
 		if (strValue == null) {
-			LOG.warn(config.name() + " config value was not found, getting the default value");
+			LOG.warn(config.name()
+					+ " config value was not found, getting the default value");
 			strValue = config.getDefaultValue();
 		}
 		return strValue;
@@ -91,12 +94,14 @@ public class ConfigHolder {
 	}
 
 	private void notifyConfigChange(Config config, String value) {
-		LOG.info("Config Change:" + config.name() + "=" + value + "; propagating...");
+		LOG.info("Config Change:" + config.name() + "=" + value
+				+ "; propagating...");
 		for (SettingsChangeObserver observer : getChangeObservers()) {
 			try {
 				observer.configChanged(config, value);
 			} catch (Exception e) {
-				LOG.error("Config " + config.name() + "=" + value + " could not be applied by "
+				LOG.error("Config " + config.name() + "=" + value
+						+ " could not be applied by "
 						+ observer.getClass().getName(), e);
 			}
 		}
@@ -113,5 +118,10 @@ public class ConfigHolder {
 
 	protected static ArrayList<SettingsChangeObserver> getChangeObservers() {
 		return changeObservers;
+	}
+
+	public void setConfigValue(Session session, ConfigEntry config) throws OperationException {
+		Config cfg = Config.valueOf(config.getConfigName());
+		setConfigValue(session, cfg, config.getConfigValue());
 	}
 }

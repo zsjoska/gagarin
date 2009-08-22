@@ -7,13 +7,10 @@ import static org.junit.Assert.fail;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import ro.gagarin.application.objects.AppUser;
 import ro.gagarin.config.Config;
-import ro.gagarin.config.DBConfigManager;
 import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.OperationException;
@@ -34,8 +31,6 @@ public class SessionTest {
 	private static final ManagerFactory FACTORY = BasicManagerFactory
 			.getInstance();
 
-	private static final long LOCAL_DB_CONFIG_CHECK_PERIOD = 100;
-
 	private Authentication authentication = new Authentication();
 	private String username = "_User_" + System.currentTimeMillis();
 
@@ -43,17 +38,6 @@ public class SessionTest {
 
 	// TODO: add test with null session for all WS methods
 
-	public void speedUpConfigCheck() {
-		DBConfigManager.getInstance().configChanged(
-				Config.DB_CONFIG_CHECK_PERIOD,
-				"" + LOCAL_DB_CONFIG_CHECK_PERIOD);
-	}
-
-	public void resetConfigCheck() {
-		DBConfigManager dbConfig = DBConfigManager.getInstance();
-		dbConfig.configChanged(Config.DB_CONFIG_CHECK_PERIOD, ""
-				+ dbConfig.getLong(Config.DB_CONFIG_CHECK_PERIOD));
-	}
 
 	@Test
 	public void testSuccessLogin() throws SessionNotFoundException,
@@ -160,7 +144,7 @@ public class SessionTest {
 	public void testSessionExpiration() throws InterruptedException,
 			SessionNotFoundException, OperationException {
 
-		speedUpConfigCheck();
+		TUtil.setDBImportRate(100);
 		
 		session = FACTORY.getSessionManager()
 				.createSession(null, null, FACTORY);
@@ -170,8 +154,7 @@ public class SessionTest {
 		cfgManager.setConfigValue(session, Config.USER_SESSION_TIMEOUT, "100");
 		FACTORY.releaseSession(session);
 
-		LOG.info("Waiting DB config import for " + LOCAL_DB_CONFIG_CHECK_PERIOD);
-		Thread.sleep(LOCAL_DB_CONFIG_CHECK_PERIOD);
+		TUtil.waitDBImportToHappen();
 
 		SessionManager sessionManager = FACTORY.getSessionManager();
 		Session session = FACTORY.getSessionManager().createSession(null, null,
@@ -196,6 +179,6 @@ public class SessionTest {
 		}
 
 		FACTORY.releaseSession(session);
-		resetConfigCheck();
+		TUtil.resetDBImportRate();
 	}
 }

@@ -7,13 +7,18 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import ro.gagarin.ConfigurationManager;
 import ro.gagarin.application.objects.AppConfig;
 import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.OperationException;
 
-public class FileConfigurationManager extends ConfigHolder implements ConfigurationManager {
+public class FileConfigurationManager extends ConfigHolder implements
+		ConfigurationManager {
 
+	private static final transient Logger LOG = Logger
+			.getLogger(FileConfigurationManager.class);
 	private static final ConfigurationManager INSTANCE = new FileConfigurationManager();
 
 	public static ConfigurationManager getInstance() {
@@ -34,7 +39,8 @@ public class FileConfigurationManager extends ConfigHolder implements Configurat
 	}
 
 	@Override
-	public InputStream getConfigFileStream(Config fileConfig) throws OperationException {
+	public InputStream getConfigFileStream(Config fileConfig)
+			throws OperationException {
 		String filename = getString(fileConfig);
 		File file = new File(filename);
 		try {
@@ -55,9 +61,11 @@ public class FileConfigurationManager extends ConfigHolder implements Configurat
 			return is;
 		}
 
-		LOG.error("Could not load file for config " + fileConfig.name() + " tried to load from "
-				+ file.getAbsolutePath() + " and " + filename + " in classpath");
-		throw new OperationException(ErrorCodes.ERROR_READING_FILE, "File not found:" + filename);
+		LOG.error("Could not load file for config " + fileConfig.name()
+				+ " tried to load from " + file.getAbsolutePath() + " and "
+				+ filename + " in classpath");
+		throw new OperationException(ErrorCodes.ERROR_READING_FILE,
+				"File not found:" + filename);
 	}
 
 	public List<ConfigEntry> getConfigValues() {
@@ -69,12 +77,12 @@ public class FileConfigurationManager extends ConfigHolder implements Configurat
 			AppConfig cfgObj = new AppConfig();
 			cfgObj.setConfigName(cfg.name());
 			cfgObj.setConfigValue(getString(cfg));
-			if(isDefined(cfg)){
+			if (isDefined(cfg)) {
 				cfgObj.setConfigScope(ConfigScope.LOCAL);
 			} else {
 				cfgObj.setConfigScope(ConfigScope.DEFAULT);
 			}
-			
+
 			cfgList.add(cfgObj);
 		}
 		return cfgList;

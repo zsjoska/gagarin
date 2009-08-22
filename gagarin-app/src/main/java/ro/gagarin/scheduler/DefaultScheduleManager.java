@@ -1,9 +1,13 @@
 package ro.gagarin.scheduler;
 
+import org.apache.log4j.Logger;
+
 import ro.gagarin.ScheduleManager;
 
 public class DefaultScheduleManager implements ScheduleManager {
 
+	private static final transient Logger LOG = Logger
+			.getLogger(DefaultScheduleManager.class);
 	private static Scheduler defaultScheduler;
 
 	static {
@@ -13,17 +17,21 @@ public class DefaultScheduleManager implements ScheduleManager {
 
 	@Override
 	public long scheduleJob(ScheduledJob job) {
+		job.setId(ScheduledJob.getNextId());
+		LOG.info("Schedule Job:" + job.toString());
 		return defaultScheduler.scheduleJob(job);
 	}
 
 	@Override
 	public void updateJobRate(Long id, Long rate) {
+		LOG.info("Update job rate:" + id + " rate:" + rate);
 		defaultScheduler.updateJobRate(id, rate);
 	}
 
 	@Override
-	public void triggerExecution(ScheduledJob configImportJob) {
-		defaultScheduler.triggerExecution(configImportJob.getId());
+	public void triggerExecution(ScheduledJob job) {
+		LOG.info("Trigger job execution:" + job.getId());
+		defaultScheduler.triggerExecution(job.getId());
 	}
 
 }

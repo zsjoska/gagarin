@@ -53,10 +53,13 @@ public abstract class ScheduledJob extends BaseEntity {
 		return period;
 	}
 
+	
+
 	@Override
 	public String toString() {
-		return "ScheduledJob [initialWait=" + initialWait + ", name=" + name + ", period=" + period
-				+ ", getId()=" + getId() + "]";
+		return "ScheduledJob [count=" + count + ", initialWait=" + initialWait
+				+ ", name=" + name + ", period=" + period + ", getId()="
+				+ getId() + "]";
 	}
 
 	public void setCount(int count) {

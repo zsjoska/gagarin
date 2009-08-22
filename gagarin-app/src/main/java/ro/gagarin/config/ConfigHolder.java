@@ -9,8 +9,7 @@ import ro.gagarin.session.Session;
 
 public class ConfigHolder {
 
-	// TODO make it private
-	protected static final transient Logger LOG = Logger
+	private static final transient Logger LOG = Logger
 			.getLogger(ConfigHolder.class);
 
 	/**

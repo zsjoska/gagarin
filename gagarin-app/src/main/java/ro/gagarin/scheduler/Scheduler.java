@@ -29,7 +29,7 @@ public class Scheduler {
 		return false;
 	}
 
-	public RunableJob getNextJob() {
+	private RunableJob getNextJob() {
 		long minNextRun = Long.MAX_VALUE;
 		RunableJob nextJob = null;
 		for (RunableJob job : this.jobStore.values()) {
@@ -50,7 +50,7 @@ public class Scheduler {
 		}
 	}
 
-	public synchronized RunableJob waitNextJob() throws InterruptedException {
+	public RunableJob waitNextJob() throws InterruptedException {
 		RunableJob nextJob = null;
 		long toWait = Long.MAX_VALUE;
 		synchronized (this) {
@@ -89,7 +89,9 @@ public class Scheduler {
 	}
 
 	public long scheduleJob(ScheduledJob job) {
-		job.setId(ScheduledJob.getNextId());
+		if (job.getId() == null) {
+			job.setId(ScheduledJob.getNextId());
+		}
 		synchronized (this) {
 			this.jobStore.put(job.getId(), new RunableJob(job));
 			this.notify();
@@ -99,7 +101,7 @@ public class Scheduler {
 
 	public synchronized void updateJobRate(Long id, Long rate) {
 		RunableJob job = this.jobStore.get(id);
-		if(job != null){
+		if (job != null) {
 			job.setPeriod(rate);
 			this.notify();
 		}
@@ -107,7 +109,7 @@ public class Scheduler {
 
 	public synchronized void triggerExecution(Long id) {
 		RunableJob job = this.jobStore.get(id);
-		if(job != null){
+		if (job != null) {
 			job.markToExecuteNow();
 			this.notify();
 		}

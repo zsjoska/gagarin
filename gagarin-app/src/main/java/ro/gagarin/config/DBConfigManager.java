@@ -4,6 +4,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import ro.gagarin.BasicManagerFactory;
 import ro.gagarin.ConfigDAO;
 import ro.gagarin.ConfigurationManager;
@@ -20,6 +22,9 @@ import ro.gagarin.session.Session;
 public class DBConfigManager extends ConfigHolder implements
 		ConfigurationManager, SettingsChangeObserver {
 
+	private static final transient Logger LOG = Logger
+	.getLogger(DBConfigManager.class);
+	
 	// TODO: there is a problem with the configuration implementation in the
 	// following scenario:
 	// the config is only in the DB

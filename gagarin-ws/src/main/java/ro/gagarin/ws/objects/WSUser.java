@@ -65,12 +65,8 @@ public class WSUser extends BaseEntity implements User {
 	}
 
 	public void setRole(UserRole role) {
-		if (role instanceof WSUserRole) {
-			this.role = (WSUserRole) role;
-
-		} else {
+		if (role != null)
 			this.role = new WSUserRole(role);
-		}
 	}
 
 	public String getEmail() {

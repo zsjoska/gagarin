@@ -1,4 +1,4 @@
-package ro.gagarin.jdbc.objects;
+package ro.gagarin.ws.objects;
 
 import ro.gagarin.log.LogEntry;
 import ro.gagarin.user.BaseEntity;
@@ -9,7 +9,11 @@ public class WSLogEntry extends BaseEntity implements LogEntry {
 	private String message;
 	private String logLevel;
 	private Long date;
-	private User user;
+	private WSUser user;
+	private String sessionID;
+
+	public WSLogEntry() {
+	}
 
 	@Override
 	public String toString() {
@@ -22,7 +26,8 @@ public class WSLogEntry extends BaseEntity implements LogEntry {
 		this.message = logEntry.getMessage();
 		this.logLevel = logEntry.getLogLevel();
 		this.date = logEntry.getDate();
-		this.user = logEntry.getUser();
+		if (logEntry.getUser() != null)
+			this.user = new WSUser(logEntry.getUser());
 	}
 
 	public void setMessage(String message) {
@@ -54,15 +59,19 @@ public class WSLogEntry extends BaseEntity implements LogEntry {
 
 	@Override
 	public String getSessionID() {
-		return this.getSessionID();
+		return this.sessionID;
+	}
+
+	public void setSessionID(String sessionID) {
+		this.sessionID = sessionID;
 	}
 
 	@Override
-	public User getUser() {
+	public WSUser getUser() {
 		return this.user;
 	}
 
-	public void setUser(User user) {
+	public void setUser(WSUser user) {
 		this.user = user;
 	}
 

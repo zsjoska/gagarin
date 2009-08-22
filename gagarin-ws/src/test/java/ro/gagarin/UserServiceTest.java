@@ -1,9 +1,11 @@
 package ro.gagarin;
 
-import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.Date;
 import java.util.List;
 
 import org.junit.BeforeClass;
@@ -15,13 +17,13 @@ import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.exceptions.PermissionDeniedException;
 import ro.gagarin.exceptions.SessionNotFoundException;
-import ro.gagarin.jdbc.objects.WSLogEntry;
 import ro.gagarin.testutil.TUtil;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.UserRole;
 import ro.gagarin.ws.Authentication;
 import ro.gagarin.ws.UserService;
 import ro.gagarin.ws.objects.WSConfig;
+import ro.gagarin.ws.objects.WSLogEntry;
 import ro.gagarin.ws.objects.WSUser;
 import ro.gagarin.ws.objects.WSUserPermission;
 import ro.gagarin.ws.objects.WSUserRole;
@@ -133,6 +135,9 @@ public class UserServiceTest {
 	public void getLogEntries() throws Exception {
 		// TODO: add some more meaningful test
 		List<WSLogEntry> logEntries = userService.getLogEntries(session, null);
+		for (WSLogEntry wsLogEntry : logEntries) {
+			System.out.println(wsLogEntry);
+		}
 		assertNotNull(logEntries);
 		assertTrue(logEntries.size() > 0);
 	}

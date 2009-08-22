@@ -5,11 +5,11 @@ import java.util.Collection;
 import java.util.List;
 
 import ro.gagarin.config.ConfigEntry;
-import ro.gagarin.jdbc.objects.WSLogEntry;
 import ro.gagarin.log.LogEntry;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.ws.objects.WSConfig;
+import ro.gagarin.ws.objects.WSLogEntry;
 import ro.gagarin.ws.objects.WSUser;
 import ro.gagarin.ws.objects.WSUserPermission;
 

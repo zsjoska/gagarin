@@ -30,11 +30,16 @@ public class FileConfigurationManager extends ConfigHolder implements
 		// TODO: load from file
 
 		String[] newCfg = new String[Config.values().length];
-		// newCfg[Config.USER_SESSION_TIMEOUT.ordinal()] = "100000";
-		newCfg[Config.SESSION_CHECK_PERIOD.ordinal()] = "10000";
-		newCfg[Config.ADMIN_ROLE_NAME.ordinal()] = "ADMIN_ROLE";
-		newCfg[Config.ADMIN_USER_NAME.ordinal()] = "admin";
-		newCfg[Config.ADMIN_PASSWORD.ordinal()] = "password";
+		newCfg[Config.JDBC_DB_DRIVER.ordinal()] = Config.JDBC_DB_DRIVER
+				.getDefaultValue();
+		newCfg[Config.JDBC_CONNECTION_URL.ordinal()] = Config.JDBC_CONNECTION_URL
+				.getDefaultValue();
+		newCfg[Config.JDBC_DB_USER.ordinal()] = Config.JDBC_DB_USER
+				.getDefaultValue();
+		newCfg[Config.JDBC_DB_PASSWORD.ordinal()] = Config.JDBC_DB_PASSWORD
+				.getDefaultValue();
+		newCfg[Config.DB_INIT_SQL_FILE.ordinal()] = Config.DB_INIT_SQL_FILE
+				.getDefaultValue();
 		super.importConfig(newCfg);
 	}
 

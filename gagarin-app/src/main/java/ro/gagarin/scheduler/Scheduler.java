@@ -15,6 +15,7 @@ public class Scheduler {
 	private HashMap<Long, RunableJob> allJobStore = new HashMap<Long, RunableJob>();
 
 	public Scheduler() {
+		// TODO: make this value configurable
 		this(10);
 	}
 

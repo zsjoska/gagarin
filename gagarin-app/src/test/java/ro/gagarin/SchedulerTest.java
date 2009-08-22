@@ -33,11 +33,11 @@ public class SchedulerTest {
 		long schedTime = System.currentTimeMillis();
 		scheduler.scheduleJob(job);
 
-		Thread.sleep(20);
+		Thread.sleep(200);
 
 		assertEquals("We expect one run only", 1, xTimes.size());
 		assertEquals("The expected run time is wrong", schedTime + 10, xTimes
-				.get(0), 10);
+				.get(0), 50);
 
 	}
 
@@ -59,7 +59,7 @@ public class SchedulerTest {
 		long schedTime = System.currentTimeMillis();
 		scheduler.scheduleJob(job);
 
-		Thread.sleep(200);
+		Thread.sleep(500);
 
 		assertEquals("Too many executions", count, xTimes.size());
 
@@ -67,13 +67,13 @@ public class SchedulerTest {
 		long oldXtime = schedTime - 10;
 		for (Long x : xTimes) {
 			assertEquals("Too big difference have passed between the two runs",
-					10, x - oldXtime, 5);
+					10, x - oldXtime, 100);
 			oldXtime = x;
 			sum += x - schedTime;
 		}
 		assertEquals(
 				"The sum of deltas does not integrates in the expected interval",
-				10 * count * (count - 1) / 2, sum, 5 * count);
+				10 * count * (count - 1) / 2, sum, 100 * count);
 
 	}
 

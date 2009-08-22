@@ -2,11 +2,13 @@ package ro.gagarin.config;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 import ro.gagarin.BasicManagerFactory;
 import ro.gagarin.ConfigDAO;
 import ro.gagarin.ConfigurationManager;
 import ro.gagarin.ManagerFactory;
+import ro.gagarin.application.objects.AppConfig;
 import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.OperationException;
@@ -27,7 +29,7 @@ public class DBConfigManager extends ConfigHolder implements
 	private static ManagerFactory FACTORY = BasicManagerFactory.getInstance();
 	private static final DBConfigManager INSTANCE = new DBConfigManager(
 			FileConfigurationManager.getInstance());
-	private  ConfigImportJob configImportJob;
+	private ConfigImportJob configImportJob;
 
 	static {
 		ConfigurationManager cfgManager = FACTORY.getConfigurationManager();
@@ -57,11 +59,15 @@ public class DBConfigManager extends ConfigHolder implements
 				INSTANCE.importConfigMap(cfgValues, log);
 				INSTANCE.setLastUpdateTime(lastQuery);
 			}
+			synchronized (INSTANCE) {
+				INSTANCE.notify();
+			}
 		}
 	}
 
 	private final ConfigurationManager localConfig;
 	private long lastUpdateTime = 0;
+	private long lastChangeRequest = 0;
 
 	private DBConfigManager(ConfigurationManager localCfg) {
 		this.localConfig = localCfg;
@@ -125,6 +131,8 @@ public class DBConfigManager extends ConfigHolder implements
 	public void setConfigValue(Session session, Config config, String value)
 			throws OperationException {
 
+		this.lastChangeRequest = System.currentTimeMillis();
+
 		// local config has precedence...
 		if (localConfig.isDefined(config)) {
 			AppLog log = session.getManagerFactory().getLogManager(session,
@@ -145,13 +153,15 @@ public class DBConfigManager extends ConfigHolder implements
 			LOG.error("Error setting config " + config + "=" + value, e);
 			throw new OperationException(ErrorCodes.DB_OP_ERROR, e);
 		}
+		FACTORY.getScheduleManager().triggerExecution(configImportJob);
 	}
 
 	@Override
 	public boolean configChanged(Config config, String value) {
 		switch (config) {
 		case DB_CONFIG_CHECK_PERIOD:
-			FACTORY.getScheduleManager().updateJobRate(configImportJob.getId(), Long.valueOf(value));
+			FACTORY.getScheduleManager().updateJobRate(configImportJob.getId(),
+					Long.valueOf(value));
 			return true;
 		default:
 			break;
@@ -159,4 +169,39 @@ public class DBConfigManager extends ConfigHolder implements
 		return false;
 	}
 
+	public List<ConfigEntry> getConfigValues() {
+		ArrayList<ConfigEntry> cfgList = new ArrayList<ConfigEntry>();
+		for (Config cfg : Config.values()) {
+			// do not export internal config controls
+			if (cfg.name().startsWith("_"))
+				continue;
+			AppConfig cfgObj = new AppConfig();
+			cfgObj.setConfigName(cfg.name());
+			cfgObj.setConfigValue(getString(cfg));
+			if (isDefined(cfg)) {
+				cfgObj.setConfigScope(ConfigScope.DB);
+			} else if (localConfig.isDefined(cfg)) {
+				cfgObj.setConfigScope(ConfigScope.LOCAL);
+			} else {
+				cfgObj.setConfigScope(ConfigScope.DEFAULT);
+			}
+
+			cfgList.add(cfgObj);
+		}
+		return cfgList;
+	}
+
+	/**
+	 * Wait until the last requested change to actually happen. For testing
+	 * purposes only.
+	 * 
+	 * @throws InterruptedException
+	 */
+	public void waitForDBImport() throws InterruptedException {
+		synchronized (this) {
+			while (lastChangeRequest > lastUpdateTime) {
+				this.wait();
+			}
+		}
+	}
 }

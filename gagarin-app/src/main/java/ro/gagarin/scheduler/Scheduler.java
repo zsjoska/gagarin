@@ -104,4 +104,12 @@ public class Scheduler {
 			this.notify();
 		}
 	}
+
+	public synchronized void triggerExecution(Long id) {
+		RunableJob job = this.jobStore.get(id);
+		if(job != null){
+			job.markToExecuteNow();
+			this.notify();
+		}
+	}
 }

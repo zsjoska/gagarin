@@ -7,5 +7,7 @@ public interface ConfigEntry {
 	String getConfigName();
 
 	String getConfigValue();
+	
+	ConfigScope getConfigScope();
 
 }

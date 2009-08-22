@@ -8,7 +8,7 @@
 	</parent>
 	<artifactId>gagarin-da-jdbc</artifactId>
 	<name>gagarin-da-jdbc</name>
-	<url>http://maven.apache.org</url>
+	<url>../../${project.name}/target/site</url>
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>

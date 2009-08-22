@@ -6,6 +6,7 @@ public class SchedulerThread extends Thread {
 
 	public SchedulerThread(Scheduler parent) {
 		this.parent = parent;
+		setDaemon(false);
 	}
 
 	@Override

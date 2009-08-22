@@ -1,19 +1,19 @@
-package ro.gagarin.jdbc.objects;
+package ro.gagarin.ws.objects;
 
 import ro.gagarin.config.ConfigEntry;
 import ro.gagarin.config.ConfigScope;
 import ro.gagarin.user.BaseEntity;
 
-public class DBConfig extends BaseEntity implements ConfigEntry {
+public class WSConfig extends BaseEntity implements ConfigEntry {
 
 	private String configName;
 	private String configValue;
 	private ConfigScope configScope;
 
-	public DBConfig() {
+	public WSConfig() {
 	}
 
-	public DBConfig(ConfigEntry cfg) {
+	public WSConfig(ConfigEntry cfg) {
 		this.setId(cfg.getId());
 		this.configName = cfg.getConfigName();
 		this.configValue = cfg.getConfigValue();

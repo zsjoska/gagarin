@@ -25,9 +25,11 @@ import ro.gagarin.ws.Authentication;
  * Unit test for simple App.
  */
 public class SessionTest {
-	private static final transient Logger LOG = Logger.getLogger(SessionTest.class);
+	private static final transient Logger LOG = Logger
+			.getLogger(SessionTest.class);
 
-	private static final ManagerFactory FACTORY = BasicManagerFactory.getInstance();
+	private static final ManagerFactory FACTORY = BasicManagerFactory
+			.getInstance();
 
 	private Authentication authentication = new Authentication();
 	private String username = "_User_" + System.currentTimeMillis();
@@ -36,9 +38,10 @@ public class SessionTest {
 
 	// TODO: add test with null session for all WS methods
 
+
 	@Test
-	public void testSuccessLogin() throws SessionNotFoundException, DataConstraintException,
-			ItemNotFoundException, OperationException {
+	public void testSuccessLogin() throws SessionNotFoundException,
+			DataConstraintException, ItemNotFoundException, OperationException {
 
 		session = TUtil.createTestSession();
 
@@ -56,7 +59,8 @@ public class SessionTest {
 		AppUser user = new AppUser();
 		user.setUsername("1" + username);
 		user.setPassword("password1");
-		user.setRole(roleManager.getRoleByName(cfgManager.getString(Config.ADMIN_ROLE_NAME)));
+		user.setRole(roleManager.getRoleByName(cfgManager
+				.getString(Config.ADMIN_ROLE_NAME)));
 		userManager.createUser(user);
 		FACTORY.releaseSession(session);
 
@@ -69,8 +73,8 @@ public class SessionTest {
 	}
 
 	@Test
-	public void testFailedLogin() throws SessionNotFoundException, ItemNotFoundException,
-			DataConstraintException, OperationException {
+	public void testFailedLogin() throws SessionNotFoundException,
+			ItemNotFoundException, DataConstraintException, OperationException {
 
 		session = TUtil.createTestSession();
 
@@ -81,7 +85,8 @@ public class SessionTest {
 		DBUser user = new DBUser();
 		user.setUsername("2" + username);
 		user.setPassword("password2");
-		user.setRole(roleManager.getRoleByName(cfgManager.getString(Config.ADMIN_ROLE_NAME)));
+		user.setRole(roleManager.getRoleByName(cfgManager
+				.getString(Config.ADMIN_ROLE_NAME)));
 		userManager.createUser(user);
 
 		FACTORY.releaseSession(session);
@@ -104,8 +109,8 @@ public class SessionTest {
 	}
 
 	@Test
-	public void testSessionDeletion() throws ItemNotFoundException, DataConstraintException,
-			OperationException {
+	public void testSessionDeletion() throws ItemNotFoundException,
+			DataConstraintException, OperationException {
 		session = TUtil.createTestSession();
 
 		UserDAO userManager = FACTORY.getDAOManager().getUserDAO(session);
@@ -115,7 +120,8 @@ public class SessionTest {
 		DBUser user = new DBUser();
 		user.setUsername("3" + username);
 		user.setPassword("password3");
-		user.setRole(roleManager.getRoleByName(cfgManager.getString(Config.ADMIN_ROLE_NAME)));
+		user.setRole(roleManager.getRoleByName(cfgManager
+				.getString(Config.ADMIN_ROLE_NAME)));
 		userManager.createUser(user);
 
 		FACTORY.releaseSession(session);
@@ -128,30 +134,34 @@ public class SessionTest {
 			authentication.login(session, "3" + username, "password3", null);
 			fail("The login must fail since the session was deleted");
 		} catch (SessionNotFoundException e) {
-			assertEquals("Wrong session ID returned by the exception", e.getSessionID(), session);
+			assertEquals("Wrong session ID returned by the exception", e
+					.getSessionID(), session);
 		}
 
 	}
 
 	@Test
-	public void testSessionExpiration() throws InterruptedException, SessionNotFoundException,
-			OperationException {
+	public void testSessionExpiration() throws InterruptedException,
+			SessionNotFoundException, OperationException {
 
-		session = FACTORY.getSessionManager().createSession(null, null, FACTORY);
+		TUtil.setDBImportRate(100);
+		
+		session = FACTORY.getSessionManager()
+				.createSession(null, null, FACTORY);
 		FACTORY.getSessionManager().acquireSession(session.getSessionString());
 
 		ConfigurationManager cfgManager = FACTORY.getConfigurationManager();
 		cfgManager.setConfigValue(session, Config.USER_SESSION_TIMEOUT, "100");
 		FACTORY.releaseSession(session);
 
-		long toWait = cfgManager.getLong(Config.DB_CONFIG_CHECK_PERIOD);
-		LOG.info("Waiting DB config import for " + toWait);
-		Thread.sleep(toWait);
+		TUtil.waitDBImportToHappen();
 
 		SessionManager sessionManager = FACTORY.getSessionManager();
-		Session session = FACTORY.getSessionManager().createSession(null, null, FACTORY);
+		Session session = FACTORY.getSessionManager().createSession(null, null,
+				FACTORY);
 		assertNotNull(session);
-		assertEquals("We just set the timeout to 100", session.getSessionTimeout(), 100);
+		assertEquals("We just set the timeout to 100", session
+				.getSessionTimeout(), 100);
 
 		try {
 			session = sessionManager.acquireSession(session.getSessionString());
@@ -169,5 +179,6 @@ public class SessionTest {
 		}
 
 		FACTORY.releaseSession(session);
+		TUtil.resetDBImportRate();
 	}
 }

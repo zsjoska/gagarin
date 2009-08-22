@@ -1,5 +1,7 @@
 package ro.gagarin.log;
 
+import java.util.List;
+
 public interface AppLog {
 
 	String SUCCESS = "SUCCESS";
@@ -20,5 +22,7 @@ public interface AppLog {
 	void warn(String message);
 
 	void action(AppLogAction action, Class<?> classInAction, String id, String detail);
+
+	List<LogEntry> getLogEntries(String user);
 
 }

@@ -21,4 +21,9 @@ public class DefaultScheduleManager implements ScheduleManager {
 		defaultScheduler.updateJobRate(id, rate);
 	}
 
+	@Override
+	public void triggerExecution(ScheduledJob configImportJob) {
+		defaultScheduler.triggerExecution(configImportJob.getId());
+	}
+
 }

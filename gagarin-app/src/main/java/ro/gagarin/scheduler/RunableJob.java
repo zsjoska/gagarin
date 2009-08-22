@@ -25,7 +25,7 @@ class RunableJob {
 		this.job = job;
 		this.period = job.getPeriod();
 		this.lastRun = (System.currentTimeMillis() + job.getInitialWait())
-		- job.getPeriod();
+				- job.getPeriod();
 		if (job.getPeriod() == 0) {
 			// once to be executed
 			this.toExecute = 1;
@@ -35,10 +35,11 @@ class RunableJob {
 	}
 
 	public void run() {
-		
-		// TODO: move this session creation to the constructor and set the right timeout for the session
+
+		// TODO: move this session creation to the constructor and set the right
+		// timeout for the session
 		Session session = createSession();
-		
+
 		AppLog log = FACTORY.getLogManager(session, RunableJob.class);
 		try {
 			log.debug("Executing job " + job.getName() + "#" + job.getId());
@@ -94,4 +95,7 @@ class RunableJob {
 		return period;
 	}
 
+	public void markToExecuteNow() {
+		this.lastRun = System.currentTimeMillis() - period;
+	}
 }

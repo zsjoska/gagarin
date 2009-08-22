@@ -5,7 +5,6 @@ import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.JdbcDAOManager;
 import ro.gagarin.log.AppLog;
 import ro.gagarin.log.BasicLogManager;
-import ro.gagarin.scheduler.BasicScheduleManager;
 import ro.gagarin.scheduler.DefaultScheduleManager;
 import ro.gagarin.session.BasicSessionManager;
 import ro.gagarin.session.Session;

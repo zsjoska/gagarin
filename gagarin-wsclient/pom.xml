@@ -8,6 +8,7 @@
 	</parent>
 	<artifactId>gagarin-wsclient</artifactId>
 	<name>gagarin-wsclient</name>
+	<url>../../${project.name}/target/site</url>
 	<build>
 		<plugins>
 			<plugin>
@@ -47,6 +48,13 @@
 					<contextPath>/gagarin-ws</contextPath>
 				</configuration>
 				<executions>
+					<execution>
+						<id>ensure-jetty-stopped</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>stop</goal>
+						</goals>
+					</execution>
 					<execution>
 						<id>start-jetty</id>
 						<phase>generate-sources</phase>

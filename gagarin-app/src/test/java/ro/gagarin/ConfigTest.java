@@ -22,17 +22,12 @@ public class ConfigTest {
 
 	@BeforeClass
 	public static void startup() {
-		DBConfigManager dbCfgMgr = DBConfigManager.getInstance();
-
-		// trigger a config change to increase the DB check rate
-		dbCfgMgr.configChanged(Config.DB_CONFIG_CHECK_PERIOD, "100");
+		TUtil.setDBImportRate(100);
 	}
 
 	@AfterClass
 	public static void shutdown() {
-		DBConfigManager dbCfgMgr = DBConfigManager.getInstance();
-		long chk = dbCfgMgr.getLong(Config.DB_CONFIG_CHECK_PERIOD);
-		dbCfgMgr.configChanged(Config.DB_CONFIG_CHECK_PERIOD, "" + chk);
+		TUtil.resetDBImportRate();
 	}
 
 	@Test
@@ -75,11 +70,7 @@ public class ConfigTest {
 			FACTORY.releaseSession(session);
 		}
 
-		assertEquals("The config should not change", oldValue, dbCfgMgr
-				.getString(Config._TEST_DB_ONLY_));
-		long sleeptime = 150; //dbCfgMgr.getLong(Config.DB_CONFIG_CHECK_PERIOD);
-		LOG.info("Waiting for DB Import " + sleeptime);
-		Thread.sleep(sleeptime);
+		dbCfgMgr.waitForDBImport();
 		assertEquals("The config should change", aNewValue, dbCfgMgr
 				.getString(Config._TEST_DB_ONLY_));
 	}

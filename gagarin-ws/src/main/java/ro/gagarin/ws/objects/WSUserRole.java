@@ -5,27 +5,27 @@ import ro.gagarin.user.UserRole;
 
 public class WSUserRole extends BaseEntity implements UserRole {
 
-	private static final long serialVersionUID = -566662791080932756L;
+    private static final long serialVersionUID = -566662791080932756L;
 
-	private String roleName;
+    private String roleName;
 
-	public WSUserRole(UserRole role) {
-		this.roleName = role.getRoleName();
-		this.setId(role.getId());
-	}
+    public WSUserRole(UserRole role) {
+	this.roleName = role.getRoleName();
+	this.setId(role.getId());
+    }
 
-	public WSUserRole() {
-	}
+    public WSUserRole() {
+    }
 
-	public WSUserRole(String roleName) {
-		setRoleName(roleName);
-	}
+    public WSUserRole(String roleName) {
+	setRoleName(roleName);
+    }
 
-	public void setRoleName(String roleName) {
-		this.roleName = roleName;
-	}
+    public void setRoleName(String roleName) {
+	this.roleName = roleName;
+    }
 
-	public String getRoleName() {
-		return roleName;
-	}
+    public String getRoleName() {
+	return roleName;
+    }
 }

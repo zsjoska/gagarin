@@ -18,53 +18,51 @@ import ro.gagarin.session.Session;
  */
 public interface ConfigurationManager {
 
-	/**
-	 * Returns a configuration value converted to long
-	 * 
-	 * @param config
-	 *            the requested configuration
-	 * @return the value of configuration
-	 */
-	long getLong(Config config);
+    /**
+     * Returns a configuration value converted to long
+     * 
+     * @param config
+     *            the requested configuration
+     * @return the value of configuration
+     */
+    long getLong(Config config);
 
-	/**
-	 * An object implementing {@link SettingsChangeObserver} interface could
-	 * register with this method for change notification when a configuration
-	 * entry is modified. When a configuration entry changes, the configuration
-	 * manager will call the
-	 * {@link SettingsChangeObserver#configChanged(Config, String)} method for
-	 * all observers.
-	 * 
-	 * @param observer
-	 *            the object requesting change notification
-	 */
-	void registerForChange(SettingsChangeObserver observer);
+    /**
+     * An object implementing {@link SettingsChangeObserver} interface could
+     * register with this method for change notification when a configuration
+     * entry is modified. When a configuration entry changes, the configuration
+     * manager will call the
+     * {@link SettingsChangeObserver#configChanged(Config, String)} method for
+     * all observers.
+     * 
+     * @param observer
+     *            the object requesting change notification
+     */
+    void registerForChange(SettingsChangeObserver observer);
 
-	/**
-	 * Modifies a configuration value and notifies the change observers.
-	 * 
-	 * @param session
-	 *            an active session to be used for config change
-	 * @param config
-	 *            configuration key
-	 * @param value
-	 *            configuration value
-	 * @throws OperationException
-	 */
-	void setConfigValue(Session session, Config config, String value)
-			throws OperationException;
+    /**
+     * Modifies a configuration value and notifies the change observers.
+     * 
+     * @param session
+     *            an active session to be used for config change
+     * @param config
+     *            configuration key
+     * @param value
+     *            configuration value
+     * @throws OperationException
+     */
+    void setConfigValue(Session session, Config config, String value) throws OperationException;
 
-	String getString(Config config);
+    String getString(Config config);
 
-	InputStream getConfigFileStream(Config file) throws OperationException;
+    InputStream getConfigFileStream(Config file) throws OperationException;
 
-	boolean isDefined(Config config);
+    boolean isDefined(Config config);
 
-	String[] exportConfig();
+    String[] exportConfig();
 
-	List<ConfigEntry> getConfigValues();
+    List<ConfigEntry> getConfigValues();
 
-	void setConfigValue(Session session, ConfigEntry config)
-			throws OperationException;
+    void setConfigValue(Session session, ConfigEntry config) throws OperationException;
 
 }

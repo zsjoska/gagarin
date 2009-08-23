@@ -16,23 +16,23 @@ import ro.gagarin.user.UserRole;
  */
 public class CreateRoleSQL extends UpdateQuery {
 
-	private final UserRole role;
+    private final UserRole role;
 
-	public CreateRoleSQL(BaseJdbcDAO dao, UserRole role) {
-		super(dao, UserRole.class);
-		this.role = role;
+    public CreateRoleSQL(BaseJdbcDAO dao, UserRole role) {
+	super(dao, UserRole.class);
+	this.role = role;
 
-	}
+    }
 
-	@Override
-	protected void fillParameters(PreparedStatement stmnt) throws SQLException {
-		stmnt.setLong(1, role.getId());
-		stmnt.setString(2, role.getRoleName());
-	}
+    @Override
+    protected void fillParameters(PreparedStatement stmnt) throws SQLException {
+	stmnt.setLong(1, role.getId());
+	stmnt.setString(2, role.getRoleName());
+    }
 
-	@Override
-	protected String getSQL() {
-		return "INSERT INTO UserRoles( id, roleName) VALUES (?,?)";
-	}
+    @Override
+    protected String getSQL() {
+	return "INSERT INTO UserRoles( id, roleName) VALUES (?,?)";
+    }
 
 }

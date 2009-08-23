@@ -5,35 +5,33 @@ import ro.gagarin.user.UserPermission;
 
 public class WSUserPermission extends BaseEntity implements UserPermission {
 
-	private static final long serialVersionUID = 1399484581989890777L;
+    private static final long serialVersionUID = 1399484581989890777L;
 
-	private String permissionName;
+    private String permissionName;
 
-	public WSUserPermission() {
-	}
+    public WSUserPermission() {
+    }
 
-	public WSUserPermission(UserPermission perm) {
-		this.setId(perm.getId());
-		this.permissionName = perm.getPermissionName();
-	}
+    public WSUserPermission(UserPermission perm) {
+	this.setId(perm.getId());
+	this.permissionName = perm.getPermissionName();
+    }
 
-	public WSUserPermission(String string) {
-		this.setPermissionName(string);
-	}
+    public WSUserPermission(String string) {
+	this.setPermissionName(string);
+    }
 
-	public void setPermissionName(String permissionName) {
-		this.permissionName = permissionName;
-	}
+    public void setPermissionName(String permissionName) {
+	this.permissionName = permissionName;
+    }
 
-	public String getPermissionName() {
-		return permissionName;
-	}
+    public String getPermissionName() {
+	return permissionName;
+    }
 
-	@Override
-	public String toString() {
-		return "WSUserPermission [permissionName=" + permissionName
-				+ ", getId()=" + getId() + "]";
-	}
+    @Override
+    public String toString() {
+	return "WSUserPermission [permissionName=" + permissionName + ", getId()=" + getId() + "]";
+    }
 
-	
 }

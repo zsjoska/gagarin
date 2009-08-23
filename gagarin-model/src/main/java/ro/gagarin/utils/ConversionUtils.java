@@ -10,43 +10,41 @@ import ro.gagarin.user.UserRole;
 
 public class ConversionUtils {
 
-	public static String user2String(User user) {
-		// TODO Auto-generated method stub
-		return user.getUsername();
-	}
+    public static String user2String(User user) {
+	// TODO Auto-generated method stub
+	return user.getUsername();
+    }
 
-	public static String role2String(UserRole role) {
-		// TODO Auto-generated method stub
-		return role.getRoleName();
-	}
+    public static String role2String(UserRole role) {
+	// TODO Auto-generated method stub
+	return role.getRoleName();
+    }
 
-	public static String perm2String(UserPermission perm) {
-		// TODO Auto-generated method stub
-		return perm.getPermissionName();
-	}
+    public static String perm2String(UserPermission perm) {
+	// TODO Auto-generated method stub
+	return perm.getPermissionName();
+    }
 
-	public static List<UserPermission> matchPermissions(List<UserPermission> allPermissions,
-			UserPermission[] permissions) throws ItemNotFoundException {
-		ArrayList<UserPermission> perms = new ArrayList<UserPermission>();
-		for (UserPermission reqPermission : permissions) {
-			UserPermission mPerm = null;
-			for (UserPermission aDBPermission : allPermissions) {
-				if (aDBPermission.getPermissionName().equalsIgnoreCase(
-						reqPermission.getPermissionName())) {
-					mPerm = aDBPermission;
-					break;
-				}
-				if (aDBPermission.getId().equals(reqPermission.getId())) {
-					mPerm = aDBPermission;
-					break;
-				}
-			}
-			if (mPerm == null)
-				throw new ItemNotFoundException(UserPermission.class, reqPermission
-						.getPermissionName());
-
-			perms.add(mPerm);
+    public static List<UserPermission> matchPermissions(List<UserPermission> allPermissions,
+	    UserPermission[] permissions) throws ItemNotFoundException {
+	ArrayList<UserPermission> perms = new ArrayList<UserPermission>();
+	for (UserPermission reqPermission : permissions) {
+	    UserPermission mPerm = null;
+	    for (UserPermission aDBPermission : allPermissions) {
+		if (aDBPermission.getPermissionName().equalsIgnoreCase(reqPermission.getPermissionName())) {
+		    mPerm = aDBPermission;
+		    break;
 		}
-		return perms;
+		if (aDBPermission.getId().equals(reqPermission.getId())) {
+		    mPerm = aDBPermission;
+		    break;
+		}
+	    }
+	    if (mPerm == null)
+		throw new ItemNotFoundException(UserPermission.class, reqPermission.getPermissionName());
+
+	    perms.add(mPerm);
 	}
+	return perms;
+    }
 }

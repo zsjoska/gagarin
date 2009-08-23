@@ -9,22 +9,22 @@ import ro.gagarin.user.UserPermission;
 
 public class CreatePermissionSQL extends UpdateQuery {
 
-	private final UserPermission perm;
+    private final UserPermission perm;
 
-	public CreatePermissionSQL(BaseJdbcDAO dao, UserPermission perm) {
-		super(dao, UserPermission.class);
-		this.perm = perm;
-	}
+    public CreatePermissionSQL(BaseJdbcDAO dao, UserPermission perm) {
+	super(dao, UserPermission.class);
+	this.perm = perm;
+    }
 
-	@Override
-	protected void fillParameters(PreparedStatement stmnt) throws SQLException {
-		stmnt.setLong(1, perm.getId());
-		stmnt.setString(2, perm.getPermissionName());
-	}
+    @Override
+    protected void fillParameters(PreparedStatement stmnt) throws SQLException {
+	stmnt.setLong(1, perm.getId());
+	stmnt.setString(2, perm.getPermissionName());
+    }
 
-	@Override
-	protected String getSQL() {
-		return "INSERT INTO UserPermissions( id, permissionName) VALUES (?,?)";
-	}
+    @Override
+    protected String getSQL() {
+	return "INSERT INTO UserPermissions( id, permissionName) VALUES (?,?)";
+    }
 
 }

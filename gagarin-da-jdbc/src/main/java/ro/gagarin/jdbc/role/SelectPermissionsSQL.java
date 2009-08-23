@@ -14,36 +14,36 @@ import ro.gagarin.user.UserPermission;
 
 public class SelectPermissionsSQL extends SelectQuery {
 
-	private List<UserPermission> permissions = null;
+    private List<UserPermission> permissions = null;
 
-	public SelectPermissionsSQL(BaseJdbcDAO dao) {
-		super(dao, UserPermission.class);
-	}
+    public SelectPermissionsSQL(BaseJdbcDAO dao) {
+	super(dao, UserPermission.class);
+    }
 
-	@Override
-	protected void useResult(ResultSet rs) throws SQLException {
-		this.permissions = new ArrayList<UserPermission>();
-		while (rs.next()) {
-			DBUserPermission permission = new DBUserPermission();
-			permission.setId(rs.getLong("id"));
-			permission.setPermissionName(rs.getString("permissionName"));
-			permissions.add(permission);
-		}
+    @Override
+    protected void useResult(ResultSet rs) throws SQLException {
+	this.permissions = new ArrayList<UserPermission>();
+	while (rs.next()) {
+	    DBUserPermission permission = new DBUserPermission();
+	    permission.setId(rs.getLong("id"));
+	    permission.setPermissionName(rs.getString("permissionName"));
+	    permissions.add(permission);
 	}
+    }
 
-	@Override
-	protected void fillParameters(PreparedStatement stmnt) throws SQLException {
-	}
+    @Override
+    protected void fillParameters(PreparedStatement stmnt) throws SQLException {
+    }
 
-	@Override
-	protected String getSQL() {
-		return "SELECT id, permissionName FROM UserPermissions";
-	}
+    @Override
+    protected String getSQL() {
+	return "SELECT id, permissionName FROM UserPermissions";
+    }
 
-	public static List<UserPermission> execute(BaseJdbcDAO dao) throws OperationException {
-		SelectPermissionsSQL sql = new SelectPermissionsSQL(dao);
-		sql.execute();
-		return sql.permissions;
-	}
+    public static List<UserPermission> execute(BaseJdbcDAO dao) throws OperationException {
+	SelectPermissionsSQL sql = new SelectPermissionsSQL(dao);
+	sql.execute();
+	return sql.permissions;
+    }
 
 }

@@ -9,21 +9,21 @@ import ro.gagarin.user.UserPermission;
 
 public class DeletePermissionSQL extends UpdateQuery {
 
-	private final UserPermission perm;
+    private final UserPermission perm;
 
-	public DeletePermissionSQL(BaseJdbcDAO dao, UserPermission perm) {
-		super(dao, UserPermission.class);
-		this.perm = perm;
-	}
+    public DeletePermissionSQL(BaseJdbcDAO dao, UserPermission perm) {
+	super(dao, UserPermission.class);
+	this.perm = perm;
+    }
 
-	@Override
-	protected void fillParameters(PreparedStatement stmnt) throws SQLException {
-		stmnt.setLong(1, perm.getId());
-	}
+    @Override
+    protected void fillParameters(PreparedStatement stmnt) throws SQLException {
+	stmnt.setLong(1, perm.getId());
+    }
 
-	@Override
-	protected String getSQL() {
-		return "DELETE FROM UserPermissions WHERE id = ?";
-	}
+    @Override
+    protected String getSQL() {
+	return "DELETE FROM UserPermissions WHERE id = ?";
+    }
 
 }

@@ -20,55 +20,53 @@ import ro.gagarin.user.User;
  */
 public class SelectUserByUsernamePasswordSQL extends SelectQuery {
 
-	private DBUser user;
-	private final String username;
-	private final String password;
+    private DBUser user;
+    private final String username;
+    private final String password;
 
-	public SelectUserByUsernamePasswordSQL(BaseJdbcDAO dao, String username, String password) {
-		super(dao, User.class);
-		this.username = username;
-		this.password = password;
+    public SelectUserByUsernamePasswordSQL(BaseJdbcDAO dao, String username, String password) {
+	super(dao, User.class);
+	this.username = username;
+	this.password = password;
+    }
+
+    @Override
+    protected void useResult(ResultSet rs) throws SQLException {
+	if (rs.next()) {
+	    user = new DBUser();
+	    user.setId(rs.getLong("id"));
+	    user.setUsername(rs.getString("username"));
+	    user.setName(rs.getString("name"));
+	    DBUserRole role = new DBUserRole();
+	    role.setId(rs.getLong("roleid"));
+	    role.setRoleName(rs.getString("roleName"));
+	    user.setRole(role);
+	} else {
+	    user = null;
 	}
 
-	@Override
-	protected void useResult(ResultSet rs) throws SQLException {
-		if (rs.next()) {
-			user = new DBUser();
-			user.setId(rs.getLong("id"));
-			user.setUsername(rs.getString("username"));
-			user.setName(rs.getString("name"));
-			DBUserRole role = new DBUserRole();
-			role.setId(rs.getLong("roleid"));
-			role.setRoleName(rs.getString("roleName"));
-			user.setRole(role);
-		} else {
-			user = null;
-		}
+    }
 
-	}
+    @Override
+    protected void fillParameters(PreparedStatement stmnt) throws SQLException {
+	stmnt.setString(1, username);
+	stmnt.setString(2, password);
 
-	@Override
-	protected void fillParameters(PreparedStatement stmnt) throws SQLException {
-		stmnt.setString(1, username);
-		stmnt.setString(2, password);
+    }
 
-	}
+    @Override
+    protected String getSQL() {
+	return "SELECT Users.id, username, name, password, roleid, roleName "
+		+ "FROM Users INNER JOIN UserRoles ON Users.roleid = UserRoles.id "
+		+ "WHERE username = ? and password = ?";
+    }
 
-	@Override
-	protected String getSQL() {
-		return "SELECT Users.id, username, name, password, roleid, roleName "
-				+ "FROM Users INNER JOIN UserRoles ON Users.roleid = UserRoles.id "
-				+ "WHERE username = ? and password = ?";
-	}
+    public static User execute(BaseJdbcDAO dao, String username, String password) throws OperationException {
 
-	public static User execute(BaseJdbcDAO dao, String username, String password)
-			throws OperationException {
+	SelectUserByUsernamePasswordSQL select = new SelectUserByUsernamePasswordSQL(dao, username, password);
+	select.execute();
+	return select.user;
 
-		SelectUserByUsernamePasswordSQL select = new SelectUserByUsernamePasswordSQL(dao, username,
-				password);
-		select.execute();
-		return select.user;
-
-	}
+    }
 
 }

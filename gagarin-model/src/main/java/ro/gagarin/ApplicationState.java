@@ -1,5 +1,5 @@
 package ro.gagarin;
 
 public enum ApplicationState {
-	INIT, READY, OFFLINE, MAINTENANCE
+    INIT, READY, OFFLINE, MAINTENANCE
 }

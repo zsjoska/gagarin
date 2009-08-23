@@ -27,52 +27,51 @@ import ro.gagarin.ws.objects.WSUser;
 @WebService
 public class Authentication {
 
-	private static final transient Logger LOG = Logger.getLogger(Authentication.class);
-	private static final transient ManagerFactory FACTORY = BasicManagerFactory.getInstance();
+    private static final transient Logger LOG = Logger.getLogger(Authentication.class);
+    private static final transient ManagerFactory FACTORY = BasicManagerFactory.getInstance();
 
-	@WebMethod
-	public String createSession(String language, String reason) {
+    @WebMethod
+    public String createSession(String language, String reason) {
 
-		SessionManager sessionManager = FACTORY.getSessionManager();
+	SessionManager sessionManager = FACTORY.getSessionManager();
 
-		if (language == null) {
-			// TODO move this to the configuration
-			language = "en_us";
-		}
-
-		Session session = sessionManager.createSession(language, reason, FACTORY);
-		LOG.info("Session created:" + session.getId() + "; reason:" + session.getReason()
-				+ "; language:" + session.getLanguage());
-
-		return session.getSessionString();
-
+	if (language == null) {
+	    // TODO move this to the configuration
+	    language = "en_us";
 	}
 
-	@WebMethod
-	public WSUser login(String sessionID, String username, String password, String[] extra)
-			throws SessionNotFoundException, ItemNotFoundException, OperationException {
+	Session session = sessionManager.createSession(language, reason, FACTORY);
+	LOG.info("Session created:" + session.getId() + "; reason:" + session.getReason() + "; language:"
+		+ session.getLanguage());
 
-		LOG.info("Login User " + username + "; extra:" + Arrays.toString(extra));
+	return session.getSessionString();
 
-		SessionManager sessionManager = FACTORY.getSessionManager();
-		Session session = sessionManager.acquireSession(sessionID);
-		if (session == null)
-			throw new SessionNotFoundException(sessionID);
+    }
 
-		try {
+    @WebMethod
+    public WSUser login(String sessionID, String username, String password, String[] extra)
+	    throws SessionNotFoundException, ItemNotFoundException, OperationException {
 
-			User user = FACTORY.getAuthenticationManager(session).userLogin(username, password,
-					extra);
-			return new WSUser(user);
-		} finally {
-			FACTORY.releaseSession(session);
-		}
+	LOG.info("Login User " + username + "; extra:" + Arrays.toString(extra));
+
+	SessionManager sessionManager = FACTORY.getSessionManager();
+	Session session = sessionManager.acquireSession(sessionID);
+	if (session == null)
+	    throw new SessionNotFoundException(sessionID);
+
+	try {
+
+	    User user = FACTORY.getAuthenticationManager(session).userLogin(username, password, extra);
+	    return new WSUser(user);
+	} finally {
+	    FACTORY.releaseSession(session);
 	}
+    }
 
-	@WebMethod
-	public void logout(String sessionId) {
-		LOG.info("Session logout " + sessionId);
-		SessionManager sessionManager = FACTORY.getSessionManager();
-		sessionManager.logout(sessionId);
-	}
+    @WebMethod
+    public void logout(String sessionId) {
+	LOG.info("Session logout " + sessionId);
+	SessionManager sessionManager = FACTORY.getSessionManager();
+	sessionManager.logout(sessionId);
+    }
 }

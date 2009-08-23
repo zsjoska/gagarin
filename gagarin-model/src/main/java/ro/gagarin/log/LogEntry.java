@@ -3,15 +3,15 @@ package ro.gagarin.log;
 import ro.gagarin.user.User;
 
 public interface LogEntry {
-	Long getId();
+    Long getId();
 
-	User getUser();
+    User getUser();
 
-	String getSessionID();
+    String getSessionID();
 
-	String getLogLevel();
+    String getLogLevel();
 
-	Long getDate();
+    Long getDate();
 
-	String getMessage();
+    String getMessage();
 }

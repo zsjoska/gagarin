@@ -8,10 +8,10 @@ import ro.gagarin.exceptions.OperationException;
 
 public interface ConfigDAO extends BaseDAO {
 
-	long getLastUpdateTime() throws OperationException, DataConstraintException;
+    long getLastUpdateTime() throws OperationException, DataConstraintException;
 
-	ArrayList<ConfigEntry> listConfigurations() throws OperationException;
+    ArrayList<ConfigEntry> listConfigurations() throws OperationException;
 
-	void setConfigValue(ConfigEntry cfg) throws OperationException, DataConstraintException;
+    void setConfigValue(ConfigEntry cfg) throws OperationException, DataConstraintException;
 
 }

@@ -2,8 +2,8 @@ package ro.gagarin.user;
 
 public interface UserPermission {
 
-	Long getId();
+    Long getId();
 
-	String getPermissionName();
+    String getPermissionName();
 
 }

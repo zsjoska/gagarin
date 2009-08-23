@@ -8,19 +8,17 @@ import _root_.net.liftweb.http.S._
 import _root_.net.liftweb.http.SHtml._
 import _root_.net.liftweb.util.Helpers._
 import _root_.net.liftweb.util._
-import _root_.ro.gagarin.wsclient.WSClient
-import _root_.ro.gagarin.model.WebServiceClient._
 import _root_.ro.gagarin.model.{wsSession, SessionInfo}
-import _root_.scala.collection.jcl.Buffer
+import _root_.ro.gagarin.model.userService
 
 class Users {
   
   private object selectedUser extends RequestVar[WsUser](null)
   
     def list(in: NodeSeq): NodeSeq  = {
-   	  val users = Buffer(getUserService.getUsers(wsSession.session))
+   	  val users = userService.getUsers
       <span>
-      <table>
+      <table border="1" cellspacing="0">
       {users.flatMap( u => <tr>
                       		<td>{link("editUser", () => {selectedUser.set(u)}, Text(u.getUsername()))}</td>
                       		<td>{Text(u.getName())}</td>
@@ -33,7 +31,7 @@ class Users {
     
   def newUser (in: NodeSeq): NodeSeq  = {
 	val user = new WsUser();
-    val roles = Buffer(getUserService.getRoleList(wsSession.session)).map(x => (x.getId().toString,x.getRoleName()))
+    val roles = userService.getRoleList.map(x => (x.getId().toString,x.getRoleName()))
     bind("user", in, 
          "username" -> text("", (x)=> user.setUsername(x)),
          "password" -> password("", (x) => user.setPassword(x)),
@@ -46,7 +44,7 @@ class Users {
            user.setRole(role)
          }),
          "submit" -> submit("Create", () => {
-        	 	getUserService.createUser(wsSession.session, user)
+        	 	userService.createUser(user)
                 redirectTo("/users") 
               })
     )

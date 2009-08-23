@@ -3,7 +3,7 @@ package ro.gagarin.snippet
 import java.util.{Date, Locale}
 import _root_.ro.gagarin.model.wsSession
 import _root_.scala.collection.jcl.Buffer
-import _root_.ro.gagarin.model.WebServiceClient._
+import _root_.ro.gagarin.model.userService
 import _root_.net.liftweb.http.SHtml._
 import _root_.scala.xml.{NodeSeq, Text, Group, Node}
 import _root_.net.liftweb.util.Helpers._
@@ -11,7 +11,7 @@ import _root_.net.liftweb.util.Helpers._
 class Config {
 	
   def show = {
-	val config = Buffer(getUserService.getConfigEntries(wsSession.session))
+	val config = userService.getConfigEntries
 	var name:String = null
 	var value:String = null
     <table border="1" cellspacing="0">
@@ -37,7 +37,7 @@ class Config {
 				val config = new WsConfig()
 				config.setConfigName(name)
 				config.setConfigValue(value)
-				getUserService.setConfigEntry(wsSession.session,config)
+				userService.setConfigEntry(config)
             })% ("style" -> "display: none;") % ("id" -> id )}</td>
 		</tr>})}
     </table>

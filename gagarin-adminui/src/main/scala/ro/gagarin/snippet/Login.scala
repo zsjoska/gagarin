@@ -8,8 +8,7 @@ import _root_.net.liftweb.http.S._
 import _root_.net.liftweb.http.SHtml._
 import _root_.net.liftweb.util.Helpers._
 import _root_.net.liftweb.util._
-import _root_.ro.gagarin.wsclient.WSClient
-import _root_.ro.gagarin.model.WebServiceClient._
+import _root_.ro.gagarin.model.authService
 import _root_.ro.gagarin.model.{wsSession, SessionInfo}
 
 class Login {
@@ -19,8 +18,7 @@ class Login {
         Welcome { wsSession.user.getName() }
         {
     	link("login", () => {
-    	  getAuthentication.logout(wsSession.session)
-    	  wsSession.set(null)
+    	  authService.logout
     	}, Text("Logout"))
     	}
         </span>
@@ -30,26 +28,14 @@ class Login {
   def login (in: NodeSeq): NodeSeq  = {
     var u:String = null
     var p: String = null
-    val session = getAuthentication.createSession(null, null)
+    val session = authService.createSession(null)
     bind("login", in, 
          "username" -> text("", (x)=> (u=x)),
          "password" -> password("", (x) =>(p=x)),
          "submit" -> submit("Login", () => {
-           try{
-	           val user = getAuthentication.login(session, u, p, null)
-	           wsSession.set(SessionInfo(session,user))
+	           val user = authService.login(session, u, p)
                notice("Logged in " + u + "("+p+")" + " session=" + session)
-           } catch {
-             case e: ItemNotFoundException_Exception => {
-	           notice("Login failed")
-	           redirectTo("/login")
-             }
-             case e: Exception => {
-               // TODO: This is ugly: Server error:ro.gagarin.exceptions.SessionNotFoundException
-	           notice("Server error:" + e.getMessage())
-	           redirectTo("/login")
-             }
-           }})
+          })
     )
   } 
 }

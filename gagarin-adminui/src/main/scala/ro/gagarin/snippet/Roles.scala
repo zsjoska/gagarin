@@ -1,6 +1,7 @@
 package ro.gagarin.snippet
 
 import _root_.scala.xml.{NodeSeq, Text, Group, Node}
+import _root_.scala.collection.mutable.ListBuffer
 import _root_.net.liftweb.http._
 import _root_.net.liftweb.http.S
 import _root_.net.liftweb.mapper._
@@ -8,19 +9,16 @@ import _root_.net.liftweb.http.S._
 import _root_.net.liftweb.http.SHtml._
 import _root_.net.liftweb.util.Helpers._
 import _root_.net.liftweb.util._
-import _root_.ro.gagarin.wsclient.WSClient
-import _root_.ro.gagarin.model.WebServiceClient._
-import _root_.ro.gagarin.model.{wsSession, SessionInfo}
-import _root_.scala.collection.jcl.Buffer
+import _root_.ro.gagarin.model.userService
 
 class Roles {
   
   private object selectedRole extends RequestVar[WsUserRole](null)
   
     def list(in: NodeSeq): NodeSeq  = {
-   	  val roles = Buffer(getUserService.getRoleList(wsSession.session))
+   	  val roles = userService.getRoleList
       <span>
-      <table>
+      <table border="1" cellspacing="0">
       {roles.flatMap( u => 
         <tr>
           <td>{link("editRole", () => {selectedRole.set(u)}, Text(u.getRoleName()))}</td>
@@ -33,17 +31,17 @@ class Roles {
     
   def newRole (in: NodeSeq): NodeSeq  = {
 	var roleName = "";
-    val permissions = Buffer(getUserService.getAllPermissionList(wsSession.session)).map(x => (x.getId().toString,x.getPermissionName()))
-    val permList = new java.util.ArrayList[WsUserPermission]();
+    val permissions = userService.getAllPermissionList.map(x => (x.getId().toString,x.getPermissionName()))
+    val permList = new ListBuffer[WsUserPermission]();
     bind("role", in, 
          "roleName" -> text("", (x)=> roleName=x),
          "permissions" -> multiSelect(permissions, Seq.empty,(x) => {
            val perm = new WsUserPermission()
            perm.setId(x.toLong)
-           permList.add(perm)
+           permList += perm
          }) % ("size" -> "20"),
          "submit" -> submit("Create", () => {
-           getUserService.createRoleWithPermissions(wsSession.session, roleName, permList)
+           userService.createRoleWithPermissions(roleName, permList)
            redirectTo("/roles") 
          })
     )
@@ -52,8 +50,8 @@ class Roles {
 
   def editRole (in: NodeSeq): NodeSeq  = {
     val role = selectedRole
-    val permissions = Buffer(getUserService.getAllPermissionList(wsSession.session)).map(x => (x.getId().toString,x.getPermissionName()))
-    val permList = Buffer(getUserService.getRolePermissions(wsSession.session, role)).map( x => x.getId().toString);
+    val permissions = userService.getAllPermissionList.map(x => (x.getId().toString,x.getPermissionName()))
+    val permList = userService.getRolePermissions(role).map( x => x.getId().toString);
     bind("role", in, 
          "roleName" -> text(role.getRoleName, (x)=> role.setRoleName(x) ),
          "permissions" -> multiSelect(permissions, permList,(x) => {

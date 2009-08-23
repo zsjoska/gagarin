@@ -9,23 +9,23 @@ import ro.gagarin.jdbc.objects.DBConfig;
 
 public class InsertConfigValueSQL extends UpdateQuery {
 
-	private final DBConfig config;
+    private final DBConfig config;
 
-	public InsertConfigValueSQL(BaseJdbcDAO dao, DBConfig config) {
-		super(dao, ConfigEntry.class);
-		this.config = config;
-	}
+    public InsertConfigValueSQL(BaseJdbcDAO dao, DBConfig config) {
+	super(dao, ConfigEntry.class);
+	this.config = config;
+    }
 
-	@Override
-	protected void fillParameters(PreparedStatement stmnt) throws SQLException {
-		stmnt.setLong(1, config.getId());
-		stmnt.setString(2, config.getConfigName());
-		stmnt.setString(3, config.getConfigValue());
-	}
+    @Override
+    protected void fillParameters(PreparedStatement stmnt) throws SQLException {
+	stmnt.setLong(1, config.getId());
+	stmnt.setString(2, config.getConfigName());
+	stmnt.setString(3, config.getConfigValue());
+    }
 
-	@Override
-	protected String getSQL() {
-		return "INSERT INTO Config (id, configName, configValue) VALUES (?,?,?)";
-	}
+    @Override
+    protected String getSQL() {
+	return "INSERT INTO Config (id, configName, configValue) VALUES (?,?,?)";
+    }
 
 }

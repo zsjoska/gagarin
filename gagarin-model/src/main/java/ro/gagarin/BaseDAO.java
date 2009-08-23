@@ -4,7 +4,7 @@ import ro.gagarin.exceptions.OperationException;
 
 public interface BaseDAO {
 
-	void checkCreateDependencies(ConfigurationManager cfgManager) throws OperationException;
+    void checkCreateDependencies(ConfigurationManager cfgManager) throws OperationException;
 
-	void release() throws OperationException;
+    void release() throws OperationException;
 }

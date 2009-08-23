@@ -4,9 +4,9 @@ import ro.gagarin.scheduler.ScheduledJob;
 
 public interface ScheduleManager {
 
-	long scheduleJob(ScheduledJob job);
+    long scheduleJob(ScheduledJob job);
 
-	void updateJobRate(Long id, Long rate);
+    void updateJobRate(Long id, Long rate);
 
-	void triggerExecution(ScheduledJob configImportJob);
+    void triggerExecution(ScheduledJob configImportJob);
 }

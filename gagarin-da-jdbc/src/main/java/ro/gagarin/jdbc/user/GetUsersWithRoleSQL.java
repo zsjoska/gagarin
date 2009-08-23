@@ -15,42 +15,42 @@ import ro.gagarin.user.UserRole;
 
 public class GetUsersWithRoleSQL extends SelectQuery {
 
-	private final UserRole role;
-	private ArrayList<User> users = null;
+    private final UserRole role;
+    private ArrayList<User> users = null;
 
-	public GetUsersWithRoleSQL(BaseJdbcDAO dao, UserRole role) {
-		super(dao, UserRole.class);
-		this.role = role;
+    public GetUsersWithRoleSQL(BaseJdbcDAO dao, UserRole role) {
+	super(dao, UserRole.class);
+	this.role = role;
+    }
+
+    @Override
+    protected void useResult(ResultSet rs) throws SQLException {
+	this.users = new ArrayList<User>();
+	while (rs.next()) {
+	    DBUser user = new DBUser();
+	    user.setId(rs.getLong("id"));
+	    user.setName(rs.getString("name"));
+	    user.setUsername(rs.getString("userName"));
+	    user.setRole(role);
+	    users.add(user);
 	}
+    }
 
-	@Override
-	protected void useResult(ResultSet rs) throws SQLException {
-		this.users = new ArrayList<User>();
-		while (rs.next()) {
-			DBUser user = new DBUser();
-			user.setId(rs.getLong("id"));
-			user.setName(rs.getString("name"));
-			user.setUsername(rs.getString("userName"));
-			user.setRole(role);
-			users.add(user);
-		}
-	}
+    @Override
+    protected void fillParameters(PreparedStatement stmnt) throws SQLException {
+	stmnt.setLong(1, role.getId());
+    }
 
-	@Override
-	protected void fillParameters(PreparedStatement stmnt) throws SQLException {
-		stmnt.setLong(1, role.getId());
-	}
+    @Override
+    protected String getSQL() {
+	return "SELECT id, name, userName, roleid FROM Users WHERE roleid = ?";
+    }
 
-	@Override
-	protected String getSQL() {
-		return "SELECT id, name, userName, roleid FROM Users WHERE roleid = ?";
-	}
+    public static ArrayList<User> execute(BaseJdbcDAO dao, UserRole role) throws OperationException,
+	    DataConstraintException {
+	GetUsersWithRoleSQL query = new GetUsersWithRoleSQL(dao, role);
+	query.execute();
 
-	public static ArrayList<User> execute(BaseJdbcDAO dao, UserRole role)
-			throws OperationException, DataConstraintException {
-		GetUsersWithRoleSQL query = new GetUsersWithRoleSQL(dao, role);
-		query.execute();
-
-		return query.users;
-	}
+	return query.users;
+    }
 }

@@ -19,194 +19,182 @@ import ro.gagarin.log.AppLog;
 import ro.gagarin.scheduler.ScheduledJob;
 import ro.gagarin.session.Session;
 
-public class DBConfigManager extends ConfigHolder implements
-		ConfigurationManager, SettingsChangeObserver {
+public class DBConfigManager extends ConfigHolder implements ConfigurationManager, SettingsChangeObserver {
 
-	private static final transient Logger LOG = Logger
-	.getLogger(DBConfigManager.class);
-	
-	// TODO: there is a problem with the configuration implementation in the
-	// following scenario:
-	// the config is only in the DB
-	// runtime, the config is added to the file
-	// Problem: DBConfig observers are not notified
+    private static final transient Logger LOG = Logger.getLogger(DBConfigManager.class);
 
-	private static ManagerFactory FACTORY = BasicManagerFactory.getInstance();
-	private static final DBConfigManager INSTANCE = new DBConfigManager(
-			FileConfigurationManager.getInstance());
-	private ConfigImportJob configImportJob;
+    // TODO: there is a problem with the configuration implementation in the
+    // following scenario:
+    // the config is only in the DB
+    // runtime, the config is added to the file
+    // Problem: DBConfig observers are not notified
 
-	static {
-		ConfigurationManager cfgManager = FACTORY.getConfigurationManager();
-		long period = cfgManager.getLong(Config.DB_CONFIG_CHECK_PERIOD);
+    private static ManagerFactory FACTORY = BasicManagerFactory.getInstance();
+    private static final DBConfigManager INSTANCE = new DBConfigManager(FileConfigurationManager.getInstance());
+    private ConfigImportJob configImportJob;
 
-		INSTANCE.registerForChange(INSTANCE);
-		INSTANCE.configImportJob = new DBConfigManager.ConfigImportJob(
-				"DB_CONFIG_IMPORT", period, period);
-		FACTORY.getScheduleManager().scheduleJob(INSTANCE.configImportJob);
-	}
+    static {
+	ConfigurationManager cfgManager = FACTORY.getConfigurationManager();
+	long period = cfgManager.getLong(Config.DB_CONFIG_CHECK_PERIOD);
 
-	public static class ConfigImportJob extends ScheduledJob {
-		public ConfigImportJob(String name, long initialWait, long period) {
-			super(name, initialWait, period);
-		}
+	INSTANCE.registerForChange(INSTANCE);
+	INSTANCE.configImportJob = new DBConfigManager.ConfigImportJob("DB_CONFIG_IMPORT", period, period);
+	FACTORY.getScheduleManager().scheduleJob(INSTANCE.configImportJob);
+    }
 
-		@Override
-		public void execute(Session session, AppLog log) throws Exception {
-			ConfigDAO configDAO = FACTORY.getDAOManager().getConfigDAO(session);
-			long lastUpdateTime = configDAO.getLastUpdateTime();
-			log.debug("DBLUT = " + lastUpdateTime + " CacheLUT="
-					+ INSTANCE.getLastUpdateTime());
-			if (lastUpdateTime > INSTANCE.getLastUpdateTime()) {
-				long lastQuery = System.currentTimeMillis();
-				ArrayList<ConfigEntry> cfgValues = configDAO
-						.listConfigurations();
-				INSTANCE.importConfigMap(cfgValues, log);
-				INSTANCE.setLastUpdateTime(lastQuery);
-			}
-			synchronized (INSTANCE) {
-				INSTANCE.notify();
-			}
-		}
-	}
-
-	private final ConfigurationManager localConfig;
-	private long lastUpdateTime = 0;
-	private long lastChangeRequest = 0;
-
-	private DBConfigManager(ConfigurationManager localCfg) {
-		this.localConfig = localCfg;
-	}
-
-	private void importConfigMap(ArrayList<ConfigEntry> cfgValues, AppLog log) {
-		String cfgs[] = new String[Config.values().length];
-
-		for (ConfigEntry configEntry : cfgValues) {
-
-			try {
-				Config cfg = Config.valueOf(configEntry.getConfigName());
-
-				// don't import entries defined locally
-				if (!localConfig.isDefined(cfg)) {
-					cfgs[cfg.ordinal()] = configEntry.getConfigValue();
-				}
-			} catch (Exception e) {
-				log.error("Could not interpret config "
-						+ configEntry.getConfigName() + "="
-						+ configEntry.getConfigValue(), e);
-			}
-		}
-		importConfig(cfgs);
-	}
-
-	public void setLastUpdateTime(long lastQuery) {
-		this.lastUpdateTime = lastQuery;
-
-	}
-
-	public long getLastUpdateTime() {
-		return this.lastUpdateTime;
+    public static class ConfigImportJob extends ScheduledJob {
+	public ConfigImportJob(String name, long initialWait, long period) {
+	    super(name, initialWait, period);
 	}
 
 	@Override
-	public String getString(Config config) {
-		// local config has precedence
-		if (localConfig.isDefined(config)) {
-			return localConfig.getString(config);
-		}
-		if (super.isDefined(config)) {
-			return super.getString(config);
-		}
+	public void execute(Session session, AppLog log) throws Exception {
+	    ConfigDAO configDAO = FACTORY.getDAOManager().getConfigDAO(session);
+	    long lastUpdateTime = configDAO.getLastUpdateTime();
+	    log.debug("DBLUT = " + lastUpdateTime + " CacheLUT=" + INSTANCE.getLastUpdateTime());
+	    if (lastUpdateTime > INSTANCE.getLastUpdateTime()) {
+		long lastQuery = System.currentTimeMillis();
+		ArrayList<ConfigEntry> cfgValues = configDAO.listConfigurations();
+		INSTANCE.importConfigMap(cfgValues, log);
+		INSTANCE.setLastUpdateTime(lastQuery);
+	    }
+	    synchronized (INSTANCE) {
+		INSTANCE.notify();
+	    }
+	}
+    }
 
-		// this will return the default value
-		return localConfig.getString(config);
+    private final ConfigurationManager localConfig;
+    private long lastUpdateTime = 0;
+    private long lastChangeRequest = 0;
+
+    private DBConfigManager(ConfigurationManager localCfg) {
+	this.localConfig = localCfg;
+    }
+
+    private void importConfigMap(ArrayList<ConfigEntry> cfgValues, AppLog log) {
+	String cfgs[] = new String[Config.values().length];
+
+	for (ConfigEntry configEntry : cfgValues) {
+
+	    try {
+		Config cfg = Config.valueOf(configEntry.getConfigName());
+
+		// don't import entries defined locally
+		if (!localConfig.isDefined(cfg)) {
+		    cfgs[cfg.ordinal()] = configEntry.getConfigValue();
+		}
+	    } catch (Exception e) {
+		log.error("Could not interpret config " + configEntry.getConfigName() + "="
+			+ configEntry.getConfigValue(), e);
+	    }
+	}
+	importConfig(cfgs);
+    }
+
+    public void setLastUpdateTime(long lastQuery) {
+	this.lastUpdateTime = lastQuery;
+
+    }
+
+    public long getLastUpdateTime() {
+	return this.lastUpdateTime;
+    }
+
+    @Override
+    public String getString(Config config) {
+	// local config has precedence
+	if (localConfig.isDefined(config)) {
+	    return localConfig.getString(config);
+	}
+	if (super.isDefined(config)) {
+	    return super.getString(config);
 	}
 
-	@Override
-	public InputStream getConfigFileStream(Config file)
-			throws OperationException {
-		return localConfig.getConfigFileStream(file);
+	// this will return the default value
+	return localConfig.getString(config);
+    }
+
+    @Override
+    public InputStream getConfigFileStream(Config file) throws OperationException {
+	return localConfig.getConfigFileStream(file);
+    }
+
+    public static DBConfigManager getInstance() {
+	return INSTANCE;
+    }
+
+    @Override
+    public void setConfigValue(Session session, Config config, String value) throws OperationException {
+
+	this.lastChangeRequest = System.currentTimeMillis();
+
+	// local config has precedence...
+	if (localConfig.isDefined(config)) {
+	    AppLog log = session.getManagerFactory().getLogManager(session, DBConfigManager.class);
+	    log.error("Changing the local config will not be persisted! " + config.name() + "=" + value);
+	    localConfig.setConfigValue(session, config, value);
+	    return;
 	}
 
-	public static DBConfigManager getInstance() {
-		return INSTANCE;
+	ConfigDAO configDAO = FACTORY.getDAOManager().getConfigDAO(session);
+	DBConfig cfg = new DBConfig();
+	cfg.setConfigName(config.name());
+	cfg.setConfigValue(value);
+	try {
+	    configDAO.setConfigValue(cfg);
+	} catch (DataConstraintException e) {
+	    LOG.error("Error setting config " + config + "=" + value, e);
+	    throw new OperationException(ErrorCodes.DB_OP_ERROR, e);
 	}
+	FACTORY.getScheduleManager().triggerExecution(configImportJob);
+    }
 
-	@Override
-	public void setConfigValue(Session session, Config config, String value)
-			throws OperationException {
-
-		this.lastChangeRequest = System.currentTimeMillis();
-
-		// local config has precedence...
-		if (localConfig.isDefined(config)) {
-			AppLog log = session.getManagerFactory().getLogManager(session,
-					DBConfigManager.class);
-			log.error("Changing the local config will not be persisted! "
-					+ config.name() + "=" + value);
-			localConfig.setConfigValue(session, config, value);
-			return;
-		}
-
-		ConfigDAO configDAO = FACTORY.getDAOManager().getConfigDAO(session);
-		DBConfig cfg = new DBConfig();
-		cfg.setConfigName(config.name());
-		cfg.setConfigValue(value);
-		try {
-			configDAO.setConfigValue(cfg);
-		} catch (DataConstraintException e) {
-			LOG.error("Error setting config " + config + "=" + value, e);
-			throw new OperationException(ErrorCodes.DB_OP_ERROR, e);
-		}
-		FACTORY.getScheduleManager().triggerExecution(configImportJob);
+    @Override
+    public boolean configChanged(Config config, String value) {
+	switch (config) {
+	case DB_CONFIG_CHECK_PERIOD:
+	    FACTORY.getScheduleManager().updateJobRate(configImportJob.getId(), Long.valueOf(value));
+	    return true;
+	default:
+	    break;
 	}
+	return false;
+    }
 
-	@Override
-	public boolean configChanged(Config config, String value) {
-		switch (config) {
-		case DB_CONFIG_CHECK_PERIOD:
-			FACTORY.getScheduleManager().updateJobRate(configImportJob.getId(),
-					Long.valueOf(value));
-			return true;
-		default:
-			break;
-		}
-		return false;
+    public List<ConfigEntry> getConfigValues() {
+	ArrayList<ConfigEntry> cfgList = new ArrayList<ConfigEntry>();
+	for (Config cfg : Config.values()) {
+	    // do not export internal config controls
+	    if (cfg.name().startsWith("_"))
+		continue;
+	    AppConfig cfgObj = new AppConfig();
+	    cfgObj.setConfigName(cfg.name());
+	    cfgObj.setConfigValue(getString(cfg));
+	    if (isDefined(cfg)) {
+		cfgObj.setConfigScope(ConfigScope.DB);
+	    } else if (localConfig.isDefined(cfg)) {
+		cfgObj.setConfigScope(ConfigScope.LOCAL);
+	    } else {
+		cfgObj.setConfigScope(ConfigScope.DEFAULT);
+	    }
+
+	    cfgList.add(cfgObj);
 	}
+	return cfgList;
+    }
 
-	public List<ConfigEntry> getConfigValues() {
-		ArrayList<ConfigEntry> cfgList = new ArrayList<ConfigEntry>();
-		for (Config cfg : Config.values()) {
-			// do not export internal config controls
-			if (cfg.name().startsWith("_"))
-				continue;
-			AppConfig cfgObj = new AppConfig();
-			cfgObj.setConfigName(cfg.name());
-			cfgObj.setConfigValue(getString(cfg));
-			if (isDefined(cfg)) {
-				cfgObj.setConfigScope(ConfigScope.DB);
-			} else if (localConfig.isDefined(cfg)) {
-				cfgObj.setConfigScope(ConfigScope.LOCAL);
-			} else {
-				cfgObj.setConfigScope(ConfigScope.DEFAULT);
-			}
-
-			cfgList.add(cfgObj);
-		}
-		return cfgList;
+    /**
+     * Wait until the last requested change to actually happen. For testing
+     * purposes only.
+     * 
+     * @throws InterruptedException
+     */
+    public void waitForDBImport() throws InterruptedException {
+	synchronized (this) {
+	    while (lastChangeRequest > lastUpdateTime) {
+		this.wait();
+	    }
 	}
-
-	/**
-	 * Wait until the last requested change to actually happen. For testing
-	 * purposes only.
-	 * 
-	 * @throws InterruptedException
-	 */
-	public void waitForDBImport() throws InterruptedException {
-		synchronized (this) {
-			while (lastChangeRequest > lastUpdateTime) {
-				this.wait();
-			}
-		}
-	}
+    }
 }

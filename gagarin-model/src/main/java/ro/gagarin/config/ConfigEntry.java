@@ -2,12 +2,12 @@ package ro.gagarin.config;
 
 public interface ConfigEntry {
 
-	Long getId();
+    Long getId();
 
-	String getConfigName();
+    String getConfigName();
 
-	String getConfigValue();
-	
-	ConfigScope getConfigScope();
+    String getConfigValue();
+
+    ConfigScope getConfigScope();
 
 }

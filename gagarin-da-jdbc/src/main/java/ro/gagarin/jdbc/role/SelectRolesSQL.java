@@ -14,35 +14,35 @@ import ro.gagarin.user.UserRole;
 
 public class SelectRolesSQL extends SelectQuery {
 
-	private List<UserRole> roles = null;
+    private List<UserRole> roles = null;
 
-	public SelectRolesSQL(BaseJdbcDAO dao) {
-		super(dao, UserRole.class);
-	}
+    public SelectRolesSQL(BaseJdbcDAO dao) {
+	super(dao, UserRole.class);
+    }
 
-	@Override
-	protected void useResult(ResultSet rs) throws SQLException {
-		roles = new ArrayList<UserRole>();
-		while (rs.next()) {
-			DBUserRole role = new DBUserRole();
-			role.setId(rs.getLong("id"));
-			role.setRoleName(rs.getString("roleName"));
-			roles.add(role);
-		}
+    @Override
+    protected void useResult(ResultSet rs) throws SQLException {
+	roles = new ArrayList<UserRole>();
+	while (rs.next()) {
+	    DBUserRole role = new DBUserRole();
+	    role.setId(rs.getLong("id"));
+	    role.setRoleName(rs.getString("roleName"));
+	    roles.add(role);
 	}
+    }
 
-	@Override
-	protected void fillParameters(PreparedStatement stmnt) throws SQLException {
-	}
+    @Override
+    protected void fillParameters(PreparedStatement stmnt) throws SQLException {
+    }
 
-	@Override
-	protected String getSQL() {
-		return "SELECT id, roleName FROM UserRoles";
-	}
+    @Override
+    protected String getSQL() {
+	return "SELECT id, roleName FROM UserRoles";
+    }
 
-	public static List<UserRole> execute(BaseJdbcDAO dao) throws OperationException {
-		SelectRolesSQL q = new SelectRolesSQL(dao);
-		q.execute();
-		return q.roles;
-	}
+    public static List<UserRole> execute(BaseJdbcDAO dao) throws OperationException {
+	SelectRolesSQL q = new SelectRolesSQL(dao);
+	q.execute();
+	return q.roles;
+    }
 }

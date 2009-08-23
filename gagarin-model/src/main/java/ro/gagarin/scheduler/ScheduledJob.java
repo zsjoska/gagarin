@@ -6,67 +6,63 @@ import ro.gagarin.user.BaseEntity;
 
 public abstract class ScheduledJob extends BaseEntity {
 
-	protected static final long serialVersionUID = -238225317665931596L;
+    protected static final long serialVersionUID = -238225317665931596L;
 
-	private final String name;
-	private final long initialWait;
-	private final long period;
+    private final String name;
+    private final long initialWait;
+    private final long period;
 
-	/**
-	 * The number of time to execute this job. <code>-1</code> means infinite.
-	 */
-	private int count;
+    /**
+     * The number of time to execute this job. <code>-1</code> means infinite.
+     */
+    private int count;
 
-	public ScheduledJob(String name, long initialWait, long period) {
-		this.name = name;
-		this.initialWait = initialWait;
-		this.period = period;
-		this.count = -1;
-	}
-	
-	public ScheduledJob(String name, long initialWait, long period, int count) {
-		this.name = name;
-		this.initialWait = initialWait;
-		this.period = period;
-		this.count = count;
-	}
-	
+    public ScheduledJob(String name, long initialWait, long period) {
+	this.name = name;
+	this.initialWait = initialWait;
+	this.period = period;
+	this.count = -1;
+    }
 
-	public ScheduledJob(String name, long initialWait) {
-		this.name = name;
-		this.initialWait = initialWait;
-		this.period = 0;
-		this.count = 1;
-	}
+    public ScheduledJob(String name, long initialWait, long period, int count) {
+	this.name = name;
+	this.initialWait = initialWait;
+	this.period = period;
+	this.count = count;
+    }
 
-	abstract public void execute(Session session, AppLog log) throws Exception;
-	
-	public String getName() {
-		return name;
-	}
+    public ScheduledJob(String name, long initialWait) {
+	this.name = name;
+	this.initialWait = initialWait;
+	this.period = 0;
+	this.count = 1;
+    }
 
-	public long getInitialWait() {
-		return initialWait;
-	}
+    abstract public void execute(Session session, AppLog log) throws Exception;
 
-	public long getPeriod() {
-		return period;
-	}
+    public String getName() {
+	return name;
+    }
 
-	
+    public long getInitialWait() {
+	return initialWait;
+    }
 
-	@Override
-	public String toString() {
-		return "ScheduledJob [count=" + count + ", initialWait=" + initialWait
-				+ ", name=" + name + ", period=" + period + ", getId()="
-				+ getId() + "]";
-	}
+    public long getPeriod() {
+	return period;
+    }
 
-	public void setCount(int count) {
-		this.count = count;
-	}
+    @Override
+    public String toString() {
+	return "ScheduledJob [count=" + count + ", initialWait=" + initialWait + ", name=" + name + ", period="
+		+ period + ", getId()=" + getId() + "]";
+    }
 
-	public int getCount() {
-		return count;
-	}
+    public void setCount(int count) {
+	this.count = count;
+    }
+
+    public int getCount() {
+	return count;
+    }
 }

@@ -10,35 +10,35 @@ import ro.gagarin.jdbc.SelectQuery;
 
 public class GetConfigValueSQL extends SelectQuery {
 
-	private final String config;
-	private String lastUpdateTime = null;
+    private final String config;
+    private String lastUpdateTime = null;
 
-	public GetConfigValueSQL(BaseJdbcDAO dao, String config) {
-		super(dao, null);
-		this.config = config;
-	}
+    public GetConfigValueSQL(BaseJdbcDAO dao, String config) {
+	super(dao, null);
+	this.config = config;
+    }
 
-	@Override
-	protected void useResult(ResultSet rs) throws SQLException {
-		this.lastUpdateTime = null;
-		if (rs.next()) {
-			this.lastUpdateTime = rs.getString("configValue");
-		}
+    @Override
+    protected void useResult(ResultSet rs) throws SQLException {
+	this.lastUpdateTime = null;
+	if (rs.next()) {
+	    this.lastUpdateTime = rs.getString("configValue");
 	}
+    }
 
-	@Override
-	protected void fillParameters(PreparedStatement stmnt) throws SQLException {
-		stmnt.setString(1, this.config);
-	}
+    @Override
+    protected void fillParameters(PreparedStatement stmnt) throws SQLException {
+	stmnt.setString(1, this.config);
+    }
 
-	@Override
-	protected String getSQL() {
-		return "SELECT configValue FROM Config WHERE configName = ?";
-	}
+    @Override
+    protected String getSQL() {
+	return "SELECT configValue FROM Config WHERE configName = ?";
+    }
 
-	public static String execute(BaseJdbcDAO dao, String lastUpdateTime) throws OperationException {
-		GetConfigValueSQL q = new GetConfigValueSQL(dao, lastUpdateTime);
-		q.execute();
-		return q.lastUpdateTime;
-	}
+    public static String execute(BaseJdbcDAO dao, String lastUpdateTime) throws OperationException {
+	GetConfigValueSQL q = new GetConfigValueSQL(dao, lastUpdateTime);
+	q.execute();
+	return q.lastUpdateTime;
+    }
 }

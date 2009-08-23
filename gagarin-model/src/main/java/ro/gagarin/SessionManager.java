@@ -14,63 +14,63 @@ import ro.gagarin.session.Session;
  */
 public interface SessionManager {
 
-	/**
-	 * Creates a new, empty session with the specified language and scope. The
-	 * implementation must call associateUser before use of the session.
-	 * 
-	 * @param language
-	 *            the language code for error messages
-	 * @param reason
-	 *            the scope of the session
-	 * @return a new initialized session
-	 */
-	Session createSession(String language, String reason, ManagerFactory factory);
+    /**
+     * Creates a new, empty session with the specified language and scope. The
+     * implementation must call associateUser before use of the session.
+     * 
+     * @param language
+     *            the language code for error messages
+     * @param reason
+     *            the scope of the session
+     * @return a new initialized session
+     */
+    Session createSession(String language, String reason, ManagerFactory factory);
 
-	// TODO: create associateUser
+    // TODO: create associateUser
 
-	/**
-	 * Returns the session identified by the given session ID.
-	 * 
-	 * @param sessionID
-	 *            the ID of the requested session
-	 * @return the session or <code>null</code> if the session was not found or
-	 *         it was expired
-	 */
-	Session getSessionById(String sessionID);
+    /**
+     * Returns the session identified by the given session ID.
+     * 
+     * @param sessionID
+     *            the ID of the requested session
+     * @return the session or <code>null</code> if the session was not found or
+     *         it was expired
+     */
+    Session getSessionById(String sessionID);
 
-	/**
-	 * Destroys the session.
-	 * 
-	 * @param sessionId
-	 *            the ID of the session to be destroyed
-	 */
-	void logout(String sessionId);
+    /**
+     * Destroys the session.
+     * 
+     * @param sessionId
+     *            the ID of the session to be destroyed
+     */
+    void logout(String sessionId);
 
-	/**
-	 * Returns a list with sessions that expired. These sessions will be
-	 * destroyed by the session manager's timer.
-	 * 
-	 * @return a list of expired sessions
-	 */
-	ArrayList<Session> getExpiredSessions();
+    /**
+     * Returns a list with sessions that expired. These sessions will be
+     * destroyed by the session manager's timer.
+     * 
+     * @return a list of expired sessions
+     */
+    ArrayList<Session> getExpiredSessions();
 
-	/**
-	 * Destroys a session.
-	 * 
-	 * @param session
-	 *            the session to be destroyed
-	 */
-	void destroySession(Session session);
+    /**
+     * Destroys a session.
+     * 
+     * @param session
+     *            the session to be destroyed
+     */
+    void destroySession(Session session);
 
-	/**
-	 * Returns the time period for the Session Checker thread to check for
-	 * expired sessions
-	 * 
-	 * @return the time in miliseconds
-	 */
-	long getSessionCheckPeriod();
+    /**
+     * Returns the time period for the Session Checker thread to check for
+     * expired sessions
+     * 
+     * @return the time in miliseconds
+     */
+    long getSessionCheckPeriod();
 
-	Session acquireSession(String sessionID) throws SessionNotFoundException;
+    Session acquireSession(String sessionID) throws SessionNotFoundException;
 
-	void releaseSession(Session session);
+    void releaseSession(Session session);
 }

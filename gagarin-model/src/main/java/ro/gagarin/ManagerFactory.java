@@ -4,26 +4,26 @@ import ro.gagarin.log.AppLog;
 import ro.gagarin.session.Session;
 
 public interface ManagerFactory {
-	ConfigurationManager getConfigurationManager();
+    ConfigurationManager getConfigurationManager();
 
-	DAOManager getDAOManager();
+    DAOManager getDAOManager();
 
-	void releaseSession(Session session);
+    void releaseSession(Session session);
 
-	SessionManager getSessionManager();
+    SessionManager getSessionManager();
 
-	AuthorizationManager getAuthorizationManager(Session session);
+    AuthorizationManager getAuthorizationManager(Session session);
 
-	ApplicationState getApplicationState();
+    ApplicationState getApplicationState();
 
-	void setApplicationState(ApplicationState state);
+    void setApplicationState(ApplicationState state);
 
-	AuthenticationManager getAuthenticationManager(Session session);
+    AuthenticationManager getAuthenticationManager(Session session);
 
-	AppLog getLogManager(Session session, Class<?> name);
+    AppLog getLogManager(Session session, Class<?> name);
 
-	ScheduleManager getScheduleManager();
+    ScheduleManager getScheduleManager();
 
-	void setConfigurationManager(ConfigurationManager configurationManager);
+    void setConfigurationManager(ConfigurationManager configurationManager);
 
 }

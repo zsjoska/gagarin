@@ -1,10 +1,9 @@
 package ro.gagarin.user;
 
-
 public interface UserRole {
 
-	Long getId();
+    Long getId();
 
-	String getRoleName();
+    String getRoleName();
 
 }

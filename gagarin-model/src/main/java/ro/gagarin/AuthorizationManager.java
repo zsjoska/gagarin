@@ -11,13 +11,12 @@ import ro.gagarin.user.UserPermission;
 
 public interface AuthorizationManager {
 
-	void requiresPermission(Session session, PermissionEnum create_user)
-			throws PermissionDeniedException, OperationException;
+    void requiresPermission(Session session, PermissionEnum create_user) throws PermissionDeniedException,
+	    OperationException;
 
-	void checkUserRole(Session session, User user) throws PermissionDeniedException,
-			OperationException;
+    void checkUserRole(Session session, User user) throws PermissionDeniedException, OperationException;
 
-	void checkUserHasThePermissions(Session session, List<UserPermission> matched)
-			throws OperationException, PermissionDeniedException;
+    void checkUserHasThePermissions(Session session, List<UserPermission> matched) throws OperationException,
+	    PermissionDeniedException;
 
 }

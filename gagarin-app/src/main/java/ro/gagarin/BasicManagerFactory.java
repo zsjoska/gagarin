@@ -19,87 +19,87 @@ import ro.gagarin.session.Session;
  */
 public class BasicManagerFactory implements ManagerFactory {
 
-	private static final BasicManagerFactory INSTANCE = new BasicManagerFactory();
+    private static final BasicManagerFactory INSTANCE = new BasicManagerFactory();
 
-	private ApplicationState state = ApplicationState.INIT;
+    private ApplicationState state = ApplicationState.INIT;
 
-	private ConfigurationManager configurationManager = FileConfigurationManager.getInstance();
+    private ConfigurationManager configurationManager = FileConfigurationManager.getInstance();
 
-	static {
-		try {
-			if (ApplicationInitializer.init()) {
-				INSTANCE.setApplicationState(ApplicationState.READY);
-			}
-		} catch (OperationException e) {
-			INSTANCE.setApplicationState(ApplicationState.OFFLINE);
-		}
+    static {
+	try {
+	    if (ApplicationInitializer.init()) {
+		INSTANCE.setApplicationState(ApplicationState.READY);
+	    }
+	} catch (OperationException e) {
+	    INSTANCE.setApplicationState(ApplicationState.OFFLINE);
 	}
+    }
 
-	public static ManagerFactory getInstance() {
-		return INSTANCE;
-	}
+    public static ManagerFactory getInstance() {
+	return INSTANCE;
+    }
 
-	@Override
-	public ApplicationState getApplicationState() {
-		return this.state;
-	}
+    @Override
+    public ApplicationState getApplicationState() {
+	return this.state;
+    }
 
-	@Override
-	public void setApplicationState(ApplicationState state) {
-		this.state = state;
-	}
+    @Override
+    public void setApplicationState(ApplicationState state) {
+	this.state = state;
+    }
 
-	/**
-	 * This method returns the {@link SessionManager} implementation selected.
-	 * 
-	 * @return the configured {@link SessionManager} implementation
-	 */
-	public SessionManager getSessionManager() {
-		return BasicSessionManager.getInstance();
-	}
+    /**
+     * This method returns the {@link SessionManager} implementation selected.
+     * 
+     * @return the configured {@link SessionManager} implementation
+     */
+    public SessionManager getSessionManager() {
+	return BasicSessionManager.getInstance();
+    }
 
-	public DAOManager getDAOManager() {
-		return JdbcDAOManager.getInstance();
-	}
+    public DAOManager getDAOManager() {
+	return JdbcDAOManager.getInstance();
+    }
 
-	/**
-	 * This method returns the {@link ConfigurationManager} implementation
-	 * selected.
-	 * 
-	 * @return the configured {@link ConfigurationManager} implementation
-	 */
-	public ConfigurationManager getConfigurationManager() {
-		return this.configurationManager;
-		// if (state != ApplicationState.INIT) {
-		// return new DBConfigManager(session,
-		// FileConfigurationManager.getInstance());
-		// }
-	}
+    /**
+     * This method returns the {@link ConfigurationManager} implementation
+     * selected.
+     * 
+     * @return the configured {@link ConfigurationManager} implementation
+     */
+    public ConfigurationManager getConfigurationManager() {
+	return this.configurationManager;
+	// if (state != ApplicationState.INIT) {
+	// return new DBConfigManager(session,
+	// FileConfigurationManager.getInstance());
+	// }
+    }
 
-	public AuthorizationManager getAuthorizationManager(Session session) {
-		return new BasicAuthorizationManager();
-	}
+    public AuthorizationManager getAuthorizationManager(Session session) {
+	return new BasicAuthorizationManager();
+    }
 
-	public void releaseSession(Session session) {
-		getSessionManager().releaseSession(session);
-	}
+    public void releaseSession(Session session) {
+	getSessionManager().releaseSession(session);
+    }
 
-	@Override
-	public AuthenticationManager getAuthenticationManager(Session session) {
-		return new BasicAuthenticationManager(session);
-	}
+    @Override
+    public AuthenticationManager getAuthenticationManager(Session session) {
+	return new BasicAuthenticationManager(session);
+    }
 
-	@Override
-	public AppLog getLogManager(Session session, Class<?> aClass) {
-		return new BasicLogManager(session, aClass);
-	}
+    @Override
+    public AppLog getLogManager(Session session, Class<?> aClass) {
+	return new BasicLogManager(session, aClass);
+    }
 
-	@Override
-	public ScheduleManager getScheduleManager() {
-		return new DefaultScheduleManager();
-	}
+    @Override
+    public ScheduleManager getScheduleManager() {
+	return new DefaultScheduleManager();
+    }
 
-	public void setConfigurationManager(ConfigurationManager configurationManager) {
-		this.configurationManager = configurationManager;
-	}
+    public void setConfigurationManager(ConfigurationManager configurationManager) {
+	this.configurationManager = configurationManager;
+    }
 }

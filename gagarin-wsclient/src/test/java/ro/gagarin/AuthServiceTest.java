@@ -7,14 +7,14 @@ import org.junit.Test;
  */
 public class AuthServiceTest {
 
-	@Test
-	public void testSessionCreateLoginLogout() throws SessionNotFoundException_Exception,
-			ItemNotFoundException_Exception, OperationException_Exception {
-		AuthenticationService service = new AuthenticationService();
-		Authentication api = service.getAuthenticationPort();
-		String session = api.createSession(null, null);
-		api.login(session, "admin", "password", null);
-		api.logout(session);
-	}
+    @Test
+    public void testSessionCreateLoginLogout() throws SessionNotFoundException_Exception,
+	    ItemNotFoundException_Exception, OperationException_Exception {
+	AuthenticationService service = new AuthenticationService();
+	Authentication api = service.getAuthenticationPort();
+	String session = api.createSession(null, null);
+	api.login(session, "admin", "password", null);
+	api.logout(session);
+    }
 
 }

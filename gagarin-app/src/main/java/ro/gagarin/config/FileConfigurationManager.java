@@ -33,6 +33,7 @@ public class FileConfigurationManager extends ConfigHolder implements Configurat
 	newCfg[Config.JDBC_DB_USER.ordinal()] = Config.JDBC_DB_USER.getDefaultValue();
 	newCfg[Config.JDBC_DB_PASSWORD.ordinal()] = Config.JDBC_DB_PASSWORD.getDefaultValue();
 	newCfg[Config.DB_INIT_SQL_FILE.ordinal()] = Config.DB_INIT_SQL_FILE.getDefaultValue();
+	newCfg[Config._TEST_LOCAL_ONLY_.ordinal()] = Config._TEST_LOCAL_ONLY_.getDefaultValue();
 	super.importConfig(newCfg);
     }
 

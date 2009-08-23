@@ -13,7 +13,7 @@ public class SchedulerThread extends Thread {
     public void run() {
 	try {
 	    while (!parent.shutdown()) {
-		RunableJob nextJob = parent.waitNextJob();
+		SimpleJob nextJob = parent.waitNextJob();
 		if (nextJob == null) {
 		    continue;
 		}

@@ -10,8 +10,8 @@ public class Scheduler {
     private static final transient Logger LOG = Logger.getLogger(Scheduler.class);
     private ArrayList<SchedulerThread> threads = new ArrayList<SchedulerThread>();
     private final int threadCount;
-    private HashMap<Long, RunableJob> pendingJobStore = new HashMap<Long, RunableJob>();
-    private HashMap<Long, RunableJob> allJobStore = new HashMap<Long, RunableJob>();
+    private HashMap<Long, SimpleJob> pendingJobStore = new HashMap<Long, SimpleJob>();
+    private HashMap<Long, SimpleJob> allJobStore = new HashMap<Long, SimpleJob>();
 
     public Scheduler() {
 	// TODO: make this value configurable
@@ -34,10 +34,10 @@ public class Scheduler {
 	return false;
     }
 
-    private RunableJob getNextJob() {
+    private SimpleJob getNextJob() {
 	long minNextRun = Long.MAX_VALUE;
-	RunableJob nextJob = null;
-	for (RunableJob job : this.pendingJobStore.values()) {
+	SimpleJob nextJob = null;
+	for (SimpleJob job : this.pendingJobStore.values()) {
 	    long nextRun = job.getNextRun();
 	    if (nextRun < minNextRun) {
 		minNextRun = nextRun;
@@ -47,7 +47,7 @@ public class Scheduler {
 	return nextJob;
     }
 
-    public void releaseJob(RunableJob nextJob) {
+    public void releaseJob(SimpleJob nextJob) {
 	synchronized (this) {
 	    nextJob.markExecuted();
 	    this.pendingJobStore.put(nextJob.getId(), nextJob);
@@ -56,8 +56,8 @@ public class Scheduler {
 	}
     }
 
-    public RunableJob waitNextJob() throws InterruptedException {
-	RunableJob nextJob = null;
+    public SimpleJob waitNextJob() throws InterruptedException {
+	SimpleJob nextJob = null;
 	long toWait = Long.MAX_VALUE;
 	synchronized (this) {
 
@@ -93,6 +93,7 @@ public class Scheduler {
 	}
 
 	if (toWait < 10) {
+	    toWait = nextJob.getNextRun() - System.currentTimeMillis();
 	    if (toWait > 0) {
 		Thread.sleep(toWait);
 	    }
@@ -102,12 +103,17 @@ public class Scheduler {
 	return null;
     }
 
-    public long scheduleJob(ScheduledJob job) {
+    public long scheduleJob(ScheduledJob job, boolean createDBConnecton) {
 	if (job.getId() == null) {
 	    job.setId(ScheduledJob.getNextId());
 	}
 	synchronized (this) {
-	    RunableJob runableJob = new RunableJob(job);
+	    SimpleJob runableJob = null;
+	    if (createDBConnecton) {
+		runableJob = new SessionJob(job);
+	    } else {
+		runableJob = new SimpleJob(job);
+	    }
 	    this.pendingJobStore.put(job.getId(), runableJob);
 	    this.allJobStore.put(job.getId(), runableJob);
 	    this.notify();
@@ -116,7 +122,7 @@ public class Scheduler {
     }
 
     public synchronized void updateJobRate(Long id, Long rate) {
-	RunableJob job = this.allJobStore.get(id);
+	SimpleJob job = this.allJobStore.get(id);
 	if (job != null) {
 	    job.setPeriod(rate);
 	    this.notify();
@@ -125,7 +131,7 @@ public class Scheduler {
     }
 
     public synchronized void triggerExecution(Long id) {
-	RunableJob job = this.allJobStore.get(id);
+	SimpleJob job = this.allJobStore.get(id);
 	if (job != null) {
 	    job.markToExecuteNow();
 	    this.notify();

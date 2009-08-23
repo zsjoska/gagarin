@@ -52,7 +52,9 @@ public enum Config {
      */
     _LAST_UPDATE_TIME_(null),
 
-    _TEST_DB_ONLY_("_TEST_DB_ONLY_");
+    _TEST_DB_ONLY_("_TEST_DB_ONLY_"),
+
+    _TEST_LOCAL_ONLY_("_TEST_LOCAL_ONLY_");
 
     private final String defValue;
 

@@ -39,7 +39,7 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
 
 	INSTANCE.registerForChange(INSTANCE);
 	INSTANCE.configImportJob = new DBConfigManager.ConfigImportJob("DB_CONFIG_IMPORT", period, period);
-	FACTORY.getScheduleManager().scheduleJob(INSTANCE.configImportJob);
+	FACTORY.getScheduleManager().scheduleJob(INSTANCE.configImportJob, true);
     }
 
     public static class ConfigImportJob extends ScheduledJob {

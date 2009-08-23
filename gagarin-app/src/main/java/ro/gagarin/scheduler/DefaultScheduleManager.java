@@ -15,10 +15,10 @@ public class DefaultScheduleManager implements ScheduleManager {
     }
 
     @Override
-    public long scheduleJob(ScheduledJob job) {
+    public long scheduleJob(ScheduledJob job, boolean createSession) {
 	job.setId(ScheduledJob.getNextId());
 	LOG.info("Schedule Job:" + job.toString());
-	return defaultScheduler.scheduleJob(job);
+	return defaultScheduler.scheduleJob(job, createSession);
     }
 
     @Override

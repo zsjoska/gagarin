@@ -30,7 +30,7 @@ public class SchedulerTest {
 	scheduler.start();
 
 	long schedTime = System.currentTimeMillis();
-	scheduler.scheduleJob(job);
+	scheduler.scheduleJob(job, false);
 
 	Thread.sleep(200);
 
@@ -43,9 +43,10 @@ public class SchedulerTest {
     public void testMultiRunScheduler() throws Exception {
 
 	final ArrayList<Long> xTimes = new ArrayList<Long>();
-	final int count = 10;
+	final int count = 5;
+	final long rate = 30;
 
-	ScheduledJob job = new ScheduledJob("testMultiRunScheduler", 0, 10, count) {
+	ScheduledJob job = new ScheduledJob("testMultiRunScheduler", 0, rate, count) {
 	    public void execute(Session session, AppLog log) throws Exception {
 		xTimes.add(System.currentTimeMillis());
 	    }
@@ -55,20 +56,20 @@ public class SchedulerTest {
 	scheduler.start();
 
 	long schedTime = System.currentTimeMillis();
-	scheduler.scheduleJob(job);
+	scheduler.scheduleJob(job, false);
 
 	Thread.sleep(500);
 
 	assertEquals("Too many executions", count, xTimes.size());
 
 	long sum = 0;
-	long oldXtime = schedTime - 10;
+	long oldXtime = schedTime - rate;
 	for (Long x : xTimes) {
-	    assertEquals("Too big difference have passed between the two runs", 10, x - oldXtime, 100);
+	    assertEquals("Too big difference have passed between the two runs", rate, x - oldXtime, 30);
 	    oldXtime = x;
 	    sum += x - schedTime;
 	}
-	assertEquals("The sum of deltas does not integrates in the expected interval", 10 * count * (count - 1) / 2,
+	assertEquals("The sum of deltas does not integrates in the expected interval", rate * count * (count - 1) / 2,
 		sum, 100 * count);
 
     }
@@ -82,7 +83,7 @@ public class SchedulerTest {
 	    public void execute(Session session, AppLog log) {
 		xTimes.add(System.currentTimeMillis());
 	    }
-	});
+	}, false);
 	Thread.sleep(100);
 	assertEquals("Only one time execution was expected", 1, xTimes.size());
     }
@@ -97,7 +98,7 @@ public class SchedulerTest {
 	    public void execute(Session session, AppLog log) {
 		xTimes.add(System.currentTimeMillis());
 	    }
-	});
+	}, false);
 	Thread.sleep(100);
 	for (Long l : xTimes) {
 	}
@@ -112,6 +113,6 @@ public class SchedulerTest {
 	    public void execute(Session session, AppLog log) {
 		throw new RuntimeException("Test Exception");
 	    }
-	});
+	}, false);
     }
 }

@@ -35,17 +35,17 @@ public class ConfigTest {
 	DBConfigManager dbCfgMgr = DBConfigManager.getInstance();
 
 	try {
-	    dbCfgMgr.setConfigValue(session, Config.SESSION_CHECK_PERIOD, "1000");
+	    dbCfgMgr.setConfigValue(session, Config._TEST_LOCAL_ONLY_, "1000");
 	} finally {
 	    FACTORY.releaseSession(session);
 	}
-	assertEquals("The config should not change", FileConfigurationManager.getInstance().getLong(
-		Config.SESSION_CHECK_PERIOD), dbCfgMgr.getLong(Config.SESSION_CHECK_PERIOD));
+	assertEquals("The config should not change", FileConfigurationManager.getInstance().getString(
+		Config._TEST_LOCAL_ONLY_), dbCfgMgr.getString(Config._TEST_LOCAL_ONLY_));
 	long sleeptime = 150; // dbCfgMgr.getLong(Config.DB_CONFIG_CHECK_PERIOD);
 	LOG.info("Waiting for DB Import " + sleeptime);
 	Thread.sleep(sleeptime);
 	assertEquals("The config should not change because this config is defined locally", FileConfigurationManager
-		.getInstance().getLong(Config.SESSION_CHECK_PERIOD), dbCfgMgr.getLong(Config.SESSION_CHECK_PERIOD));
+		.getInstance().getString(Config._TEST_LOCAL_ONLY_), dbCfgMgr.getString(Config._TEST_LOCAL_ONLY_));
     }
 
     @Test

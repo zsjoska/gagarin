@@ -10,30 +10,15 @@ import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.log.AppLog;
 import ro.gagarin.session.Session;
 
-class RunableJob {
+class SessionJob extends SimpleJob {
 
-    private static final transient Logger LOG = Logger.getLogger(RunableJob.class);
+    private static final transient Logger LOG = Logger.getLogger(SessionJob.class);
     private static final ManagerFactory FACTORY = BasicManagerFactory.getInstance();
 
-    private final ScheduledJob job;
-
-    private int toExecute;
-
-    private long lastRun;
-
-    private long period;
     private Session session;
 
-    public RunableJob(ScheduledJob job) {
-	this.job = job;
-	this.period = job.getPeriod();
-	this.lastRun = (System.currentTimeMillis() + job.getInitialWait()) - job.getPeriod();
-	if (job.getPeriod() == 0) {
-	    // once to be executed
-	    this.toExecute = 1;
-	} else {
-	    this.toExecute = job.getCount();
-	}
+    public SessionJob(ScheduledJob job) {
+	super(job);
 	session = createSession();
 	if (session.getSessionTimeout() < job.getPeriod() * 2)
 	    session.setSessiontimeout(job.getPeriod() * 2);
@@ -60,17 +45,17 @@ class RunableJob {
 	try {
 	    sessionManager.acquireSession(session.getSessionString());
 	} catch (SessionNotFoundException e) {
-	    LOG.error("Session expired for job " + this.job);
+	    LOG.error("Session expired for job " + this.getJob());
 	    return;
 	}
 
-	AppLog log = FACTORY.getLogManager(session, RunableJob.class);
+	AppLog log = FACTORY.getLogManager(session, SessionJob.class);
 	try {
-	    log.debug("Executing job " + job.getName() + "#" + job.getId());
-	    job.execute(session, log);
-	    log.debug("Finished job " + job.getName() + "#" + job.getId());
+	    log.debug("Executing job " + getJob().getName() + "#" + getJob().getId());
+	    getJob().execute(session, log);
+	    log.debug("Finished job " + getJob().getName() + "#" + getJob().getId());
 	} catch (Exception e) {
-	    log.error("Exception executing job " + job.getName() + "#" + job.getId(), e);
+	    log.error("Exception executing job " + getJob().getName() + "#" + getJob().getId(), e);
 	}
 	FACTORY.releaseSession(session);
 
@@ -87,40 +72,10 @@ class RunableJob {
 
     private Session createSession() {
 	SessionManager sessionManager = FACTORY.getSessionManager();
-	Session session = sessionManager.createSession(null, job.getName(), FACTORY);
+	Session session = sessionManager.createSession(null, getJob().getName(), FACTORY);
 	AppUser user = new AppUser();
 	user.setUsername("SCHEDULER");
 	session.setUser(user);
 	return session;
-    }
-
-    public long getNextRun() {
-	// negative is infinite, positive is to be executed
-	if (toExecute < 0 || toExecute > 0) {
-	    return this.lastRun + this.period;
-	}
-	return 0;
-    }
-
-    public Long getId() {
-	return this.job.getId();
-    }
-
-    public void markExecuted() {
-	this.lastRun += this.period;
-	if (this.toExecute > 0)
-	    this.toExecute--;
-    }
-
-    public void setPeriod(long period) {
-	this.period = period;
-    }
-
-    public long getPeriod() {
-	return period;
-    }
-
-    public void markToExecuteNow() {
-	this.lastRun = System.currentTimeMillis() - period;
     }
 }

@@ -37,8 +37,6 @@ class RunableJob {
 		} else {
 			this.toExecute = job.getCount();
 		}
-		// TODO: move this session creation to the constructor and set the right
-		// timeout for the session
 		session = createSession();
 		if (session.getSessionTimeout() < job.getPeriod() * 2)
 			session.setSessiontimeout(job.getPeriod() * 2);
@@ -80,9 +78,6 @@ class RunableJob {
 		}
 		FACTORY.releaseSession(session);
 
-		// TODO: destroy the session for the last run
-		// FACTORY.getSessionManager().destroySession(session);
-
 		long end = System.currentTimeMillis();
 		if (end - start > this.getPeriod()) {
 			LOG.error("Job #" + this.getId()
@@ -91,6 +86,10 @@ class RunableJob {
 		}
 	}
 
+	public void destroyJob(){
+		FACTORY.getSessionManager().destroySession(session);
+	}
+	
 	private Session createSession() {
 		SessionManager sessionManager = FACTORY.getSessionManager();
 		Session session = sessionManager.createSession(null, job.getName(),

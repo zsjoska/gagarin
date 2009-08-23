@@ -76,17 +76,24 @@ public class Scheduler {
 				// this job has no left execution; remove it and forget it
 				this.pendingJobStore.remove(nextJob.getId());
 				this.allJobStore.remove(nextJob.getId());
-				return null;
-			}
-
-			toWait = nextRun - System.currentTimeMillis();
-			if (toWait < 10) {
-				this.pendingJobStore.remove(nextJob.getId());
+				// we will destroy the job outside of the synchronized block
 			} else {
-				this.wait(toWait);
-				return null;
+
+				toWait = nextRun - System.currentTimeMillis();
+				if (toWait < 10) {
+					this.pendingJobStore.remove(nextJob.getId());
+				} else {
+					this.wait(toWait);
+					return null;
+				}
 			}
 		}
+		
+		if(nextJob !=null && nextJob.getNextRun()==0){
+			// this was removed already from the stores
+			nextJob.destroyJob();
+		}
+		
 		if (toWait < 10) {
 			if (toWait > 0) {
 				Thread.sleep(toWait);

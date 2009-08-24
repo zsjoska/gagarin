@@ -13,5 +13,7 @@ public class ErrorCodes {
     public static final int DB_OP_ERROR = 9;
     public static final int ERROR_WILD_SESSION = 10;
     public static final int CONFIG_ENTRY_INVALID = 11;
+    public static final int LOGIN_REQUIRED = 12;
+    public static final int PERMISSION_DENIED = 13;
 
 }

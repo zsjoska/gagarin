@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+import ro.gagarin.exceptions.LoginRequiredException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.exceptions.PermissionDeniedException;
 import ro.gagarin.session.Session;
@@ -69,5 +70,18 @@ public class BasicAuthorizationManager implements AuthorizationManager {
 		throw new PermissionDeniedException(session.getUser().getUsername(), p.getPermissionName());
 	    }
 	}
+    }
+
+    @Override
+    public void requireLogin(Session session) throws LoginRequiredException {
+	UserRole role = null;
+	if (session != null) {
+	    User user = session.getUser();
+	    if (user != null) {
+		role = user.getRole();
+	    }
+	}
+	if (role == null)
+	    throw new LoginRequiredException();
     }
 }

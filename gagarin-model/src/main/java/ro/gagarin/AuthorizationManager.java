@@ -2,6 +2,7 @@ package ro.gagarin;
 
 import java.util.List;
 
+import ro.gagarin.exceptions.LoginRequiredException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.exceptions.PermissionDeniedException;
 import ro.gagarin.session.Session;
@@ -18,5 +19,7 @@ public interface AuthorizationManager {
 
     void checkUserHasThePermissions(Session session, List<UserPermission> matched) throws OperationException,
 	    PermissionDeniedException;
+
+    void requireLogin(Session session) throws LoginRequiredException;
 
 }

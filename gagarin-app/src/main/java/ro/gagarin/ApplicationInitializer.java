@@ -21,6 +21,7 @@ import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
+import ro.gagarin.utils.ConversionUtils;
 
 public class ApplicationInitializer {
 
@@ -164,13 +165,12 @@ public class ApplicationInitializer {
 	    grantedPermissions = new HashSet<UserPermission>();
 	}
 
-	List<UserPermission> permissions = roleManager.getAllPermissions();
-	if (permissions == null || permissions.size() == 0) {
-	    throw new RuntimeException("Inconsistent state: The permission list should have been created!");
-	}
+	HashSet<String> permSet = ConversionUtils.convertPermissionsToStringSet(grantedPermissions);
 
-	for (UserPermission userPermission : permissions) {
-	    if (!grantedPermissions.contains(userPermission)) {
+	List<UserPermission> allDBPermissions = roleManager.getAllPermissions();
+
+	for (UserPermission userPermission : allDBPermissions) {
+	    if (!permSet.contains(userPermission.getPermissionName())) {
 		LOG.info("Adding permission " + userPermission.getPermissionName() + " to admin role");
 		roleManager.assignPermissionToRole(adminRole, userPermission);
 	    } else {

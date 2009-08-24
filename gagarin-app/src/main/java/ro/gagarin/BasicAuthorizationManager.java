@@ -41,6 +41,7 @@ public class BasicAuthorizationManager implements AuthorizationManager {
 	user = session.getUser();
 	Set<UserPermission> perm = roleDAO.getRolePermissions(user.getRole());
 
+	// TODO: rewrite with the new method in the ConversionUtils
 	Iterator<? extends UserPermission> iterator = perm.iterator();
 	while (iterator.hasNext()) {
 	    UserPermission userPermission = iterator.next();

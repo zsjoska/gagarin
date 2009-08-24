@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ItemNotFoundException;
+import ro.gagarin.exceptions.LoginRequiredException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.exceptions.PermissionDeniedException;
 import ro.gagarin.exceptions.SessionNotFoundException;
@@ -79,7 +80,7 @@ public class MethodAccessTest {
 
     @Test
     public void createUserAccess() throws ItemNotFoundException, SessionNotFoundException, DataConstraintException,
-	    OperationException {
+	    OperationException, LoginRequiredException {
 
 	RoleDAO roleDAO = FACTORY.getDAOManager().getRoleDAO(aDummySession);
 	UserDAO userDAO = FACTORY.getDAOManager().getUserDAO(aDummySession);

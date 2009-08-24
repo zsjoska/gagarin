@@ -21,6 +21,7 @@ import ro.gagarin.config.ConfigEntry;
 import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.ItemNotFoundException;
+import ro.gagarin.exceptions.LoginRequiredException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.exceptions.PermissionDeniedException;
 import ro.gagarin.exceptions.SessionNotFoundException;
@@ -47,19 +48,24 @@ public class UserService {
 
     @WebMethod
     public Long createUser(String sessionId, WSUser user) throws SessionNotFoundException, PermissionDeniedException,
-	    ItemNotFoundException, DataConstraintException, OperationException {
+	    ItemNotFoundException, DataConstraintException, OperationException, LoginRequiredException {
 	LOG.info("createUser " + user.getUsername());
 
 	SessionManager sessionManager = FACTORY.getSessionManager();
 	Session session = sessionManager.acquireSession(sessionId);
-	UserDAO userManager = FACTORY.getDAOManager().getUserDAO(session);
-	AuthorizationManager permissionManager = FACTORY.getAuthorizationManager(session);
 
 	try {
+	    AuthorizationManager authManager = FACTORY.getAuthorizationManager(session);
+
+	    // check real login
+	    authManager.requireLogin(session);
 
 	    // the session user must have CREATE_USER permission
-	    permissionManager.requiresPermission(session, PermissionEnum.CREATE_USER);
+	    authManager.requiresPermission(session, PermissionEnum.CREATE_USER);
 
+	    UserDAO userManager = FACTORY.getDAOManager().getUserDAO(session);
+
+	    // TODO: what for this rollback... no change so far
 	    // check user fields
 	    if (user.getRole() == null) {
 		userManager.markRollback();
@@ -79,7 +85,7 @@ public class UserService {
 
 	    // the created user's permission list must not exceed session user's
 	    // permissions
-	    permissionManager.checkUserRole(session, user);
+	    authManager.checkUserRole(session, user);
 
 	    long userId = userManager.createUser(user);
 	    LOG.info("Created User " + user.getId() + ":" + user.getUsername() + "; session:" + sessionId);
@@ -91,17 +97,21 @@ public class UserService {
 
     @WebMethod
     public List<WSUserRole> getRoleList(String sessionId) throws SessionNotFoundException, PermissionDeniedException,
-	    OperationException {
+	    OperationException, LoginRequiredException {
 
 	SessionManager sessionManager = FACTORY.getSessionManager();
 	Session session = sessionManager.acquireSession(sessionId);
-	RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
-	AuthorizationManager permissionManager = FACTORY.getAuthorizationManager(session);
 
 	try {
+	    AuthorizationManager authManager = FACTORY.getAuthorizationManager(session);
+
+	    // check real login
+	    authManager.requireLogin(session);
 
 	    // the session user must have LIST_ROLES permission
-	    permissionManager.requiresPermission(session, PermissionEnum.LIST_ROLES);
+	    authManager.requiresPermission(session, PermissionEnum.LIST_ROLES);
+
+	    RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
 	    List<UserRole> allRoles = roleManager.getAllRoles();
 	    List<WSUserRole> convRoles = new ArrayList<WSUserRole>();
 	    for (UserRole userRole : allRoles) {
@@ -117,23 +127,27 @@ public class UserService {
     @WebMethod
     public WSUserRole createRoleWithPermissions(String sessionId, String roleName, WSUserPermission[] permissions)
 	    throws SessionNotFoundException, PermissionDeniedException, OperationException, ItemNotFoundException,
-	    DataConstraintException {
+	    DataConstraintException, LoginRequiredException {
 
 	SessionManager sessionManager = FACTORY.getSessionManager();
 	Session session = sessionManager.acquireSession(sessionId);
 
 	try {
+	    AuthorizationManager authManager = FACTORY.getAuthorizationManager(session);
+
+	    // check real login
+	    authManager.requireLogin(session);
+
 	    RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
-	    AuthorizationManager permissionManager = FACTORY.getAuthorizationManager(session);
 
 	    LOG.debug("Create role:" + roleName + " with permissions " + Arrays.toString(permissions));
 
 	    // the session user must have LIST_PERMISSIONS permission
-	    permissionManager.requiresPermission(session, PermissionEnum.LIST_PERMISSIONS);
+	    authManager.requiresPermission(session, PermissionEnum.LIST_PERMISSIONS);
 	    List<UserPermission> allPermissions = roleManager.getAllPermissions();
 	    List<UserPermission> matched;
 	    matched = ConversionUtils.matchPermissions(allPermissions, permissions);
-	    permissionManager.checkUserHasThePermissions(session, matched);
+	    authManager.checkUserHasThePermissions(session, matched);
 
 	    WSUserRole role = new WSUserRole();
 	    role.setRoleName(roleName);
@@ -152,16 +166,20 @@ public class UserService {
 
     @WebMethod
     public List<WSUserPermission> getAllPermissionList(String sessionId) throws SessionNotFoundException,
-	    OperationException, PermissionDeniedException {
+	    OperationException, PermissionDeniedException, LoginRequiredException {
 	SessionManager sessionManager = FACTORY.getSessionManager();
 	Session session = sessionManager.acquireSession(sessionId);
 
 	try {
+	    AuthorizationManager authManager = FACTORY.getAuthorizationManager(session);
+
+	    // check real login
+	    authManager.requireLogin(session);
+
 	    RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
-	    AuthorizationManager permissionManager = FACTORY.getAuthorizationManager(session);
 
 	    // the session user must have LIST_PERMISSIONS permission
-	    permissionManager.requiresPermission(session, PermissionEnum.LIST_PERMISSIONS);
+	    authManager.requiresPermission(session, PermissionEnum.LIST_PERMISSIONS);
 
 	    List<UserPermission> allPermissions = roleManager.getAllPermissions();
 	    return WSConversionUtils.convertToWSPermissionList(allPermissions);
@@ -173,16 +191,20 @@ public class UserService {
 
     @WebMethod
     public List<WSUserPermission> getRolePermissions(String sessionId, WSUserRole wsUserRole)
-	    throws SessionNotFoundException, OperationException, PermissionDeniedException {
+	    throws SessionNotFoundException, OperationException, PermissionDeniedException, LoginRequiredException {
 	SessionManager sessionManager = FACTORY.getSessionManager();
 	Session session = sessionManager.acquireSession(sessionId);
 
 	try {
+	    AuthorizationManager authManager = FACTORY.getAuthorizationManager(session);
+
+	    // check real login
+	    authManager.requireLogin(session);
+
 	    RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
-	    AuthorizationManager permissionManager = FACTORY.getAuthorizationManager(session);
 
 	    // the session user must have LIST_PERMISSIONS permission
-	    permissionManager.requiresPermission(session, PermissionEnum.LIST_PERMISSIONS);
+	    authManager.requiresPermission(session, PermissionEnum.LIST_PERMISSIONS);
 
 	    Set<UserPermission> permissions = roleManager.getRolePermissions(wsUserRole);
 	    return WSConversionUtils.convertToWSPermissionList(permissions);
@@ -194,16 +216,20 @@ public class UserService {
 
     @WebMethod
     public void deleteRole(String sessionId, WSUserRole role) throws OperationException, PermissionDeniedException,
-	    SessionNotFoundException {
+	    SessionNotFoundException, LoginRequiredException {
 	SessionManager sessionManager = FACTORY.getSessionManager();
 	Session session = sessionManager.acquireSession(sessionId);
 
 	try {
+	    AuthorizationManager authManager = FACTORY.getAuthorizationManager(session);
+
+	    // check real login
+	    authManager.requireLogin(session);
+
 	    RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
-	    AuthorizationManager permissionManager = FACTORY.getAuthorizationManager(session);
 
 	    // the session user must have LIST_PERMISSIONS permission
-	    permissionManager.requiresPermission(session, PermissionEnum.DELETE_ROLE);
+	    authManager.requiresPermission(session, PermissionEnum.DELETE_ROLE);
 
 	    roleManager.deleteRole(role);
 
@@ -214,16 +240,20 @@ public class UserService {
 
     @WebMethod
     public List<WSUser> getUsers(String sessionId) throws OperationException, SessionNotFoundException,
-	    PermissionDeniedException {
+	    PermissionDeniedException, LoginRequiredException {
 	SessionManager sessionManager = FACTORY.getSessionManager();
 	Session session = sessionManager.acquireSession(sessionId);
 
 	try {
+	    AuthorizationManager authManager = FACTORY.getAuthorizationManager(session);
+
+	    // check real login
+	    authManager.requireLogin(session);
+
 	    UserDAO userDAO = FACTORY.getDAOManager().getUserDAO(session);
-	    AuthorizationManager permissionManager = FACTORY.getAuthorizationManager(session);
 
 	    // the session user must have LIST_USERS permission
-	    permissionManager.requiresPermission(session, PermissionEnum.LIST_USERS);
+	    authManager.requiresPermission(session, PermissionEnum.LIST_USERS);
 
 	    List<User> allUsers = userDAO.getAllUsers();
 	    return WSConversionUtils.convertToWSUserList(allUsers);
@@ -235,13 +265,17 @@ public class UserService {
 
     @WebMethod
     public List<WSConfig> getConfigEntries(String sessionId) throws SessionNotFoundException, OperationException,
-	    PermissionDeniedException {
+	    PermissionDeniedException, LoginRequiredException {
 	SessionManager sessionManager = FACTORY.getSessionManager();
 	Session session = sessionManager.acquireSession(sessionId);
 
 	try {
+	    AuthorizationManager authManager = FACTORY.getAuthorizationManager(session);
 
-	    FACTORY.getAuthorizationManager(session).requiresPermission(session, PermissionEnum.LIST_CONFIG);
+	    // check real login
+	    authManager.requireLogin(session);
+
+	    authManager.requiresPermission(session, PermissionEnum.LIST_CONFIG);
 
 	    ConfigurationManager cfgMgr = FACTORY.getConfigurationManager();
 	    List<ConfigEntry> configValues = cfgMgr.getConfigValues();
@@ -254,13 +288,17 @@ public class UserService {
 
     @WebMethod
     public void setConfigEntry(String sessionId, WSConfig wsConfig) throws SessionNotFoundException,
-	    OperationException, PermissionDeniedException {
+	    OperationException, PermissionDeniedException, LoginRequiredException {
 	SessionManager sessionManager = FACTORY.getSessionManager();
 	Session session = sessionManager.acquireSession(sessionId);
 
 	try {
+	    AuthorizationManager authManager = FACTORY.getAuthorizationManager(session);
 
-	    FACTORY.getAuthorizationManager(session).requiresPermission(session, PermissionEnum.UPDATE_CONFIG);
+	    // check real login
+	    authManager.requireLogin(session);
+
+	    authManager.requiresPermission(session, PermissionEnum.UPDATE_CONFIG);
 
 	    ConfigurationManager cfgMgr = FACTORY.getConfigurationManager();
 	    cfgMgr.setConfigValue(session, wsConfig);
@@ -271,13 +309,17 @@ public class UserService {
 
     @WebMethod
     public List<WSLogEntry> getLogEntries(String sessionId, String user) throws SessionNotFoundException,
-	    OperationException, PermissionDeniedException {
+	    OperationException, PermissionDeniedException, LoginRequiredException {
 	SessionManager sessionManager = FACTORY.getSessionManager();
 	Session session = sessionManager.acquireSession(sessionId);
 
 	try {
+	    AuthorizationManager authManager = FACTORY.getAuthorizationManager(session);
 
-	    FACTORY.getAuthorizationManager(session).requiresPermission(session, PermissionEnum.LIST_LOGS);
+	    // check real login
+	    authManager.requireLogin(session);
+
+	    authManager.requiresPermission(session, PermissionEnum.LIST_LOGS);
 
 	    AppLog logMgr = FACTORY.getLogManager(session, UserService.class);
 	    List<LogEntry> logValues = logMgr.getLogEntries(user);

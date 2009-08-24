@@ -94,4 +94,8 @@ class SimpleJob {
     public ScheduledJob getJob() {
 	return job;
     }
+
+    public void markDone() {
+	this.toExecute = 0;
+    }
 }

@@ -23,6 +23,7 @@ import ro.gagarin.user.UserRole;
 import ro.gagarin.ws.Authentication;
 import ro.gagarin.ws.UserService;
 import ro.gagarin.ws.objects.WSConfig;
+import ro.gagarin.ws.objects.WSExportedSession;
 import ro.gagarin.ws.objects.WSLogEntry;
 import ro.gagarin.ws.objects.WSUser;
 import ro.gagarin.ws.objects.WSUserPermission;
@@ -131,5 +132,13 @@ public class UserServiceTest {
 	}
 	assertNotNull(logEntries);
 	assertTrue(logEntries.size() > 0);
+    }
+
+    @Test
+    public void getSessionList() throws Exception {
+	List<WSExportedSession> sessionList = userService.getSessionList(session);
+	for (WSExportedSession wsExportedSession : sessionList) {
+	    System.out.println(wsExportedSession);
+	}
     }
 }

@@ -34,6 +34,7 @@ import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
 import ro.gagarin.utils.ConversionUtils;
 import ro.gagarin.ws.objects.WSConfig;
+import ro.gagarin.ws.objects.WSExportedSession;
 import ro.gagarin.ws.objects.WSLogEntry;
 import ro.gagarin.ws.objects.WSUser;
 import ro.gagarin.ws.objects.WSUserPermission;
@@ -329,4 +330,48 @@ public class UserService {
 	    FACTORY.releaseSession(session);
 	}
     }
+
+    @WebMethod
+    public List<WSExportedSession> getSessionList(String sessionId) throws SessionNotFoundException,
+	    OperationException, PermissionDeniedException, LoginRequiredException {
+	SessionManager sessionManager = FACTORY.getSessionManager();
+	Session session = sessionManager.acquireSession(sessionId);
+
+	try {
+	    AuthorizationManager authManager = FACTORY.getAuthorizationManager(session);
+
+	    // check real login
+	    authManager.requireLogin(session);
+
+	    authManager.requiresPermission(session, PermissionEnum.SESSION_OPERATION);
+	    List<Session> sessions = sessionManager.getSessionList();
+
+	    return WSConversionUtils.convertToSessionList(sessions);
+
+	} finally {
+	    FACTORY.releaseSession(session);
+	}
+    }
+
+    @WebMethod
+    public void logoutSession(String sessionId, String otherSessionId) throws SessionNotFoundException,
+	    PermissionDeniedException, LoginRequiredException, OperationException {
+	SessionManager sessionManager = FACTORY.getSessionManager();
+	Session session = sessionManager.acquireSession(sessionId);
+
+	try {
+	    AuthorizationManager authManager = FACTORY.getAuthorizationManager(session);
+
+	    // check real login
+	    authManager.requireLogin(session);
+
+	    authManager.requiresPermission(session, PermissionEnum.SESSION_OPERATION);
+
+	    sessionManager.logout(otherSessionId);
+
+	} finally {
+	    FACTORY.releaseSession(session);
+	}
+    }
+
 }

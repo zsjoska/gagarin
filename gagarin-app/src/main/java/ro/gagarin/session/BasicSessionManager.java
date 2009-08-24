@@ -2,6 +2,8 @@ package ro.gagarin.session;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
 
@@ -24,7 +26,8 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
     private long USER_SESSION_TIMEOUT;
     private long SESSION_CHECK_PERIOD;
 
-    private final HashMap<String, Session> sessions = new HashMap<String, Session>();
+    private final ConcurrentHashMap<String, Session> sessions = new ConcurrentHashMap<String, Session>(
+	    new HashMap<String, Session>());
 
     private SessionCheckerThread chkSession = null;
 
@@ -154,5 +157,14 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
 	    }
 	    session.setBusy(false, null);
 	}
+    }
+
+    @Override
+    public List<Session> getSessionList() {
+	ArrayList<Session> sessions = new ArrayList<Session>();
+	for (Session session : this.sessions.values()) {
+	    sessions.add(session);
+	}
+	return sessions;
     }
 }

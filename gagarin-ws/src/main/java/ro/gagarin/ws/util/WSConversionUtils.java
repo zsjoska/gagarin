@@ -8,9 +8,11 @@ import java.util.Set;
 
 import ro.gagarin.config.ConfigEntry;
 import ro.gagarin.log.LogEntry;
+import ro.gagarin.session.Session;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.ws.objects.WSConfig;
+import ro.gagarin.ws.objects.WSExportedSession;
 import ro.gagarin.ws.objects.WSLogEntry;
 import ro.gagarin.ws.objects.WSUser;
 import ro.gagarin.ws.objects.WSUserPermission;
@@ -55,6 +57,14 @@ public class WSConversionUtils {
 	    set.add(new WSUserPermission(userPermission));
 	}
 	return set;
+    }
+
+    public static List<WSExportedSession> convertToSessionList(List<Session> sessions) {
+	ArrayList<WSExportedSession> list = new ArrayList<WSExportedSession>();
+	for (Session logEntry : sessions) {
+	    list.add(new WSExportedSession(logEntry));
+	}
+	return list;
     }
 
 }

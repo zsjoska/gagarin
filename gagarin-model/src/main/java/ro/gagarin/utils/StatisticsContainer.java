@@ -22,8 +22,11 @@ public class StatisticsContainer {
 	}
 	ArrayList<Statistic> list = new ArrayList<Statistic>();
 	for (Statistic stat : statContainer.values()) {
-	    if (pattern != null && pattern.matcher(stat.getName()).matches())
+	    if (pattern == null) {
 		list.add(new Statistic(stat));
+	    } else if (pattern.matcher(stat.getName()).matches()) {
+		list.add(new Statistic(stat));
+	    }
 	}
 	return list;
     }

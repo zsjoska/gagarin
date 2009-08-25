@@ -22,6 +22,7 @@ import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserPermission;
+import ro.gagarin.utils.Statistic;
 import ro.gagarin.ws.objects.WSUser;
 import ro.gagarin.ws.objects.WSUserPermission;
 import ro.gagarin.ws.util.WSConversionUtils;
@@ -36,8 +37,12 @@ public class Authentication {
     private static final transient Logger LOG = Logger.getLogger(Authentication.class);
     private static final transient ManagerFactory FACTORY = BasicManagerFactory.getInstance();
 
+    private static final Statistic STAT_CREATE_SESSION = new Statistic("ws.auth.createSession");
+
     @WebMethod
     public String createSession(String language, String reason) {
+
+	long start = System.currentTimeMillis();
 
 	SessionManager sessionManager = FACTORY.getSessionManager();
 
@@ -50,13 +55,19 @@ public class Authentication {
 	LOG.info("Session created:" + session.getId() + "; reason:" + session.getReason() + "; language:"
 		+ session.getLanguage());
 
+	STAT_CREATE_SESSION.addDuration(System.currentTimeMillis() - start);
+
 	return session.getSessionString();
 
     }
 
+    private static final Statistic STAT_LOGIN = new Statistic("ws.auth.login");
+
     @WebMethod
     public WSUser login(String sessionID, String username, String password, String[] extra)
 	    throws SessionNotFoundException, ItemNotFoundException, OperationException {
+
+	long start = System.currentTimeMillis();
 
 	LOG.info("Login User " + username + "; extra:" + Arrays.toString(extra));
 
@@ -71,19 +82,28 @@ public class Authentication {
 	    return new WSUser(user);
 	} finally {
 	    FACTORY.releaseSession(session);
+	    STAT_LOGIN.addDuration(System.currentTimeMillis() - start);
 	}
     }
 
+    private static final Statistic STAT_LOGOUT = new Statistic("ws.auth.logout");
+
     @WebMethod
     public void logout(String sessionId) {
+	long start = System.currentTimeMillis();
 	LOG.info("Session logout " + sessionId);
 	SessionManager sessionManager = FACTORY.getSessionManager();
 	sessionManager.logout(sessionId);
+	STAT_LOGOUT.addDuration(System.currentTimeMillis() - start);
     }
+
+    private static final Statistic STAT_CURRENT_USER_PERMISSION = new Statistic("ws.auth.getCurrentUserPermissions");
 
     @WebMethod
     public Set<WSUserPermission> getCurrentUserPermissions(String sessionId) throws SessionNotFoundException,
 	    OperationException, LoginRequiredException {
+
+	long start = System.currentTimeMillis();
 
 	SessionManager sessionManager = FACTORY.getSessionManager();
 	Session session = sessionManager.acquireSession(sessionId);
@@ -100,6 +120,7 @@ public class Authentication {
 	    return WSConversionUtils.convertToWSPermissionSet(perm);
 	} finally {
 	    FACTORY.releaseSession(session);
+	    STAT_CURRENT_USER_PERMISSION.addDuration(System.currentTimeMillis() - start);
 	}
     }
 }

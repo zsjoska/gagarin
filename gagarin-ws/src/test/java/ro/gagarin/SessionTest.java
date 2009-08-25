@@ -147,31 +147,38 @@ public class SessionTest {
 
 	session = FACTORY.getSessionManager().createSession(null, null, FACTORY);
 	FACTORY.getSessionManager().acquireSession(session.getSessionString());
-
 	ConfigurationManager cfgManager = FACTORY.getConfigurationManager();
-	cfgManager.setConfigValue(session, Config.USER_SESSION_TIMEOUT, "100");
-	FACTORY.releaseSession(session);
 
-	TUtil.waitDBImportToHappen();
-
-	SessionManager sessionManager = FACTORY.getSessionManager();
-	Session session = FACTORY.getSessionManager().createSession(null, null, FACTORY);
-	assertNotNull(session);
-	assertEquals("We just set the timeout to 100", session.getSessionTimeout(), 100);
+	String oldSessionTimeout = cfgManager.getString(Config.USER_SESSION_TIMEOUT);
 
 	try {
-	    session = sessionManager.acquireSession(session.getSessionString());
-	} catch (SessionNotFoundException e) {
-	    fail("The session should be active");
-	}
-	assertNotNull(session);
+	    cfgManager.setConfigValue(session, Config.USER_SESSION_TIMEOUT, "100");
+	    FACTORY.releaseSession(session);
 
-	Thread.sleep(110);
-	try {
-	    session = sessionManager.acquireSession(session.getSessionString());
-	    fail("The session must be expired at this time");
-	} catch (SessionNotFoundException e) {
-	    // expected exception
+	    TUtil.waitDBImportToHappen();
+
+	    SessionManager sessionManager = FACTORY.getSessionManager();
+	    Session testSession = FACTORY.getSessionManager().createSession(null, null, FACTORY);
+	    assertNotNull(testSession);
+	    assertEquals("We just set the timeout to 100", 100, testSession.getSessionTimeout());
+
+	    try {
+		testSession = sessionManager.acquireSession(testSession.getSessionString());
+	    } catch (SessionNotFoundException e) {
+		fail("The session should be active");
+	    }
+	    assertNotNull(testSession);
+
+	    Thread.sleep(110);
+	    try {
+		testSession = sessionManager.acquireSession(testSession.getSessionString());
+		fail("The session must be expired at this time");
+	    } catch (SessionNotFoundException e) {
+		// expected exception
+	    }
+	} finally {
+	    FACTORY.getSessionManager().acquireSession(session.getSessionString());
+	    cfgManager.setConfigValue(session, Config.USER_SESSION_TIMEOUT, oldSessionTimeout);
 	}
 
 	FACTORY.releaseSession(session);

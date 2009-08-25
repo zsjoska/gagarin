@@ -1,6 +1,6 @@
 package ro.gagarin.exceptions;
 
-public class PermissionDeniedException extends Exception {
+public class PermissionDeniedException extends ExceptionBase {
 
     private static final long serialVersionUID = -6315990986935884611L;
 
@@ -8,6 +8,7 @@ public class PermissionDeniedException extends Exception {
     private final String name;
 
     public PermissionDeniedException(String username, String name) {
+	super(ErrorCodes.PERMISSION_DENIED);
 	this.username = username;
 	this.name = name;
     }

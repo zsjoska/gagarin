@@ -1,6 +1,7 @@
 package ro.gagarin;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.session.Session;
@@ -73,4 +74,6 @@ public interface SessionManager {
     Session acquireSession(String sessionID) throws SessionNotFoundException;
 
     void releaseSession(Session session);
+
+    List<Session> getSessionList();
 }

@@ -2,9 +2,12 @@ package ro.gagarin;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.junit.Test;
@@ -18,8 +21,11 @@ import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.jdbc.objects.DBUser;
 import ro.gagarin.session.Session;
 import ro.gagarin.testutil.TUtil;
+import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.UserRole;
+import ro.gagarin.utils.ConversionUtils;
 import ro.gagarin.ws.Authentication;
+import ro.gagarin.ws.objects.WSUserPermission;
 
 /**
  * Unit test for simple App.
@@ -35,6 +41,8 @@ public class SessionTest {
     private Session session = new Session();
 
     // TODO: add test with null session for all WS methods
+
+    // TODO: add test without login for all WS methods
 
     @Test
     public void testSuccessLogin() throws SessionNotFoundException, DataConstraintException, ItemNotFoundException,
@@ -139,34 +147,58 @@ public class SessionTest {
 
 	session = FACTORY.getSessionManager().createSession(null, null, FACTORY);
 	FACTORY.getSessionManager().acquireSession(session.getSessionString());
-
 	ConfigurationManager cfgManager = FACTORY.getConfigurationManager();
-	cfgManager.setConfigValue(session, Config.USER_SESSION_TIMEOUT, "100");
-	FACTORY.releaseSession(session);
 
-	TUtil.waitDBImportToHappen();
-
-	SessionManager sessionManager = FACTORY.getSessionManager();
-	Session session = FACTORY.getSessionManager().createSession(null, null, FACTORY);
-	assertNotNull(session);
-	assertEquals("We just set the timeout to 100", session.getSessionTimeout(), 100);
+	String oldSessionTimeout = cfgManager.getString(Config.USER_SESSION_TIMEOUT);
 
 	try {
-	    session = sessionManager.acquireSession(session.getSessionString());
-	} catch (SessionNotFoundException e) {
-	    fail("The session should be active");
-	}
-	assertNotNull(session);
+	    cfgManager.setConfigValue(session, Config.USER_SESSION_TIMEOUT, "100");
+	    FACTORY.releaseSession(session);
 
-	Thread.sleep(110);
-	try {
-	    session = sessionManager.acquireSession(session.getSessionString());
-	    fail("The session must be expired at this time");
-	} catch (SessionNotFoundException e) {
-	    // expected exception
+	    TUtil.waitDBImportToHappen();
+
+	    SessionManager sessionManager = FACTORY.getSessionManager();
+	    Session testSession = FACTORY.getSessionManager().createSession(null, null, FACTORY);
+	    assertNotNull(testSession);
+	    assertEquals("We just set the timeout to 100", 100, testSession.getSessionTimeout());
+
+	    try {
+		testSession = sessionManager.acquireSession(testSession.getSessionString());
+	    } catch (SessionNotFoundException e) {
+		fail("The session should be active");
+	    }
+	    assertNotNull(testSession);
+
+	    Thread.sleep(110);
+	    try {
+		testSession = sessionManager.acquireSession(testSession.getSessionString());
+		fail("The session must be expired at this time");
+	    } catch (SessionNotFoundException e) {
+		// expected exception
+	    }
+	} finally {
+	    FACTORY.getSessionManager().acquireSession(session.getSessionString());
+	    cfgManager.setConfigValue(session, Config.USER_SESSION_TIMEOUT, oldSessionTimeout);
 	}
 
 	FACTORY.releaseSession(session);
 	TUtil.resetDBImportRate();
+    }
+
+    @Test
+    public void testGetCurrentUserPermissions() throws Exception {
+	ConfigurationManager cfgMgr = FACTORY.getConfigurationManager();
+	String session = authentication.createSession(null, null);
+	authentication.login(session, cfgMgr.getString(Config.ADMIN_USER_NAME),
+		cfgMgr.getString(Config.ADMIN_PASSWORD), null);
+
+	Set<WSUserPermission> perm = authentication.getCurrentUserPermissions(session);
+	assertEquals("The admin permission list size does not match with all permission size.",
+		PermissionEnum.values().length, perm.size());
+	HashSet<String> permStrSet = ConversionUtils.convertPermissionsToStringSet(perm);
+	for (PermissionEnum pe : PermissionEnum.values()) {
+	    assertTrue("The admin permission list must contain all code-defined permissions; " + pe.name()
+		    + " was not found.", permStrSet.contains(pe.name()));
+	}
     }
 }

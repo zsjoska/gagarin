@@ -13,16 +13,20 @@ import org.junit.Test;
 import ro.gagarin.config.ConfigScope;
 import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ItemNotFoundException;
+import ro.gagarin.exceptions.LoginRequiredException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.exceptions.PermissionDeniedException;
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.testutil.TUtil;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.UserRole;
+import ro.gagarin.utils.Statistic;
 import ro.gagarin.ws.Authentication;
 import ro.gagarin.ws.UserService;
 import ro.gagarin.ws.objects.WSConfig;
+import ro.gagarin.ws.objects.WSExportedSession;
 import ro.gagarin.ws.objects.WSLogEntry;
+import ro.gagarin.ws.objects.WSStatistic;
 import ro.gagarin.ws.objects.WSUser;
 import ro.gagarin.ws.objects.WSUserPermission;
 import ro.gagarin.ws.objects.WSUserRole;
@@ -45,7 +49,7 @@ public class UserServiceTest {
 
     @Test
     public void testCreateUser() throws SessionNotFoundException, ItemNotFoundException, PermissionDeniedException,
-	    DataConstraintException, OperationException {
+	    DataConstraintException, OperationException, LoginRequiredException {
 
 	UserService userService = new UserService();
 
@@ -61,7 +65,7 @@ public class UserServiceTest {
 
     @Test
     public void testCreateRole() throws SessionNotFoundException, PermissionDeniedException, OperationException,
-	    ItemNotFoundException, DataConstraintException {
+	    ItemNotFoundException, DataConstraintException, LoginRequiredException {
 	UserService userService = new UserService();
 
 	// check that ID is enough
@@ -98,7 +102,8 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testListUsers() throws OperationException, SessionNotFoundException, PermissionDeniedException {
+    public void testListUsers() throws OperationException, SessionNotFoundException, PermissionDeniedException,
+	    LoginRequiredException {
 
 	UserService userService = new UserService();
 
@@ -129,5 +134,32 @@ public class UserServiceTest {
 	}
 	assertNotNull(logEntries);
 	assertTrue(logEntries.size() > 0);
+    }
+
+    @Test
+    public void getSessionList() throws Exception {
+	List<WSExportedSession> sessionList = userService.getSessionList(session);
+	for (WSExportedSession wsExportedSession : sessionList) {
+	    System.out.println(wsExportedSession);
+	}
+    }
+
+    @Test
+    public void getStatistics() throws Exception {
+	Statistic testStat = new Statistic("_test_statistic_");
+	testStat.addDuration(10);
+	testStat.addDuration(7);
+	testStat.addDuration(20);
+	testStat.addDuration(3);
+	List<WSStatistic> list = userService.getStatistics(session, "_test_statistic_");
+	for (WSStatistic stat : list) {
+	    System.out.println(stat);
+	}
+	assertEquals(1, list.size());
+	WSStatistic gotStat = list.get(0);
+	assertEquals(4, gotStat.getCount());
+	assertEquals(40, gotStat.getTotalDuration());
+	assertEquals(20, gotStat.getMax());
+	assertEquals(3, gotStat.getMin());
     }
 }

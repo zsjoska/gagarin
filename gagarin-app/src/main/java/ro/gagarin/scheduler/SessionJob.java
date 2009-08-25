@@ -46,6 +46,7 @@ class SessionJob extends SimpleJob {
 	    sessionManager.acquireSession(session.getSessionString());
 	} catch (SessionNotFoundException e) {
 	    LOG.error("Session expired for job " + this.getJob());
+	    super.markDone();
 	    return;
 	}
 

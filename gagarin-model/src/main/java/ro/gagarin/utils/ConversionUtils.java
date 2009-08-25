@@ -1,6 +1,8 @@
 package ro.gagarin.utils;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import ro.gagarin.exceptions.ItemNotFoundException;
@@ -46,5 +48,13 @@ public class ConversionUtils {
 	    perms.add(mPerm);
 	}
 	return perms;
+    }
+
+    public static HashSet<String> convertPermissionsToStringSet(Collection<? extends UserPermission> permissions) {
+	HashSet<String> permSet = new HashSet<String>();
+	for (UserPermission userPermission : permissions) {
+	    permSet.add(userPermission.getPermissionName());
+	}
+	return permSet;
     }
 }

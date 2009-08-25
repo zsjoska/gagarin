@@ -29,6 +29,10 @@ object webServiceUtils {
 	  val fi = e.getFaultInfo
 	  "A required item was not found " + fi.getMessage + ": " + fi.getDetail  
   }
+  implicit def errorFromException(e : LoginRequiredException_Exception) = {
+	  val fi = e.getFaultInfo
+	  "Login required." 
+  }
   
 }
 

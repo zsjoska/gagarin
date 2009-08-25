@@ -7,16 +7,24 @@ import _root_.ro.gagarin.model.userService
 import _root_.net.liftweb.http.SHtml._
 import _root_.scala.xml.{NodeSeq, Text, Group, Node}
 
-class Logs {
+class Sessions {
 	
   def show = {
-	val logs = userService.getLogEntries( null)
+	val logs = userService.getSessionList
     <table border="1" cellspacing="0">
-      {logs.flatMap( u => <tr>
-                      		<td>{Text(new Date(u.getDate().longValue()).toString)}</td>
-                      		<td>{Text(u.getLogLevel())}</td>
-                      		<td>{if(u.getUser()!=null)Text(u.getUser().getUsername()) else Text("NULL")}</td>
-                      		<td>{Text(u.getMessage())}</td>
+    <tr>
+    <th>Session identifier</th>
+    <th>Username</th>
+    <th>Expiration date</th>
+    <th>Session reason</th>
+    <th>Terminate</th>
+    </tr>
+      {logs.flatMap( s => <tr>
+                      		<td>{Text(s.getSessionid())}</td>
+                      		<td>{Text(s.getUsername())}</td>
+                      		<td>{Text(s.getReason())}</td>
+                      		<td>{Text(new Date(s.getExpires().longValue()).toString)}</td>
+                      		<td>{link("/sessions", () => { userService.logoutSession(s.getSessionid()) }, Text("Terminate"))}</td>
                       	   </tr>)}
     </table>
     }

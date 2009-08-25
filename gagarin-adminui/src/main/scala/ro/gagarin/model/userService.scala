@@ -8,7 +8,91 @@ import _root_.ro.gagarin.model.webServiceUtils._
 import _root_.scala.collection.mutable.ListBuffer
 
 object userService {
-  
+
+    def getStatistics(filter: String) = { 
+	  try{
+		  	Buffer(getUserService.getStatistics(wsSession.session, filter))
+	  } catch {
+	  case e: LoginRequiredException_Exception => {
+	    wsSession.set(null)
+	    error(e);
+	    redirectTo("/login")
+	  }
+	  case e: OperationException_Exception => {
+	    error(e);
+	    redirectTo("/")
+	  }
+	  case e: PermissionDeniedException_Exception => {
+	    error(e);
+	    redirectTo("/")
+	  }
+	  case e: SessionNotFoundException_Exception => {
+	    wsSession.set(null)
+	    error(e);
+	    redirectTo("/login")
+	  }
+	  case e: Exception => {
+	    error("Unexpected exception occured: " + e.getMessage());
+	    redirectTo("/")
+	  }}
+  }
+
+    def getSessionList = { 
+	  try{
+		  	Buffer(getUserService.getSessionList(wsSession.session))
+	  } catch {
+	  case e: LoginRequiredException_Exception => {
+	    wsSession.set(null)
+	    error(e);
+	    redirectTo("/login")
+	  }
+	  case e: OperationException_Exception => {
+	    error(e);
+	    redirectTo("/")
+	  }
+	  case e: PermissionDeniedException_Exception => {
+	    error(e);
+	    redirectTo("/")
+	  }
+	  case e: SessionNotFoundException_Exception => {
+	    wsSession.set(null)
+	    error(e);
+	    redirectTo("/login")
+	  }
+	  case e: Exception => {
+	    error("Unexpected exception occured: " + e.getMessage());
+	    redirectTo("/")
+	  }}
+  }
+
+  def logoutSession(session: String) = { 
+	  try{
+		getUserService.logoutSession(wsSession.session, session)
+	  } catch {
+	  case e: LoginRequiredException_Exception => {
+	    wsSession.set(null)
+	    error(e);
+	    redirectTo("/login")
+	  }
+	  case e: OperationException_Exception => {
+	    error(e);
+	    redirectTo("/")
+	  }
+	  case e: PermissionDeniedException_Exception => {
+	    error(e);
+	    redirectTo("/")
+	  }
+	  case e: SessionNotFoundException_Exception => {
+	    wsSession.set(null)
+	    error(e);
+	    redirectTo("/login")
+	  }
+	  case e: Exception => {
+	    error("Unexpected exception occured: " + e.getMessage());
+	    redirectTo("/")
+	  }}
+  }
+
   def getLogEntries(user: String) = {
 	  try{
 		  	Buffer(getUserService.getLogEntries(wsSession.session, null))

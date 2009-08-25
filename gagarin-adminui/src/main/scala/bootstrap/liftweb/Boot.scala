@@ -31,6 +31,10 @@ class Boot {
 	    					   Menu(Loc("newRole", List("newRole"), "New Role", requiresLogin)),
 	    					   Menu(Loc("editRole", List("editRole"), "Edit Role", Hidden, requiresLogin))
     					   ),
+    					   Menu(Loc("monitor", List("monitor"), "Monitor", requiresLogin),
+	    					   Menu(Loc("sessions", List("sessions"), "Sessions", requiresLogin)),
+	    					   Menu(Loc("statistics", List("statistics"), "Statistics", requiresLogin))
+    					   ),
     					   Menu(Loc("config", List("config"), "Config", requiresLogin)),
     					   Menu(Loc("logs", List("logs"), "Logs", requiresLogin))
     					)

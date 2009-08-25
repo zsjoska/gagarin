@@ -3,7 +3,6 @@ package ro.gagarin.utils;
 public class Statistic {
 
     private final String name;
-
     private long totalDuration = 0;
     private int count = 0;
     private long min = Long.MAX_VALUE;
@@ -12,6 +11,15 @@ public class Statistic {
     public Statistic(String name) {
 	this.name = name;
 	StatisticsContainer.add(this);
+    }
+
+    public Statistic(Statistic stat) {
+	this.name = stat.name;
+	this.totalDuration = stat.totalDuration;
+	this.count = stat.count;
+	this.min = stat.min;
+	this.max = stat.max;
+	// and don't add it to the container
     }
 
     public void addDuration(long duration) {

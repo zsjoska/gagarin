@@ -33,9 +33,12 @@ import ro.gagarin.user.User;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
 import ro.gagarin.utils.ConversionUtils;
+import ro.gagarin.utils.Statistic;
+import ro.gagarin.utils.StatisticsContainer;
 import ro.gagarin.ws.objects.WSConfig;
 import ro.gagarin.ws.objects.WSExportedSession;
 import ro.gagarin.ws.objects.WSLogEntry;
+import ro.gagarin.ws.objects.WSStatistic;
 import ro.gagarin.ws.objects.WSUser;
 import ro.gagarin.ws.objects.WSUserPermission;
 import ro.gagarin.ws.objects.WSUserRole;
@@ -343,7 +346,7 @@ public class UserService {
 	    // check real login
 	    authManager.requireLogin(session);
 
-	    authManager.requiresPermission(session, PermissionEnum.SESSION_OPERATION);
+	    authManager.requiresPermission(session, PermissionEnum.ADMIN_OPERATION);
 	    List<Session> sessions = sessionManager.getSessionList();
 
 	    return WSConversionUtils.convertToSessionList(sessions);
@@ -365,7 +368,7 @@ public class UserService {
 	    // check real login
 	    authManager.requireLogin(session);
 
-	    authManager.requiresPermission(session, PermissionEnum.SESSION_OPERATION);
+	    authManager.requiresPermission(session, PermissionEnum.ADMIN_OPERATION);
 
 	    sessionManager.logout(otherSessionId);
 
@@ -374,4 +377,26 @@ public class UserService {
 	}
     }
 
+    @WebMethod
+    public List<WSStatistic> getStatistics(String sessionId, String filter) throws SessionNotFoundException,
+	    OperationException, PermissionDeniedException, LoginRequiredException {
+	SessionManager sessionManager = FACTORY.getSessionManager();
+	Session session = sessionManager.acquireSession(sessionId);
+
+	try {
+	    AuthorizationManager authManager = FACTORY.getAuthorizationManager(session);
+
+	    // check real login
+	    authManager.requireLogin(session);
+
+	    authManager.requiresPermission(session, PermissionEnum.ADMIN_OPERATION);
+
+	    List<Statistic> statistics = StatisticsContainer.exportStatistics(filter);
+
+	    return WSConversionUtils.convertToWSStatisticList(statistics);
+
+	} finally {
+	    FACTORY.releaseSession(session);
+	}
+    }
 }

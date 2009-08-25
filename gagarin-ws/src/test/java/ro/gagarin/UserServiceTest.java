@@ -25,6 +25,7 @@ import ro.gagarin.ws.UserService;
 import ro.gagarin.ws.objects.WSConfig;
 import ro.gagarin.ws.objects.WSExportedSession;
 import ro.gagarin.ws.objects.WSLogEntry;
+import ro.gagarin.ws.objects.WSStatistic;
 import ro.gagarin.ws.objects.WSUser;
 import ro.gagarin.ws.objects.WSUserPermission;
 import ro.gagarin.ws.objects.WSUserRole;
@@ -139,6 +140,14 @@ public class UserServiceTest {
 	List<WSExportedSession> sessionList = userService.getSessionList(session);
 	for (WSExportedSession wsExportedSession : sessionList) {
 	    System.out.println(wsExportedSession);
+	}
+    }
+
+    @Test
+    public void getStatistics() throws Exception {
+	List<WSStatistic> list = userService.getStatistics(session, null);
+	for (WSStatistic stat : list) {
+	    System.out.println(stat);
 	}
     }
 }

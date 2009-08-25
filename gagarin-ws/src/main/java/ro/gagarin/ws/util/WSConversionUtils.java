@@ -11,9 +11,11 @@ import ro.gagarin.log.LogEntry;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserPermission;
+import ro.gagarin.utils.Statistic;
 import ro.gagarin.ws.objects.WSConfig;
 import ro.gagarin.ws.objects.WSExportedSession;
 import ro.gagarin.ws.objects.WSLogEntry;
+import ro.gagarin.ws.objects.WSStatistic;
 import ro.gagarin.ws.objects.WSUser;
 import ro.gagarin.ws.objects.WSUserPermission;
 
@@ -63,6 +65,14 @@ public class WSConversionUtils {
 	ArrayList<WSExportedSession> list = new ArrayList<WSExportedSession>();
 	for (Session logEntry : sessions) {
 	    list.add(new WSExportedSession(logEntry));
+	}
+	return list;
+    }
+
+    public static List<WSStatistic> convertToWSStatisticList(List<Statistic> statistics) {
+	ArrayList<WSStatistic> list = new ArrayList<WSStatistic>();
+	for (Statistic stat : statistics) {
+	    list.add(new WSStatistic(stat));
 	}
 	return list;
     }

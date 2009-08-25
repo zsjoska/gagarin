@@ -20,6 +20,7 @@ import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.testutil.TUtil;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.UserRole;
+import ro.gagarin.utils.Statistic;
 import ro.gagarin.ws.Authentication;
 import ro.gagarin.ws.UserService;
 import ro.gagarin.ws.objects.WSConfig;
@@ -145,9 +146,20 @@ public class UserServiceTest {
 
     @Test
     public void getStatistics() throws Exception {
-	List<WSStatistic> list = userService.getStatistics(session, null);
+	Statistic testStat = new Statistic("_test_statistic_");
+	testStat.addDuration(10);
+	testStat.addDuration(7);
+	testStat.addDuration(20);
+	testStat.addDuration(3);
+	List<WSStatistic> list = userService.getStatistics(session, "_test_statistic_");
 	for (WSStatistic stat : list) {
 	    System.out.println(stat);
 	}
+	assertEquals(1, list.size());
+	WSStatistic gotStat = list.get(0);
+	assertEquals(4, gotStat.getCount());
+	assertEquals(40, gotStat.getTotalDuration());
+	assertEquals(20, gotStat.getMax());
+	assertEquals(3, gotStat.getMin());
     }
 }

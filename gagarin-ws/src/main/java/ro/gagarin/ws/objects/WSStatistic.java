@@ -9,6 +9,7 @@ public class WSStatistic {
     private int count;
     private long max;
     private long min;
+    private long average;
 
     public WSStatistic() {
 	// default constructor for WS export
@@ -20,6 +21,7 @@ public class WSStatistic {
 	count = stat.getCount();
 	max = stat.getMax();
 	min = stat.getMin();
+	average = stat.getAverage();
     }
 
     public String getName() {
@@ -60,6 +62,14 @@ public class WSStatistic {
 
     public void setMin(long min) {
 	this.min = min;
+    }
+
+    public void setAverage(long average) {
+	this.average = average;
+    }
+
+    public long getAverage() {
+	return average;
     }
 
     @Override

@@ -30,4 +30,14 @@ public class StatisticsContainer {
 	}
 	return list;
     }
+
+    public static Statistic getByName(String name) {
+	// not synchronized... well I know, not safe but I hope that the loss is
+	// less; only the first statistics are lost
+	Statistic statistic = statContainer.get(name);
+	if (statistic == null) {
+	    statistic = new Statistic(name);
+	}
+	return statistic;
+    }
 }

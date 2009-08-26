@@ -8,6 +8,7 @@ import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.log.AppLog;
+import ro.gagarin.utils.Statistic;
 
 public abstract class UpdateQuery {
 
@@ -71,7 +72,9 @@ public abstract class UpdateQuery {
 
     protected void doExecute(PreparedStatement stmnt) throws DataConstraintException {
 	try {
+	    long start = System.currentTimeMillis();
 	    stmnt.executeUpdate();
+	    Statistic.getByName("db.update." + getSQL()).add(start);
 	} catch (SQLException e) {
 	    // this exception should be converted to our nice exceptions
 	    LOG.error("Error executing the query", e);

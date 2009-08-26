@@ -16,6 +16,7 @@ class Statistics {
     <th>Name</th>
     <th>Count</th>
     <th>Total duration</th>
+    <th>Average</th>
     <th>Minimum</th>
     <th>Maximum</th>
     </tr>
@@ -23,6 +24,7 @@ class Statistics {
                       		<td>{Text(s.getName())}</td>
                       		<td>{Text(s.getCount().toString)}</td>
                       		<td>{Text(s.getTotalDuration().toString)}</td>
+                      		<td>{Text(s.getAverage().toString)}</td>
                       		<td>{Text(s.getMin().toString)}</td>
                       		<td>{Text(s.getMax().toString)}</td>
                       	   </tr>)}

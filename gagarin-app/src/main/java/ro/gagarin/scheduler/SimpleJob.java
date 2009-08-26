@@ -2,6 +2,8 @@ package ro.gagarin.scheduler;
 
 import org.apache.log4j.Logger;
 
+import ro.gagarin.utils.Statistic;
+
 class SimpleJob {
 
     private static final transient Logger LOG = Logger.getLogger(SimpleJob.class);
@@ -31,6 +33,8 @@ class SimpleJob {
 	long start = System.currentTimeMillis();
 	long delay = start - this.getNextRun();
 
+	// TODO: move to a base method
+
 	String msg = "Job #" + this.getId() + " execution delay:" + delay;
 	if (delay > 2)
 	    if (delay < 10) {
@@ -44,9 +48,17 @@ class SimpleJob {
 	    }
 
 	try {
+
 	    LOG.debug("Executing job " + getJob().getName() + "#" + getJob().getId());
+
+	    long jobStart = System.currentTimeMillis();
+
 	    getJob().execute(null, null);
+
+	    Statistic.getByName("job.simple.effective." + getJob().getName()).add(jobStart);
+
 	    LOG.debug("Finished job " + getJob().getName() + "#" + getJob().getId());
+
 	} catch (Exception e) {
 	    LOG.error("Exception executing job " + getJob().getName() + "#" + getJob().getId(), e);
 	}
@@ -56,6 +68,7 @@ class SimpleJob {
 	    LOG.error("Job #" + this.getId() + " execution takes longer than the period:" + this.getPeriod()
 		    + "; duration:" + (end - start));
 	}
+	Statistic.getByName("job.simple.overall." + getJob().getName()).add(start);
     }
 
     public void destroyJob() {

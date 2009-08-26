@@ -9,6 +9,7 @@ import ro.gagarin.application.objects.AppUser;
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.log.AppLog;
 import ro.gagarin.session.Session;
+import ro.gagarin.utils.Statistic;
 
 class SessionJob extends SimpleJob {
 
@@ -53,7 +54,13 @@ class SessionJob extends SimpleJob {
 	AppLog log = FACTORY.getLogManager(session, SessionJob.class);
 	try {
 	    log.debug("Executing job " + getJob().getName() + "#" + getJob().getId());
+
+	    long jobStart = System.currentTimeMillis();
+
 	    getJob().execute(session, log);
+
+	    Statistic.getByName("job.session.effective." + getJob().getName()).add(jobStart);
+
 	    log.debug("Finished job " + getJob().getName() + "#" + getJob().getId());
 	} catch (Exception e) {
 	    log.error("Exception executing job " + getJob().getName() + "#" + getJob().getId(), e);
@@ -65,6 +72,7 @@ class SessionJob extends SimpleJob {
 	    LOG.error("Job #" + this.getId() + " execution takes longer than the period:" + this.getPeriod()
 		    + "; duration:" + (end - start));
 	}
+	Statistic.getByName("job.session.overall." + getJob().getName()).add(start);
     }
 
     public void destroyJob() {

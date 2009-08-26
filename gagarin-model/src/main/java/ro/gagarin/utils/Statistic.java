@@ -52,4 +52,19 @@ public class Statistic {
     public long getMax() {
 	return max;
     }
+
+    public long getAverage() {
+	if (count > 0)
+	    return totalDuration / count;
+	else
+	    return -1;
+    }
+
+    public static Statistic getByName(String name) {
+	return StatisticsContainer.getByName(name);
+    }
+
+    public void add(long start) {
+	addDuration(System.currentTimeMillis() - start);
+    }
 }

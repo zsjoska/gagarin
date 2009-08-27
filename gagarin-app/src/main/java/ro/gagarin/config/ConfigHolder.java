@@ -1,6 +1,9 @@
 package ro.gagarin.config;
 
 import java.util.ArrayList;
+import java.util.Properties;
+import java.util.Set;
+import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 
@@ -116,5 +119,18 @@ public class ConfigHolder {
     public void setConfigValue(Session session, ConfigEntry config) throws OperationException {
 	Config cfg = Config.valueOf(config.getConfigName());
 	setConfigValue(session, cfg, config.getConfigValue());
+    }
+
+    public void importConfig(Properties prop) {
+	Set<Entry<Object, Object>> entrySet = prop.entrySet();
+	String[] newCfg = new String[Config.values().length];
+	for (Entry<Object, Object> entry : entrySet) {
+	    try {
+		newCfg[Config.valueOf(entry.getKey().toString()).ordinal()] = entry.getValue().toString();
+	    } catch (IllegalArgumentException e) {
+		LOG.error("Could not load config " + entry.getKey().toString() + "=" + entry.getValue().toString());
+	    }
+	}
+	importConfig(newCfg);
     }
 }

@@ -113,6 +113,7 @@ public class FileConfigurationManager extends ConfigHolder implements Configurat
 	}
 	try {
 	    prop.load(fis);
+	    super.importConfig(prop);
 	} catch (IOException e) {
 	    LOG.error("IOException while reading the file " + file.getName(), e);
 	}

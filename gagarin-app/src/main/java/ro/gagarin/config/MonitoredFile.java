@@ -2,6 +2,8 @@ package ro.gagarin.config;
 
 import java.io.File;
 
+import org.apache.log4j.Logger;
+
 import ro.gagarin.BasicManagerFactory;
 import ro.gagarin.ConfigurationManager;
 import ro.gagarin.ManagerFactory;
@@ -14,15 +16,15 @@ import ro.gagarin.session.Session;
 
 public class MonitoredFile implements SettingsChangeObserver {
 
+    private static final transient Logger LOG = Logger.getLogger(MonitoredFile.class);
+
     public class StartupJob extends ScheduledJob {
 
 	private final MonitoredFile monitoredFile;
 	private final long fileCheckInterval;
-	private final String name2;
 
 	public StartupJob(String name, MonitoredFile monitoredFile, long fileCheckInterval) {
-	    super(name, 10, 300, 1000);
-	    name2 = name;
+	    super(name, 10, 300);
 	    this.monitoredFile = monitoredFile;
 	    this.fileCheckInterval = fileCheckInterval;
 	}
@@ -67,6 +69,8 @@ public class MonitoredFile implements SettingsChangeObserver {
 	this.file = file;
 	this.observer = observer;
 
+	LOG.info("Creating file monitor for file " + file.getAbsolutePath());
+
 	// the file configuration manager calls this first which is
 	// uninitialized
 	// we have to be careful here
@@ -92,8 +96,11 @@ public class MonitoredFile implements SettingsChangeObserver {
 	public void execute(Session session, AppLog log, JobController jc) throws Exception {
 	    long fileModification = monitoredFile.getFile().lastModified();
 	    if (monitoredFile.lastModified != fileModification) {
-		monitoredFile.observer.fileChanged(file);
-		monitoredFile.lastModified = fileModification;
+		try {
+		    monitoredFile.observer.fileChanged(file);
+		} finally {
+		    monitoredFile.lastModified = fileModification;
+		}
 	    }
 
 	}

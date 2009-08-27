@@ -57,7 +57,7 @@ class SessionJob extends SimpleJob {
 
 	    long jobStart = System.currentTimeMillis();
 
-	    getJob().execute(session, log);
+	    getJob().execute(session, log, this);
 
 	    Statistic.getByName("job.session.effective." + getJob().getName()).add(jobStart);
 

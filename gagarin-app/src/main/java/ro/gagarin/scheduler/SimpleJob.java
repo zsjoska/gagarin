@@ -4,7 +4,7 @@ import org.apache.log4j.Logger;
 
 import ro.gagarin.utils.Statistic;
 
-class SimpleJob {
+class SimpleJob implements JobController {
 
     private static final transient Logger LOG = Logger.getLogger(SimpleJob.class);
 
@@ -53,7 +53,7 @@ class SimpleJob {
 
 	    long jobStart = System.currentTimeMillis();
 
-	    getJob().execute(null, null);
+	    getJob().execute(null, null, this);
 
 	    Statistic.getByName("job.simple.effective." + getJob().getName()).add(jobStart);
 
@@ -74,6 +74,11 @@ class SimpleJob {
     public void destroyJob() {
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see ro.gagarin.scheduler.JobController#getNextRun()
+     */
     public long getNextRun() {
 	// negative is infinite, positive is to be executed
 	if (toExecute < 0 || toExecute > 0) {
@@ -92,14 +97,29 @@ class SimpleJob {
 	    this.toExecute--;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see ro.gagarin.scheduler.JobController#setPeriod(long)
+     */
     public void setPeriod(long period) {
 	this.period = period;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see ro.gagarin.scheduler.JobController#getPeriod()
+     */
     public long getPeriod() {
 	return period;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see ro.gagarin.scheduler.JobController#markToExecuteNow()
+     */
     public void markToExecuteNow() {
 	this.lastRun = System.currentTimeMillis() - period;
     }
@@ -108,6 +128,11 @@ class SimpleJob {
 	return job;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see ro.gagarin.scheduler.JobController#markDone()
+     */
     public void markDone() {
 	this.toExecute = 0;
     }

@@ -54,7 +54,7 @@ public enum Config {
 
     _TEST_DB_ONLY_("_TEST_DB_ONLY_"),
 
-    _TEST_LOCAL_ONLY_("_TEST_LOCAL_ONLY_");
+    _TEST_LOCAL_ONLY_("_TEST_LOCAL_ONLY_"), FILE_CHECK_INTERVAL("10000");
 
     private final String defValue;
 

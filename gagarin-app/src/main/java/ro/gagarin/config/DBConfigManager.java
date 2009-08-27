@@ -16,6 +16,7 @@ import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.objects.DBConfig;
 import ro.gagarin.log.AppLog;
+import ro.gagarin.scheduler.JobController;
 import ro.gagarin.scheduler.ScheduledJob;
 import ro.gagarin.session.Session;
 
@@ -48,7 +49,7 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
 	}
 
 	@Override
-	public void execute(Session session, AppLog log) throws Exception {
+	public void execute(Session session, AppLog log, JobController jc) throws Exception {
 	    ConfigDAO configDAO = FACTORY.getDAOManager().getConfigDAO(session);
 	    long lastUpdateTime = configDAO.getLastUpdateTime();
 	    log.debug("DBLUT = " + lastUpdateTime + " CacheLUT=" + INSTANCE.getLastUpdateTime());

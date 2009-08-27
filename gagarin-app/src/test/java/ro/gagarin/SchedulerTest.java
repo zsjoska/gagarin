@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import org.junit.Test;
 
 import ro.gagarin.log.AppLog;
+import ro.gagarin.scheduler.JobController;
 import ro.gagarin.scheduler.ScheduledJob;
 import ro.gagarin.scheduler.Scheduler;
 import ro.gagarin.session.Session;
@@ -21,7 +22,7 @@ public class SchedulerTest {
 	final ArrayList<Long> xTimes = new ArrayList<Long>();
 
 	ScheduledJob job = new ScheduledJob("testSingleRunScheduler", 10) {
-	    public void execute(Session session, AppLog log) throws Exception {
+	    public void execute(Session session, AppLog log, JobController jc) throws Exception {
 		xTimes.add(System.currentTimeMillis());
 	    }
 	};
@@ -47,7 +48,7 @@ public class SchedulerTest {
 	final long rate = 30;
 
 	ScheduledJob job = new ScheduledJob("testMultiRunScheduler", 0, rate, count) {
-	    public void execute(Session session, AppLog log) throws Exception {
+	    public void execute(Session session, AppLog log, JobController jc) throws Exception {
 		xTimes.add(System.currentTimeMillis());
 	    }
 	};
@@ -80,7 +81,7 @@ public class SchedulerTest {
 	final ArrayList<Long> xTimes = new ArrayList<Long>();
 	scheduleManager.scheduleJob(new ScheduledJob("testSingleExecutionManager", 10) {
 	    @Override
-	    public void execute(Session session, AppLog log) {
+	    public void execute(Session session, AppLog log, JobController jc) {
 		xTimes.add(System.currentTimeMillis());
 	    }
 	}, false);
@@ -95,7 +96,7 @@ public class SchedulerTest {
 	long start = System.currentTimeMillis();
 	scheduleManager.scheduleJob(new ScheduledJob("testMultipleExecutionManager", 10, 35) {
 	    @Override
-	    public void execute(Session session, AppLog log) {
+	    public void execute(Session session, AppLog log, JobController jc) {
 		xTimes.add(System.currentTimeMillis());
 	    }
 	}, false);
@@ -110,7 +111,7 @@ public class SchedulerTest {
 	ScheduleManager scheduleManager = FACTORY.getScheduleManager();
 	scheduleManager.scheduleJob(new ScheduledJob("testExceptionExecution", 10) {
 	    @Override
-	    public void execute(Session session, AppLog log) {
+	    public void execute(Session session, AppLog log, JobController jc) {
 		throw new RuntimeException("Test Exception");
 	    }
 	}, false);

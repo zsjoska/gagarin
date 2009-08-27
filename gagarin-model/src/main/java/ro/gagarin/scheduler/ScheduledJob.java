@@ -38,7 +38,7 @@ public abstract class ScheduledJob extends BaseEntity {
 	this.count = 1;
     }
 
-    abstract public void execute(Session session, AppLog log) throws Exception;
+    abstract public void execute(Session session, AppLog log, JobController jobController) throws Exception;
 
     public String getName() {
 	return name;

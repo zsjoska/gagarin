@@ -3,9 +3,11 @@ package ro.gagarin.config;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
@@ -14,10 +16,13 @@ import ro.gagarin.application.objects.AppConfig;
 import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.OperationException;
 
-public class FileConfigurationManager extends ConfigHolder implements ConfigurationManager {
+public class FileConfigurationManager extends ConfigHolder implements ConfigurationManager, FileChangeObserver {
 
+    private static final String CONFIG_DIR = "CONFIG_DIR";
     private static final transient Logger LOG = Logger.getLogger(FileConfigurationManager.class);
     private static final ConfigurationManager INSTANCE = new FileConfigurationManager();
+    private String cfgDir;
+    private MonitoredFile cfgFile;
 
     public static ConfigurationManager getInstance() {
 	return INSTANCE;
@@ -25,7 +30,18 @@ public class FileConfigurationManager extends ConfigHolder implements Configurat
 
     private FileConfigurationManager() {
 
-	// TODO: load from file
+	// try to guess the config directory
+	cfgDir = System.getProperty(CONFIG_DIR);
+	if (cfgDir == null) {
+	    cfgDir = System.getenv(CONFIG_DIR);
+	}
+	if (cfgDir == null) {
+	    cfgDir = "./";
+	}
+
+	LOG.info("Config dir is set to " + cfgDir);
+
+	this.cfgFile = new MonitoredFile(new File(cfgDir + "config.properties"), this);
 
 	String[] newCfg = new String[Config.values().length];
 	newCfg[Config.JDBC_DB_DRIVER.ordinal()] = Config.JDBC_DB_DRIVER.getDefaultValue();
@@ -82,5 +98,30 @@ public class FileConfigurationManager extends ConfigHolder implements Configurat
 	    cfgList.add(cfgObj);
 	}
 	return cfgList;
+    }
+
+    @Override
+    public void fileChanged(File file) {
+	LOG.info("File change detected on " + file.getAbsolutePath());
+	Properties prop = new Properties();
+	FileInputStream fis;
+	try {
+	    fis = new FileInputStream(file);
+	} catch (FileNotFoundException e) {
+	    LOG.error("The file was not found:" + file.getName(), e);
+	    return;
+	}
+	try {
+	    prop.load(fis);
+	} catch (IOException e) {
+	    LOG.error("IOException while reading the file " + file.getName(), e);
+	}
+
+	try {
+	    fis.close();
+	} catch (IOException e) {
+	    LOG.error("IOException while closing the file " + file.getName(), e);
+	}
+
     }
 }

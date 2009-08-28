@@ -144,8 +144,8 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
 	    return;
 	}
 
-	if (value.equalsIgnoreCase(getString(config)))
-	    return;
+	// if (value.equalsIgnoreCase(getString(config)))
+	// return;
 
 	this.lastChangeRequest = System.currentTimeMillis();
 

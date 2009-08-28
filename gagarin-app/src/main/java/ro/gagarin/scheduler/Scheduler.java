@@ -24,7 +24,7 @@ public class Scheduler {
 
     public void start() {
 	for (int i = 0; i < threadCount; i++) {
-	    SchedulerThread thread = new SchedulerThread(this);
+	    SchedulerThread thread = new SchedulerThread(this, i);
 	    thread.start();
 	    threads.add(thread);
 	}

@@ -4,7 +4,8 @@ public class SchedulerThread extends Thread {
 
     private final Scheduler parent;
 
-    public SchedulerThread(Scheduler parent) {
+    public SchedulerThread(Scheduler parent, int index) {
+	super("SCHEDULER" + index);
 	this.parent = parent;
 	setDaemon(false);
     }

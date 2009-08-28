@@ -71,6 +71,8 @@ public class MonitoredFile implements SettingsChangeObserver {
 
 	LOG.info("Creating file monitor for file " + file.getAbsolutePath());
 
+	lastModified = file.lastModified();
+
 	// the file configuration manager calls this first which is
 	// uninitialized
 	// we have to be careful here

@@ -35,20 +35,19 @@ public class FileConfigurationManager extends ConfigHolder implements Configurat
 	if (cfgDir == null) {
 	    cfgDir = System.getenv(CONFIG_DIR);
 	}
+
+	// project build directory
 	if (cfgDir == null) {
-	    cfgDir = "./";
+	    cfgDir = "../";
 	}
 
-	LOG.info("Config dir is set to " + cfgDir);
+	LOG.info("Config dir is set to " + new File(cfgDir).getAbsolutePath());
 
 	this.cfgFile = new MonitoredFile(new File(cfgDir + "config.properties"), this);
+	fileChanged(this.cfgFile.getFile());
 
+	// for test import this config
 	String[] newCfg = new String[Config.values().length];
-	newCfg[Config.JDBC_DB_DRIVER.ordinal()] = Config.JDBC_DB_DRIVER.getDefaultValue();
-	newCfg[Config.JDBC_CONNECTION_URL.ordinal()] = Config.JDBC_CONNECTION_URL.getDefaultValue();
-	newCfg[Config.JDBC_DB_USER.ordinal()] = Config.JDBC_DB_USER.getDefaultValue();
-	newCfg[Config.JDBC_DB_PASSWORD.ordinal()] = Config.JDBC_DB_PASSWORD.getDefaultValue();
-	newCfg[Config.DB_INIT_SQL_FILE.ordinal()] = Config.DB_INIT_SQL_FILE.getDefaultValue();
 	newCfg[Config._TEST_LOCAL_ONLY_.ordinal()] = Config._TEST_LOCAL_ONLY_.getDefaultValue();
 	super.importConfig(newCfg);
     }
@@ -56,7 +55,12 @@ public class FileConfigurationManager extends ConfigHolder implements Configurat
     @Override
     public InputStream getConfigFileStream(Config fileConfig) throws OperationException {
 	String filename = getString(fileConfig);
-	File file = new File(filename);
+	return getConfigFileStream(filename);
+    }
+
+    @Override
+    public InputStream getConfigFileStream(String filename) throws OperationException {
+	File file = new File(this.cfgDir + filename);
 	try {
 	    InputStream is = new FileInputStream(file);
 	    LOG.info("Loaded file " + file.getAbsolutePath());
@@ -75,8 +79,8 @@ public class FileConfigurationManager extends ConfigHolder implements Configurat
 	    return is;
 	}
 
-	LOG.error("Could not load file for config " + fileConfig.name() + " tried to load from "
-		+ file.getAbsolutePath() + " and " + filename + " in classpath");
+	LOG.error("Could not load file for config " + filename + " tried to load from " + file.getAbsolutePath()
+		+ " and " + filename + " in classpath");
 	throw new OperationException(ErrorCodes.ERROR_READING_FILE, "File not found:" + filename);
     }
 

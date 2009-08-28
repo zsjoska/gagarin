@@ -179,9 +179,10 @@ public class SessionTest {
 	} finally {
 	    FACTORY.getSessionManager().acquireSession(session.getSessionString());
 	    cfgManager.setConfigValue(session, Config.USER_SESSION_TIMEOUT, oldSessionTimeout);
+	    FACTORY.releaseSession(session);
+	    TUtil.waitDBImportToHappen();
 	}
 
-	FACTORY.releaseSession(session);
 	TUtil.resetDBImportRate();
     }
 

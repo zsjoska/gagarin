@@ -56,11 +56,12 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
 	    if (lastUpdateTime > INSTANCE.getLastUpdateTime()) {
 		long lastQuery = System.currentTimeMillis();
 		ArrayList<ConfigEntry> cfgValues = configDAO.listConfigurations();
-		INSTANCE.importConfigMap(cfgValues, log);
-		INSTANCE.setLastUpdateTime(lastQuery);
-	    }
-	    synchronized (INSTANCE) {
-		INSTANCE.notify();
+		synchronized (INSTANCE) {
+		    INSTANCE.importConfigMap(cfgValues, log);
+		    INSTANCE.setLastUpdateTime(lastQuery);
+		    INSTANCE.notify();
+		    LOG.debug("DB import done");
+		}
 	    }
 	}
     }
@@ -121,14 +122,17 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
 	return localConfig.getConfigFileStream(file);
     }
 
+    @Override
+    public InputStream getConfigFileStream(String file) throws OperationException {
+	return localConfig.getConfigFileStream(file);
+    }
+
     public static DBConfigManager getInstance() {
 	return INSTANCE;
     }
 
     @Override
-    public void setConfigValue(Session session, Config config, String value) throws OperationException {
-
-	this.lastChangeRequest = System.currentTimeMillis();
+    public synchronized void setConfigValue(Session session, Config config, String value) throws OperationException {
 
 	// local config has precedence...
 	if (localConfig.isDefined(config)) {
@@ -137,6 +141,11 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
 	    localConfig.setConfigValue(session, config, value);
 	    return;
 	}
+
+	if (value.equalsIgnoreCase(getString(config)))
+	    return;
+
+	this.lastChangeRequest = System.currentTimeMillis();
 
 	ConfigDAO configDAO = FACTORY.getDAOManager().getConfigDAO(session);
 	DBConfig cfg = new DBConfig();
@@ -192,10 +201,12 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
      * @throws InterruptedException
      */
     public void waitForDBImport() throws InterruptedException {
+	LOG.info("Waiting for DB import...");
 	synchronized (this) {
 	    while (lastChangeRequest > lastUpdateTime) {
 		this.wait();
 	    }
 	}
+	LOG.info("DB import done.");
     }
 }

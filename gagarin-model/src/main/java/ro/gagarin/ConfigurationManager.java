@@ -57,6 +57,8 @@ public interface ConfigurationManager {
 
     InputStream getConfigFileStream(Config file) throws OperationException;
 
+    InputStream getConfigFileStream(String file) throws OperationException;
+
     boolean isDefined(Config config);
 
     String[] exportConfig();

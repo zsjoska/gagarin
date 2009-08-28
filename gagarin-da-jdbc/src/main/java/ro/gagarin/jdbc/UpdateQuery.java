@@ -35,6 +35,7 @@ public abstract class UpdateQuery {
 	    fillParameters(stmnt);
 	    LOG.debug("Executing SQL:" + sqlString);
 	    doExecute(stmnt);
+	    this.dao.markChangePending();
 	    success = true;
 	} catch (OperationException e) {
 	    LOG.error("Error executing the query", e);

@@ -36,6 +36,7 @@ public class BaseJdbcDAO implements BaseDAO {
 
     private boolean rollback = false;
     private final Session session;
+    private boolean changePending = false;
 
     public BaseJdbcDAO(Session session) throws OperationException {
 	if (session == null) {
@@ -122,17 +123,30 @@ public class BaseJdbcDAO implements BaseDAO {
 
 	    OperationException exception = null;
 	    if (!this.rollback) {
-		APPLOG.debug("Committing connection " + tmpConn.toString());
-		try {
-		    tmpConn.commit();
-		    tmpConn.close();
-		    APPLOG.debug("Released connection " + tmpConn.toString());
-		    return;
-		} catch (SQLException e) {
-		    // this is the most relevant exception, so keep it then
-		    // throw it
-		    exception = new OperationException(ErrorCodes.DB_OP_ERROR, e);
-		    APPLOG.error("Exception on commit:", e);
+
+		if (!this.changePending) {
+		    try {
+			tmpConn.close();
+			APPLOG.debug("Released connection " + tmpConn.toString());
+			return;
+		    } catch (SQLException e) {
+			exception = new OperationException(ErrorCodes.DB_OP_ERROR, e);
+			APPLOG.error("Exception on connection close", e);
+		    }
+		} else {
+
+		    APPLOG.debug("Committing connection " + tmpConn.toString());
+		    try {
+			tmpConn.commit();
+			tmpConn.close();
+			APPLOG.debug("Released connection " + tmpConn.toString());
+			return;
+		    } catch (SQLException e) {
+			// this is the most relevant exception, so keep it then
+			// throw it
+			exception = new OperationException(ErrorCodes.DB_OP_ERROR, e);
+			APPLOG.error("Exception on commit:", e);
+		    }
 		}
 	    }
 	    APPLOG.debug("Rollback connection " + tmpConn.toString());
@@ -265,5 +279,9 @@ public class BaseJdbcDAO implements BaseDAO {
 
     public AppLog getLogger() {
 	return APPLOG;
+    }
+
+    public void markChangePending() {
+	this.changePending = true;
     }
 }

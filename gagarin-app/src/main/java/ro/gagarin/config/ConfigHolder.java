@@ -63,7 +63,7 @@ public class ConfigHolder {
 	return configuration.get(config.ordinal()) != null;
     }
 
-    public void importConfig(String[] newCfg) {
+    public synchronized void importConfig(String[] newCfg) {
 	ArrayList<Integer> changed = new ArrayList<Integer>();
 	for (int i = 0; i < newCfg.length; i++) {
 

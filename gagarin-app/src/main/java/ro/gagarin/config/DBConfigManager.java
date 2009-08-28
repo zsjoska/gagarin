@@ -54,9 +54,11 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
 	    long lastUpdateTime = configDAO.getLastUpdateTime();
 	    log.debug("DBLUT = " + lastUpdateTime + " CacheLUT=" + INSTANCE.getLastUpdateTime());
 	    if (lastUpdateTime > INSTANCE.getLastUpdateTime()) {
-		long lastQuery = System.currentTimeMillis();
-		ArrayList<ConfigEntry> cfgValues = configDAO.listConfigurations();
+
+		// TODO: use TB generated timestamp
 		synchronized (INSTANCE) {
+		    long lastQuery = System.currentTimeMillis();
+		    ArrayList<ConfigEntry> cfgValues = configDAO.listConfigurations();
 		    INSTANCE.importConfigMap(cfgValues, log);
 		    INSTANCE.setLastUpdateTime(lastQuery);
 		    INSTANCE.notify();
@@ -68,7 +70,7 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
 
     private final ConfigurationManager localConfig;
     private long lastUpdateTime = 0;
-    private long lastChangeRequest = 0;
+    private long lastChangeRequest = System.currentTimeMillis();
 
     private DBConfigManager(ConfigurationManager localCfg) {
 	this.localConfig = localCfg;

@@ -138,7 +138,7 @@ object userService {
 	    redirectTo("/")
 	  }}
   }
-  
+
   def getConfigEntries = {
 	  try{
 		  	Buffer(getUserService.getConfigEntries(wsSession.session))

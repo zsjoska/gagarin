@@ -22,7 +22,7 @@ object authService {
 
     def createSession(lang: String) = {
 	  try{
-		  	getAuthService.createSession(lang, "ADMIN_UI")
+	      getAuthService.createSession(lang, "ADMIN_UI")
 	  } catch {
 	  case e: Exception => {
 	    error("Unexpected exception occured: " + e.getMessage());
@@ -32,8 +32,10 @@ object authService {
 
   def login(session: String, username: String, password: String) = {
 	  try{
-		  def user = getAuthService.login(session, username, password, null)
-		  wsSession.set(SessionInfo(session,user))
+	      val user = getAuthService.login(session, username, password, null)
+	      val perm = getCurrentUserPermissions(session)
+	      val permSet = (Set[String]()/:perm)((x,y) => x + y.getPermissionName)
+	      wsSession.set(SessionInfo(session,user,permSet))
 	  } catch {
 	  case e: OperationException_Exception => {
 	    error(e);
@@ -52,6 +54,30 @@ object authService {
 	    redirectTo("/")
 	  }}
   }
-    
+
+  def getCurrentUserPermissions(session: String) = {
+	  try{
+	      Buffer(getAuthService.getCurrentUserPermissions(session))
+	  } catch {
+	  case e: LoginRequiredException_Exception => {
+	    wsSession.set(null)
+	    error(e);
+	    redirectTo("/login")
+	  }
+	  case e: OperationException_Exception => {
+	    error(e);
+		redirectTo("/")
+	  }
+	  case e: SessionNotFoundException_Exception => {
+	    wsSession.set(null)
+	    error(e);
+	    redirectTo("/login")
+	  }
+	  case e: Exception => {
+	    error("Unexpected exception occured: " + e.getMessage());
+	    redirectTo("/")
+	  }}
+  }
+  
 }
 

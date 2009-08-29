@@ -8,17 +8,51 @@
 <title>demo.helloworld:helloworld:1.0-SNAPSHOT</title>
 <script id="jquery" src="/classpath/jquery.js" type="text/javascript"></script>
 <style>
+/* commented backslash hack \*/
+html,body {
+	height: 100%;
+}
+
+/* end hack */
+html,body {
+	margin: 0;
+	padding: 0
+}
+
+#outer {
+	min-height: 100%;
+	height: auto;
+	background: #F0F0F0;
+	width: 13%;
+	border: 1px solid black;
+}
+
+* html #outer {
+	height: 100%;
+}  /* ie6 and under*/
+
 div {
-border: 1px solid black;
-} 
+	float: left;
+}
+
+div.content {
+	width: 100%;
+	display: block;
+	padding-left: 5px;
+}
+
+div.right {
+	background-color: #F8F8F8;
+}
+
 </style>
 </head>
-<body style="width: 99%; text-align: center;">
-<div style="width: 100%; background-color:red; display:block;"><div style="float:right;"><lift:login.userinfo /></div></div>
-<div style="width: 100%; display:block;">
-<div style="width: 150px; float:left; display:block; "><lift:Menu.builder /></div>
-<div style="float:left;"><lift:bind name="content" /></div>
-<div style="float:right;"><lift:msgs /></div>
+<body>
+<div  id="outer" class=""><lift:Menu.builder /></div>
+<div class="right" style="width: 86%; height: 100%; min-height: 100%;">
+<div class="right" style="width: 85%; height: 80px;"><lift:msgs /></div>
+<div class="right" style="width: 14%; height: 80px; float: right;"><lift:login.userinfo /></div>
+<div class="content right"><hr /><lift:bind name="content" /></div>
 </div>
 </body>
 </html>

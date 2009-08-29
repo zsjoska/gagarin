@@ -1,17 +1,24 @@
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:lift="http://liftweb.net/">
-	<head>
-		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-		<meta name="description" content="" />
-		<meta name="keywords" content="" />
-		
-		<title>demo.helloworld:helloworld:1.0-SNAPSHOT</title>
-		<script id="jquery" src="/classpath/jquery.js" type="text/javascript"></script>
-	</head>
-	<body>
-		<lift:login.userinfo />
-		<lift:Menu.builder />
-		<hr />
-		<lift:bind name="content" />
-		<lift:msgs/>
-	</body>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:lift="http://liftweb.net/">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+
+<title>demo.helloworld:helloworld:1.0-SNAPSHOT</title>
+<script id="jquery" src="/classpath/jquery.js" type="text/javascript"></script>
+<style>
+div {
+border: 1px solid black;
+} 
+</style>
+</head>
+<body style="width: 99%; text-align: center;">
+<div style="width: 100%; background-color:red; display:block;"><div style="float:right;"><lift:login.userinfo /></div></div>
+<div style="width: 100%; display:block;">
+<div style="width: 150px; float:left; display:block; "><lift:Menu.builder /></div>
+<div style="float:left;"><lift:bind name="content" /></div>
+<div style="float:right;"><lift:msgs /></div>
+</div>
+</body>
 </html>

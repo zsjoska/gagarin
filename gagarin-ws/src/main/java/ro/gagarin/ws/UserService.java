@@ -279,7 +279,7 @@ public class UserService {
 	    // check real login
 	    authManager.requireLogin(session);
 
-	    authManager.requiresPermission(session, PermissionEnum.LIST_CONFIG);
+	    authManager.requiresPermission(session, PermissionEnum.ADMIN_OPERATION);
 
 	    ConfigurationManager cfgMgr = FACTORY.getConfigurationManager();
 	    List<ConfigEntry> configValues = cfgMgr.getConfigValues();
@@ -302,7 +302,7 @@ public class UserService {
 	    // check real login
 	    authManager.requireLogin(session);
 
-	    authManager.requiresPermission(session, PermissionEnum.UPDATE_CONFIG);
+	    authManager.requiresPermission(session, PermissionEnum.ADMIN_OPERATION);
 
 	    ConfigurationManager cfgMgr = FACTORY.getConfigurationManager();
 	    cfgMgr.setConfigValue(session, wsConfig);
@@ -323,7 +323,7 @@ public class UserService {
 	    // check real login
 	    authManager.requireLogin(session);
 
-	    authManager.requiresPermission(session, PermissionEnum.LIST_LOGS);
+	    authManager.requiresPermission(session, PermissionEnum.ADMIN_OPERATION);
 
 	    AppLog logMgr = FACTORY.getLogManager(session, UserService.class);
 	    List<LogEntry> logValues = logMgr.getLogEntries(user);

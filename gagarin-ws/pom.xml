@@ -15,6 +15,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>jaxws-maven-plugin</artifactId>
+				<version>${jaxws-maven-plugin.version}</version>
 				<executions>
 					<execution>
 						<id>AuthService</id>
@@ -25,7 +26,7 @@
 							<sei>ro.gagarin.ws.Authentication</sei>
 							<genWsdl>true</genWsdl>
 							<keep>true</keep>
-							<verbose>true</verbose>
+							<verbose>false</verbose>
 							<target>2.1</target>
 						</configuration>
 					</execution>
@@ -38,7 +39,7 @@
 							<sei>ro.gagarin.ws.UserService</sei>
 							<genWsdl>true</genWsdl>
 							<keep>true</keep>
-							<verbose>true</verbose>
+							<verbose>false</verbose>
 							<target>2.1</target>
 						</configuration>
 					</execution>

@@ -87,6 +87,7 @@
 			<plugin>
 				<groupId>org.scala-tools</groupId>
 				<artifactId>maven-scala-plugin</artifactId>
+				<version>2.11</version>
 				<executions>
 					<execution>
 						<goals>
@@ -101,6 +102,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.0</version>
 				<executions>
 					<execution>
 						<id>prepare-gagarin-ws</id>
@@ -145,6 +147,7 @@
 			<plugin>
 				<groupId>net.sf.alchim</groupId>
 				<artifactId>yuicompressor-maven-plugin</artifactId>
+				<version>0.7.1</version>
 				<executions>
 					<execution>
 						<goals>
@@ -159,6 +162,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-eclipse-plugin</artifactId>
+				<version>2.7</version>
 				<configuration>
 					<downloadSources>true</downloadSources>
 					<excludes>
@@ -183,6 +187,7 @@
 			<plugin>
 				<groupId>org.scala-tools</groupId>
 				<artifactId>maven-scala-plugin</artifactId>
+				<version>2.11</version>
 				<configuration>
 					<scalaVersion>${scala.version}</scalaVersion>
 				</configuration>

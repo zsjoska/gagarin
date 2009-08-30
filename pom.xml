@@ -9,6 +9,7 @@
 	
 	<properties>
 		<jetty.version>6.1.16</jetty.version>
+		<jaxws-maven-plugin.version>1.10</jaxws-maven-plugin.version>
 	</properties>
 	
 	<modules>
@@ -23,6 +24,7 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.0.2</version>
 				<configuration>
 					<compilerVersion>1.6</compilerVersion>
 					<fork>true</fork>
@@ -77,18 +79,22 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-report-plugin</artifactId>
+				<version>2.4.3</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jxr-plugin</artifactId>
+				<version>2.1</version>
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>cobertura-maven-plugin</artifactId>
+				<version>2.3</version>
 			</plugin>
 		    <plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.6</version>
 			</plugin>
 		</plugins>
 	</reporting>

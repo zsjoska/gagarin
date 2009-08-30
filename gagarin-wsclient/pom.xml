@@ -13,6 +13,7 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.0</version>
 				<executions>
 					<execution>
 						<id>prepare-gagarin-ws</id>
@@ -49,13 +50,6 @@
 				</configuration>
 				<executions>
 					<execution>
-						<id>ensure-jetty-stopped</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>stop</goal>
-						</goals>
-					</execution>
-					<execution>
 						<id>start-jetty</id>
 						<phase>generate-sources</phase>
 						<goals>
@@ -74,8 +68,10 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>jaxws-maven-plugin</artifactId>
+				<version>${jaxws-maven-plugin.version}</version>
 				<executions>
 					<execution>
+						<phase>generate-sources</phase>
 						<goals>
 							<goal>wsimport</goal>
 						</goals>
@@ -85,7 +81,8 @@
 								<wsdlUrl>http://localhost:8080/gagarin-ws/ws/UserService?wsdl</wsdlUrl>
 							</wsdlUrls>
 							<packageName>ro.gagarin</packageName>
-							<verbose>true</verbose>
+							<verbose>false</verbose>
+							<keep>true</keep>
 						</configuration>
 					</execution>
 				</executions>

@@ -23,6 +23,7 @@ import ro.gagarin.user.UserRole;
 import ro.gagarin.utils.Statistic;
 import ro.gagarin.ws.Authentication;
 import ro.gagarin.ws.UserService;
+import ro.gagarin.ws.WSException;
 import ro.gagarin.ws.objects.WSConfig;
 import ro.gagarin.ws.objects.WSExportedSession;
 import ro.gagarin.ws.objects.WSLogEntry;
@@ -41,8 +42,7 @@ public class UserServiceTest {
     private static UserService userService = new UserService();
 
     @BeforeClass
-    public static void startup() throws SessionNotFoundException, ItemNotFoundException, OperationException,
-	    DataConstraintException {
+    public static void startup() throws WSException {
 	session = authentication.createSession(null, null);
 	authentication.login(session, "admin", "password", null);
     }

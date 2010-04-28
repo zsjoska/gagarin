@@ -1,6 +1,6 @@
 <projectDescription>
   <name>gagarin-ws</name>
-  <comment/>
+  <comment>NO_M2ECLIPSE_SUPPORT: Project files created with the maven-eclipse-plugin are not supported in M2Eclipse.</comment>
   <projects>
     <project>gagarin-app</project>
     <project>gagarin-da-jdbc</project>

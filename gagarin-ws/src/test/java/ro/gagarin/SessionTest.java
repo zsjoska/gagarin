@@ -15,6 +15,7 @@ import org.junit.Test;
 import ro.gagarin.application.objects.AppUser;
 import ro.gagarin.config.Config;
 import ro.gagarin.exceptions.DataConstraintException;
+import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.exceptions.SessionNotFoundException;
@@ -25,6 +26,7 @@ import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.UserRole;
 import ro.gagarin.utils.ConversionUtils;
 import ro.gagarin.ws.Authentication;
+import ro.gagarin.ws.WSException;
 import ro.gagarin.ws.objects.WSUserPermission;
 
 /**
@@ -45,8 +47,8 @@ public class SessionTest {
     // TODO: add test without login for all WS methods
 
     @Test
-    public void testSuccessLogin() throws SessionNotFoundException, DataConstraintException, ItemNotFoundException,
-	    OperationException {
+    public void testSuccessLogin() throws OperationException, DataConstraintException, ItemNotFoundException,
+	    WSException {
 
 	session = TUtil.createTestSession();
 
@@ -78,7 +80,7 @@ public class SessionTest {
 
     @Test
     public void testFailedLogin() throws SessionNotFoundException, ItemNotFoundException, DataConstraintException,
-	    OperationException {
+	    OperationException, WSException {
 
 	session = TUtil.createTestSession();
 
@@ -100,19 +102,22 @@ public class SessionTest {
 	try {
 	    authentication.login(session, "user2_", "password2", null);
 	    fail("The user does not exists");
-	} catch (ItemNotFoundException e) {
+	} catch (WSException e) {
+	    assertEquals(ErrorCodes.ITEM_NOT_FOUND, e.getErrorCode());
 	    // the exception was expected
 	}
 	try {
 	    authentication.login(session, "user2", "password2_", null);
 	    fail("The user and password does not match; thus authentication must fail");
-	} catch (ItemNotFoundException e) {
+	} catch (WSException e) {
+	    assertEquals(ErrorCodes.ITEM_NOT_FOUND, e.getErrorCode());
 	    // the exception was expected
 	}
     }
 
     @Test
-    public void testSessionDeletion() throws ItemNotFoundException, DataConstraintException, OperationException {
+    public void testSessionDeletion() throws OperationException, DataConstraintException, ItemNotFoundException,
+	    WSException {
 	session = TUtil.createTestSession();
 
 	UserDAO userManager = FACTORY.getDAOManager().getUserDAO(session);
@@ -134,8 +139,9 @@ public class SessionTest {
 	try {
 	    authentication.login(session, "3" + username, "password3", null);
 	    fail("The login must fail since the session was deleted");
-	} catch (SessionNotFoundException e) {
-	    assertEquals("Wrong session ID returned by the exception", e.getSessionID(), session);
+	} catch (WSException e) {
+	    assertEquals("Invalid status returned", ErrorCodes.SESSION_NOT_FOUND, e.getErrorCode());
+	    assertEquals("Not enough information in detail", session, e.getDetail());
 	}
 
     }

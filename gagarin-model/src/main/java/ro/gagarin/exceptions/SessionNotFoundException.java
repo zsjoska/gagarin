@@ -15,13 +15,13 @@ public class SessionNotFoundException extends ExceptionBase {
     private final String sessionID;
 
     public SessionNotFoundException(String sessionID) {
-	super(ErrorCodes.SESSION_NOT_FOUND);
+	super(ErrorCodes.SESSION_NOT_FOUND, sessionID);
 	this.sessionID = sessionID;
 	LOG.error("Session was not found: " + sessionID);
     }
 
     public SessionNotFoundException(Session session) {
-	super(ErrorCodes.SESSION_NOT_FOUND);
+	super(ErrorCodes.SESSION_NOT_FOUND, session.getSessionString());
 	this.sessionID = session.getSessionString();
 	// TODO: construct with more details
     }

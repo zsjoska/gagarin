@@ -24,6 +24,7 @@ import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
 import ro.gagarin.ws.Authentication;
 import ro.gagarin.ws.UserService;
+import ro.gagarin.ws.WSException;
 import ro.gagarin.ws.objects.WSUser;
 import ro.gagarin.ws.objects.WSUserRole;
 
@@ -42,8 +43,7 @@ public class MethodAccessTest {
     private Session aDummySession;
 
     @Before
-    public void setUp() throws SessionNotFoundException, ItemNotFoundException, OperationException,
-	    DataConstraintException {
+    public void setUp() throws WSException, OperationException, DataConstraintException {
 
 	cleanup();
 
@@ -79,8 +79,8 @@ public class MethodAccessTest {
     }
 
     @Test
-    public void createUserAccess() throws ItemNotFoundException, SessionNotFoundException, DataConstraintException,
-	    OperationException, LoginRequiredException {
+    public void createUserAccess() throws OperationException, DataConstraintException, ItemNotFoundException,
+	    WSException, SessionNotFoundException, LoginRequiredException {
 
 	RoleDAO roleDAO = FACTORY.getDAOManager().getRoleDAO(aDummySession);
 	UserDAO userDAO = FACTORY.getDAOManager().getUserDAO(aDummySession);

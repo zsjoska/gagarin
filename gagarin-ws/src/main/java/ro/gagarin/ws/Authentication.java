@@ -23,6 +23,8 @@ import ro.gagarin.session.Session;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.utils.Statistic;
+import ro.gagarin.ws.authentication.CreateSession;
+import ro.gagarin.ws.executor.WebserviceExecutor;
 import ro.gagarin.ws.objects.WSUser;
 import ro.gagarin.ws.objects.WSUserPermission;
 import ro.gagarin.ws.util.WSConversionUtils;
@@ -37,10 +39,12 @@ public class Authentication {
     private static final transient Logger LOG = Logger.getLogger(Authentication.class);
     private static final transient ManagerFactory FACTORY = BasicManagerFactory.getInstance();
 
-    private static final Statistic STAT_CREATE_SESSION = new Statistic("ws.auth.createSession");
-
     @WebMethod
     public String createSession(String language, String reason) {
+
+	CreateSession createSession = new CreateSession(language, reason);
+	WebserviceExecutor.execute(createSession);
+	return createSession.getSessionString();
 
 	long start = System.currentTimeMillis();
 

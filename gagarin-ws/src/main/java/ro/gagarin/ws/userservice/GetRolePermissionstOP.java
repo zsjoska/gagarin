@@ -57,4 +57,10 @@ public class GetRolePermissionstOP extends WebserviceOperation {
     public List<WSUserPermission> getRolePermissions() {
 	return this.permList;
     }
+
+    @Override
+    public String toString() {
+	return "GetRolePermissionstOP [wsUserRole=" + wsUserRole + "]";
+    }
+
 }

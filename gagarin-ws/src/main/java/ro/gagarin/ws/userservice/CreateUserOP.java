@@ -1,7 +1,5 @@
 package ro.gagarin.ws.userservice;
 
-import org.apache.log4j.Logger;
-
 import ro.gagarin.AuthorizationManager;
 import ro.gagarin.RoleDAO;
 import ro.gagarin.UserDAO;
@@ -18,7 +16,6 @@ import ro.gagarin.ws.objects.WSUser;
 
 public class CreateUserOP extends WebserviceOperation {
 
-    private static final transient Logger LOG = Logger.getLogger(CreateUserOP.class);
     private static final Statistic STAT_CREATE_USER = new Statistic("ws.userserservice.createUser");
 
     private final WSUser user;
@@ -67,7 +64,7 @@ public class CreateUserOP extends WebserviceOperation {
 	authManager.checkUserRole(getSession(), user);
 
 	this.setUserId(userManager.createUser(user));
-	LOG.info("Created User " + user.getId() + ":" + user.getUsername() + "; session:" + getSessionString());
+	getApplog().info("Created User " + user.getId() + ":" + user.getUsername() + "; session:" + getSessionString());
     }
 
     @Override
@@ -81,6 +78,11 @@ public class CreateUserOP extends WebserviceOperation {
 
     public long getUserId() {
 	return userId;
+    }
+
+    @Override
+    public String toString() {
+	return "CreateUserOP [user=" + user + "]";
     }
 
 }

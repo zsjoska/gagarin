@@ -37,11 +37,17 @@ public class DeleteRoleOP extends WebserviceOperation {
 	authManager.requiresPermission(getSession(), PermissionEnum.DELETE_ROLE);
 
 	roleManager.deleteRole(role);
+	getApplog().info("Role " + role.getRoleName() + " deleted");
     }
 
     @Override
     public Statistic getStatistic() {
 	return STAT_DELETE_ROLE;
+    }
+
+    @Override
+    public String toString() {
+	return "DeleteRoleOP [role=" + role + "]";
     }
 
 }

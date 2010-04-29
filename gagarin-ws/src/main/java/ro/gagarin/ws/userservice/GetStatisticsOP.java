@@ -48,4 +48,10 @@ public class GetStatisticsOP extends WebserviceOperation {
     public List<WSStatistic> getStatisticList() {
 	return this.statisticsList;
     }
+
+    @Override
+    public String toString() {
+	return "GetStatisticsOP [filter=" + filter + "]";
+    }
+
 }

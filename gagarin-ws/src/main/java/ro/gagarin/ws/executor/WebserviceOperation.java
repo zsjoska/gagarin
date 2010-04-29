@@ -1,5 +1,8 @@
 package ro.gagarin.ws.executor;
 
+import org.apache.log4j.Logger;
+
+import ro.gagarin.ApplicationInitializer;
 import ro.gagarin.BasicManagerFactory;
 import ro.gagarin.ManagerFactory;
 import ro.gagarin.SessionManager;
@@ -13,6 +16,7 @@ import ro.gagarin.utils.Statistic;
 public abstract class WebserviceOperation {
 
     protected static final transient ManagerFactory FACTORY = BasicManagerFactory.getInstance();
+    private static final transient Logger LOG = Logger.getLogger(ApplicationInitializer.class);
 
     private final String sessionString;
 
@@ -32,6 +36,19 @@ public abstract class WebserviceOperation {
 	this.requiresLogin = requiresLogin;
 	this.sessionString = session;
 	this.opClass = opClass;
+    }
+
+    public void performOperation() throws ExceptionBase {
+	prepareSession();
+	if (applog != null) {
+	    applog.debug(opClass.getSimpleName() + " " + this);
+	} else {
+	    LOG.debug(opClass.getSimpleName() + " " + this);
+	}
+	prepareManagers(getSession());
+	prepare();
+	execute();
+	finish();
     }
 
     // TODO: make protected

@@ -31,12 +31,10 @@ public class LogoutSessionOP extends WebserviceOperation {
     @Override
     public void execute() throws ExceptionBase {
 
-	// check real login
-	authManager.requireLogin(getSession());
-
 	authManager.requiresPermission(getSession(), PermissionEnum.ADMIN_OPERATION);
 
 	sessionManager.logout(otherSessionId);
+	getApplog().info("LogoutSession " + otherSessionId);
 
     }
 
@@ -44,4 +42,10 @@ public class LogoutSessionOP extends WebserviceOperation {
     public Statistic getStatistic() {
 	return STAT_LOGOUT_SESSION;
     }
+
+    @Override
+    public String toString() {
+	return "LogoutSessionOP [otherSessionId=" + otherSessionId + "]";
+    }
+
 }

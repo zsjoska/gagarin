@@ -6,7 +6,6 @@ package ro.gagarin.ws.executor;
 import org.apache.log4j.Logger;
 
 import ro.gagarin.exceptions.ExceptionBase;
-import ro.gagarin.ws.WSException;
 
 /**
  * @author ZsJoska
@@ -17,13 +16,9 @@ public class WebserviceExecutor {
 
     public static void execute(WebserviceOperation op) throws WSException {
 	long start = System.currentTimeMillis();
-	LOG.debug("Executing WSOperation " + op.getClass().getName());
+	LOG.debug("Executing WSOperation " + op.getClass().getSimpleName());
 	try {
-	    op.prepareSession();
-	    op.prepareManagers(op.getSession());
-	    op.prepare();
-	    op.execute();
-	    op.finish();
+	    op.performOperation();
 	} catch (ExceptionBase e) {
 	    LOG.error("Exception executing the operation: " + op.getClass().getName(), e);
 	    throw new WSException(e);

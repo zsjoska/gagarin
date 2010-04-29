@@ -1,4 +1,4 @@
-package ro.gagarin.ws;
+package ro.gagarin.ws.executor;
 
 import ro.gagarin.exceptions.ExceptionBase;
 

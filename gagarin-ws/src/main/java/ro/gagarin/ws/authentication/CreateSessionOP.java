@@ -3,10 +3,9 @@
  */
 package ro.gagarin.ws.authentication;
 
-import org.apache.log4j.Logger;
-
 import ro.gagarin.SessionManager;
 import ro.gagarin.exceptions.SessionNotFoundException;
+import ro.gagarin.log.AppLog;
 import ro.gagarin.session.Session;
 import ro.gagarin.utils.Statistic;
 import ro.gagarin.ws.executor.WebserviceOperation;
@@ -14,7 +13,6 @@ import ro.gagarin.ws.executor.WebserviceOperation;
 public class CreateSessionOP extends WebserviceOperation {
 
     private static final Statistic STAT_CREATE_SESSION = new Statistic("ws.auth.createSession");
-    private static final transient Logger LOG = Logger.getLogger(CreateSessionOP.class);
 
     private final String language;
     private final String reason;
@@ -43,7 +41,8 @@ public class CreateSessionOP extends WebserviceOperation {
 
 	Session session = sessionManager.createSession(language, reason, FACTORY);
 	this.sessionString = session.getSessionString();
-	LOG.info("Session created:" + session.getId() + "; reason:" + session.getReason() + "; language:"
+	AppLog log = FACTORY.getLogManager(session, CreateSessionOP.class);
+	log.info("Session created:" + session.getSessionString() + "; reason:" + session.getReason() + "; language:"
 		+ session.getLanguage());
     }
 
@@ -64,5 +63,10 @@ public class CreateSessionOP extends WebserviceOperation {
     @Override
     public void releaseSession() {
 	// just to override the default: do nothing
+    }
+
+    @Override
+    public String toString() {
+	return "CreateSessionOP [language=" + language + ", reason=" + reason + "]";
     }
 }

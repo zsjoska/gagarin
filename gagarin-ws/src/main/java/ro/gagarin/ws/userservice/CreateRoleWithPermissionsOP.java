@@ -3,8 +3,6 @@ package ro.gagarin.ws.userservice;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-
 import ro.gagarin.AuthorizationManager;
 import ro.gagarin.RoleDAO;
 import ro.gagarin.exceptions.ExceptionBase;
@@ -19,7 +17,6 @@ import ro.gagarin.ws.objects.WSUserRole;
 
 public class CreateRoleWithPermissionsOP extends WebserviceOperation {
 
-    private static final transient Logger LOG = Logger.getLogger(CreateUserOP.class);
     private static final Statistic STAT_CREATE_ROLE_WITH_PERMISSIONS = new Statistic(
 	    "ws.userserservice.createRoleWithPermissions");
 
@@ -44,8 +41,6 @@ public class CreateRoleWithPermissionsOP extends WebserviceOperation {
     @Override
     public void execute() throws ExceptionBase {
 
-	LOG.debug("Create role:" + roleName + " with permissions " + Arrays.toString(permissions));
-
 	// the session user must have LIST_PERMISSIONS permission
 	authManager.requiresPermission(getSession(), PermissionEnum.LIST_PERMISSIONS);
 	List<UserPermission> allPermissions = roleManager.getAllPermissions();
@@ -62,6 +57,7 @@ public class CreateRoleWithPermissionsOP extends WebserviceOperation {
 	}
 
 	this.role = role;
+	getApplog().info("Role " + roleName + " created" + " with permissions " + Arrays.toString(permissions));
 
     }
 
@@ -72,6 +68,12 @@ public class CreateRoleWithPermissionsOP extends WebserviceOperation {
 
     public WSUserRole getRole() {
 	return this.role;
+    }
+
+    @Override
+    public String toString() {
+	return "CreateRoleWithPermissionsOP [permissions=" + Arrays.toString(permissions) + ", roleName=" + roleName
+		+ "]";
     }
 
 }

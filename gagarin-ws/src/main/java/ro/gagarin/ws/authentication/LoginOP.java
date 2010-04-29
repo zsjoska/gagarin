@@ -3,6 +3,8 @@
  */
 package ro.gagarin.ws.authentication;
 
+import java.util.Arrays;
+
 import ro.gagarin.AuthenticationManager;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.session.Session;
@@ -11,10 +13,6 @@ import ro.gagarin.utils.Statistic;
 import ro.gagarin.ws.executor.WebserviceOperation;
 import ro.gagarin.ws.objects.WSUser;
 
-/**
- * @author zsjoska
- * 
- */
 public class LoginOP extends WebserviceOperation {
 
     private static final Statistic STAT_LOGIN = new Statistic("ws.auth.login");
@@ -40,6 +38,7 @@ public class LoginOP extends WebserviceOperation {
     public void execute() throws ExceptionBase {
 	User user = authenticationManager.userLogin(username, password, extra);
 	this.loginUser = new WSUser(user);
+	getApplog().info("Login completed for user " + this.username);
     }
 
     @Override
@@ -51,4 +50,8 @@ public class LoginOP extends WebserviceOperation {
 	return this.loginUser;
     }
 
+    @Override
+    public String toString() {
+	return "LoginOP [extra=" + Arrays.toString(extra) + ", password=" + password + ", username=" + username + "]";
+    }
 }

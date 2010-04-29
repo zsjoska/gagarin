@@ -17,6 +17,7 @@ import ro.gagarin.ws.authentication.CreateSessionOP;
 import ro.gagarin.ws.authentication.GetCurrentUserPermissionsOP;
 import ro.gagarin.ws.authentication.LoginOP;
 import ro.gagarin.ws.authentication.LogoutOP;
+import ro.gagarin.ws.executor.WSException;
 import ro.gagarin.ws.executor.WebserviceExecutor;
 import ro.gagarin.ws.objects.WSUser;
 import ro.gagarin.ws.objects.WSUserPermission;

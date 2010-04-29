@@ -24,7 +24,7 @@ import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
 import ro.gagarin.ws.Authentication;
 import ro.gagarin.ws.UserService;
-import ro.gagarin.ws.WSException;
+import ro.gagarin.ws.executor.WSException;
 import ro.gagarin.ws.objects.WSUser;
 import ro.gagarin.ws.objects.WSUserRole;
 

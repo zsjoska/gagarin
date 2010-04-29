@@ -58,7 +58,7 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
 	session.setSessionString(System.currentTimeMillis() + "-" + System.nanoTime());
 	session.setManagerFactory(factory);
 	this.sessions.put(session.getSessionString(), session);
-	LOG.info("Created Session " + session.getId());
+	LOG.info("Created Session " + session.getSessionString());
 	return session;
     }
 

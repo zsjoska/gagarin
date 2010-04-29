@@ -26,6 +26,7 @@ public class LogoutOP extends WebserviceOperation {
     @Override
     public void execute() throws ExceptionBase {
 	sessionManager.logout(getSessionString());
+	getApplog().info("Logout completed");
     }
 
     @Override

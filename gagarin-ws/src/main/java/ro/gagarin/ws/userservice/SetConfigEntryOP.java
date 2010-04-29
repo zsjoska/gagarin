@@ -32,11 +32,17 @@ public class SetConfigEntryOP extends WebserviceOperation {
 
 	ConfigurationManager cfgMgr = FACTORY.getConfigurationManager();
 	cfgMgr.setConfigValue(getSession(), wsConfig);
+	getApplog().info("Config update:" + wsConfig);
 
     }
 
     @Override
     public Statistic getStatistic() {
 	return STAT_SET_CONFIG_ENTRY;
+    }
+
+    @Override
+    public String toString() {
+	return "SetConfigEntryOP [wsConfig=" + wsConfig + "]";
     }
 }

@@ -56,4 +56,9 @@ public class GetLogEntriesOP extends WebserviceOperation {
 	return configList;
     }
 
+    @Override
+    public String toString() {
+	return "GetLogEntriesOP [user=" + user + "]";
+    }
+
 }

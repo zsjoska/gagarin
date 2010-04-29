@@ -26,7 +26,7 @@ import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.UserRole;
 import ro.gagarin.utils.ConversionUtils;
 import ro.gagarin.ws.Authentication;
-import ro.gagarin.ws.WSException;
+import ro.gagarin.ws.executor.WSException;
 import ro.gagarin.ws.objects.WSUserPermission;
 
 /**

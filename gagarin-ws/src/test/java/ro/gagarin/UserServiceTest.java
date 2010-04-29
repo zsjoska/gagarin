@@ -21,7 +21,7 @@ import ro.gagarin.user.UserRole;
 import ro.gagarin.utils.Statistic;
 import ro.gagarin.ws.Authentication;
 import ro.gagarin.ws.UserService;
-import ro.gagarin.ws.WSException;
+import ro.gagarin.ws.executor.WSException;
 import ro.gagarin.ws.objects.WSConfig;
 import ro.gagarin.ws.objects.WSExportedSession;
 import ro.gagarin.ws.objects.WSLogEntry;
@@ -126,9 +126,9 @@ public class UserServiceTest {
     public void getLogEntries() throws Exception {
 	// TODO: add some more meaningful test
 	List<WSLogEntry> logEntries = userService.getLogEntries(session, null);
-	for (WSLogEntry wsLogEntry : logEntries) {
-	    System.out.println(wsLogEntry);
-	}
+	// for (WSLogEntry wsLogEntry : logEntries) {
+	// System.out.println(wsLogEntry);
+	// }
 	assertNotNull(logEntries);
 	assertTrue(logEntries.size() > 0);
     }
@@ -136,9 +136,9 @@ public class UserServiceTest {
     @Test
     public void getSessionList() throws Exception {
 	List<WSExportedSession> sessionList = userService.getSessionList(session);
-	for (WSExportedSession wsExportedSession : sessionList) {
-	    System.out.println(wsExportedSession);
-	}
+	// for (WSExportedSession wsExportedSession : sessionList) {
+	// System.out.println(wsExportedSession);
+	// }
     }
 
     @Test

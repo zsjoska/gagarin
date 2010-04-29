@@ -11,10 +11,6 @@ import ro.gagarin.session.Session;
 import ro.gagarin.utils.Statistic;
 import ro.gagarin.ws.executor.WebserviceOperation;
 
-/**
- * @author ZsJoska
- * 
- */
 public class CreateSessionOP extends WebserviceOperation {
 
     private static final Statistic STAT_CREATE_SESSION = new Statistic("ws.auth.createSession");
@@ -24,6 +20,7 @@ public class CreateSessionOP extends WebserviceOperation {
     private final String reason;
 
     private String sessionString = null;
+    private SessionManager sessionManager;
 
     public CreateSessionOP(String language, String reason) {
 	super(false, null, CreateSessionOP.class);
@@ -32,8 +29,12 @@ public class CreateSessionOP extends WebserviceOperation {
     }
 
     @Override
+    public void prepareManagers(Session session) {
+	sessionManager = FACTORY.getSessionManager();
+    }
+
+    @Override
     public void execute() {
-	SessionManager sessionManager = FACTORY.getSessionManager();
 	String language = this.language;
 	if (language == null) {
 	    // TODO move this to the configuration

@@ -20,6 +20,7 @@ public class WebserviceExecutor {
 	LOG.debug("Executing WSOperation " + op.getClass().getName());
 	try {
 	    op.prepareSession();
+	    op.prepareManagers(op.getSession());
 	    op.prepare();
 	    op.execute();
 	    op.finish();

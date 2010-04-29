@@ -3,8 +3,10 @@ package ro.gagarin.ws.userservice;
 import java.util.ArrayList;
 import java.util.List;
 
+import ro.gagarin.AuthorizationManager;
 import ro.gagarin.RoleDAO;
 import ro.gagarin.exceptions.ExceptionBase;
+import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.UserRole;
 import ro.gagarin.utils.Statistic;
@@ -15,17 +17,24 @@ public class GetRoleListOP extends WebserviceOperation {
 
     private static final Statistic STAT_CREATE_USER = new Statistic("ws.userserservice.getRoleList");
     private List<WSUserRole> roles = null;
+    private AuthorizationManager authorizationManager;
+    private RoleDAO roleManager;
 
     public GetRoleListOP(String sessionId) {
 	super(sessionId, GetRoleListOP.class);
     }
 
     @Override
+    public void prepareManagers(Session session) throws ExceptionBase {
+	authorizationManager = FACTORY.getAuthorizationManager(getSession());
+	roleManager = FACTORY.getDAOManager().getRoleDAO(getSession());
+    }
+
+    @Override
     public void execute() throws ExceptionBase {
 	// the session user must have LIST_ROLES permission
-	FACTORY.getAuthorizationManager(getSession()).requiresPermission(getSession(), PermissionEnum.LIST_ROLES);
+	authorizationManager.requiresPermission(getSession(), PermissionEnum.LIST_ROLES);
 
-	RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(getSession());
 	List<UserRole> allRoles = roleManager.getAllRoles();
 	List<WSUserRole> convRoles = new ArrayList<WSUserRole>();
 	for (UserRole userRole : allRoles) {
@@ -42,5 +51,4 @@ public class GetRoleListOP extends WebserviceOperation {
     public List<WSUserRole> getRoleList() {
 	return this.roles;
     }
-
 }

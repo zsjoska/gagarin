@@ -8,6 +8,7 @@ import ro.gagarin.UserDAO;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.ItemNotFoundException;
+import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserRole;
@@ -22,6 +23,9 @@ public class CreateUserOP extends WebserviceOperation {
 
     private final WSUser user;
     private long userId = -1;
+    private AuthorizationManager authManager;
+    private UserDAO userManager;
+    private RoleDAO roleDAO;
 
     public CreateUserOP(String sessionId, WSUser user) {
 	super(sessionId, CreateUserOP.class);
@@ -29,13 +33,18 @@ public class CreateUserOP extends WebserviceOperation {
     }
 
     @Override
-    public void execute() throws ExceptionBase {
+    public void prepareManagers(Session session) throws ExceptionBase {
+	authManager = FACTORY.getAuthorizationManager(getSession());
+	userManager = FACTORY.getDAOManager().getUserDAO(getSession());
+	roleDAO = FACTORY.getDAOManager().getRoleDAO(getSession());
 
-	AuthorizationManager authManager = FACTORY.getAuthorizationManager(getSession());
+    }
+
+    @Override
+    public void execute() throws ExceptionBase {
 
 	// the session user must have CREATE_USER permission
 	authManager.requiresPermission(getSession(), PermissionEnum.CREATE_USER);
-	UserDAO userManager = FACTORY.getDAOManager().getUserDAO(getSession());
 
 	// TODO: what for this rollback... no change so far
 	// check user fields
@@ -46,7 +55,6 @@ public class CreateUserOP extends WebserviceOperation {
 
 	UserRole role = user.getRole();
 	if (role.getId() == null && role.getRoleName() != null) {
-	    RoleDAO roleDAO = FACTORY.getDAOManager().getRoleDAO(getSession());
 	    role = roleDAO.getRoleByName(role.getRoleName());
 	    if (role == null) {
 		userManager.markRollback();

@@ -5,6 +5,7 @@ import java.util.List;
 import ro.gagarin.AuthorizationManager;
 import ro.gagarin.RoleDAO;
 import ro.gagarin.exceptions.ExceptionBase;
+import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.utils.Statistic;
@@ -17,16 +18,21 @@ public class GetAllPermissionListOP extends WebserviceOperation {
     private static final Statistic STAT_CREATE_ROLE_WITH_PERMISSIONS = new Statistic(
 	    "ws.userserservice.getAllPermissionListOP");
     private List<WSUserPermission> permissionlist;
+    private AuthorizationManager authManager;
+    private RoleDAO roleManager;
 
     public GetAllPermissionListOP(String sessionId) {
 	super(sessionId, GetAllPermissionListOP.class);
     }
 
     @Override
-    public void execute() throws ExceptionBase {
-	AuthorizationManager authManager = FACTORY.getAuthorizationManager(getSession());
+    public void prepareManagers(Session session) throws ExceptionBase {
+	authManager = FACTORY.getAuthorizationManager(getSession());
+	roleManager = FACTORY.getDAOManager().getRoleDAO(getSession());
+    }
 
-	RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(getSession());
+    @Override
+    public void execute() throws ExceptionBase {
 
 	// the session user must have LIST_PERMISSIONS permission
 	authManager.requiresPermission(getSession(), PermissionEnum.LIST_PERMISSIONS);
@@ -43,5 +49,4 @@ public class GetAllPermissionListOP extends WebserviceOperation {
     public List<WSUserPermission> getPermissionList() {
 	return this.permissionlist;
     }
-
 }

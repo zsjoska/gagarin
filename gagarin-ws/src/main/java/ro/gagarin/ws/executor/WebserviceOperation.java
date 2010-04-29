@@ -39,6 +39,8 @@ public abstract class WebserviceOperation {
 
     public abstract Statistic getStatistic();
 
+    public abstract void prepareManagers(Session session) throws ExceptionBase;
+
     public Session getSession() {
 	return session;
     }
@@ -72,4 +74,5 @@ public abstract class WebserviceOperation {
     public String getSessionString() {
 	return sessionString;
     }
+
 }

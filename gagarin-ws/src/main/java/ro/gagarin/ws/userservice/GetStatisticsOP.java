@@ -3,31 +3,31 @@ package ro.gagarin.ws.userservice;
 import java.util.List;
 
 import ro.gagarin.AuthorizationManager;
-import ro.gagarin.ConfigurationManager;
-import ro.gagarin.config.ConfigEntry;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.utils.Statistic;
+import ro.gagarin.utils.StatisticsContainer;
 import ro.gagarin.ws.executor.WebserviceOperation;
-import ro.gagarin.ws.objects.WSConfig;
+import ro.gagarin.ws.objects.WSStatistic;
 import ro.gagarin.ws.util.WSConversionUtils;
 
-public class GetConfigEntriesOP extends WebserviceOperation {
+public class GetStatisticsOP extends WebserviceOperation {
+    private static final Statistic STAT = new Statistic("ws.userserservice.getStatisticsList");
 
-    private static final Statistic STAT_GET_CONFIG_LIST = new Statistic("ws.userserservice.getConfigList");
-    private List<WSConfig> configList;
+    private final String filter;
+    private List<WSStatistic> statisticsList;
+
     private AuthorizationManager authManager;
-    private ConfigurationManager cfgMgr;
 
-    public GetConfigEntriesOP(String sessionId) {
-	super(sessionId, GetConfigEntriesOP.class);
+    public GetStatisticsOP(String sessionId, String filter) {
+	super(sessionId, GetStatisticsOP.class);
+	this.filter = filter;
     }
 
     @Override
     public void prepareManagers(Session session) throws ExceptionBase {
 	authManager = FACTORY.getAuthorizationManager(getSession());
-	cfgMgr = FACTORY.getConfigurationManager();
     }
 
     @Override
@@ -35,17 +35,17 @@ public class GetConfigEntriesOP extends WebserviceOperation {
 
 	authManager.requiresPermission(getSession(), PermissionEnum.ADMIN_OPERATION);
 
-	List<ConfigEntry> configValues = cfgMgr.getConfigValues();
-	List<WSConfig> wsConfigList = WSConversionUtils.toWSConfigList(configValues);
-	this.configList = wsConfigList;
+	List<Statistic> statistics = StatisticsContainer.exportStatistics(filter);
+
+	this.statisticsList = WSConversionUtils.convertToWSStatisticList(statistics);
     }
 
     @Override
     public Statistic getStatistic() {
-	return STAT_GET_CONFIG_LIST;
+	return STAT;
     }
 
-    public List<WSConfig> getConfigEntries() {
-	return configList;
+    public List<WSStatistic> getStatisticList() {
+	return this.statisticsList;
     }
 }

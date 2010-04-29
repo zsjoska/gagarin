@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import ro.gagarin.AuthorizationManager;
 import ro.gagarin.RoleDAO;
 import ro.gagarin.exceptions.ExceptionBase;
+import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.utils.ConversionUtils;
@@ -25,6 +26,8 @@ public class CreateRoleWithPermissionsOP extends WebserviceOperation {
     private final String roleName;
     private final WSUserPermission[] permissions;
     private WSUserRole role;
+    private AuthorizationManager authManager;
+    private RoleDAO roleManager;
 
     public CreateRoleWithPermissionsOP(String sessionId, String roleName, WSUserPermission[] permissions) {
 	super(sessionId, CreateRoleWithPermissionsOP.class);
@@ -33,9 +36,13 @@ public class CreateRoleWithPermissionsOP extends WebserviceOperation {
     }
 
     @Override
+    public void prepareManagers(Session session) throws ExceptionBase {
+	authManager = FACTORY.getAuthorizationManager(session);
+	roleManager = FACTORY.getDAOManager().getRoleDAO(session);
+    }
+
+    @Override
     public void execute() throws ExceptionBase {
-	AuthorizationManager authManager = FACTORY.getAuthorizationManager(getSession());
-	RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(getSession());
 
 	LOG.debug("Create role:" + roleName + " with permissions " + Arrays.toString(permissions));
 

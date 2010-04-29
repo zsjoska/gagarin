@@ -5,20 +5,6 @@ import java.util.List;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 
-import ro.gagarin.AuthorizationManager;
-import ro.gagarin.BasicManagerFactory;
-import ro.gagarin.ManagerFactory;
-import ro.gagarin.SessionManager;
-import ro.gagarin.exceptions.LoginRequiredException;
-import ro.gagarin.exceptions.OperationException;
-import ro.gagarin.exceptions.PermissionDeniedException;
-import ro.gagarin.exceptions.SessionNotFoundException;
-import ro.gagarin.log.AppLog;
-import ro.gagarin.log.LogEntry;
-import ro.gagarin.session.Session;
-import ro.gagarin.user.PermissionEnum;
-import ro.gagarin.utils.Statistic;
-import ro.gagarin.utils.StatisticsContainer;
 import ro.gagarin.ws.executor.WebserviceExecutor;
 import ro.gagarin.ws.objects.WSConfig;
 import ro.gagarin.ws.objects.WSExportedSession;
@@ -32,16 +18,17 @@ import ro.gagarin.ws.userservice.CreateUserOP;
 import ro.gagarin.ws.userservice.DeleteRoleOP;
 import ro.gagarin.ws.userservice.GetAllPermissionListOP;
 import ro.gagarin.ws.userservice.GetConfigEntriesOP;
+import ro.gagarin.ws.userservice.GetLogEntriesOP;
 import ro.gagarin.ws.userservice.GetRoleListOP;
 import ro.gagarin.ws.userservice.GetRolePermissionstOP;
+import ro.gagarin.ws.userservice.GetSessionListOP;
+import ro.gagarin.ws.userservice.GetStatisticsOP;
 import ro.gagarin.ws.userservice.GetUsersOP;
+import ro.gagarin.ws.userservice.LogoutSessionOP;
 import ro.gagarin.ws.userservice.SetConfigEntryOP;
-import ro.gagarin.ws.util.WSConversionUtils;
 
 @WebService
 public class UserService {
-
-    private static final transient ManagerFactory FACTORY = BasicManagerFactory.getInstance();
 
     @WebMethod
     public Long createUser(String sessionId, WSUser user) throws WSException {
@@ -124,91 +111,35 @@ public class UserService {
     }
 
     @WebMethod
-    public List<WSLogEntry> getLogEntries(String sessionId, String user) throws SessionNotFoundException,
-	    OperationException, PermissionDeniedException, LoginRequiredException {
-	SessionManager sessionManager = FACTORY.getSessionManager();
-	Session session = sessionManager.acquireSession(sessionId);
+    public List<WSLogEntry> getLogEntries(String sessionId, String user) throws WSException {
 
-	try {
-	    AuthorizationManager authManager = FACTORY.getAuthorizationManager(session);
-
-	    // check real login
-	    authManager.requireLogin(session);
-
-	    authManager.requiresPermission(session, PermissionEnum.ADMIN_OPERATION);
-
-	    AppLog logMgr = FACTORY.getLogManager(session, UserService.class);
-	    List<LogEntry> logValues = logMgr.getLogEntries(user);
-	    List<WSLogEntry> wsConfigList = WSConversionUtils.toWSLogList(logValues);
-	    return wsConfigList;
-	} finally {
-	    FACTORY.releaseSession(session);
-	}
+	GetLogEntriesOP getLogEntries = new GetLogEntriesOP(sessionId, user);
+	WebserviceExecutor.execute(getLogEntries);
+	return getLogEntries.getLogEntries();
     }
 
     @WebMethod
-    public List<WSExportedSession> getSessionList(String sessionId) throws SessionNotFoundException,
-	    OperationException, PermissionDeniedException, LoginRequiredException {
-	SessionManager sessionManager = FACTORY.getSessionManager();
-	Session session = sessionManager.acquireSession(sessionId);
+    public List<WSExportedSession> getSessionList(String sessionId) throws WSException {
 
-	try {
-	    AuthorizationManager authManager = FACTORY.getAuthorizationManager(session);
+	GetSessionListOP getSessionList = new GetSessionListOP(sessionId);
+	WebserviceExecutor.execute(getSessionList);
+	return getSessionList.getSessionList();
 
-	    // check real login
-	    authManager.requireLogin(session);
-
-	    authManager.requiresPermission(session, PermissionEnum.ADMIN_OPERATION);
-	    List<Session> sessions = sessionManager.getSessionList();
-
-	    return WSConversionUtils.convertToSessionList(sessions);
-
-	} finally {
-	    FACTORY.releaseSession(session);
-	}
     }
 
     @WebMethod
-    public void logoutSession(String sessionId, String otherSessionId) throws SessionNotFoundException,
-	    PermissionDeniedException, LoginRequiredException, OperationException {
-	SessionManager sessionManager = FACTORY.getSessionManager();
-	Session session = sessionManager.acquireSession(sessionId);
+    public void logoutSession(String sessionId, String otherSessionId) throws WSException {
 
-	try {
-	    AuthorizationManager authManager = FACTORY.getAuthorizationManager(session);
+	WebserviceExecutor.execute(new LogoutSessionOP(sessionId, otherSessionId));
 
-	    // check real login
-	    authManager.requireLogin(session);
-
-	    authManager.requiresPermission(session, PermissionEnum.ADMIN_OPERATION);
-
-	    sessionManager.logout(otherSessionId);
-
-	} finally {
-	    FACTORY.releaseSession(session);
-	}
     }
 
     @WebMethod
-    public List<WSStatistic> getStatistics(String sessionId, String filter) throws SessionNotFoundException,
-	    OperationException, PermissionDeniedException, LoginRequiredException {
-	SessionManager sessionManager = FACTORY.getSessionManager();
-	Session session = sessionManager.acquireSession(sessionId);
+    public List<WSStatistic> getStatistics(String sessionId, String filter) throws WSException {
 
-	try {
-	    AuthorizationManager authManager = FACTORY.getAuthorizationManager(session);
+	GetStatisticsOP getStatistics = new GetStatisticsOP(sessionId, filter);
+	WebserviceExecutor.execute(getStatistics);
+	return getStatistics.getStatisticList();
 
-	    // check real login
-	    authManager.requireLogin(session);
-
-	    authManager.requiresPermission(session, PermissionEnum.ADMIN_OPERATION);
-
-	    List<Statistic> statistics = StatisticsContainer.exportStatistics(filter);
-
-	    return WSConversionUtils.convertToWSStatisticList(statistics);
-
-	} finally {
-	    FACTORY.releaseSession(session);
-	}
     }
 }

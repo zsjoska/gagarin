@@ -1,42 +1,47 @@
 package ro.gagarin.ws.userservice;
 
 import ro.gagarin.AuthorizationManager;
-import ro.gagarin.ConfigurationManager;
+import ro.gagarin.SessionManager;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.utils.Statistic;
 import ro.gagarin.ws.executor.WebserviceOperation;
-import ro.gagarin.ws.objects.WSConfig;
 
-public class SetConfigEntryOP extends WebserviceOperation {
+public class LogoutSessionOP extends WebserviceOperation {
+    private static final Statistic STAT_LOGOUT_SESSION = new Statistic("ws.userserservice.logoutSession");
 
-    private static final Statistic STAT_SET_CONFIG_ENTRY = new Statistic("ws.userserservice.setConfigEntry");
-    private final WSConfig wsConfig;
+    private final String otherSessionId;
+
     private AuthorizationManager authManager;
 
-    public SetConfigEntryOP(String sessionId, WSConfig wsConfig) {
-	super(sessionId, SetConfigEntryOP.class);
-	this.wsConfig = wsConfig;
+    private SessionManager sessionManager;
+
+    public LogoutSessionOP(String sessionId, String otherSessionId) {
+	super(sessionId, LogoutSessionOP.class);
+	this.otherSessionId = otherSessionId;
     }
 
     @Override
     public void prepareManagers(Session session) throws ExceptionBase {
 	authManager = FACTORY.getAuthorizationManager(getSession());
+	sessionManager = FACTORY.getSessionManager();
     }
 
     @Override
     public void execute() throws ExceptionBase {
 
+	// check real login
+	authManager.requireLogin(getSession());
+
 	authManager.requiresPermission(getSession(), PermissionEnum.ADMIN_OPERATION);
 
-	ConfigurationManager cfgMgr = FACTORY.getConfigurationManager();
-	cfgMgr.setConfigValue(getSession(), wsConfig);
+	sessionManager.logout(otherSessionId);
 
     }
 
     @Override
     public Statistic getStatistic() {
-	return STAT_SET_CONFIG_ENTRY;
+	return STAT_LOGOUT_SESSION;
     }
 }

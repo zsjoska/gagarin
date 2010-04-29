@@ -3,31 +3,38 @@ package ro.gagarin.ws.userservice;
 import java.util.List;
 
 import ro.gagarin.AuthorizationManager;
-import ro.gagarin.ConfigurationManager;
-import ro.gagarin.config.ConfigEntry;
 import ro.gagarin.exceptions.ExceptionBase;
+import ro.gagarin.log.AppLog;
+import ro.gagarin.log.LogEntry;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.utils.Statistic;
+import ro.gagarin.ws.UserService;
 import ro.gagarin.ws.executor.WebserviceOperation;
-import ro.gagarin.ws.objects.WSConfig;
+import ro.gagarin.ws.objects.WSLogEntry;
 import ro.gagarin.ws.util.WSConversionUtils;
 
-public class GetConfigEntriesOP extends WebserviceOperation {
+public class GetLogEntriesOP extends WebserviceOperation {
 
-    private static final Statistic STAT_GET_CONFIG_LIST = new Statistic("ws.userserservice.getConfigList");
-    private List<WSConfig> configList;
+    private static final Statistic STAT_GET_LOG_ENTRIES = new Statistic("ws.userserservice.getLogEntries");
+
+    private final String user;
+    private List<WSLogEntry> configList;
+
     private AuthorizationManager authManager;
-    private ConfigurationManager cfgMgr;
 
-    public GetConfigEntriesOP(String sessionId) {
-	super(sessionId, GetConfigEntriesOP.class);
+    private AppLog logMgr;
+
+    public GetLogEntriesOP(String sessionId, String user) {
+	super(sessionId, GetLogEntriesOP.class);
+	this.user = user;
     }
 
     @Override
     public void prepareManagers(Session session) throws ExceptionBase {
 	authManager = FACTORY.getAuthorizationManager(getSession());
-	cfgMgr = FACTORY.getConfigurationManager();
+	logMgr = FACTORY.getLogManager(getSession(), UserService.class);
+
     }
 
     @Override
@@ -35,17 +42,18 @@ public class GetConfigEntriesOP extends WebserviceOperation {
 
 	authManager.requiresPermission(getSession(), PermissionEnum.ADMIN_OPERATION);
 
-	List<ConfigEntry> configValues = cfgMgr.getConfigValues();
-	List<WSConfig> wsConfigList = WSConversionUtils.toWSConfigList(configValues);
+	List<LogEntry> logValues = logMgr.getLogEntries(user);
+	List<WSLogEntry> wsConfigList = WSConversionUtils.toWSLogList(logValues);
 	this.configList = wsConfigList;
     }
 
     @Override
     public Statistic getStatistic() {
-	return STAT_GET_CONFIG_LIST;
+	return STAT_GET_LOG_ENTRIES;
     }
 
-    public List<WSConfig> getConfigEntries() {
+    public List<WSLogEntry> getLogEntries() {
 	return configList;
     }
+
 }

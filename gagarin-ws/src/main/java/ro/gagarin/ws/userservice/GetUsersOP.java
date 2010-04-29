@@ -5,6 +5,7 @@ import java.util.List;
 import ro.gagarin.AuthorizationManager;
 import ro.gagarin.UserDAO;
 import ro.gagarin.exceptions.ExceptionBase;
+import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.User;
 import ro.gagarin.utils.Statistic;
@@ -18,15 +19,22 @@ public class GetUsersOP extends WebserviceOperation {
 
     private List<WSUser> users;
 
+    private AuthorizationManager authManager;
+
+    private UserDAO userDAO;
+
     public GetUsersOP(String sessionId) {
 	super(sessionId, GetUsersOP.class);
     }
 
     @Override
-    public void execute() throws ExceptionBase {
-	AuthorizationManager authManager = FACTORY.getAuthorizationManager(getSession());
+    public void prepareManagers(Session session) throws ExceptionBase {
+	authManager = FACTORY.getAuthorizationManager(getSession());
+	userDAO = FACTORY.getDAOManager().getUserDAO(getSession());
+    }
 
-	UserDAO userDAO = FACTORY.getDAOManager().getUserDAO(getSession());
+    @Override
+    public void execute() throws ExceptionBase {
 
 	// the session user must have LIST_USERS permission
 	authManager.requiresPermission(getSession(), PermissionEnum.LIST_USERS);

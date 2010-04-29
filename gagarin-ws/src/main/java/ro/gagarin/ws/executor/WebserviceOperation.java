@@ -34,6 +34,7 @@ public abstract class WebserviceOperation {
 	this.opClass = opClass;
     }
 
+    // TODO: make protected
     public abstract void execute() throws ExceptionBase;
 
     public abstract Statistic getStatistic();

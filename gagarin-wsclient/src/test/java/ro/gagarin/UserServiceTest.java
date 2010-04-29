@@ -26,9 +26,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void createUser() throws DataConstraintException_Exception, ItemNotFoundException_Exception,
-	    LoginRequiredException_Exception, OperationException_Exception, PermissionDeniedException_Exception,
-	    SessionNotFoundException_Exception {
+    public void createUser() throws WSException_Exception {
 	UserServiceService service = new UserServiceService();
 	UserService userAPI = service.getUserServicePort();
 	WsUserRole role = new WsUserRole();

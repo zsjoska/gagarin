@@ -11,8 +11,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import ro.gagarin.config.ConfigScope;
-import ro.gagarin.exceptions.DataConstraintException;
-import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.LoginRequiredException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.exceptions.PermissionDeniedException;
@@ -64,8 +62,8 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testCreateRole() throws SessionNotFoundException, PermissionDeniedException, OperationException,
-	    ItemNotFoundException, DataConstraintException, LoginRequiredException {
+    public void testCreateRole() throws WSException, SessionNotFoundException, OperationException,
+	    PermissionDeniedException, LoginRequiredException {
 	UserService userService = new UserService();
 
 	// check that ID is enough
@@ -102,8 +100,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testListUsers() throws OperationException, SessionNotFoundException, PermissionDeniedException,
-	    LoginRequiredException {
+    public void testListUsers() throws WSException {
 
 	UserService userService = new UserService();
 

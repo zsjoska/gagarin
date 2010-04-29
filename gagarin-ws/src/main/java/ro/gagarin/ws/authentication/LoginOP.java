@@ -22,7 +22,7 @@ public class LoginOP extends WebserviceOperation {
     private final String[] extra;
 
     public LoginOP(String sessionID, String username, String password, String[] extra) {
-	super(sessionID, LoginOP.class);
+	super(false, sessionID, LoginOP.class);
 	this.username = username;
 	this.password = password;
 	this.extra = extra;

@@ -26,7 +26,7 @@ public class CreateSessionOP extends WebserviceOperation {
     private String sessionString = null;
 
     public CreateSessionOP(String language, String reason) {
-	super(null, CreateSessionOP.class);
+	super(false, null, CreateSessionOP.class);
 	this.language = language;
 	this.reason = reason;
     }

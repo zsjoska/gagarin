@@ -8,7 +8,7 @@ public class PermissionDeniedException extends ExceptionBase {
     private final String name;
 
     public PermissionDeniedException(String username, String name) {
-	super(ErrorCodes.PERMISSION_DENIED);
+	super(ErrorCodes.PERMISSION_DENIED, name);
 	this.username = username;
 	this.name = name;
     }

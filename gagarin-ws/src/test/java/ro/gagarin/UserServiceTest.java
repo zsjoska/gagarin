@@ -48,8 +48,8 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testCreateUser() throws SessionNotFoundException, ItemNotFoundException, PermissionDeniedException,
-	    DataConstraintException, OperationException, LoginRequiredException {
+    public void testCreateUser() throws SessionNotFoundException, PermissionDeniedException, OperationException,
+	    LoginRequiredException, WSException {
 
 	UserService userService = new UserService();
 

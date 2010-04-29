@@ -19,7 +19,6 @@ import ro.gagarin.SessionManager;
 import ro.gagarin.UserDAO;
 import ro.gagarin.config.ConfigEntry;
 import ro.gagarin.exceptions.DataConstraintException;
-import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.LoginRequiredException;
 import ro.gagarin.exceptions.OperationException;
@@ -35,6 +34,7 @@ import ro.gagarin.user.UserRole;
 import ro.gagarin.utils.ConversionUtils;
 import ro.gagarin.utils.Statistic;
 import ro.gagarin.utils.StatisticsContainer;
+import ro.gagarin.ws.executor.WebserviceExecutor;
 import ro.gagarin.ws.objects.WSConfig;
 import ro.gagarin.ws.objects.WSExportedSession;
 import ro.gagarin.ws.objects.WSLogEntry;
@@ -42,6 +42,7 @@ import ro.gagarin.ws.objects.WSStatistic;
 import ro.gagarin.ws.objects.WSUser;
 import ro.gagarin.ws.objects.WSUserPermission;
 import ro.gagarin.ws.objects.WSUserRole;
+import ro.gagarin.ws.userservice.CreateUserOP;
 import ro.gagarin.ws.util.WSConversionUtils;
 
 @WebService
@@ -51,52 +52,12 @@ public class UserService {
     private static final transient ManagerFactory FACTORY = BasicManagerFactory.getInstance();
 
     @WebMethod
-    public Long createUser(String sessionId, WSUser user) throws SessionNotFoundException, PermissionDeniedException,
-	    ItemNotFoundException, DataConstraintException, OperationException, LoginRequiredException {
-	LOG.info("createUser " + user.getUsername());
+    public Long createUser(String sessionId, WSUser user) throws WSException {
 
-	SessionManager sessionManager = FACTORY.getSessionManager();
-	Session session = sessionManager.acquireSession(sessionId);
+	CreateUserOP createUser = new CreateUserOP(sessionId, user);
+	WebserviceExecutor.execute(createUser);
+	return createUser.getUserId();
 
-	try {
-	    AuthorizationManager authManager = FACTORY.getAuthorizationManager(session);
-
-	    // check real login
-	    authManager.requireLogin(session);
-
-	    // the session user must have CREATE_USER permission
-	    authManager.requiresPermission(session, PermissionEnum.CREATE_USER);
-
-	    UserDAO userManager = FACTORY.getDAOManager().getUserDAO(session);
-
-	    // TODO: what for this rollback... no change so far
-	    // check user fields
-	    if (user.getRole() == null) {
-		userManager.markRollback();
-		throw new FieldRequiredException("ROLE", User.class);
-	    }
-
-	    UserRole role = user.getRole();
-	    if (role.getId() == null && role.getRoleName() != null) {
-		RoleDAO roleDAO = FACTORY.getDAOManager().getRoleDAO(session);
-		role = roleDAO.getRoleByName(role.getRoleName());
-		if (role == null) {
-		    userManager.markRollback();
-		    throw new ItemNotFoundException(UserRole.class, user.getRole().getRoleName());
-		}
-		user.setRole(role);
-	    }
-
-	    // the created user's permission list must not exceed session user's
-	    // permissions
-	    authManager.checkUserRole(session, user);
-
-	    long userId = userManager.createUser(user);
-	    LOG.info("Created User " + user.getId() + ":" + user.getUsername() + "; session:" + sessionId);
-	    return userId;
-	} finally {
-	    FACTORY.releaseSession(session);
-	}
     }
 
     @WebMethod

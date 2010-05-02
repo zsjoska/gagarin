@@ -6,11 +6,17 @@ import java.util.HashSet;
 import java.util.List;
 
 import ro.gagarin.exceptions.ItemNotFoundException;
+import ro.gagarin.user.Group;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
 
 public class ConversionUtils {
+
+    public static String group2String(Group group) {
+	// TODO Auto-generated method stub
+	return null;
+    }
 
     public static String user2String(User user) {
 	// TODO Auto-generated method stub

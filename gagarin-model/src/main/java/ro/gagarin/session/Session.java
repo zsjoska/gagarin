@@ -3,8 +3,8 @@ package ro.gagarin.session;
 import java.util.HashMap;
 
 import ro.gagarin.BaseDAO;
+import ro.gagarin.BaseEntity;
 import ro.gagarin.ManagerFactory;
-import ro.gagarin.user.BaseEntity;
 import ro.gagarin.user.User;
 
 public class Session extends BaseEntity {

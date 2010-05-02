@@ -94,16 +94,14 @@ public class SchedulerTest {
 	ScheduleManager scheduleManager = FACTORY.getScheduleManager();
 	final ArrayList<Long> xTimes = new ArrayList<Long>();
 	long start = System.currentTimeMillis();
-	scheduleManager.scheduleJob(new ScheduledJob("testMultipleExecutionManager", 10, 35) {
+	scheduleManager.scheduleJob(new ScheduledJob("testMultipleExecutionManager", 10, 45) {
 	    @Override
 	    public void execute(Session session, AppLog log, JobController jc) {
 		xTimes.add(System.currentTimeMillis());
 	    }
 	}, false);
 	Thread.sleep(100);
-	for (Long l : xTimes) {
-	}
-	assertEquals("Only 2 times of execution was expected", 3, xTimes.size());
+	assertEquals("Only 2 times of execution was expected", 2, xTimes.size());
     }
 
     @Test

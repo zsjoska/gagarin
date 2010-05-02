@@ -35,6 +35,21 @@ CREATE TABLE Users
 )
 --END
 
+--CHECK: Groups
+SELECT * FROM Groups
+--CREATE:
+CREATE TABLE Groups 
+(
+	id bigint, 
+	name varchar(50) NOT NULL, 
+	description varchar(500), 
+	
+	CONSTRAINT PK_GROUPS_id PRIMARY KEY (id),
+	CONSTRAINT UK_GROUPS_name UNIQUE (name)
+)
+--END
+
+
 --CHECK: UserRoles
 SELECT * FROM UserRoles
 --CREATE:

@@ -1,6 +1,6 @@
 package ro.gagarin.jdbc.objects;
 
-import ro.gagarin.user.BaseEntity;
+import ro.gagarin.BaseEntity;
 import ro.gagarin.user.UserPermission;
 
 public class DBUserPermission extends BaseEntity implements UserPermission {

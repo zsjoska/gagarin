@@ -1,8 +1,8 @@
 package ro.gagarin.ws.objects;
 
+import ro.gagarin.BaseEntity;
 import ro.gagarin.config.ConfigEntry;
 import ro.gagarin.config.ConfigScope;
-import ro.gagarin.user.BaseEntity;
 
 public class WSConfig extends BaseEntity implements ConfigEntry {
 

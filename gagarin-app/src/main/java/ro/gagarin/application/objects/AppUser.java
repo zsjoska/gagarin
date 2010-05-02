@@ -1,6 +1,6 @@
 package ro.gagarin.application.objects;
 
-import ro.gagarin.user.BaseEntity;
+import ro.gagarin.BaseEntity;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserRole;
 

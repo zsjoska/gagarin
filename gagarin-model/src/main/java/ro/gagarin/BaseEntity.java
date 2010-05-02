@@ -1,4 +1,4 @@
-package ro.gagarin.user;
+package ro.gagarin;
 
 import java.io.Serializable;
 

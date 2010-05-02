@@ -5,6 +5,7 @@ import java.util.List;
 import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.OperationException;
+import ro.gagarin.user.Group;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserRole;
 
@@ -61,4 +62,8 @@ public interface UserDAO extends BaseDAO {
     List<User> getAllUsers() throws OperationException;
 
     void markRollback();
+
+    Long createGroup(Group group) throws DataConstraintException, OperationException;
+
+    Group getGroupByName(String groupname) throws OperationException;
 }

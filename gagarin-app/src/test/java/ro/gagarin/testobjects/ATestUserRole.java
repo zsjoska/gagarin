@@ -1,6 +1,6 @@
 package ro.gagarin.testobjects;
 
-import ro.gagarin.user.BaseEntity;
+import ro.gagarin.BaseEntity;
 import ro.gagarin.user.UserRole;
 
 public class ATestUserRole extends BaseEntity implements UserRole {

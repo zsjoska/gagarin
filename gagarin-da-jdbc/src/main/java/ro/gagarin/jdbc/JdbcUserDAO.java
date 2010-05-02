@@ -1,5 +1,6 @@
 package ro.gagarin.jdbc;
 
+import static ro.gagarin.utils.ConversionUtils.group2String;
 import static ro.gagarin.utils.ConversionUtils.user2String;
 
 import java.util.ArrayList;
@@ -11,6 +12,9 @@ import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.OperationException;
+import ro.gagarin.jdbc.group.CreateGroupSQL;
+import ro.gagarin.jdbc.group.SelectGroupByNameSQL;
+import ro.gagarin.jdbc.objects.DBGroup;
 import ro.gagarin.jdbc.objects.DBUser;
 import ro.gagarin.jdbc.user.CreateUserSQL;
 import ro.gagarin.jdbc.user.DeleteUserSQL;
@@ -21,6 +25,7 @@ import ro.gagarin.jdbc.user.SelectUsersSQL;
 import ro.gagarin.log.AppLog;
 import ro.gagarin.log.AppLogAction;
 import ro.gagarin.session.Session;
+import ro.gagarin.user.Group;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserRole;
 
@@ -122,4 +127,30 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 	ArrayList<User> users = SelectUsersSQL.execute(this);
 	return users;
     }
+
+    @Override
+    public Long createGroup(Group group) throws DataConstraintException, OperationException {
+	try {
+
+	    DBGroup dbGroup = new DBGroup(group);
+	    dbGroup.setId(DBUser.getNextId());
+
+	    new CreateGroupSQL(this, dbGroup).execute();
+
+	    APPLOG.action(AppLogAction.CREATE, Group.class, group.getName(), AppLog.SUCCESS);
+	    APPLOG.info("Group " + group.getName() + " was created");
+	    return dbGroup.getId();
+	} catch (OperationException e) {
+	    APPLOG.error("Could not create user:" + group2String(group), e);
+	    APPLOG.action(AppLogAction.CREATE, Group.class, group.getName(), AppLog.FAILED);
+	    throw e;
+	}
+    }
+
+    @Override
+    public Group getGroupByName(String groupname) throws OperationException {
+	Group group = SelectGroupByNameSQL.execute(this, groupname);
+	return group;
+    }
+
 }

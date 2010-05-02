@@ -1,8 +1,8 @@
 package ro.gagarin.scheduler;
 
+import ro.gagarin.BaseEntity;
 import ro.gagarin.log.AppLog;
 import ro.gagarin.session.Session;
-import ro.gagarin.user.BaseEntity;
 
 public abstract class ScheduledJob extends BaseEntity {
 

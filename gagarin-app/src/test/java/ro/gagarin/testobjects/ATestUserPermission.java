@@ -1,6 +1,6 @@
 package ro.gagarin.testobjects;
 
-import ro.gagarin.user.BaseEntity;
+import ro.gagarin.BaseEntity;
 import ro.gagarin.user.UserPermission;
 
 public class ATestUserPermission extends BaseEntity implements UserPermission {

@@ -1,7 +1,7 @@
 package ro.gagarin.ws.objects;
 
+import ro.gagarin.BaseEntity;
 import ro.gagarin.log.LogEntry;
-import ro.gagarin.user.BaseEntity;
 
 public class WSLogEntry extends BaseEntity implements LogEntry {
 

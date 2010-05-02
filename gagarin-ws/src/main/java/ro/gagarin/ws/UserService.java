@@ -9,11 +9,13 @@ import ro.gagarin.ws.executor.WSException;
 import ro.gagarin.ws.executor.WebserviceExecutor;
 import ro.gagarin.ws.objects.WSConfig;
 import ro.gagarin.ws.objects.WSExportedSession;
+import ro.gagarin.ws.objects.WSGroup;
 import ro.gagarin.ws.objects.WSLogEntry;
 import ro.gagarin.ws.objects.WSStatistic;
 import ro.gagarin.ws.objects.WSUser;
 import ro.gagarin.ws.objects.WSUserPermission;
 import ro.gagarin.ws.objects.WSUserRole;
+import ro.gagarin.ws.userservice.CreateGroupOP;
 import ro.gagarin.ws.userservice.CreateRoleWithPermissionsOP;
 import ro.gagarin.ws.userservice.CreateUserOP;
 import ro.gagarin.ws.userservice.DeleteRoleOP;
@@ -28,6 +30,7 @@ import ro.gagarin.ws.userservice.GetUsersOP;
 import ro.gagarin.ws.userservice.LogoutSessionOP;
 import ro.gagarin.ws.userservice.SetConfigEntryOP;
 
+// TODO: rename to AdminService
 @WebService
 public class UserService {
 
@@ -142,5 +145,12 @@ public class UserService {
 	WebserviceExecutor.execute(getStatistics);
 	return getStatistics.getStatisticList();
 
+    }
+
+    @WebMethod
+    public Long createGroup(String sessionId, WSGroup group) throws WSException {
+	CreateGroupOP createGroup = new CreateGroupOP(sessionId, group);
+	WebserviceExecutor.execute(createGroup);
+	return createGroup.getGroupId();
     }
 }

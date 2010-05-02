@@ -1,8 +1,8 @@
 package ro.gagarin.jdbc.objects;
 
+import ro.gagarin.BaseEntity;
 import ro.gagarin.config.ConfigEntry;
 import ro.gagarin.config.ConfigScope;
-import ro.gagarin.user.BaseEntity;
 
 public class DBConfig extends BaseEntity implements ConfigEntry {
 

@@ -1,6 +1,6 @@
 package ro.gagarin.ws.objects;
 
-import ro.gagarin.user.BaseEntity;
+import ro.gagarin.BaseEntity;
 import ro.gagarin.user.UserRole;
 
 public class WSUserRole extends BaseEntity implements UserRole {

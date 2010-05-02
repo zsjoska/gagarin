@@ -1,6 +1,6 @@
 package ro.gagarin.application.objects;
 
-import ro.gagarin.user.BaseEntity;
+import ro.gagarin.BaseEntity;
 import ro.gagarin.user.UserPermission;
 
 public class AppUserPermission extends BaseEntity implements UserPermission {

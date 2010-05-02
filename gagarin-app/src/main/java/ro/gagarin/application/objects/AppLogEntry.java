@@ -1,7 +1,7 @@
 package ro.gagarin.application.objects;
 
+import ro.gagarin.BaseEntity;
 import ro.gagarin.log.LogEntry;
-import ro.gagarin.user.BaseEntity;
 import ro.gagarin.user.User;
 
 public class AppLogEntry extends BaseEntity implements LogEntry {

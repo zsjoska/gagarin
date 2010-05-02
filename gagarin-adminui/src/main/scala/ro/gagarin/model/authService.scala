@@ -37,21 +37,8 @@ object authService {
 	      val permSet = (Set[String]()/:perm)((x,y) => x + y.getPermissionName)
 	      wsSession.set(SessionInfo(session,user,permSet))
 	  } catch {
-	  case e: OperationException_Exception => {
-	    error(e);
-		redirectTo("/")
-	  }
-	  case e: ItemNotFoundException_Exception => {
-	    error("Invalid username or password");
-		redirectTo("/")
-	  }
-	  case e: SessionNotFoundException_Exception => {
-	    error(e);
-	    redirectTo("/login")
-	  }
-	  case e: Exception => {
-	    error("Unexpected exception occured: " + e.getMessage());
-	    redirectTo("/")
+	  case e: WSException_Exception => {
+	    handleException(e)
 	  }}
   }
 
@@ -59,25 +46,10 @@ object authService {
 	  try{
 	      Buffer(getAuthService.getCurrentUserPermissions(session))
 	  } catch {
-	  case e: LoginRequiredException_Exception => {
-	    wsSession.set(null)
-	    error(e);
-	    redirectTo("/login")
-	  }
-	  case e: OperationException_Exception => {
-	    error(e);
-		redirectTo("/")
-	  }
-	  case e: SessionNotFoundException_Exception => {
-	    wsSession.set(null)
-	    error(e);
-	    redirectTo("/login")
-	  }
-	  case e: Exception => {
-	    error("Unexpected exception occured: " + e.getMessage());
-	    redirectTo("/")
+	  case e: WSException_Exception => {
+	    handleException(e)
 	  }}
-  }
   
-}
+  }
+  }
 

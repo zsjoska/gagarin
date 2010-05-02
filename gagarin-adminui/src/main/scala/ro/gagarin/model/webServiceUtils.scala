@@ -1,6 +1,8 @@
 package ro.gagarin.model
 
 import _root_.ro.gagarin.wsclient.WSClient
+import _root_.net.liftweb.http.S._
+
 
 object webServiceUtils {
   
@@ -11,28 +13,18 @@ object webServiceUtils {
   def getAuthService = wsclient.getAuthentication()
   def getUserService = wsclient.getUserService()
   
-  implicit def errorFromException(e : OperationException_Exception) = {
-	  val fi = e.getFaultInfo
-	  "Error " + fi.getErrorCode + ": " + fi.getMessage + "; " + fi.getDetail 
-  }
-  implicit def errorFromException(e : PermissionDeniedException_Exception) = {
-	  val fi = e.getFaultInfo
-	  "Permission denied for " + fi.getUsername + ": " + fi.getName  
-  }
-  implicit def errorFromException(e : SessionNotFoundException_Exception) = 
-	"Your session expired. please log-in again."
-  implicit def errorFromException(e : DataConstraintException_Exception) = {
-	  val fi = e.getFaultInfo
-	  "Could not create record " + fi.getMessage + ": " + fi.getDetail  
-  }
-  implicit def errorFromException(e : ItemNotFoundException_Exception) = {
-	  val fi = e.getFaultInfo
-	  "A required item was not found " + fi.getMessage + ": " + fi.getDetail  
-  }
-  implicit def errorFromException(e : LoginRequiredException_Exception) = {
-	  val fi = e.getFaultInfo
-	  "Login required." 
-  }
-  
+      def handleException(e : WSException_Exception) = {
+	    val wsException = e.getFaultInfo()
+	    error(wsException.getMessage +"(" + wsException.getDetail + ")");
+	    if( wsException.getErrorCode() == ErrorCodes.SESSION_NOT_FOUND ){
+	      wsSession.set(null)
+	      redirectTo("/login")
+	    } else if(wsException.getErrorCode() == ErrorCodes.LOGIN_REQUIRED){
+	      wsSession.set(null)
+	      redirectTo("/")
+	    } else {
+	      redirectTo("/")
+	    }
+    }  
 }
 

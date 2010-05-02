@@ -8,32 +8,13 @@ import _root_.ro.gagarin.model.webServiceUtils._
 import _root_.scala.collection.mutable.ListBuffer
 
 object userService {
-
+  
     def getStatistics(filter: String) = { 
 	  try{
 		  	Buffer(getUserService.getStatistics(wsSession.session, filter))
 	  } catch {
-	  case e: LoginRequiredException_Exception => {
-	    wsSession.set(null)
-	    error(e);
-	    redirectTo("/login")
-	  }
-	  case e: OperationException_Exception => {
-	    error(e);
-	    redirectTo("/")
-	  }
-	  case e: PermissionDeniedException_Exception => {
-	    error(e);
-	    redirectTo("/")
-	  }
-	  case e: SessionNotFoundException_Exception => {
-	    wsSession.set(null)
-	    error(e);
-	    redirectTo("/login")
-	  }
-	  case e: Exception => {
-	    error("Unexpected exception occured: " + e.getMessage());
-	    redirectTo("/")
+	  case e: WSException_Exception => {
+	    handleException(e)
 	  }}
   }
 
@@ -41,27 +22,8 @@ object userService {
 	  try{
 		  	Buffer(getUserService.getSessionList(wsSession.session))
 	  } catch {
-	  case e: LoginRequiredException_Exception => {
-	    wsSession.set(null)
-	    error(e);
-	    redirectTo("/login")
-	  }
-	  case e: OperationException_Exception => {
-	    error(e);
-	    redirectTo("/")
-	  }
-	  case e: PermissionDeniedException_Exception => {
-	    error(e);
-	    redirectTo("/")
-	  }
-	  case e: SessionNotFoundException_Exception => {
-	    wsSession.set(null)
-	    error(e);
-	    redirectTo("/login")
-	  }
-	  case e: Exception => {
-	    error("Unexpected exception occured: " + e.getMessage());
-	    redirectTo("/")
+	  case e: WSException_Exception => {
+	    handleException(e)
 	  }}
   }
 
@@ -69,27 +31,8 @@ object userService {
 	  try{
 		getUserService.logoutSession(wsSession.session, session)
 	  } catch {
-	  case e: LoginRequiredException_Exception => {
-	    wsSession.set(null)
-	    error(e);
-	    redirectTo("/login")
-	  }
-	  case e: OperationException_Exception => {
-	    error(e);
-	    redirectTo("/")
-	  }
-	  case e: PermissionDeniedException_Exception => {
-	    error(e);
-	    redirectTo("/")
-	  }
-	  case e: SessionNotFoundException_Exception => {
-	    wsSession.set(null)
-	    error(e);
-	    redirectTo("/login")
-	  }
-	  case e: Exception => {
-	    error("Unexpected exception occured: " + e.getMessage());
-	    redirectTo("/")
+	  case e: WSException_Exception => {
+	    handleException(e)
 	  }}
   }
 
@@ -97,22 +40,8 @@ object userService {
 	  try{
 		  	Buffer(getUserService.getLogEntries(wsSession.session, null))
 	  } catch {
-	  case e: OperationException_Exception => {
-	    error(e);
-		redirectTo("/")
-	  }
-	  case e: PermissionDeniedException_Exception => {
-	    error(e);
-		redirectTo("/")
-	  }
-	  case e: SessionNotFoundException_Exception => {
-	    wsSession.set(null)
-	    error(e);
-	    redirectTo("/login")
-	  }
-	  case e: Exception => {
-	    error("Unexpected exception occured: " + e.getMessage());
-	    redirectTo("/")
+	  case e: WSException_Exception => {
+	    handleException(e)
 	  }}
   }
 
@@ -120,22 +49,8 @@ object userService {
 	  try{
 		  	Buffer(getUserService.getRolePermissions(wsSession.session, role))
 	  } catch {
-	  case e: OperationException_Exception => {
-	    error(e);
-		redirectTo("/")
-	  }
-	  case e: PermissionDeniedException_Exception => {
-	    error(e);
-		redirectTo("/")
-	  }
-	  case e: SessionNotFoundException_Exception => {
-	    wsSession.set(null)
-	    error(e);
-	    redirectTo("/login")
-	  }
-	  case e: Exception => {
-	    error("Unexpected exception occured: " + e.getMessage());
-	    redirectTo("/")
+	  case e: WSException_Exception => {
+	    handleException(e)
 	  }}
   }
 
@@ -143,22 +58,8 @@ object userService {
 	  try{
 		  	Buffer(getUserService.getConfigEntries(wsSession.session))
 	  } catch {
-	  case e: OperationException_Exception => {
-	    error(e);
-		redirectTo("/")
-	  }
-	  case e: PermissionDeniedException_Exception => {
-	    error(e);
-		redirectTo("/")
-	  }
-	  case e: SessionNotFoundException_Exception => {
-	    wsSession.set(null)
-	    error(e);
-	    redirectTo("/login")
-	  }
-	  case e: Exception => {
-	    error("Unexpected exception occured: " + e.getMessage());
-	    redirectTo("/")
+	  case e: WSException_Exception => {
+	    handleException(e)
 	  }}
   }
 
@@ -166,22 +67,8 @@ object userService {
 	  try{
 		  	getUserService.setConfigEntry(wsSession.session, cfg)
 	  } catch {
-	  case e: OperationException_Exception => {
-	    error(e);
-		redirectTo("/")
-	  }
-	  case e: PermissionDeniedException_Exception => {
-	    error(e);
-		redirectTo("/")
-	  }
-	  case e: SessionNotFoundException_Exception => {
-	    wsSession.set(null)
-	    error(e);
-	    redirectTo("/login")
-	  }
-	  case e: Exception => {
-	    error("Unexpected exception occured: " + e.getMessage());
-	    redirectTo("/")
+	  case e: WSException_Exception => {
+	    handleException(e)
 	  }}
   }
 
@@ -189,22 +76,8 @@ object userService {
 	  try{
 		  	Buffer(getUserService.getUsers(wsSession.session))
 	  } catch {
-	  case e: OperationException_Exception => {
-	    error(e);
-		redirectTo("/")
-	  }
-	  case e: PermissionDeniedException_Exception => {
-	    error(e);
-		redirectTo("/")
-	  }
-	  case e: SessionNotFoundException_Exception => {
-	    wsSession.set(null)
-	    error(e);
-	    redirectTo("/login")
-	  }
-	  case e: Exception => {
-	    error("Unexpected exception occured: " + e.getMessage());
-	    redirectTo("/")
+	  case e: WSException_Exception => {
+	    handleException(e)
 	  }}
   }
 
@@ -212,22 +85,8 @@ object userService {
 	  try{
 		  	Buffer(getUserService.getRoleList(wsSession.session))
 	  } catch {
-	  case e: OperationException_Exception => {
-	    error(e);
-		redirectTo("/")
-	  }
-	  case e: PermissionDeniedException_Exception => {
-	    error(e);
-		redirectTo("/")
-	  }
-	  case e: SessionNotFoundException_Exception => {
-	    wsSession.set(null)
-	    error(e);
-	    redirectTo("/login")
-	  }
-	  case e: Exception => {
-	    error("Unexpected exception occured: " + e.getMessage());
-	    redirectTo("/")
+	  case e: WSException_Exception => {
+	    handleException(e)
 	  }}
   }
 
@@ -235,22 +94,8 @@ object userService {
 	  try{
 		  	Buffer(getUserService.getAllPermissionList(wsSession.session))
 	  } catch {
-	  case e: OperationException_Exception => {
-	    error(e);
-		redirectTo("/")
-	  }
-	  case e: PermissionDeniedException_Exception => {
-	    error(e);
-		redirectTo("/")
-	  }
-	  case e: SessionNotFoundException_Exception => {
-	    wsSession.set(null)
-	    error(e);
-	    redirectTo("/login")
-	  }
-	  case e: Exception => {
-	    error("Unexpected exception occured: " + e.getMessage());
-	    redirectTo("/")
+	  case e: WSException_Exception => {
+	    handleException(e)
 	  }}
   }
   
@@ -258,22 +103,8 @@ object userService {
 	  try{
 		  	getUserService.createUser(wsSession.session, user)
 	  } catch {
-	  case e: OperationException_Exception => {
-	    error(e);
-		redirectTo("/")
-	  }
-	  case e: PermissionDeniedException_Exception => {
-	    error(e);
-		redirectTo("/")
-	  }
-	  case e: SessionNotFoundException_Exception => {
-	    wsSession.set(null)
-	    error(e);
-	    redirectTo("/login")
-	  }
-	  case e: Exception => {
-	    error("Unexpected exception occured: " + e.getMessage());
-	    redirectTo("/")
+	  case e: WSException_Exception => {
+	    handleException(e)
 	  }}
   }
 
@@ -283,30 +114,8 @@ object userService {
 	  try{
 		  	getUserService.createRoleWithPermissions(wsSession.session, role, perm)
 	  } catch {
-	  case e: OperationException_Exception => {
-	    error(e);
-		redirectTo("/")
-	  }
-	  case e: PermissionDeniedException_Exception => {
-	    error(e);
-		redirectTo("/")
-	  }
-	  case e: DataConstraintException_Exception => {
-	    error(e);
-		redirectTo("/")
-	  }
-	  case e: ItemNotFoundException_Exception => {
-	    error(e);
-		redirectTo("/")
-	  }
-	  case e: SessionNotFoundException_Exception => {
-	    wsSession.set(null)
-	    error(e);
-	    redirectTo("/login")
-	  }
-	  case e: Exception => {
-	    error("Unexpected exception occured: " + e.getMessage());
-	    redirectTo("/")
+	  case e: WSException_Exception => {
+	    handleException(e)
 	  }}
   }
 }

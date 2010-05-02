@@ -37,13 +37,16 @@ public class ApplicationInitializer {
 
     private String task;
 
-    private final Session session;
+    private Session session = null;
 
-    public ApplicationInitializer(Session session) {
-	this.session = session;
+    private final BasicManagerFactory factory;
+
+    public ApplicationInitializer(BasicManagerFactory instance) {
+	this.factory = instance;
+
     }
 
-    public static synchronized boolean init() throws OperationException {
+    public static synchronized boolean init(BasicManagerFactory instance) throws OperationException {
 
 	if (initRun)
 	    return false;
@@ -51,26 +54,25 @@ public class ApplicationInitializer {
 
 	LOG.info("---------------------------- Application initializer started ------------------------");
 
-	Session session = prepareInitSession();
-
-	ApplicationInitializer initializer = new ApplicationInitializer(session);
+	ApplicationInitializer initializer = new ApplicationInitializer(instance);
 	try {
-
 	    initializer.doInit();
 	} catch (Exception e) {
 	    LOG.error("Application initializer failed for task:" + initializer.getTask(), e);
 	    throw new OperationException(ErrorCodes.STARTUP_FAILED, e);
 	} finally {
-	    initializer.session.getManagerFactory().releaseSession(session);
+	    if (initializer.session != null) {
+		initializer.session.getManagerFactory().releaseSession(initializer.session);
+	    }
 	}
 
 	LOG.info("---------------------------- Application initializer finished ----------------------------");
 	return true;
     }
 
-    private static Session prepareInitSession() {
+    private Session prepareInitSession() {
 	Session session = new Session();
-	session.setManagerFactory(BasicManagerFactory.getInstance());
+	session.setManagerFactory(this.factory);
 	session.setBusy(true, new Throwable("Session leak notice"));
 	session.setReason("SYSINIT");
 	session.setSessionString(System.currentTimeMillis() + "-" + System.nanoTime());
@@ -82,6 +84,12 @@ public class ApplicationInitializer {
     }
 
     private void doInit() throws ItemNotFoundException, OperationException, DataConstraintException {
+
+	this.setTask("LOAD_FILE_CONFIGURATION");
+	loadFileConfiguration();
+
+	this.setTask("PREPARE_INIT_SESSION");
+	this.session = prepareInitSession();
 
 	this.setTask("CREATE_MANAGERS");
 	initManagers(this.session);
@@ -111,8 +119,11 @@ public class ApplicationInitializer {
 
     }
 
+    private void loadFileConfiguration() {
+	factory.getConfigurationManager().loadConfiguration(null);
+    }
+
     private void initManagers(Session session) throws OperationException {
-	ManagerFactory factory = session.getManagerFactory();
 	this.cfgManager = factory.getConfigurationManager();
 	this.userManager = factory.getDAOManager().getUserDAO(session);
 	this.roleManager = factory.getDAOManager().getRoleDAO(session);
@@ -120,7 +131,6 @@ public class ApplicationInitializer {
 
     private void checkCreateDBTables() throws OperationException {
 	this.userManager.checkCreateDependencies(this.cfgManager);
-
     }
 
     private UserRole checkCreateAdminRole(final String adminRoleName) throws DataConstraintException,

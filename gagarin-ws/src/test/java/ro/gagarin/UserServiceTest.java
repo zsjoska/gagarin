@@ -11,8 +11,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import ro.gagarin.config.ConfigScope;
-import ro.gagarin.exceptions.DataConstraintException;
-import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.LoginRequiredException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.exceptions.PermissionDeniedException;
@@ -23,6 +21,7 @@ import ro.gagarin.user.UserRole;
 import ro.gagarin.utils.Statistic;
 import ro.gagarin.ws.Authentication;
 import ro.gagarin.ws.UserService;
+import ro.gagarin.ws.executor.WSException;
 import ro.gagarin.ws.objects.WSConfig;
 import ro.gagarin.ws.objects.WSExportedSession;
 import ro.gagarin.ws.objects.WSLogEntry;
@@ -41,15 +40,14 @@ public class UserServiceTest {
     private static UserService userService = new UserService();
 
     @BeforeClass
-    public static void startup() throws SessionNotFoundException, ItemNotFoundException, OperationException,
-	    DataConstraintException {
+    public static void startup() throws WSException {
 	session = authentication.createSession(null, null);
 	authentication.login(session, "admin", "password", null);
     }
 
     @Test
-    public void testCreateUser() throws SessionNotFoundException, ItemNotFoundException, PermissionDeniedException,
-	    DataConstraintException, OperationException, LoginRequiredException {
+    public void testCreateUser() throws SessionNotFoundException, PermissionDeniedException, OperationException,
+	    LoginRequiredException, WSException {
 
 	UserService userService = new UserService();
 
@@ -64,8 +62,8 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testCreateRole() throws SessionNotFoundException, PermissionDeniedException, OperationException,
-	    ItemNotFoundException, DataConstraintException, LoginRequiredException {
+    public void testCreateRole() throws WSException, SessionNotFoundException, OperationException,
+	    PermissionDeniedException, LoginRequiredException {
 	UserService userService = new UserService();
 
 	// check that ID is enough
@@ -102,8 +100,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testListUsers() throws OperationException, SessionNotFoundException, PermissionDeniedException,
-	    LoginRequiredException {
+    public void testListUsers() throws WSException {
 
 	UserService userService = new UserService();
 
@@ -129,9 +126,9 @@ public class UserServiceTest {
     public void getLogEntries() throws Exception {
 	// TODO: add some more meaningful test
 	List<WSLogEntry> logEntries = userService.getLogEntries(session, null);
-	for (WSLogEntry wsLogEntry : logEntries) {
-	    System.out.println(wsLogEntry);
-	}
+	// for (WSLogEntry wsLogEntry : logEntries) {
+	// System.out.println(wsLogEntry);
+	// }
 	assertNotNull(logEntries);
 	assertTrue(logEntries.size() > 0);
     }
@@ -139,9 +136,9 @@ public class UserServiceTest {
     @Test
     public void getSessionList() throws Exception {
 	List<WSExportedSession> sessionList = userService.getSessionList(session);
-	for (WSExportedSession wsExportedSession : sessionList) {
-	    System.out.println(wsExportedSession);
-	}
+	// for (WSExportedSession wsExportedSession : sessionList) {
+	// System.out.println(wsExportedSession);
+	// }
     }
 
     @Test

@@ -21,7 +21,7 @@ public class FileConfigurationManager extends ConfigHolder implements Configurat
     private static final String CONFIG_DIR = "CONFIG_DIR";
     private static final transient Logger LOG = Logger.getLogger(FileConfigurationManager.class);
     private static final ConfigurationManager INSTANCE = new FileConfigurationManager();
-    private String cfgDir;
+    private File cfgDir;
     private MonitoredFile cfgFile;
 
     public static ConfigurationManager getInstance() {
@@ -31,19 +31,30 @@ public class FileConfigurationManager extends ConfigHolder implements Configurat
     private FileConfigurationManager() {
 
 	// try to guess the config directory
-	cfgDir = System.getProperty(CONFIG_DIR);
-	if (cfgDir == null) {
-	    cfgDir = System.getenv(CONFIG_DIR);
+	String strCfgDir = System.getProperty(CONFIG_DIR);
+	if (strCfgDir == null) {
+	    strCfgDir = System.getenv(CONFIG_DIR);
 	}
 
 	// project build directory
-	if (cfgDir == null) {
-	    cfgDir = "../";
+	if (strCfgDir == null) {
+	    strCfgDir = "../";
 	}
+	this.cfgDir = new File(strCfgDir);
 
-	LOG.info("Config dir is set to " + new File(cfgDir).getAbsolutePath());
+    }
 
-	this.cfgFile = new MonitoredFile(new File(cfgDir + "config.properties"), this);
+    @Override
+    public void loadConfiguration(Object param) {
+	if (param instanceof File) {
+	    File paramFile = (File) param;
+	    if (paramFile.isDirectory()) {
+		this.cfgDir = paramFile;
+	    }
+	}
+	LOG.info("Config dir is set to " + cfgDir.getAbsolutePath());
+
+	this.cfgFile = new MonitoredFile(new File(cfgDir + File.separator + "config.properties"), this);
 	fileChanged(this.cfgFile.getFile());
 
 	// for test import this config

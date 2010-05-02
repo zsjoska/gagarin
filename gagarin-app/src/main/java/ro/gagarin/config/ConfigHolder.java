@@ -42,7 +42,6 @@ public class ConfigHolder {
 	    strValue = this.configuration.get(config.ordinal());
 	}
 	if (strValue == null) {
-	    LOG.warn(config.name() + " config value was not found, getting the default value");
 	    strValue = config.getDefaultValue();
 	}
 	return strValue;

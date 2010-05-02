@@ -84,4 +84,11 @@ public class WSUser extends BaseEntity implements User {
     public void setPhone(String phone) {
 	this.phone = phone;
     }
+
+    @Override
+    public String toString() {
+	return "WSUser [email=" + email + ", name=" + name + ", password=" + password + ", phone=" + phone + ", role="
+		+ role + ", username=" + username + ", getId()=" + getId() + "]";
+    }
+
 }

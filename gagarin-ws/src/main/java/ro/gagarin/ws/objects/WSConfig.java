@@ -44,4 +44,11 @@ public class WSConfig extends BaseEntity implements ConfigEntry {
     public void setConfigScope(ConfigScope configScope) {
 	this.configScope = configScope;
     }
+
+    @Override
+    public String toString() {
+	return "WSConfig [configName=" + configName + ", configScope=" + configScope + ", configValue=" + configValue
+		+ ", getId()=" + getId() + "]";
+    }
+
 }

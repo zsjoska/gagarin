@@ -211,4 +211,9 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
 	}
 	LOG.info("DB import done.");
     }
+
+    @Override
+    public void loadConfiguration(Object param) {
+
+    }
 }

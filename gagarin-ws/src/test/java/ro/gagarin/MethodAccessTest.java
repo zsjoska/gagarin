@@ -11,10 +11,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ro.gagarin.exceptions.DataConstraintException;
+import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.LoginRequiredException;
 import ro.gagarin.exceptions.OperationException;
-import ro.gagarin.exceptions.PermissionDeniedException;
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.session.Session;
 import ro.gagarin.testutil.TUtil;
@@ -24,6 +24,7 @@ import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
 import ro.gagarin.ws.Authentication;
 import ro.gagarin.ws.UserService;
+import ro.gagarin.ws.executor.WSException;
 import ro.gagarin.ws.objects.WSUser;
 import ro.gagarin.ws.objects.WSUserRole;
 
@@ -42,8 +43,7 @@ public class MethodAccessTest {
     private Session aDummySession;
 
     @Before
-    public void setUp() throws SessionNotFoundException, ItemNotFoundException, OperationException,
-	    DataConstraintException {
+    public void setUp() throws WSException, OperationException, DataConstraintException {
 
 	cleanup();
 
@@ -52,7 +52,7 @@ public class MethodAccessTest {
     }
 
     @After
-    public void shutdown() throws OperationException, DataConstraintException {
+    public void shutdown() throws WSException, OperationException, DataConstraintException {
 	authentication.logout(session);
 	FACTORY.releaseSession(aDummySession);
 	cleanup();
@@ -79,8 +79,8 @@ public class MethodAccessTest {
     }
 
     @Test
-    public void createUserAccess() throws ItemNotFoundException, SessionNotFoundException, DataConstraintException,
-	    OperationException, LoginRequiredException {
+    public void createUserAccess() throws OperationException, DataConstraintException, ItemNotFoundException,
+	    WSException, SessionNotFoundException, LoginRequiredException {
 
 	RoleDAO roleDAO = FACTORY.getDAOManager().getRoleDAO(aDummySession);
 	UserDAO userDAO = FACTORY.getDAOManager().getUserDAO(aDummySession);
@@ -115,8 +115,10 @@ public class MethodAccessTest {
 	try {
 	    userService.createUser(session, notCreated);
 	    fail("weakUser's role not enugh to create a user");
-	} catch (PermissionDeniedException e) {
+	} catch (WSException e) {
 	    // expected
+	    assertEquals("Wrong error code received", ErrorCodes.PERMISSION_DENIED, e.getErrorCode());
+	    assertEquals("Wrong detail message", PermissionEnum.CREATE_USER.toString(), e.getDetail());
 	}
 
 	roleDAO.assignPermissionToRole(role1, findPermission(PermissionEnum.CREATE_USER, allPermissions));
@@ -141,8 +143,9 @@ public class MethodAccessTest {
 	try {
 	    userService.createUser(session, notCreated);
 	    fail("weakUser could not create a user with LIST_ROLES");
-	} catch (PermissionDeniedException e) {
+	} catch (WSException e) {
 	    // expected
+	    assertEquals("Wrong error code received", ErrorCodes.PERMISSION_DENIED, e.getErrorCode());
 	}
 
 	userDAO.deleteUser(weakUser);

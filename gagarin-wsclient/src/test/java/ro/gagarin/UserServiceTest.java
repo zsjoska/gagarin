@@ -13,8 +13,7 @@ public class UserServiceTest {
     private static Authentication api = null;
 
     @BeforeClass
-    public static void setUp() throws SessionNotFoundException_Exception, ItemNotFoundException_Exception,
-	    OperationException_Exception {
+    public static void setUp() throws WSException_Exception {
 	AuthenticationService service = new AuthenticationService();
 	api = service.getAuthenticationPort();
 	session = api.createSession(null, null);
@@ -22,14 +21,12 @@ public class UserServiceTest {
     }
 
     @AfterClass
-    public static void shutDown() {
+    public static void shutDown() throws WSException_Exception {
 	api.logout(session);
     }
 
     @Test
-    public void createUser() throws SessionNotFoundException_Exception, PermissionDeniedException_Exception,
-	    ItemNotFoundException_Exception, DataConstraintException_Exception, OperationException_Exception,
-	    LoginRequiredException_Exception {
+    public void createUser() throws WSException_Exception {
 	UserServiceService service = new UserServiceService();
 	UserService userAPI = service.getUserServicePort();
 	WsUserRole role = new WsUserRole();

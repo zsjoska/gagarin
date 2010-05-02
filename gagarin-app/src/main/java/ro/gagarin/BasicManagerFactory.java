@@ -23,17 +23,17 @@ public class BasicManagerFactory implements ManagerFactory {
 
     private ApplicationState state = ApplicationState.INIT;
 
-    private ConfigurationManager configurationManager = FileConfigurationManager.getInstance();
-
     static {
 	try {
-	    if (ApplicationInitializer.init()) {
+	    if (ApplicationInitializer.init(INSTANCE)) {
 		INSTANCE.setApplicationState(ApplicationState.READY);
 	    }
 	} catch (OperationException e) {
 	    INSTANCE.setApplicationState(ApplicationState.OFFLINE);
 	}
     }
+
+    private ConfigurationManager configurationManager = FileConfigurationManager.getInstance();
 
     public static ManagerFactory getInstance() {
 	return INSTANCE;
@@ -70,10 +70,6 @@ public class BasicManagerFactory implements ManagerFactory {
      */
     public ConfigurationManager getConfigurationManager() {
 	return this.configurationManager;
-	// if (state != ApplicationState.INIT) {
-	// return new DBConfigManager(session,
-	// FileConfigurationManager.getInstance());
-	// }
     }
 
     public AuthorizationManager getAuthorizationManager(Session session) {

@@ -1,5 +1,6 @@
 package ro.gagarin.ws.executor;
 
+import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.ExceptionBase;
 
 public class WSException extends Exception {
@@ -8,7 +9,7 @@ public class WSException extends Exception {
      * 
      */
     private static final long serialVersionUID = 8399343260675574882L;
-    private int errorCode;
+    private ErrorCodes errorCode;
     private String detail;
 
     public WSException(ExceptionBase e) {
@@ -17,7 +18,7 @@ public class WSException extends Exception {
 	detail = e.getDetail();
     }
 
-    public int getErrorCode() {
+    public ErrorCodes getErrorCode() {
 	return errorCode;
     }
 

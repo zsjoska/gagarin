@@ -24,7 +24,9 @@ public class WebserviceExecutor {
 	    throw new WSException(e);
 	} finally {
 	    try {
-		op.releaseSession();
+		if (op.getSession() != null) {
+		    op.releaseSession();
+		}
 	    } catch (Exception e) {
 		LOG.error("Exception releasing the session after the operation: " + op.getClass().getName(), e);
 	    }

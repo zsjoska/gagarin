@@ -13,7 +13,7 @@ public class TUtil {
     private static final ManagerFactory FACTORY = BasicManagerFactory.getInstance();
 
     public static Session createTestSession() {
-	Session session = FACTORY.getSessionManager().createSession(null, null, FACTORY);
+	Session session = FACTORY.getSessionManager().createSession(null, "TEST", FACTORY);
 	try {
 	    FACTORY.getSessionManager().acquireSession(session.getSessionString());
 	} catch (SessionNotFoundException e) {

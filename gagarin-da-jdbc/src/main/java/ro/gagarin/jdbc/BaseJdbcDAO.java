@@ -180,10 +180,10 @@ public class BaseJdbcDAO implements BaseDAO {
 	try {
 	    ArrayList<Triple<String, String, String>> parseDBSQLFile = parseDBSQLFile(cfgManager,
 		    Config.DB_INIT_SQL_FILE);
-	    for (Triple<String, String, String> tuple : parseDBSQLFile) {
-		APPLOG.info("CHECK:" + tuple.s1);
-		APPLOG.info("CREATE:" + tuple.s2);
-	    }
+	    // for (Triple<String, String, String> tuple : parseDBSQLFile) {
+	    // APPLOG.debug("CHECK:" + tuple.s1);
+	    // APPLOG.debug("CREATE:" + tuple.s2);
+	    // }
 
 	    for (Triple<String, String, String> t : parseDBSQLFile) {
 		PreparedStatement prepareStatement;

@@ -67,4 +67,6 @@ public interface ConfigurationManager {
 
     void setConfigValue(Session session, ConfigEntry config) throws OperationException;
 
+    void loadConfiguration(Object param);
+
 }

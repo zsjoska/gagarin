@@ -12,11 +12,11 @@ public class DataConstraintException extends ExceptionBase {
 	    .compile("The statement was aborted because it would have caused a duplicate key value in a unique or primary key constraint or unique index identified by '(.*)' defined on '(.*)'.");
     private static final Pattern CONSTRAINT = Pattern.compile(".K_.*_(.*)");
 
-    public DataConstraintException(int errorCode) {
+    public DataConstraintException(ErrorCodes errorCode) {
 	super(errorCode);
     }
 
-    public DataConstraintException(int errorCode, Exception e) {
+    public DataConstraintException(ErrorCodes errorCode, Exception e) {
 	super(errorCode, e);
     }
 

@@ -12,6 +12,7 @@ import org.junit.Test;
 import ro.gagarin.application.objects.AppUser;
 import ro.gagarin.config.Config;
 import ro.gagarin.exceptions.DataConstraintException;
+import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.ItemExistsException;
 import ro.gagarin.exceptions.ItemNotFoundException;
@@ -81,6 +82,32 @@ public class UserTest {
 
 	usrManager.deleteUser(user);
 	assertNull("We just deleted the user; must not exists", usrManager.getUserByUsername(username));
+    }
+
+    @Test
+    public void createUserNegative() throws Exception {
+
+	UserDAO usrManager = FACTORY.getDAOManager().getUserDAO(session);
+	RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
+
+	UserRole adminRole = roleManager.getRoleByName(configManager.getString(Config.ADMIN_ROLE_NAME));
+	assertNotNull("this test requires application setup", adminRole);
+
+	try {
+	    AppUser user = new AppUser();
+	    user.setName("");
+	    user.setUsername("");
+	    user.setPassword("");
+	    user.setEmail("");
+	    user.setPhone("");
+	    user.setRole(adminRole);
+	    long userid = usrManager.createUser(user);
+	    user.setId(userid);
+	    usrManager.deleteUser(user);
+	    fail("The user shouldn't be created");
+	} catch (DataConstraintException e) {
+	    assertEquals("Invalid error code was thrown", ErrorCodes.FIELD_REQUIRED, e.getErrorCode());
+	}
     }
 
     // @Test

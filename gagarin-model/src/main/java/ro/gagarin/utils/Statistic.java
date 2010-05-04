@@ -8,7 +8,7 @@ public class Statistic {
     private long min = Long.MAX_VALUE;
     private long max = 0;
 
-    public Statistic(String name) {
+    private Statistic(String name) {
 	this.name = name;
 	StatisticsContainer.add(this);
     }
@@ -61,7 +61,14 @@ public class Statistic {
     }
 
     public static Statistic getByName(String name) {
-	return StatisticsContainer.getByName(name);
+	// not synchronized... well I know, not safe but I hope that the loss is
+	// less; only the first statistics are lost
+	Statistic stat = StatisticsContainer.getByName(name);
+	if (stat == null) {
+	    stat = new Statistic(name);
+	    StatisticsContainer.add(stat);
+	}
+	return stat;
     }
 
     public void add(long start) {

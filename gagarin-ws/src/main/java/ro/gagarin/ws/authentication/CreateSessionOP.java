@@ -12,7 +12,7 @@ import ro.gagarin.ws.executor.WebserviceOperation;
 
 public class CreateSessionOP extends WebserviceOperation {
 
-    private static final Statistic STAT_CREATE_SESSION = new Statistic("ws.auth.createSession");
+    private static final Statistic STAT_CREATE_SESSION = Statistic.getByName("ws.auth.createSession");
 
     private final String language;
     private final String reason;

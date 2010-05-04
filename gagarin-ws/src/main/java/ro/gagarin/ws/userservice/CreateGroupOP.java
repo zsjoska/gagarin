@@ -1,7 +1,6 @@
 package ro.gagarin.ws.userservice;
 
 import ro.gagarin.AuthorizationManager;
-import ro.gagarin.RoleDAO;
 import ro.gagarin.UserDAO;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.session.Session;
@@ -12,11 +11,10 @@ import ro.gagarin.ws.objects.WSGroup;
 
 public class CreateGroupOP extends WebserviceOperation {
 
-    private static final Statistic STAT_CREATE_GROUP = new Statistic("ws.userserservice.createGroup");
+    private static final Statistic STAT_CREATE_GROUP = Statistic.getByName("ws.userserservice.createGroup");
 
     private AuthorizationManager authManager;
     private UserDAO userManager;
-    private RoleDAO roleDAO;
 
     private final WSGroup group;
 
@@ -45,7 +43,6 @@ public class CreateGroupOP extends WebserviceOperation {
     public void prepareManagers(Session session) throws ExceptionBase {
 	authManager = FACTORY.getAuthorizationManager(getSession());
 	userManager = FACTORY.getDAOManager().getUserDAO(getSession());
-	roleDAO = FACTORY.getDAOManager().getRoleDAO(getSession());
     }
 
     public Long getGroupId() {

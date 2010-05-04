@@ -143,7 +143,7 @@ public class UserServiceTest {
 
     @Test
     public void getStatistics() throws Exception {
-	Statistic testStat = new Statistic("_test_statistic_");
+	Statistic testStat = Statistic.getByName("_test_statistic_");
 	testStat.addDuration(10);
 	testStat.addDuration(7);
 	testStat.addDuration(20);

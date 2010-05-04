@@ -15,7 +15,7 @@ import ro.gagarin.ws.objects.WSUser;
 
 public class LoginOP extends WebserviceOperation {
 
-    private static final Statistic STAT_LOGIN = new Statistic("ws.auth.login");
+    private static final Statistic STAT_LOGIN = Statistic.getByName("ws.auth.login");
     private WSUser loginUser = null;
     private final String username;
     private final String password;

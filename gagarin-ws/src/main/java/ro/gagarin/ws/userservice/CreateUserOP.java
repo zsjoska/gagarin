@@ -16,7 +16,7 @@ import ro.gagarin.ws.objects.WSUser;
 
 public class CreateUserOP extends WebserviceOperation {
 
-    private static final Statistic STAT_CREATE_USER = new Statistic("ws.userserservice.createUser");
+    private static final Statistic STAT_CREATE_USER = Statistic.getByName("ws.userserservice.createUser");
 
     private final WSUser user;
     private long userId = -1;

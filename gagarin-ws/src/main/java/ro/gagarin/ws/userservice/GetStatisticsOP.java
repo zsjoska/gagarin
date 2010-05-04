@@ -13,7 +13,7 @@ import ro.gagarin.ws.objects.WSStatistic;
 import ro.gagarin.ws.util.WSConversionUtils;
 
 public class GetStatisticsOP extends WebserviceOperation {
-    private static final Statistic STAT = new Statistic("ws.userserservice.getStatisticsList");
+    private static final Statistic STAT = Statistic.getByName("ws.userserservice.getStatisticsList");
 
     private final String filter;
     private List<WSStatistic> statisticsList;

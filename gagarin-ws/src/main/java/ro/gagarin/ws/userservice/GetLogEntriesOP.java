@@ -16,7 +16,7 @@ import ro.gagarin.ws.util.WSConversionUtils;
 
 public class GetLogEntriesOP extends WebserviceOperation {
 
-    private static final Statistic STAT_GET_LOG_ENTRIES = new Statistic("ws.userserservice.getLogEntries");
+    private static final Statistic STAT_GET_LOG_ENTRIES = Statistic.getByName("ws.userserservice.getLogEntries");
 
     private final String user;
     private List<WSLogEntry> configList;

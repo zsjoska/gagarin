@@ -11,7 +11,7 @@ import ro.gagarin.ws.executor.WebserviceOperation;
 
 public class LogoutOP extends WebserviceOperation {
 
-    private static final Statistic STAT_LOGOUT = new Statistic("ws.auth.logout");
+    private static final Statistic STAT_LOGOUT = Statistic.getByName("ws.auth.logout");
     private SessionManager sessionManager;
 
     public LogoutOP(String sessionId) {

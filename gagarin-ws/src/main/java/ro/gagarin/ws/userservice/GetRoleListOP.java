@@ -15,7 +15,7 @@ import ro.gagarin.ws.objects.WSUserRole;
 
 public class GetRoleListOP extends WebserviceOperation {
 
-    private static final Statistic STAT_CREATE_USER = new Statistic("ws.userserservice.getRoleList");
+    private static final Statistic STAT_CREATE_USER = Statistic.getByName("ws.userserservice.getRoleList");
     private List<WSUserRole> roles = null;
     private AuthorizationManager authorizationManager;
     private RoleDAO roleManager;

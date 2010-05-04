@@ -9,7 +9,7 @@ import ro.gagarin.utils.Statistic;
 import ro.gagarin.ws.executor.WebserviceOperation;
 
 public class LogoutSessionOP extends WebserviceOperation {
-    private static final Statistic STAT_LOGOUT_SESSION = new Statistic("ws.userserservice.logoutSession");
+    private static final Statistic STAT_LOGOUT_SESSION = Statistic.getByName("ws.userserservice.logoutSession");
 
     private final String otherSessionId;
 

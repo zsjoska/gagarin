@@ -17,8 +17,8 @@ import ro.gagarin.ws.util.WSConversionUtils;
 
 public class GetRolePermissionstOP extends WebserviceOperation {
 
-    private static final Statistic STAT_GET_ROLE_PERMISSIONLIST = new Statistic(
-	    "ws.userserservice.getRolePermissionstOP");
+    private static final Statistic STAT_GET_ROLE_PERMISSIONLIST = Statistic
+	    .getByName("ws.userserservice.getRolePermissionstOP");
 
     private final WSUserRole wsUserRole;
 

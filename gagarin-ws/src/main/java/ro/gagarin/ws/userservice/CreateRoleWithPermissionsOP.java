@@ -17,8 +17,8 @@ import ro.gagarin.ws.objects.WSUserRole;
 
 public class CreateRoleWithPermissionsOP extends WebserviceOperation {
 
-    private static final Statistic STAT_CREATE_ROLE_WITH_PERMISSIONS = new Statistic(
-	    "ws.userserservice.createRoleWithPermissions");
+    private static final Statistic STAT_CREATE_ROLE_WITH_PERMISSIONS = Statistic
+	    .getByName("ws.userserservice.createRoleWithPermissions");
 
     private final String roleName;
     private final WSUserPermission[] permissions;

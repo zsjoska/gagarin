@@ -13,7 +13,8 @@ import ro.gagarin.ws.util.WSConversionUtils;
 
 public class GetCurrentUserPermissionsOP extends WebserviceOperation {
 
-    private static final Statistic STAT_CURRENT_USER_PERMISSION = new Statistic("ws.auth.getCurrentUserPermissions");
+    private static final Statistic STAT_CURRENT_USER_PERMISSION = Statistic
+	    .getByName("ws.auth.getCurrentUserPermissions");
     private Set<WSUserPermission> currentUserPermissions;
     private RoleDAO roleDAO;
 

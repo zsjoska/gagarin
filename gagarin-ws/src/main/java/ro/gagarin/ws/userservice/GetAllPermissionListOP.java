@@ -15,8 +15,8 @@ import ro.gagarin.ws.util.WSConversionUtils;
 
 public class GetAllPermissionListOP extends WebserviceOperation {
 
-    private static final Statistic STAT_CREATE_ROLE_WITH_PERMISSIONS = new Statistic(
-	    "ws.userserservice.getAllPermissionListOP");
+    private static final Statistic STAT_CREATE_ROLE_WITH_PERMISSIONS = Statistic
+	    .getByName("ws.userserservice.getAllPermissionListOP");
     private List<WSUserPermission> permissionlist;
     private AuthorizationManager authManager;
     private RoleDAO roleManager;

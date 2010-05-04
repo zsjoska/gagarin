@@ -11,7 +11,7 @@ import ro.gagarin.ws.objects.WSUserRole;
 
 public class DeleteRoleOP extends WebserviceOperation {
 
-    private static final Statistic STAT_DELETE_ROLE = new Statistic("ws.userserservice.deleteRole");
+    private static final Statistic STAT_DELETE_ROLE = Statistic.getByName("ws.userserservice.deleteRole");
 
     private final WSUserRole role;
 

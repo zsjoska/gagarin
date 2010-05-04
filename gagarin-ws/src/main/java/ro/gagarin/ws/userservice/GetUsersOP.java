@@ -15,7 +15,7 @@ import ro.gagarin.ws.util.WSConversionUtils;
 
 public class GetUsersOP extends WebserviceOperation {
 
-    private static final Statistic STAT_GET_USERS = new Statistic("ws.userserservice.getUsers");
+    private static final Statistic STAT_GET_USERS = Statistic.getByName("ws.userserservice.getUsers");
 
     private List<WSUser> users;
 

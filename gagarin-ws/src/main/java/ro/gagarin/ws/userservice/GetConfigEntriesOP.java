@@ -15,7 +15,7 @@ import ro.gagarin.ws.util.WSConversionUtils;
 
 public class GetConfigEntriesOP extends WebserviceOperation {
 
-    private static final Statistic STAT_GET_CONFIG_LIST = new Statistic("ws.userserservice.getConfigList");
+    private static final Statistic STAT_GET_CONFIG_LIST = Statistic.getByName("ws.userserservice.getConfigList");
     private List<WSConfig> configList;
     private AuthorizationManager authManager;
     private ConfigurationManager cfgMgr;

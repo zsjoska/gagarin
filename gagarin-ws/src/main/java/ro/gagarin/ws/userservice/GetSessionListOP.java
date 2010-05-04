@@ -14,7 +14,7 @@ import ro.gagarin.ws.util.WSConversionUtils;
 
 public class GetSessionListOP extends WebserviceOperation {
 
-    private static final Statistic STAT_GET_SESSION_LIST = new Statistic("ws.userserservice.getSessionList");
+    private static final Statistic STAT_GET_SESSION_LIST = Statistic.getByName("ws.userserservice.getSessionList");
 
     private List<WSExportedSession> sessionList;
 

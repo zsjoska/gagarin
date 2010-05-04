@@ -11,7 +11,7 @@ import ro.gagarin.ws.objects.WSConfig;
 
 public class SetConfigEntryOP extends WebserviceOperation {
 
-    private static final Statistic STAT_SET_CONFIG_ENTRY = new Statistic("ws.userserservice.setConfigEntry");
+    private static final Statistic STAT_SET_CONFIG_ENTRY = Statistic.getByName("ws.userserservice.setConfigEntry");
     private final WSConfig wsConfig;
     private AuthorizationManager authManager;
 

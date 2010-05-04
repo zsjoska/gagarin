@@ -14,6 +14,7 @@ import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.group.CreateGroupSQL;
 import ro.gagarin.jdbc.group.SelectGroupByNameSQL;
+import ro.gagarin.jdbc.group.SelectGroupsSQL;
 import ro.gagarin.jdbc.objects.DBGroup;
 import ro.gagarin.jdbc.objects.DBUser;
 import ro.gagarin.jdbc.user.CreateUserSQL;
@@ -151,6 +152,11 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
     public Group getGroupByName(String groupname) throws OperationException {
 	Group group = SelectGroupByNameSQL.execute(this, groupname);
 	return group;
+    }
+
+    @Override
+    public List<Group> getGroups() throws OperationException {
+	return SelectGroupsSQL.execute(this);
     }
 
 }

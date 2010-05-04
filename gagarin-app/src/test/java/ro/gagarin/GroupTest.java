@@ -1,6 +1,9 @@
 package ro.gagarin;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
@@ -32,7 +35,7 @@ public class GroupTest {
     }
 
     @Test
-    public void createGroup() throws Exception {
+    public void createDeleteGroup() throws Exception {
 
 	UserDAO usrManager = FACTORY.getDAOManager().getUserDAO(session);
 
@@ -42,11 +45,17 @@ public class GroupTest {
 	group.setId(usrManager.createGroup(group));
 
 	Group gr = usrManager.getGroupByName(groupname);
-
+	assertNotNull("The group should exists", gr);
 	assertEquals("Invalid ID", group.getId(), gr.getId());
 	assertEquals("Invalid name", group.getName(), gr.getName());
 	assertEquals("Invalid description", group.getDescription(), gr.getDescription());
 
+	List<Group> groups = usrManager.getGroups();
+	gr = groups.get(groups.size() - 1);
+
+	assertEquals("Invalid ID", group.getId(), gr.getId());
+	assertEquals("Invalid name", group.getName(), gr.getName());
+	assertEquals("Invalid description", group.getDescription(), gr.getDescription());
     }
 
 }

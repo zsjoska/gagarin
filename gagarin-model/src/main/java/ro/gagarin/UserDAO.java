@@ -66,4 +66,6 @@ public interface UserDAO extends BaseDAO {
     Long createGroup(Group group) throws DataConstraintException, OperationException;
 
     Group getGroupByName(String groupname) throws OperationException;
+
+    List<Group> getGroups() throws OperationException;
 }

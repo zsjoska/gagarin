@@ -1,5 +1,6 @@
 package ro.gagarin.utils;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import org.apache.log4j.Logger;
@@ -100,5 +101,17 @@ public class FieldValidator {
 		return null;
 	    }
 	}.check();
+    }
+
+    public static void checkAllFields(Object object) throws FieldRequiredException {
+	Field[] fields = object.getClass().getDeclaredFields();
+	for (Field field : fields) {
+	    Class<?> declaringClass = field.getType();
+	    if (String.class.equals(declaringClass)) {
+		requireStringField(field.getName(), object, false);
+	    } else if (Long.class.equals(declaringClass)) {
+		requireLongField(field.getName(), object);
+	    }
+	}
     }
 }

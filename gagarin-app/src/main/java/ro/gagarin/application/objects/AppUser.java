@@ -12,7 +12,7 @@ public class AppUser extends BaseEntity implements User {
 
     private String phone;
     private String password;
-    private String userName;
+    private String username;
     private UserRole role;
 
     public String getEmail() {
@@ -42,7 +42,7 @@ public class AppUser extends BaseEntity implements User {
 
     @Override
     public String getUsername() {
-	return this.userName;
+	return this.username;
     }
 
     public void setName(String name) {
@@ -54,7 +54,7 @@ public class AppUser extends BaseEntity implements User {
     }
 
     public void setUsername(String userName) {
-	this.userName = userName;
+	this.username = userName;
     }
 
     public void setRole(UserRole role) {

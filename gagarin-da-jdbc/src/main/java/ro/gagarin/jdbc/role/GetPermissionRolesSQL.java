@@ -6,12 +6,14 @@ import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 
+import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.BaseJdbcDAO;
 import ro.gagarin.jdbc.SelectQuery;
 import ro.gagarin.jdbc.objects.DBUserRole;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
+import ro.gagarin.utils.FieldValidator;
 
 public class GetPermissionRolesSQL extends SelectQuery {
 
@@ -48,5 +50,10 @@ public class GetPermissionRolesSQL extends SelectQuery {
 	GetPermissionRolesSQL q = new GetPermissionRolesSQL(dao, perm);
 	q.execute();
 	return q.roles;
+    }
+
+    @Override
+    protected void checkInput() throws FieldRequiredException {
+	FieldValidator.requireLongField("id", perm);
     }
 }

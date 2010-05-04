@@ -6,6 +6,7 @@ import java.sql.SQLException;
 
 import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ErrorCodes;
+import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.log.AppLog;
 import ro.gagarin.utils.Statistic;
@@ -26,10 +27,13 @@ public abstract class UpdateQuery {
 
     protected abstract void fillParameters(PreparedStatement stmnt) throws SQLException;
 
+    protected abstract void checkInput() throws FieldRequiredException;
+
     public void execute() throws OperationException, DataConstraintException {
 	PreparedStatement stmnt = null;
 	boolean success = false;
 	try {
+	    checkInput();
 	    String sqlString = getSQL();
 	    LOG.debug("SQL:" + sqlString);
 	    stmnt = this.dao.getConnection().prepareStatement(sqlString);

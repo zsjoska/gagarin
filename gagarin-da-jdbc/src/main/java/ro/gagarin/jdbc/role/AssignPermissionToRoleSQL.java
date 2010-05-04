@@ -5,10 +5,12 @@ import java.sql.SQLException;
 
 import javax.management.relation.Role;
 
+import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.jdbc.BaseJdbcDAO;
 import ro.gagarin.jdbc.UpdateQuery;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
+import ro.gagarin.utils.FieldValidator;
 
 public class AssignPermissionToRoleSQL extends UpdateQuery {
 
@@ -30,6 +32,12 @@ public class AssignPermissionToRoleSQL extends UpdateQuery {
     @Override
     protected String getSQL() {
 	return "INSERT INTO PermissionAssignment( role_id, perm_id) VALUES (?,?)";
+    }
+
+    @Override
+    protected void checkInput() throws FieldRequiredException {
+	FieldValidator.requireLongField("id", role);
+	FieldValidator.requireLongField("id", perm);
     }
 
 }

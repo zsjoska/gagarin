@@ -6,9 +6,11 @@ package ro.gagarin.jdbc.user;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.jdbc.BaseJdbcDAO;
 import ro.gagarin.jdbc.UpdateQuery;
 import ro.gagarin.user.User;
+import ro.gagarin.utils.FieldValidator;
 
 /**
  * @author zsjoska
@@ -37,6 +39,12 @@ public class CreateUserSQL extends UpdateQuery {
     @Override
     protected String getSQL() {
 	return "INSERT INTO Users( id, username, name, email, phone, password, roleid) VALUES (?,?,?,?,?,?,?)";
+    }
+
+    @Override
+    protected void checkInput() throws FieldRequiredException {
+	FieldValidator.requireStringField("username", user, true);
+	FieldValidator.requireField("role", user);
     }
 
 }

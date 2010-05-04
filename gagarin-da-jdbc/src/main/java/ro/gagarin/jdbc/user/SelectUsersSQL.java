@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.BaseJdbcDAO;
 import ro.gagarin.jdbc.SelectQuery;
@@ -52,6 +53,11 @@ public class SelectUsersSQL extends SelectQuery {
 	SelectUsersSQL q = new SelectUsersSQL(dao);
 	q.execute();
 	return q.users;
+    }
+
+    @Override
+    protected void checkInput() throws FieldRequiredException {
+	// no input
     }
 
 }

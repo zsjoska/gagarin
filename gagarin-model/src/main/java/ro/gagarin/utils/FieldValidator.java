@@ -37,7 +37,10 @@ public class FieldValidator {
 	    Object validate;
 	    try {
 		Object value = getMethod.invoke(this.object);
-		if (value != null && !this.dstClass.isInstance(value)) {
+		if (value == null)
+		    throw new FieldRequiredException(fieldName, object.getClass());
+
+		if (!this.dstClass.isInstance(value)) {
 		    throw new RuntimeException("Wrong type: Expected: " + this.dstClass.getName() + " Received: "
 			    + value.getClass().getName());
 		}
@@ -68,8 +71,15 @@ public class FieldValidator {
 
 	    @Override
 	    public Object validate(Object value) throws Exception {
-		if (value == null)
-		    throw new FieldRequiredException(fieldname, object.getClass());
+		return null;
+	    }
+	}.check();
+    }
+
+    public static void requireField(final String fieldname, final Object object) throws FieldRequiredException {
+	new FieldChecker(fieldname, object, Object.class) {
+	    @Override
+	    public Object validate(Object value) throws Exception {
 		return null;
 	    }
 	}.check();
@@ -81,8 +91,6 @@ public class FieldValidator {
 
 	    @Override
 	    public Object validate(Object value) throws Exception {
-		if (value == null)
-		    throw new FieldRequiredException(fieldname, object.getClass());
 		String str = (String) value;
 
 		if (!trim) {

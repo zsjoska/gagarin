@@ -4,9 +4,11 @@ import java.security.acl.Group;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.jdbc.BaseJdbcDAO;
 import ro.gagarin.jdbc.UpdateQuery;
 import ro.gagarin.jdbc.objects.DBGroup;
+import ro.gagarin.utils.FieldValidator;
 
 public class CreateGroupSQL extends UpdateQuery {
 
@@ -27,6 +29,13 @@ public class CreateGroupSQL extends UpdateQuery {
     @Override
     protected String getSQL() {
 	return "INSERT INTO Groups( id, name, description) VALUES (?,?,?)";
+    }
+
+    @Override
+    protected void checkInput() throws FieldRequiredException {
+	FieldValidator.requireLongField("id", dbGroup);
+	FieldValidator.requireStringField("name", dbGroup, true);
+
     }
 
 }

@@ -94,7 +94,7 @@ public class SchedulerTest {
 	ScheduleManager scheduleManager = FACTORY.getScheduleManager();
 	final ArrayList<Long> xTimes = new ArrayList<Long>();
 	long start = System.currentTimeMillis();
-	scheduleManager.scheduleJob(new ScheduledJob("testMultipleExecutionManager", 10, 45) {
+	scheduleManager.scheduleJob(new ScheduledJob("testMultipleExecutionManager", 10, 55) {
 	    @Override
 	    public void execute(Session session, AppLog log, JobController jc) {
 		xTimes.add(System.currentTimeMillis());

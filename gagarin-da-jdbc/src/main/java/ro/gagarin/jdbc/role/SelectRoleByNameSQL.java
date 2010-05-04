@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.BaseJdbcDAO;
 import ro.gagarin.jdbc.SelectQuery;
@@ -43,6 +44,11 @@ public class SelectRoleByNameSQL extends SelectQuery {
 	SelectRoleByNameSQL q = new SelectRoleByNameSQL(dao, roleName);
 	q.execute();
 	return q.role;
+    }
+
+    @Override
+    protected void checkInput() throws FieldRequiredException {
+	// TODO check input
     }
 
 }

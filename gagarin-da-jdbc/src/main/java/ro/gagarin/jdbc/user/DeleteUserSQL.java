@@ -3,9 +3,11 @@ package ro.gagarin.jdbc.user;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.jdbc.BaseJdbcDAO;
 import ro.gagarin.jdbc.UpdateQuery;
 import ro.gagarin.user.User;
+import ro.gagarin.utils.FieldValidator;
 
 public class DeleteUserSQL extends UpdateQuery {
 
@@ -24,6 +26,11 @@ public class DeleteUserSQL extends UpdateQuery {
     @Override
     protected String getSQL() {
 	return "DELETE FROM Users WHERE id = ?";
+    }
+
+    @Override
+    protected void checkInput() throws FieldRequiredException {
+	FieldValidator.requireLongField("id", user);
     }
 
 }

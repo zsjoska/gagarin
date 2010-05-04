@@ -6,12 +6,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import ro.gagarin.exceptions.DataConstraintException;
+import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.BaseJdbcDAO;
 import ro.gagarin.jdbc.SelectQuery;
 import ro.gagarin.jdbc.objects.DBUser;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserRole;
+import ro.gagarin.utils.FieldValidator;
 
 public class GetUsersWithRoleSQL extends SelectQuery {
 
@@ -52,5 +54,10 @@ public class GetUsersWithRoleSQL extends SelectQuery {
 	query.execute();
 
 	return query.users;
+    }
+
+    @Override
+    protected void checkInput() throws FieldRequiredException {
+	FieldValidator.requireLongField("id", role);
     }
 }

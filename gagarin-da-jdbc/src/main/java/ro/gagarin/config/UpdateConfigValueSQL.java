@@ -3,9 +3,11 @@ package ro.gagarin.config;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.jdbc.BaseJdbcDAO;
 import ro.gagarin.jdbc.UpdateQuery;
 import ro.gagarin.jdbc.objects.DBConfig;
+import ro.gagarin.utils.FieldValidator;
 
 public class UpdateConfigValueSQL extends UpdateQuery {
 
@@ -25,6 +27,12 @@ public class UpdateConfigValueSQL extends UpdateQuery {
     @Override
     protected String getSQL() {
 	return "UPDATE Config SET configValue = ? WHERE configName = ?";
+    }
+
+    @Override
+    protected void checkInput() throws FieldRequiredException {
+	FieldValidator.requireStringField("configName", config, true);
+	FieldValidator.requireStringField("configValue", config, true);
     }
 
 }

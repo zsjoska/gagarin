@@ -211,8 +211,7 @@ public class UserTest {
 	    usrManager.createUser(user1);
 	    fail("the username was empty; thus this item must not be created");
 	} catch (FieldRequiredException e) {
-	    assertEquals("Wrong field info", "USERNAME", e.getFieldName());
-	    assertEquals("Wrong class info", "User", e.getClassName());
+	    assertEquals("Wrong field info", "username", e.getFieldName());
 	} finally {
 	    FACTORY.releaseSession(brokenSession);
 	}

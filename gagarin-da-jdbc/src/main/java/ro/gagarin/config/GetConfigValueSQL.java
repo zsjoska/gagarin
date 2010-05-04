@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.BaseJdbcDAO;
 import ro.gagarin.jdbc.SelectQuery;
@@ -40,5 +41,10 @@ public class GetConfigValueSQL extends SelectQuery {
 	GetConfigValueSQL q = new GetConfigValueSQL(dao, lastUpdateTime);
 	q.execute();
 	return q.lastUpdateTime;
+    }
+
+    @Override
+    protected void checkInput() throws FieldRequiredException {
+	// TODO check input
     }
 }

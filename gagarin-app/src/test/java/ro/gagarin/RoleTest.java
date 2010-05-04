@@ -271,8 +271,7 @@ public class RoleTest {
 	    roleManager.createRole(role);
 	    fail("the rolename was empty; thus this item must not be created");
 	} catch (FieldRequiredException e) {
-	    assertEquals("Wrong field info", "ROLENAME", e.getFieldName());
-	    assertEquals("Wrong class info", "UserRole", e.getClassName());
+	    assertEquals("Wrong field info", "roleName", e.getFieldName());
 	} finally {
 	    FACTORY.releaseSession(brokenSession);
 	}
@@ -291,8 +290,7 @@ public class RoleTest {
 	    roleManager.createPermission(perm);
 	    fail("the permission name was empty; thus this item must not be created");
 	} catch (FieldRequiredException e) {
-	    assertEquals("Wrong field info", "PERMISSIONNAME", e.getFieldName());
-	    assertEquals("Wrong class info", "UserPermission", e.getClassName());
+	    assertEquals("Wrong field info", "permissionName", e.getFieldName());
 	} finally {
 	    FACTORY.releaseSession(brokenSession);
 	}

@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import ro.gagarin.JdbcConfigDAO;
+import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.BaseJdbcDAO;
 import ro.gagarin.jdbc.SelectQuery;
@@ -45,6 +46,11 @@ public class GetConfigsSQL extends SelectQuery {
 	GetConfigsSQL q = new GetConfigsSQL(jdbcConfigDAO);
 	q.execute();
 	return q.configs;
+    }
+
+    @Override
+    protected void checkInput() throws FieldRequiredException {
+	// no input
     }
 
 }

@@ -9,6 +9,7 @@ import ro.gagarin.AuthenticationManager;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.User;
+import ro.gagarin.utils.FieldValidator;
 import ro.gagarin.utils.Statistic;
 import ro.gagarin.ws.executor.WebserviceOperation;
 import ro.gagarin.ws.objects.WSUser;
@@ -17,8 +18,8 @@ public class LoginOP extends WebserviceOperation {
 
     private static final Statistic STAT_LOGIN = Statistic.getByName("ws.auth.login");
     private WSUser loginUser = null;
-    private final String username;
-    private final String password;
+    private String username;
+    private String password;
     private final String[] extra;
     private AuthenticationManager authenticationManager;
 
@@ -53,5 +54,11 @@ public class LoginOP extends WebserviceOperation {
     @Override
     public String toString() {
 	return "LoginOP [extra=" + Arrays.toString(extra) + ", password=" + password + ", username=" + username + "]";
+    }
+
+    @Override
+    public void checkInput(Session session) throws ExceptionBase {
+	this.username = FieldValidator.checkStringValue(username, "username", 50);
+	this.password = FieldValidator.checkStringValue(password, "password", 50);
     }
 }

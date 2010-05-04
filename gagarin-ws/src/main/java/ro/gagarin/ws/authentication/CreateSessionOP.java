@@ -4,9 +4,11 @@
 package ro.gagarin.ws.authentication;
 
 import ro.gagarin.SessionManager;
+import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.log.AppLog;
 import ro.gagarin.session.Session;
+import ro.gagarin.utils.FieldValidator;
 import ro.gagarin.utils.Statistic;
 import ro.gagarin.ws.executor.WebserviceOperation;
 
@@ -14,8 +16,8 @@ public class CreateSessionOP extends WebserviceOperation {
 
     private static final Statistic STAT_CREATE_SESSION = Statistic.getByName("ws.auth.createSession");
 
-    private final String language;
-    private final String reason;
+    private String language;
+    private String reason;
 
     private String sessionString = null;
     private SessionManager sessionManager;
@@ -68,5 +70,11 @@ public class CreateSessionOP extends WebserviceOperation {
     @Override
     public String toString() {
 	return "CreateSessionOP [language=" + language + ", reason=" + reason + "]";
+    }
+
+    @Override
+    public void checkInput(Session session) throws ExceptionBase {
+	this.language = FieldValidator.checkStringValue(language, "language", 5);
+	this.reason = FieldValidator.checkStringValue(reason, "reason", 20);
     }
 }

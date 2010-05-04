@@ -45,4 +45,9 @@ public class GetCurrentUserPermissionsOP extends WebserviceOperation {
 	return currentUserPermissions;
     }
 
+    @Override
+    public void checkInput(Session session) throws ExceptionBase {
+	// no input
+    }
+
 }

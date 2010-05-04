@@ -5,6 +5,7 @@ import ro.gagarin.UserDAO;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
+import ro.gagarin.utils.FieldValidator;
 import ro.gagarin.utils.Statistic;
 import ro.gagarin.ws.executor.WebserviceOperation;
 import ro.gagarin.ws.objects.WSGroup;
@@ -47,6 +48,11 @@ public class CreateGroupOP extends WebserviceOperation {
 
     public Long getGroupId() {
 	return this.groupId;
+    }
+
+    @Override
+    public void checkInput(Session session) throws ExceptionBase {
+	FieldValidator.requireStringField("name", group, true);
     }
 
 }

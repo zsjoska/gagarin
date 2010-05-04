@@ -11,6 +11,14 @@ public abstract class ControlEntity extends BaseEntity {
 	return ControlEntity.class;
     }
 
+    public void setDisplayName(String displayName) {
+	this.displayName = displayName;
+    }
+
+    public String getDisplayName() {
+	return displayName;
+    }
+
     private String displayName;
 
 }

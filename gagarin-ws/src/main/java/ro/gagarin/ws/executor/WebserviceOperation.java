@@ -7,10 +7,12 @@ import ro.gagarin.BasicManagerFactory;
 import ro.gagarin.ManagerFactory;
 import ro.gagarin.SessionManager;
 import ro.gagarin.exceptions.ExceptionBase;
+import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.LoginRequiredException;
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.log.AppLog;
 import ro.gagarin.session.Session;
+import ro.gagarin.utils.FieldValidator;
 import ro.gagarin.utils.Statistic;
 
 public abstract class WebserviceOperation {
@@ -18,7 +20,7 @@ public abstract class WebserviceOperation {
     protected static final transient ManagerFactory FACTORY = BasicManagerFactory.getInstance();
     private static final transient Logger LOG = Logger.getLogger(ApplicationInitializer.class);
 
-    private final String sessionString;
+    private String sessionString;
 
     private Session session = null;
 
@@ -40,6 +42,7 @@ public abstract class WebserviceOperation {
 
     public void performOperation() throws ExceptionBase {
 	prepareSession();
+	checkInput(getSession());
 	if (applog != null) {
 	    applog.debug(opClass.getSimpleName() + " " + this);
 	} else {
@@ -58,6 +61,8 @@ public abstract class WebserviceOperation {
 
     public abstract void prepareManagers(Session session) throws ExceptionBase;
 
+    public abstract void checkInput(Session session) throws ExceptionBase;
+
     public Session getSession() {
 	return session;
     }
@@ -67,7 +72,9 @@ public abstract class WebserviceOperation {
     }
 
     public void prepareSession() throws SessionNotFoundException, LoginRequiredException {
-	if (getSessionString() == null || getSessionString().length() == 0) {
+	try {
+	    this.sessionString = FieldValidator.checkStringValue(sessionString, "sessionId", 100);
+	} catch (FieldRequiredException e) {
 	    throw new SessionNotFoundException(getSessionString());
 	}
 	SessionManager sessionManager = FACTORY.getSessionManager();

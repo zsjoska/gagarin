@@ -34,4 +34,9 @@ public class LogoutOP extends WebserviceOperation {
 	return STAT_LOGOUT;
     }
 
+    @Override
+    public void checkInput(Session session) throws ExceptionBase {
+	// no input
+    }
+
 }

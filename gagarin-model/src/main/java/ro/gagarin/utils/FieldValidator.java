@@ -111,6 +111,22 @@ public class FieldValidator {
 	}.check();
     }
 
+    public static String checkStringValue(String str, String name, int maxLength) throws FieldRequiredException {
+
+	// TODO: fix this Object.class, maybe with a permisible constructor
+	if (str == null)
+	    throw new FieldRequiredException(name, Object.class);
+	String newStr = str.trim();
+
+	if (newStr.length() == 0)
+	    throw new FieldRequiredException(name, Object.class);
+
+	if (newStr.length() > maxLength)
+	    newStr = newStr.substring(0, maxLength);
+
+	return newStr;
+    }
+
     public static void checkAllFields(Object object) throws FieldRequiredException {
 	Field[] fields = object.getClass().getDeclaredFields();
 	for (Field field : fields) {

@@ -5,6 +5,7 @@ import ro.gagarin.RoleDAO;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
+import ro.gagarin.utils.FieldValidator;
 import ro.gagarin.utils.Statistic;
 import ro.gagarin.ws.executor.WebserviceOperation;
 import ro.gagarin.ws.objects.WSUserRole;
@@ -19,6 +20,7 @@ public class DeleteRoleOP extends WebserviceOperation {
 
     private RoleDAO roleManager;
 
+    // TODO: delete also by role name
     public DeleteRoleOP(String sessionId, WSUserRole role) {
 	super(sessionId, DeleteRoleOP.class);
 	this.role = role;
@@ -50,4 +52,8 @@ public class DeleteRoleOP extends WebserviceOperation {
 	return "DeleteRoleOP [role=" + role + "]";
     }
 
+    @Override
+    public void checkInput(Session session) throws ExceptionBase {
+	FieldValidator.requireLongField("id", role);
+    }
 }

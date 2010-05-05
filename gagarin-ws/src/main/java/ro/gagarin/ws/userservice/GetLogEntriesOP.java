@@ -18,7 +18,7 @@ public class GetLogEntriesOP extends WebserviceOperation {
 
     private static final Statistic STAT_GET_LOG_ENTRIES = Statistic.getByName("ws.userserservice.getLogEntries");
 
-    private final String user;
+    private final String username;
     private List<WSLogEntry> configList;
 
     private AuthorizationManager authManager;
@@ -27,7 +27,7 @@ public class GetLogEntriesOP extends WebserviceOperation {
 
     public GetLogEntriesOP(String sessionId, String user) {
 	super(sessionId, GetLogEntriesOP.class);
-	this.user = user;
+	this.username = user;
     }
 
     @Override
@@ -42,7 +42,7 @@ public class GetLogEntriesOP extends WebserviceOperation {
 
 	authManager.requiresPermission(getSession(), PermissionEnum.ADMIN_OPERATION);
 
-	List<LogEntry> logValues = logMgr.getLogEntries(user);
+	List<LogEntry> logValues = logMgr.getLogEntries(username);
 	List<WSLogEntry> wsConfigList = WSConversionUtils.toWSLogList(logValues);
 	this.configList = wsConfigList;
     }
@@ -58,7 +58,11 @@ public class GetLogEntriesOP extends WebserviceOperation {
 
     @Override
     public String toString() {
-	return "GetLogEntriesOP [user=" + user + "]";
+	return "GetLogEntriesOP [user=" + username + "]";
     }
 
+    @Override
+    public void checkInput(Session session) throws ExceptionBase {
+	// TODO: implement custom verification for username
+    }
 }

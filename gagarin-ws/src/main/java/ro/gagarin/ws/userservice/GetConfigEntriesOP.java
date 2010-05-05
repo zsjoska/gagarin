@@ -48,4 +48,9 @@ public class GetConfigEntriesOP extends WebserviceOperation {
     public List<WSConfig> getConfigEntries() {
 	return configList;
     }
+
+    @Override
+    public void checkInput(Session session) throws ExceptionBase {
+	// no input
+    }
 }

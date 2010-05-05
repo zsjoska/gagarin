@@ -70,7 +70,7 @@ public class SessionTest {
 	userManager.createUser(user);
 	FACTORY.releaseSession(session);
 
-	String session = authentication.createSession(null, null);
+	String session = authentication.createSession(null, "TEST");
 	assertNotNull(session);
 
 	authentication.login(session, "1" + username, "password1", null);
@@ -96,7 +96,7 @@ public class SessionTest {
 
 	FACTORY.releaseSession(session);
 
-	String session = authentication.createSession(null, null);
+	String session = authentication.createSession(null, "TEST");
 	assertNotNull(session);
 
 	try {
@@ -132,7 +132,7 @@ public class SessionTest {
 
 	FACTORY.releaseSession(session);
 
-	String session = authentication.createSession(null, null);
+	String session = authentication.createSession(null, "TEST");
 	assertNotNull(session);
 
 	authentication.logout(session);
@@ -195,7 +195,7 @@ public class SessionTest {
     @Test
     public void testGetCurrentUserPermissions() throws Exception {
 	ConfigurationManager cfgMgr = FACTORY.getConfigurationManager();
-	String session = authentication.createSession(null, null);
+	String session = authentication.createSession(null, "TEST");
 	authentication.login(session, cfgMgr.getString(Config.ADMIN_USER_NAME),
 		cfgMgr.getString(Config.ADMIN_PASSWORD), null);
 

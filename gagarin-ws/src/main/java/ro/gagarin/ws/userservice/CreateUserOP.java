@@ -10,6 +10,7 @@ import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserRole;
+import ro.gagarin.utils.FieldValidator;
 import ro.gagarin.utils.Statistic;
 import ro.gagarin.ws.executor.WebserviceOperation;
 import ro.gagarin.ws.objects.WSUser;
@@ -83,6 +84,11 @@ public class CreateUserOP extends WebserviceOperation {
     @Override
     public String toString() {
 	return "CreateUserOP [user=" + user + "]";
+    }
+
+    @Override
+    public void checkInput(Session session) throws ExceptionBase {
+	FieldValidator.requireStringField("username", user, true);
     }
 
 }

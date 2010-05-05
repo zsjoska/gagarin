@@ -41,7 +41,7 @@ public class UserServiceTest {
 
     @BeforeClass
     public static void startup() throws WSException {
-	session = authentication.createSession(null, null);
+	session = authentication.createSession(null, "TEST");
 	authentication.login(session, "admin", "password", null);
     }
 

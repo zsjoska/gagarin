@@ -5,6 +5,7 @@ import ro.gagarin.SessionManager;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
+import ro.gagarin.utils.FieldValidator;
 import ro.gagarin.utils.Statistic;
 import ro.gagarin.ws.executor.WebserviceOperation;
 
@@ -46,6 +47,11 @@ public class LogoutSessionOP extends WebserviceOperation {
     @Override
     public String toString() {
 	return "LogoutSessionOP [otherSessionId=" + otherSessionId + "]";
+    }
+
+    @Override
+    public void checkInput(Session session) throws ExceptionBase {
+	FieldValidator.checkStringValue(otherSessionId, "otherSessionId", 50);
     }
 
 }

@@ -53,4 +53,9 @@ public class GetUsersOP extends WebserviceOperation {
 	return this.users;
     }
 
+    @Override
+    public void checkInput(Session session) throws ExceptionBase {
+	// no input
+    }
+
 }

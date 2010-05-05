@@ -50,4 +50,9 @@ public class GetSessionListOP extends WebserviceOperation {
 	return this.sessionList;
     }
 
+    @Override
+    public void checkInput(Session session) throws ExceptionBase {
+	// no input
+    }
+
 }

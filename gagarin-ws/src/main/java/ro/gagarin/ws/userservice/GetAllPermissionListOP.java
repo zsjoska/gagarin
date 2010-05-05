@@ -49,4 +49,9 @@ public class GetAllPermissionListOP extends WebserviceOperation {
     public List<WSUserPermission> getPermissionList() {
 	return this.permissionlist;
     }
+
+    @Override
+    public void checkInput(Session session) throws ExceptionBase {
+	// no input
+    }
 }

@@ -10,6 +10,7 @@ import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.utils.ConversionUtils;
+import ro.gagarin.utils.FieldValidator;
 import ro.gagarin.utils.Statistic;
 import ro.gagarin.ws.executor.WebserviceOperation;
 import ro.gagarin.ws.objects.WSUserPermission;
@@ -74,6 +75,12 @@ public class CreateRoleWithPermissionsOP extends WebserviceOperation {
     public String toString() {
 	return "CreateRoleWithPermissionsOP [permissions=" + Arrays.toString(permissions) + ", roleName=" + roleName
 		+ "]";
+    }
+
+    @Override
+    public void checkInput(Session session) throws ExceptionBase {
+	FieldValidator.checkStringValue(roleName, "roleName", 50);
+	// TODO: check permissions
     }
 
 }

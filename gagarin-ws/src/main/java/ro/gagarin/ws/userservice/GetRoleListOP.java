@@ -51,4 +51,9 @@ public class GetRoleListOP extends WebserviceOperation {
     public List<WSUserRole> getRoleList() {
 	return this.roles;
     }
+
+    @Override
+    public void checkInput(Session session) throws ExceptionBase {
+	// no input
+    }
 }

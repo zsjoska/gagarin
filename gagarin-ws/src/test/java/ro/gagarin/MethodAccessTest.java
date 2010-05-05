@@ -48,7 +48,7 @@ public class MethodAccessTest {
 	cleanup();
 
 	aDummySession = TUtil.createTestSession();
-	this.session = authentication.createSession(null, null);
+	this.session = authentication.createSession(null, "TEST");
     }
 
     @After

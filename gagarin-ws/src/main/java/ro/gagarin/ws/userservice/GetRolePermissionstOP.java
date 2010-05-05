@@ -63,4 +63,9 @@ public class GetRolePermissionstOP extends WebserviceOperation {
 	return "GetRolePermissionstOP [wsUserRole=" + wsUserRole + "]";
     }
 
+    @Override
+    public void checkInput(Session session) throws ExceptionBase {
+	// TODO: implement combined verification for id and roleName
+    }
+
 }

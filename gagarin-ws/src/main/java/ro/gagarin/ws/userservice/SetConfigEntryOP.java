@@ -5,6 +5,7 @@ import ro.gagarin.ConfigurationManager;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
+import ro.gagarin.utils.FieldValidator;
 import ro.gagarin.utils.Statistic;
 import ro.gagarin.ws.executor.WebserviceOperation;
 import ro.gagarin.ws.objects.WSConfig;
@@ -44,5 +45,11 @@ public class SetConfigEntryOP extends WebserviceOperation {
     @Override
     public String toString() {
 	return "SetConfigEntryOP [wsConfig=" + wsConfig + "]";
+    }
+
+    @Override
+    public void checkInput(Session session) throws ExceptionBase {
+	FieldValidator.requireStringField("configName", wsConfig, true);
+	FieldValidator.requireStringField("configValue", wsConfig, true);
     }
 }

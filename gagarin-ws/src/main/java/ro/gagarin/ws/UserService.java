@@ -5,6 +5,7 @@ import java.util.List;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 
+import ro.gagarin.user.Group;
 import ro.gagarin.ws.executor.WSException;
 import ro.gagarin.ws.executor.WebserviceExecutor;
 import ro.gagarin.ws.objects.WSConfig;
@@ -21,6 +22,7 @@ import ro.gagarin.ws.userservice.CreateUserOP;
 import ro.gagarin.ws.userservice.DeleteRoleOP;
 import ro.gagarin.ws.userservice.GetAllPermissionListOP;
 import ro.gagarin.ws.userservice.GetConfigEntriesOP;
+import ro.gagarin.ws.userservice.GetGroupsOP;
 import ro.gagarin.ws.userservice.GetLogEntriesOP;
 import ro.gagarin.ws.userservice.GetRoleListOP;
 import ro.gagarin.ws.userservice.GetRolePermissionstOP;
@@ -152,5 +154,49 @@ public class UserService {
 	CreateGroupOP createGroup = new CreateGroupOP(sessionId, group);
 	WebserviceExecutor.execute(createGroup);
 	return createGroup.getGroupId();
+    }
+
+    // FIXME: Group -> WSGroup
+    @WebMethod
+    public List<Group> getGroups(String sessionId) throws WSException {
+	GetGroupsOP getGroups = new GetGroupsOP(sessionId);
+	WebserviceExecutor.execute(getGroups);
+	return getGroups.getGroups();
+    }
+
+    @WebMethod
+    public void deleteGroup(String sessionId, WSGroup group) throws WSException {
+	// DeleteGroupOP deleteGroup = new DeleteGroupOP(sessionId, group);
+	// WebserviceExecutor.execute(deleteGroup);
+    }
+
+    @WebMethod
+    public void updateGroup(String sessionId, WSGroup group) throws WSException {
+	// UpdateGroupOP updateGroup = new UpdateGroupOP(sessionId, group);
+	// WebserviceExecutor.execute(updateGroup);
+    }
+
+    @WebMethod
+    public List<WSGroup> getUserGroups(String sessionId, WSUser user) throws WSException {
+	// GetUserGroupsOP getUserGroups = new GetUserGroupsOP(sessionId);
+	// WebserviceExecutor.execute(getUserGroups);
+	// return getUserGroups.getUserGroups();
+	return null;
+    }
+
+    @WebMethod
+    public List<WSUser> getGroupUsers(String sessionId, WSGroup group) throws WSException {
+	// GetGroupUsersOP getGroupUsers = new GetGroupUsersOP(sessionId);
+	// WebserviceExecutor.execute(getGroupUsers);
+	// return getGroupUsers.getGroupUsers();
+	return null;
+    }
+
+    @WebMethod
+    public List<WSUser> assignUsersToGroup(String sessionId, WSGroup group, WSUser[] users) throws WSException {
+	// GetGroupUsersOP getGroupUsers = new GetGroupUsersOP(sessionId);
+	// WebserviceExecutor.execute(getGroupUsers);
+	// return getGroupUsers.getGroupUsers();
+	return null;
     }
 }

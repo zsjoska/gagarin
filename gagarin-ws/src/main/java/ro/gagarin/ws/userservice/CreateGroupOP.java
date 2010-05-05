@@ -28,7 +28,7 @@ public class CreateGroupOP extends WebserviceOperation {
 
     @Override
     public void execute() throws ExceptionBase {
-	// the session user must have CREATE_USER permission
+	// the session user must have CREATE_GROUP permission
 	authManager.requiresPermission(getSession(), PermissionEnum.CREATE_GROUP);
 
 	this.groupId = userManager.createGroup(group);

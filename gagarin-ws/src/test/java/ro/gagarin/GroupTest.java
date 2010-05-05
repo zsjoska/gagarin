@@ -39,5 +39,8 @@ public class GroupTest {
 	Long groupId = userService.createGroup(session, group);
 	assertNotNull(groupId);
 	assertTrue(groupId > 0L);
+
+	group.setId(groupId);
+	userService.deleteGroup(session, group);
     }
 }

@@ -13,6 +13,7 @@ import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.group.CreateGroupSQL;
+import ro.gagarin.jdbc.group.DeleteGroupSQL;
 import ro.gagarin.jdbc.group.SelectGroupByNameSQL;
 import ro.gagarin.jdbc.group.SelectGroupsSQL;
 import ro.gagarin.jdbc.objects.DBGroup;
@@ -157,6 +158,11 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
     @Override
     public List<Group> getGroups() throws OperationException {
 	return SelectGroupsSQL.execute(this);
+    }
+
+    @Override
+    public void deleteGroup(Group gr) throws OperationException, DataConstraintException {
+	new DeleteGroupSQL(this, gr).execute();
     }
 
 }

@@ -2,6 +2,7 @@ package ro.gagarin;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.util.List;
 
@@ -56,6 +57,11 @@ public class GroupTest {
 	assertEquals("Invalid ID", group.getId(), gr.getId());
 	assertEquals("Invalid name", group.getName(), gr.getName());
 	assertEquals("Invalid description", group.getDescription(), gr.getDescription());
+
+	usrManager.deleteGroup(gr);
+	gr = usrManager.getGroupByName(groupname);
+	assertNull("The group should not exists", gr);
+
     }
 
 }

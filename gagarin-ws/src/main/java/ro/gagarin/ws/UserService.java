@@ -19,6 +19,7 @@ import ro.gagarin.ws.objects.WSUserRole;
 import ro.gagarin.ws.userservice.CreateGroupOP;
 import ro.gagarin.ws.userservice.CreateRoleWithPermissionsOP;
 import ro.gagarin.ws.userservice.CreateUserOP;
+import ro.gagarin.ws.userservice.DeleteGroupOP;
 import ro.gagarin.ws.userservice.DeleteRoleOP;
 import ro.gagarin.ws.userservice.GetAllPermissionListOP;
 import ro.gagarin.ws.userservice.GetConfigEntriesOP;
@@ -166,8 +167,8 @@ public class UserService {
 
     @WebMethod
     public void deleteGroup(String sessionId, WSGroup group) throws WSException {
-	// DeleteGroupOP deleteGroup = new DeleteGroupOP(sessionId, group);
-	// WebserviceExecutor.execute(deleteGroup);
+	DeleteGroupOP deleteGroup = new DeleteGroupOP(sessionId, group);
+	WebserviceExecutor.execute(deleteGroup);
     }
 
     @WebMethod

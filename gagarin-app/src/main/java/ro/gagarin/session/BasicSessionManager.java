@@ -121,18 +121,18 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
     public Session acquireSession(String sessionId) throws SessionNotFoundException {
 	Session session = getSessionById(sessionId);
 	if (session == null) {
-	    LOG.debug("The requested session was not found:" + sessionId);
+	    LOG.error("The requested session was not found:" + sessionId);
 	    throw new SessionNotFoundException(sessionId);
 	}
 
 	if (session.isExpired()) {
-	    LOG.info("The requested session expired:" + sessionId);
+	    LOG.error("The requested session expired:" + sessionId);
 	    throw new SessionNotFoundException(session);
 	}
 
 	synchronized (session) {
 	    if (session.isBusy()) {
-		LOG.info("The requested session is busy:" + sessionId);
+		LOG.error("The requested session is busy:" + sessionId);
 		throw new SessionNotFoundException(session);
 	    }
 	    session.setBusy(true, new Exception("Session Creation"));

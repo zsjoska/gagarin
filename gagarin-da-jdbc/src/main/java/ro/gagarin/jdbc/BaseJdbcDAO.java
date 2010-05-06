@@ -93,8 +93,12 @@ public class BaseJdbcDAO implements BaseDAO {
     }
 
     protected Connection getConnection() throws OperationException {
-	if (this.rollback)
+	if (this.rollback) {
 	    throw new OperationException(ErrorCodes.DB_OP_ERROR, "The connection was marked to rollback");
+	}
+	if (this.connection == null) {
+	    throw new OperationException(ErrorCodes.DB_OP_ERROR, "The DAO session was released.");
+	}
 	return this.connection;
     }
 

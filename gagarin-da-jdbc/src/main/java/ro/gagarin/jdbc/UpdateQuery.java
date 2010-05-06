@@ -35,8 +35,9 @@ public abstract class UpdateQuery {
 	try {
 	    checkInput();
 	    String sqlString = getSQL();
-	    LOG.debug("SQL:" + sqlString);
-	    stmnt = this.dao.getConnection().prepareStatement(sqlString);
+	    LOG.debug("Got SQL:" + sqlString);
+	    Connection connection = this.dao.getConnection();
+	    stmnt = connection.prepareStatement(sqlString);
 	    fillParameters(stmnt);
 	    LOG.debug("Executing SQL:" + sqlString);
 	    doExecute(stmnt);

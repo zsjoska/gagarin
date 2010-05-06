@@ -161,8 +161,17 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
     }
 
     @Override
-    public void deleteGroup(Group gr) throws OperationException, DataConstraintException {
-	new DeleteGroupSQL(this, gr).execute();
-    }
+    public void deleteGroup(Group gr) throws OperationException, DataConstraintException, ItemNotFoundException {
 
+	Group group = gr;
+
+	if (group.getId() == null && group.getName() != null) {
+	    group = SelectGroupByNameSQL.execute(this, group.getName());
+	    if (group == null) {
+		throw new ItemNotFoundException(Group.class, gr.getName());
+	    }
+	}
+
+	new DeleteGroupSQL(this, group).execute();
+    }
 }

@@ -1,8 +1,11 @@
 package ro.gagarin.ws.userservice;
 
+import java.security.acl.Group;
+
 import ro.gagarin.AuthorizationManager;
 import ro.gagarin.UserDAO;
 import ro.gagarin.exceptions.ExceptionBase;
+import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.utils.FieldValidator;
@@ -27,15 +30,19 @@ public class DeleteGroupOP extends WebserviceOperation {
 
     @Override
     public void checkInput(Session session) throws ExceptionBase {
-	// TODO: implement combined groupname & id verification
-	FieldValidator.requireLongField("id", group);
+	if (group.getId() == null && group.getName() == null) {
+	    throw new FieldRequiredException("id or name", Group.class);
+	}
+	if (group.getId() != null)
+	    FieldValidator.requireLongField("id", group);
+	if (group.getName() != null)
+	    FieldValidator.requireStringField("name", group, true);
     }
 
     @Override
     public void execute() throws ExceptionBase {
-	// the session user must have LIST_GROUPS permission
+	// the session user must have DELETE_GROUP permission
 	authManager.requiresPermission(getSession(), PermissionEnum.DELETE_GROUP);
-
 	userManager.deleteGroup(this.group);
     }
 
@@ -49,5 +56,4 @@ public class DeleteGroupOP extends WebserviceOperation {
 	authManager = FACTORY.getAuthorizationManager(getSession());
 	userManager = FACTORY.getDAOManager().getUserDAO(getSession());
     }
-
 }

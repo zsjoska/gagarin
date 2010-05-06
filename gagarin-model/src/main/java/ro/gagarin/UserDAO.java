@@ -69,5 +69,5 @@ public interface UserDAO extends BaseDAO {
 
     List<Group> getGroups() throws OperationException;
 
-    void deleteGroup(Group group) throws OperationException, DataConstraintException;
+    void deleteGroup(Group group) throws OperationException, DataConstraintException, ItemNotFoundException;
 }

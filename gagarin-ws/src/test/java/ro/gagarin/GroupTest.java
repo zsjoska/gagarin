@@ -29,7 +29,7 @@ public class GroupTest {
     }
 
     @Test
-    public void testCreateRole() throws WSException, SessionNotFoundException, OperationException,
+    public void testCreateGroup() throws WSException, SessionNotFoundException, OperationException,
 	    PermissionDeniedException, LoginRequiredException {
 	UserService userService = new UserService();
 
@@ -41,6 +41,21 @@ public class GroupTest {
 	assertTrue(groupId > 0L);
 
 	group.setId(groupId);
+	userService.deleteGroup(session, group);
+    }
+
+    @Test
+    public void testDeleteGroupByName() throws WSException, SessionNotFoundException, OperationException,
+	    PermissionDeniedException, LoginRequiredException {
+	UserService userService = new UserService();
+
+	WSGroup group = new WSGroup();
+	group.setName(groupname);
+	group.setDescription(groupname + username);
+	Long groupId = userService.createGroup(session, group);
+	assertNotNull(groupId);
+	assertTrue(groupId > 0L);
+
 	userService.deleteGroup(session, group);
     }
 }

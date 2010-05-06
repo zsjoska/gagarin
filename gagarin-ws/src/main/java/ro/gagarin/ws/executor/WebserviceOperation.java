@@ -30,13 +30,13 @@ public abstract class WebserviceOperation {
 
     private final boolean requiresLogin;
 
-    public WebserviceOperation(String session, Class<?> opClass) {
-	this(true, session, opClass);
+    public WebserviceOperation(String sessionId, Class<?> opClass) {
+	this(true, sessionId, opClass);
     }
 
-    public WebserviceOperation(boolean requiresLogin, String session, Class<?> opClass) {
+    public WebserviceOperation(boolean requiresLogin, String sessionId, Class<?> opClass) {
 	this.requiresLogin = requiresLogin;
-	this.sessionString = session;
+	this.sessionString = sessionId;
 	this.opClass = opClass;
     }
 

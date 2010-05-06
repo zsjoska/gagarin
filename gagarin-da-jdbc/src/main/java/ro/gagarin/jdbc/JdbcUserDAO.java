@@ -16,6 +16,7 @@ import ro.gagarin.jdbc.group.CreateGroupSQL;
 import ro.gagarin.jdbc.group.DeleteGroupSQL;
 import ro.gagarin.jdbc.group.SelectGroupByNameSQL;
 import ro.gagarin.jdbc.group.SelectGroupsSQL;
+import ro.gagarin.jdbc.group.UpdateGroupSQL;
 import ro.gagarin.jdbc.objects.DBGroup;
 import ro.gagarin.jdbc.objects.DBUser;
 import ro.gagarin.jdbc.user.CreateUserSQL;
@@ -173,5 +174,10 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 	}
 
 	new DeleteGroupSQL(this, group).execute();
+    }
+
+    @Override
+    public void updateGroup(Group group) throws OperationException, DataConstraintException {
+	new UpdateGroupSQL(this, group).execute();
     }
 }

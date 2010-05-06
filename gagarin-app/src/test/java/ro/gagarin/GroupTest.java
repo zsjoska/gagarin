@@ -64,4 +64,47 @@ public class GroupTest {
 
     }
 
+    @Test
+    public void updateGroup() throws Exception {
+
+	UserDAO usrManager = FACTORY.getDAOManager().getUserDAO(session);
+
+	String name = groupname + "1";
+	ATestGroup group = new ATestGroup();
+	group.setName(name);
+	group.setDescription("test");
+	group.setId(usrManager.createGroup(group));
+
+	ATestGroup gr2 = new ATestGroup();
+	gr2.setId(group.getId());
+	gr2.setDescription("TEST");
+	usrManager.updateGroup(gr2);
+
+	Group groupByName = usrManager.getGroupByName(name);
+	assertEquals("TEST", groupByName.getDescription());
+	assertEquals(name, groupByName.getName());
+	assertEquals(group.getId(), groupByName.getId());
+
+	gr2 = new ATestGroup();
+	gr2.setId(group.getId());
+	gr2.setName(name + "update");
+	usrManager.updateGroup(gr2);
+
+	groupByName = usrManager.getGroupByName(name + "update");
+	assertEquals("TEST", groupByName.getDescription());
+	assertEquals(name + "update", groupByName.getName());
+	assertEquals(group.getId(), groupByName.getId());
+
+	gr2 = new ATestGroup();
+	gr2.setId(group.getId());
+	gr2.setDescription("TEST2");
+	gr2.setName(name + "update2");
+	usrManager.updateGroup(gr2);
+
+	groupByName = usrManager.getGroupByName(name + "update2");
+	assertEquals("TEST2", groupByName.getDescription());
+	assertEquals(name + "update2", groupByName.getName());
+	assertEquals(group.getId(), groupByName.getId());
+    }
+
 }

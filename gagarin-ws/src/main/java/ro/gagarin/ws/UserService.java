@@ -31,6 +31,7 @@ import ro.gagarin.ws.userservice.GetStatisticsOP;
 import ro.gagarin.ws.userservice.GetUsersOP;
 import ro.gagarin.ws.userservice.LogoutSessionOP;
 import ro.gagarin.ws.userservice.SetConfigEntryOP;
+import ro.gagarin.ws.userservice.UpdateGroupOP;
 
 // TODO: rename to AdminService
 @WebService
@@ -156,7 +157,6 @@ public class UserService {
 	return createGroup.getGroupId();
     }
 
-    // FIXME: Group -> WSGroup
     @WebMethod
     public List<WSGroup> getGroups(String sessionId) throws WSException {
 	GetGroupsOP getGroups = new GetGroupsOP(sessionId);
@@ -172,8 +172,8 @@ public class UserService {
 
     @WebMethod
     public void updateGroup(String sessionId, WSGroup group) throws WSException {
-	// UpdateGroupOP updateGroup = new UpdateGroupOP(sessionId, group);
-	// WebserviceExecutor.execute(updateGroup);
+	UpdateGroupOP updateGroup = new UpdateGroupOP(sessionId, group);
+	WebserviceExecutor.execute(updateGroup);
     }
 
     @WebMethod

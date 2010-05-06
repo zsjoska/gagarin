@@ -31,7 +31,6 @@ public class GroupTest {
     @Test
     public void testCreateGroup() throws WSException, SessionNotFoundException, OperationException,
 	    PermissionDeniedException, LoginRequiredException {
-	UserService userService = new UserService();
 
 	WSGroup group = new WSGroup();
 	group.setName(groupname);
@@ -47,7 +46,6 @@ public class GroupTest {
     @Test
     public void testDeleteGroupByName() throws WSException, SessionNotFoundException, OperationException,
 	    PermissionDeniedException, LoginRequiredException {
-	UserService userService = new UserService();
 
 	WSGroup group = new WSGroup();
 	group.setName(groupname);
@@ -58,4 +56,47 @@ public class GroupTest {
 
 	userService.deleteGroup(session, group);
     }
+
+    @Test
+    public void updateGroup() throws Exception {
+
+	String name = groupname + "1";
+	WSGroup group = new WSGroup();
+	group.setName(name);
+	group.setDescription("test");
+	group.setId(userService.createGroup(session, group));
+
+	WSGroup gr2 = new WSGroup();
+	gr2.setId(group.getId());
+	gr2.setDescription("TEST");
+	userService.updateGroup(session, gr2);
+
+	// TODO: continue implementation
+	// Group groupByName = usrManager.getGroupByName(name);
+	// assertEquals("TEST", groupByName.getDescription());
+	// assertEquals(name, groupByName.getName());
+	// assertEquals(group.getId(), groupByName.getId());
+	//
+	// gr2 = new WSGroup();
+	// gr2.setId(group.getId());
+	// gr2.setName(name + "update");
+	// usrManager.updateGroup(gr2);
+	//
+	// groupByName = usrManager.getGroupByName(name + "update");
+	// assertEquals("TEST", groupByName.getDescription());
+	// assertEquals(name + "update", groupByName.getName());
+	// assertEquals(group.getId(), groupByName.getId());
+	//
+	// gr2 = new WSGroup();
+	// gr2.setId(group.getId());
+	// gr2.setDescription("TEST2");
+	// gr2.setName(name + "update2");
+	// usrManager.updateGroup(gr2);
+	//
+	// groupByName = usrManager.getGroupByName(name + "update2");
+	// assertEquals("TEST2", groupByName.getDescription());
+	// assertEquals(name + "update2", groupByName.getName());
+	// assertEquals(group.getId(), groupByName.getId());
+    }
+
 }

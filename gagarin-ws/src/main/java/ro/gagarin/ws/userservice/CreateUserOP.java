@@ -48,6 +48,7 @@ public class CreateUserOP extends WebserviceOperation {
 	    throw new FieldRequiredException("ROLE", User.class);
 	}
 
+	// TODO: this logic shouldn't be here
 	UserRole role = user.getRole();
 	if (role.getId() == null && role.getRoleName() != null) {
 	    role = roleDAO.getRoleByName(role.getRoleName());

@@ -55,27 +55,108 @@ public interface UserDAO extends BaseDAO {
      */
     User getUserByUsername(String username) throws OperationException;
 
+    /**
+     * Returns a list of users with a specific role
+     * 
+     * @param role
+     *            the role
+     * @return a list of users
+     * @throws OperationException
+     */
     List<User> getUsersWithRole(UserRole role) throws OperationException;
 
+    /**
+     * Deletes a user
+     * 
+     * @param user
+     *            the user to be deleted
+     * @throws OperationException
+     * @throws DataConstraintException
+     */
     void deleteUser(User user) throws OperationException, DataConstraintException;
 
+    /**
+     * Queries a list with all users
+     * 
+     * @return list with all users
+     * @throws OperationException
+     */
     List<User> getAllUsers() throws OperationException;
 
     // TODO: this shouldn't be here
     void markRollback();
 
+    /**
+     * Creates a new group
+     * 
+     * @param group
+     *            the group to be created
+     * @return the <code>id</code> of the created group
+     * @throws DataConstraintException
+     * @throws OperationException
+     */
     Long createGroup(Group group) throws DataConstraintException, OperationException;
 
+    /**
+     * Returns a group by looking up the group name
+     * 
+     * @param groupname
+     *            the name of the group to be returned
+     * @return the group
+     * @throws OperationException
+     */
     Group getGroupByName(String groupname) throws OperationException;
 
+    /**
+     * Returns a list with all groups
+     * 
+     * @return the group list
+     * @throws OperationException
+     */
     List<Group> getGroups() throws OperationException;
 
+    /**
+     * Deletes a group
+     * 
+     * @param group
+     *            the group to be deleted
+     * @throws OperationException
+     * @throws DataConstraintException
+     * @throws ItemNotFoundException
+     */
     void deleteGroup(Group group) throws OperationException, DataConstraintException, ItemNotFoundException;
 
+    /**
+     * Updates a group with the <code>non-null</code> fields
+     * 
+     * @param group
+     *            the group to be updated identified by <code>id</code>
+     * @throws OperationException
+     * @throws DataConstraintException
+     */
     void updateGroup(Group group) throws OperationException, DataConstraintException;
 
+    /**
+     * Assigns a user to a group
+     * 
+     * @param user
+     *            the user to be assigned to the group
+     * @param group
+     *            the group
+     * @throws OperationException
+     * @throws ItemNotFoundException
+     * @throws DataConstraintException
+     */
     void assignUserToGroup(User user, Group group) throws OperationException, ItemNotFoundException,
 	    DataConstraintException;
 
+    /**
+     * Returns the list of users belonging to a specific group
+     * 
+     * @param group
+     * @return the list of users
+     * @throws OperationException
+     * @throws ItemNotFoundException
+     */
     List<User> getGroupUsers(Group group) throws OperationException, ItemNotFoundException;
 }

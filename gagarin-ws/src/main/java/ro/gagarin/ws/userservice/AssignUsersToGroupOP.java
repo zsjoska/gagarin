@@ -7,14 +7,11 @@ import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.Group;
 import ro.gagarin.user.PermissionEnum;
-import ro.gagarin.utils.Statistic;
 import ro.gagarin.ws.executor.WebserviceOperation;
 import ro.gagarin.ws.objects.WSGroup;
 import ro.gagarin.ws.objects.WSUser;
 
 public class AssignUsersToGroupOP extends WebserviceOperation {
-
-    private static final Statistic STAT = Statistic.getByName("ws.userserservice.deleteGroup");
 
     private final WSGroup group;
     private final WSUser[] users;
@@ -24,7 +21,7 @@ public class AssignUsersToGroupOP extends WebserviceOperation {
     private UserDAO userManager;
 
     public AssignUsersToGroupOP(String sessionId, WSGroup group, WSUser[] users) {
-	super(sessionId, AssignUsersToGroupOP.class);
+	super(sessionId);
 	this.group = group;
 	this.users = users;
     }
@@ -46,11 +43,6 @@ public class AssignUsersToGroupOP extends WebserviceOperation {
 	    userManager.assignUserToGroup(user, group);
 	}
 
-    }
-
-    @Override
-    public Statistic getStatistic() {
-	return STAT;
     }
 
     @Override

@@ -11,15 +11,11 @@ import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.utils.ConversionUtils;
 import ro.gagarin.utils.FieldValidator;
-import ro.gagarin.utils.Statistic;
 import ro.gagarin.ws.executor.WebserviceOperation;
 import ro.gagarin.ws.objects.WSUserPermission;
 import ro.gagarin.ws.objects.WSUserRole;
 
 public class CreateRoleWithPermissionsOP extends WebserviceOperation {
-
-    private static final Statistic STAT_CREATE_ROLE_WITH_PERMISSIONS = Statistic
-	    .getByName("ws.userserservice.createRoleWithPermissions");
 
     private final String roleName;
     private final WSUserPermission[] permissions;
@@ -28,7 +24,7 @@ public class CreateRoleWithPermissionsOP extends WebserviceOperation {
     private RoleDAO roleManager;
 
     public CreateRoleWithPermissionsOP(String sessionId, String roleName, WSUserPermission[] permissions) {
-	super(sessionId, CreateRoleWithPermissionsOP.class);
+	super(sessionId);
 	this.roleName = roleName;
 	this.permissions = permissions;
     }
@@ -60,11 +56,6 @@ public class CreateRoleWithPermissionsOP extends WebserviceOperation {
 	this.role = role;
 	getApplog().info("Role " + roleName + " created" + " with permissions " + Arrays.toString(permissions));
 
-    }
-
-    @Override
-    public Statistic getStatistic() {
-	return STAT_CREATE_ROLE_WITH_PERMISSIONS;
     }
 
     public WSUserRole getRole() {

@@ -13,15 +13,13 @@ import ro.gagarin.ws.objects.WSStatistic;
 import ro.gagarin.ws.util.WSConversionUtils;
 
 public class GetStatisticsOP extends WebserviceOperation {
-    private static final Statistic STAT = Statistic.getByName("ws.userserservice.getStatisticsList");
-
     private final String filter;
     private List<WSStatistic> statisticsList;
 
     private AuthorizationManager authManager;
 
     public GetStatisticsOP(String sessionId, String filter) {
-	super(sessionId, GetStatisticsOP.class);
+	super(sessionId);
 	this.filter = filter;
     }
 
@@ -38,11 +36,6 @@ public class GetStatisticsOP extends WebserviceOperation {
 	List<Statistic> statistics = StatisticsContainer.exportStatistics(filter);
 
 	this.statisticsList = WSConversionUtils.convertToWSStatisticList(statistics);
-    }
-
-    @Override
-    public Statistic getStatistic() {
-	return STAT;
     }
 
     public List<WSStatistic> getStatisticList() {

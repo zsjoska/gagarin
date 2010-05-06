@@ -6,13 +6,10 @@ import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.utils.FieldValidator;
-import ro.gagarin.utils.Statistic;
 import ro.gagarin.ws.executor.WebserviceOperation;
 import ro.gagarin.ws.objects.WSUserRole;
 
 public class DeleteRoleOP extends WebserviceOperation {
-
-    private static final Statistic STAT_DELETE_ROLE = Statistic.getByName("ws.userserservice.deleteRole");
 
     private final WSUserRole role;
 
@@ -22,7 +19,7 @@ public class DeleteRoleOP extends WebserviceOperation {
 
     // TODO: delete also by role name
     public DeleteRoleOP(String sessionId, WSUserRole role) {
-	super(sessionId, DeleteRoleOP.class);
+	super(sessionId);
 	this.role = role;
     }
 
@@ -40,11 +37,6 @@ public class DeleteRoleOP extends WebserviceOperation {
 
 	roleManager.deleteRole(role);
 	getApplog().info("Role " + role.getRoleName() + " deleted");
-    }
-
-    @Override
-    public Statistic getStatistic() {
-	return STAT_DELETE_ROLE;
     }
 
     @Override

@@ -13,7 +13,6 @@ import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.log.AppLog;
 import ro.gagarin.session.Session;
 import ro.gagarin.utils.FieldValidator;
-import ro.gagarin.utils.Statistic;
 
 public abstract class WebserviceOperation {
 
@@ -26,27 +25,24 @@ public abstract class WebserviceOperation {
 
     private AppLog applog;
 
-    private final Class<?> opClass;
-
     private final boolean requiresLogin;
 
-    public WebserviceOperation(String sessionId, Class<?> opClass) {
-	this(true, sessionId, opClass);
+    public WebserviceOperation(String sessionId) {
+	this(true, sessionId);
     }
 
-    public WebserviceOperation(boolean requiresLogin, String sessionId, Class<?> opClass) {
+    public WebserviceOperation(boolean requiresLogin, String sessionId) {
 	this.requiresLogin = requiresLogin;
 	this.sessionString = sessionId;
-	this.opClass = opClass;
     }
 
     public void performOperation() throws ExceptionBase {
 	prepareSession();
 	checkInput(getSession());
 	if (applog != null) {
-	    applog.debug(opClass.getSimpleName() + " " + this);
+	    applog.debug(this.getClass().getSimpleName() + " " + this);
 	} else {
-	    LOG.debug(opClass.getSimpleName() + " " + this);
+	    LOG.debug(this.getClass().getSimpleName() + " " + this);
 	}
 	prepareManagers(getSession());
 	prepare();
@@ -56,8 +52,6 @@ public abstract class WebserviceOperation {
 
     // TODO: make protected
     public abstract void execute() throws ExceptionBase;
-
-    public abstract Statistic getStatistic();
 
     public abstract void prepareManagers(Session session) throws ExceptionBase;
 
@@ -79,7 +73,7 @@ public abstract class WebserviceOperation {
 	}
 	SessionManager sessionManager = FACTORY.getSessionManager();
 	this.session = sessionManager.acquireSession(this.getSessionString());
-	this.applog = FACTORY.getLogManager(session, opClass);
+	this.applog = FACTORY.getLogManager(session, this.getClass());
 	if (requiresLogin) {
 	    FACTORY.getAuthorizationManager(session).requireLogin(session);
 	}

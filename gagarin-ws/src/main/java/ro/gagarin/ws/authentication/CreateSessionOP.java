@@ -9,12 +9,9 @@ import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.log.AppLog;
 import ro.gagarin.session.Session;
 import ro.gagarin.utils.FieldValidator;
-import ro.gagarin.utils.Statistic;
 import ro.gagarin.ws.executor.WebserviceOperation;
 
 public class CreateSessionOP extends WebserviceOperation {
-
-    private static final Statistic STAT_CREATE_SESSION = Statistic.getByName("ws.auth.createSession");
 
     private String language;
     private String reason;
@@ -23,7 +20,7 @@ public class CreateSessionOP extends WebserviceOperation {
     private SessionManager sessionManager;
 
     public CreateSessionOP(String language, String reason) {
-	super(false, null, CreateSessionOP.class);
+	super(false, null);
 	this.language = language;
 	this.reason = reason;
     }
@@ -46,11 +43,6 @@ public class CreateSessionOP extends WebserviceOperation {
 	AppLog log = FACTORY.getLogManager(session, CreateSessionOP.class);
 	log.info("Session created:" + session.getSessionString() + "; reason:" + session.getReason() + "; language:"
 		+ session.getLanguage());
-    }
-
-    @Override
-    public Statistic getStatistic() {
-	return STAT_CREATE_SESSION;
     }
 
     public String getSessionString() {

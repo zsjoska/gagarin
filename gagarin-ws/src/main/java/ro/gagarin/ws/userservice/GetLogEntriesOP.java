@@ -9,15 +9,12 @@ import ro.gagarin.log.LogEntry;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.utils.FieldValidator;
-import ro.gagarin.utils.Statistic;
 import ro.gagarin.ws.UserService;
 import ro.gagarin.ws.executor.WebserviceOperation;
 import ro.gagarin.ws.objects.WSLogEntry;
 import ro.gagarin.ws.util.WSConversionUtils;
 
 public class GetLogEntriesOP extends WebserviceOperation {
-
-    private static final Statistic STAT_GET_LOG_ENTRIES = Statistic.getByName("ws.userserservice.getLogEntries");
 
     private final String username;
     private List<WSLogEntry> configList;
@@ -27,7 +24,7 @@ public class GetLogEntriesOP extends WebserviceOperation {
     private AppLog logMgr;
 
     public GetLogEntriesOP(String sessionId, String user) {
-	super(sessionId, GetLogEntriesOP.class);
+	super(sessionId);
 	this.username = user;
     }
 
@@ -46,11 +43,6 @@ public class GetLogEntriesOP extends WebserviceOperation {
 	List<LogEntry> logValues = logMgr.getLogEntries(username);
 	List<WSLogEntry> wsConfigList = WSConversionUtils.toWSLogList(logValues);
 	this.configList = wsConfigList;
-    }
-
-    @Override
-    public Statistic getStatistic() {
-	return STAT_GET_LOG_ENTRIES;
     }
 
     public List<WSLogEntry> getLogEntries() {

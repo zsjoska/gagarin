@@ -9,16 +9,12 @@ import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.UserPermission;
-import ro.gagarin.utils.Statistic;
 import ro.gagarin.ws.executor.WebserviceOperation;
 import ro.gagarin.ws.objects.WSUserPermission;
 import ro.gagarin.ws.objects.WSUserRole;
 import ro.gagarin.ws.util.WSConversionUtils;
 
 public class GetRolePermissionstOP extends WebserviceOperation {
-
-    private static final Statistic STAT_GET_ROLE_PERMISSIONLIST = Statistic
-	    .getByName("ws.userserservice.getRolePermissionstOP");
 
     private final WSUserRole wsUserRole;
 
@@ -29,7 +25,7 @@ public class GetRolePermissionstOP extends WebserviceOperation {
     private AuthorizationManager authManager;
 
     public GetRolePermissionstOP(String sessionId, WSUserRole wsUserRole) {
-	super(sessionId, GetRolePermissionstOP.class);
+	super(sessionId);
 	this.wsUserRole = wsUserRole;
     }
 
@@ -47,11 +43,6 @@ public class GetRolePermissionstOP extends WebserviceOperation {
 
 	Set<UserPermission> permissions = roleManager.getRolePermissions(wsUserRole);
 	this.permList = WSConversionUtils.convertToWSPermissionList(permissions);
-    }
-
-    @Override
-    public Statistic getStatistic() {
-	return STAT_GET_ROLE_PERMISSIONLIST;
     }
 
     public List<WSUserPermission> getRolePermissions() {

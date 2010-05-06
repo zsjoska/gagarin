@@ -9,19 +9,17 @@ import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.UserRole;
-import ro.gagarin.utils.Statistic;
 import ro.gagarin.ws.executor.WebserviceOperation;
 import ro.gagarin.ws.objects.WSUserRole;
 
 public class GetRoleListOP extends WebserviceOperation {
 
-    private static final Statistic STAT_CREATE_USER = Statistic.getByName("ws.userserservice.getRoleList");
     private List<WSUserRole> roles = null;
     private AuthorizationManager authorizationManager;
     private RoleDAO roleManager;
 
     public GetRoleListOP(String sessionId) {
-	super(sessionId, GetRoleListOP.class);
+	super(sessionId);
     }
 
     @Override
@@ -41,11 +39,6 @@ public class GetRoleListOP extends WebserviceOperation {
 	    convRoles.add(new WSUserRole(userRole));
 	}
 	this.roles = convRoles;
-    }
-
-    @Override
-    public Statistic getStatistic() {
-	return STAT_CREATE_USER;
     }
 
     public List<WSUserRole> getRoleList() {

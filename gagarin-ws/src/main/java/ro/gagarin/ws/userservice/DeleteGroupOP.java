@@ -9,13 +9,10 @@ import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.utils.FieldValidator;
-import ro.gagarin.utils.Statistic;
 import ro.gagarin.ws.executor.WebserviceOperation;
 import ro.gagarin.ws.objects.WSGroup;
 
 public class DeleteGroupOP extends WebserviceOperation {
-
-    private static final Statistic STAT = Statistic.getByName("ws.userserservice.deleteGroup");
 
     private final WSGroup group;
 
@@ -24,7 +21,7 @@ public class DeleteGroupOP extends WebserviceOperation {
     private UserDAO userManager;
 
     public DeleteGroupOP(String sessionId, WSGroup group) {
-	super(sessionId, DeleteGroupOP.class);
+	super(sessionId);
 	this.group = group;
     }
 
@@ -44,11 +41,6 @@ public class DeleteGroupOP extends WebserviceOperation {
 	// the session user must have DELETE_GROUP permission
 	authManager.requiresPermission(getSession(), PermissionEnum.DELETE_GROUP);
 	userManager.deleteGroup(this.group);
-    }
-
-    @Override
-    public Statistic getStatistic() {
-	return STAT;
     }
 
     @Override

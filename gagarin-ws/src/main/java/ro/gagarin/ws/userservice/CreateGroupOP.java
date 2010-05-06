@@ -6,13 +6,10 @@ import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.utils.FieldValidator;
-import ro.gagarin.utils.Statistic;
 import ro.gagarin.ws.executor.WebserviceOperation;
 import ro.gagarin.ws.objects.WSGroup;
 
 public class CreateGroupOP extends WebserviceOperation {
-
-    private static final Statistic STAT_CREATE_GROUP = Statistic.getByName("ws.userserservice.createGroup");
 
     private AuthorizationManager authManager;
     private UserDAO userManager;
@@ -22,7 +19,7 @@ public class CreateGroupOP extends WebserviceOperation {
     private Long groupId = null;
 
     public CreateGroupOP(String sessionId, WSGroup group) {
-	super(sessionId, CreateGroupOP.class);
+	super(sessionId);
 	this.group = group;
     }
 
@@ -33,11 +30,6 @@ public class CreateGroupOP extends WebserviceOperation {
 
 	this.groupId = userManager.createGroup(group);
 	getApplog().info("Created User " + group.getId() + ":" + group.getName());
-    }
-
-    @Override
-    public Statistic getStatistic() {
-	return STAT_CREATE_GROUP;
     }
 
     @Override

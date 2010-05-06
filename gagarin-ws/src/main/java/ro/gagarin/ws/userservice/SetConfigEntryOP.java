@@ -6,18 +6,16 @@ import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.utils.FieldValidator;
-import ro.gagarin.utils.Statistic;
 import ro.gagarin.ws.executor.WebserviceOperation;
 import ro.gagarin.ws.objects.WSConfig;
 
 public class SetConfigEntryOP extends WebserviceOperation {
 
-    private static final Statistic STAT_SET_CONFIG_ENTRY = Statistic.getByName("ws.userserservice.setConfigEntry");
     private final WSConfig wsConfig;
     private AuthorizationManager authManager;
 
     public SetConfigEntryOP(String sessionId, WSConfig wsConfig) {
-	super(sessionId, SetConfigEntryOP.class);
+	super(sessionId);
 	this.wsConfig = wsConfig;
     }
 
@@ -35,11 +33,6 @@ public class SetConfigEntryOP extends WebserviceOperation {
 	cfgMgr.setConfigValue(getSession(), wsConfig);
 	getApplog().info("Config update:" + wsConfig);
 
-    }
-
-    @Override
-    public Statistic getStatistic() {
-	return STAT_SET_CONFIG_ENTRY;
     }
 
     @Override

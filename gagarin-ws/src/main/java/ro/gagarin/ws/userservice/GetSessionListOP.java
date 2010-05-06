@@ -7,14 +7,11 @@ import ro.gagarin.SessionManager;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
-import ro.gagarin.utils.Statistic;
 import ro.gagarin.ws.executor.WebserviceOperation;
 import ro.gagarin.ws.objects.WSExportedSession;
 import ro.gagarin.ws.util.WSConversionUtils;
 
 public class GetSessionListOP extends WebserviceOperation {
-
-    private static final Statistic STAT_GET_SESSION_LIST = Statistic.getByName("ws.userserservice.getSessionList");
 
     private List<WSExportedSession> sessionList;
 
@@ -23,7 +20,7 @@ public class GetSessionListOP extends WebserviceOperation {
     private SessionManager sessionManager;
 
     public GetSessionListOP(String sessionId) {
-	super(sessionId, GetSessionListOP.class);
+	super(sessionId);
     }
 
     @Override
@@ -39,11 +36,6 @@ public class GetSessionListOP extends WebserviceOperation {
 	List<Session> sessions = sessionManager.getSessionList();
 
 	this.sessionList = WSConversionUtils.convertToSessionList(sessions);
-    }
-
-    @Override
-    public Statistic getStatistic() {
-	return STAT_GET_SESSION_LIST;
     }
 
     public List<WSExportedSession> getSessionList() {

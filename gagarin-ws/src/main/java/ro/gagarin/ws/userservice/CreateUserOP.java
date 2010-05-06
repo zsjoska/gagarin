@@ -11,13 +11,10 @@ import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserRole;
 import ro.gagarin.utils.FieldValidator;
-import ro.gagarin.utils.Statistic;
 import ro.gagarin.ws.executor.WebserviceOperation;
 import ro.gagarin.ws.objects.WSUser;
 
 public class CreateUserOP extends WebserviceOperation {
-
-    private static final Statistic STAT_CREATE_USER = Statistic.getByName("ws.userserservice.createUser");
 
     private final WSUser user;
     private long userId = -1;
@@ -26,7 +23,7 @@ public class CreateUserOP extends WebserviceOperation {
     private RoleDAO roleDAO;
 
     public CreateUserOP(String sessionId, WSUser user) {
-	super(sessionId, CreateUserOP.class);
+	super(sessionId);
 	this.user = user;
     }
 
@@ -66,11 +63,6 @@ public class CreateUserOP extends WebserviceOperation {
 
 	this.setUserId(userManager.createUser(user));
 	getApplog().info("Created User " + user.getId() + ":" + user.getUsername() + "; session:" + getSessionString());
-    }
-
-    @Override
-    public Statistic getStatistic() {
-	return STAT_CREATE_USER;
     }
 
     public void setUserId(long userId) {

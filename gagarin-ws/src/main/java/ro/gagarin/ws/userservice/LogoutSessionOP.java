@@ -6,12 +6,9 @@ import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.utils.FieldValidator;
-import ro.gagarin.utils.Statistic;
 import ro.gagarin.ws.executor.WebserviceOperation;
 
 public class LogoutSessionOP extends WebserviceOperation {
-    private static final Statistic STAT_LOGOUT_SESSION = Statistic.getByName("ws.userserservice.logoutSession");
-
     private final String otherSessionId;
 
     private AuthorizationManager authManager;
@@ -19,7 +16,7 @@ public class LogoutSessionOP extends WebserviceOperation {
     private SessionManager sessionManager;
 
     public LogoutSessionOP(String sessionId, String otherSessionId) {
-	super(sessionId, LogoutSessionOP.class);
+	super(sessionId);
 	this.otherSessionId = otherSessionId;
     }
 
@@ -37,11 +34,6 @@ public class LogoutSessionOP extends WebserviceOperation {
 	sessionManager.logout(otherSessionId);
 	getApplog().info("LogoutSession " + otherSessionId);
 
-    }
-
-    @Override
-    public Statistic getStatistic() {
-	return STAT_LOGOUT_SESSION;
     }
 
     @Override

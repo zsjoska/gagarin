@@ -10,13 +10,11 @@ import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.User;
 import ro.gagarin.utils.FieldValidator;
-import ro.gagarin.utils.Statistic;
 import ro.gagarin.ws.executor.WebserviceOperation;
 import ro.gagarin.ws.objects.WSUser;
 
 public class LoginOP extends WebserviceOperation {
 
-    private static final Statistic STAT_LOGIN = Statistic.getByName("ws.auth.login");
     private WSUser loginUser = null;
     private String username;
     private String password;
@@ -24,7 +22,7 @@ public class LoginOP extends WebserviceOperation {
     private AuthenticationManager authenticationManager;
 
     public LoginOP(String sessionID, String username, String password, String[] extra) {
-	super(false, sessionID, LoginOP.class);
+	super(false, sessionID);
 	this.username = username;
 	this.password = password;
 	this.extra = extra;
@@ -40,11 +38,6 @@ public class LoginOP extends WebserviceOperation {
 	User user = authenticationManager.userLogin(username, password, extra);
 	this.loginUser = new WSUser(user);
 	getApplog().info("Login completed for user " + this.username);
-    }
-
-    @Override
-    public Statistic getStatistic() {
-	return STAT_LOGIN;
     }
 
     public WSUser getLoginUser() {

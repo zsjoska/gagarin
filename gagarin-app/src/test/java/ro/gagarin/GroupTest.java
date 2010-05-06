@@ -133,5 +133,6 @@ public class GroupTest {
 	User aUser = users.get(0);
 	assertEquals(user.getId(), aUser.getId());
 	assertEquals(user.getUsername(), aUser.getUsername());
+
     }
 }

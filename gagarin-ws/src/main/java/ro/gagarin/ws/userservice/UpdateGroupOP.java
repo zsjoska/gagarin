@@ -9,13 +9,10 @@ import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.utils.FieldValidator;
-import ro.gagarin.utils.Statistic;
 import ro.gagarin.ws.executor.WebserviceOperation;
 import ro.gagarin.ws.objects.WSGroup;
 
 public class UpdateGroupOP extends WebserviceOperation {
-
-    private static final Statistic STAT = Statistic.getByName("ws.userserservice.deleteGroup");
 
     private final WSGroup group;
 
@@ -24,7 +21,7 @@ public class UpdateGroupOP extends WebserviceOperation {
     private UserDAO userManager;
 
     public UpdateGroupOP(String sessionId, WSGroup group) {
-	super(sessionId, UpdateGroupOP.class);
+	super(sessionId);
 	this.group = group;
     }
 
@@ -49,11 +46,6 @@ public class UpdateGroupOP extends WebserviceOperation {
     public void execute() throws ExceptionBase {
 	authManager.requiresPermission(getSession(), PermissionEnum.UPDATE_GROUP);
 	userManager.updateGroup(this.group);
-    }
-
-    @Override
-    public Statistic getStatistic() {
-	return STAT;
     }
 
     @Override

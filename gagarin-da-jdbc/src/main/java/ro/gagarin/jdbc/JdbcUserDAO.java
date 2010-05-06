@@ -12,8 +12,10 @@ import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.OperationException;
+import ro.gagarin.jdbc.group.AssignUserToGroupSQL;
 import ro.gagarin.jdbc.group.CreateGroupSQL;
 import ro.gagarin.jdbc.group.DeleteGroupSQL;
+import ro.gagarin.jdbc.group.GetGroupUsersSQL;
 import ro.gagarin.jdbc.group.SelectGroupByNameSQL;
 import ro.gagarin.jdbc.group.SelectGroupsSQL;
 import ro.gagarin.jdbc.group.UpdateGroupSQL;
@@ -179,5 +181,42 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
     @Override
     public void updateGroup(Group group) throws OperationException, DataConstraintException {
 	new UpdateGroupSQL(this, group).execute();
+    }
+
+    @Override
+    public void assignUserToGroup(User user, Group group) throws OperationException, ItemNotFoundException,
+	    DataConstraintException {
+	Group gr = group;
+	User usr = user;
+
+	if (gr.getId() == null && gr.getName() != null) {
+	    gr = SelectGroupByNameSQL.execute(this, gr.getName());
+	    if (gr == null) {
+		throw new ItemNotFoundException(Group.class, group.getName());
+	    }
+	}
+
+	if (usr.getId() == null && usr.getUsername() != null) {
+	    usr = SelectUserByUsernameSQL.execute(this, usr.getUsername());
+	    if (usr == null)
+		throw new ItemNotFoundException(User.class, user.getName());
+	}
+
+	new AssignUserToGroupSQL(this, usr, gr).execute();
+    }
+
+    @Override
+    public List<User> getGroupUsers(Group group) throws OperationException, ItemNotFoundException {
+
+	// TODO: make a utility
+	Group gr = group;
+	if (gr.getId() == null && gr.getName() != null) {
+	    gr = SelectGroupByNameSQL.execute(this, gr.getName());
+	    if (gr == null) {
+		throw new ItemNotFoundException(Group.class, group.getName());
+	    }
+	}
+
+	return GetGroupUsersSQL.execute(this, gr);
     }
 }

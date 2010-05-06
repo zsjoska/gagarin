@@ -49,6 +49,16 @@ CREATE TABLE Groups
 )
 --END
 
+--CHECK: UserGroupAssignment
+SELECT * FROM UserGroupAssignment
+--CREATE:
+CREATE TABLE UserGroupAssignment 
+(
+	user_id bigint  NOT NULL, 
+	group_id bigint  NOT NULL
+)
+--END
+
 
 --CHECK: UserRoles
 SELECT * FROM UserRoles

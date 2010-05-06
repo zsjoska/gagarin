@@ -9,6 +9,7 @@ import ro.gagarin.jdbc.UpdateQuery;
 import ro.gagarin.user.User;
 import ro.gagarin.utils.FieldValidator;
 
+// TODO: delete group assignments
 public class DeleteUserSQL extends UpdateQuery {
 
     private final User user;

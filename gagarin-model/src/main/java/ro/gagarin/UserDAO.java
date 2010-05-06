@@ -61,6 +61,7 @@ public interface UserDAO extends BaseDAO {
 
     List<User> getAllUsers() throws OperationException;
 
+    // TODO: this shouldn't be here
     void markRollback();
 
     Long createGroup(Group group) throws DataConstraintException, OperationException;
@@ -72,4 +73,9 @@ public interface UserDAO extends BaseDAO {
     void deleteGroup(Group group) throws OperationException, DataConstraintException, ItemNotFoundException;
 
     void updateGroup(Group group) throws OperationException, DataConstraintException;
+
+    void assignUserToGroup(User user, Group group) throws OperationException, ItemNotFoundException,
+	    DataConstraintException;
+
+    List<User> getGroupUsers(Group group) throws OperationException, ItemNotFoundException;
 }

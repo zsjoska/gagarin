@@ -15,6 +15,7 @@ import ro.gagarin.ws.objects.WSStatistic;
 import ro.gagarin.ws.objects.WSUser;
 import ro.gagarin.ws.objects.WSUserPermission;
 import ro.gagarin.ws.objects.WSUserRole;
+import ro.gagarin.ws.userservice.AssignUsersToGroupOP;
 import ro.gagarin.ws.userservice.CreateGroupOP;
 import ro.gagarin.ws.userservice.CreateRoleWithPermissionsOP;
 import ro.gagarin.ws.userservice.CreateUserOP;
@@ -193,10 +194,8 @@ public class UserService {
     }
 
     @WebMethod
-    public List<WSUser> assignUsersToGroup(String sessionId, WSGroup group, WSUser[] users) throws WSException {
-	// GetGroupUsersOP getGroupUsers = new GetGroupUsersOP(sessionId);
-	// WebserviceExecutor.execute(getGroupUsers);
-	// return getGroupUsers.getGroupUsers();
-	return null;
+    public void assignUsersToGroup(String sessionId, WSGroup group, WSUser[] users) throws WSException {
+	AssignUsersToGroupOP assignUsersToGroup = new AssignUsersToGroupOP(sessionId, group, users);
+	WebserviceExecutor.execute(assignUsersToGroup);
     }
 }

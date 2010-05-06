@@ -3,14 +3,18 @@ package ro.gagarin.testutil;
 import ro.gagarin.BasicManagerFactory;
 import ro.gagarin.ConfigurationManager;
 import ro.gagarin.ManagerFactory;
+import ro.gagarin.RoleDAO;
 import ro.gagarin.application.objects.AppUser;
 import ro.gagarin.config.Config;
 import ro.gagarin.config.DBConfigManager;
+import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.session.Session;
+import ro.gagarin.user.UserRole;
 
 public class TUtil {
     private static final ManagerFactory FACTORY = BasicManagerFactory.getInstance();
+    private static final ConfigurationManager CFG_MANAGER = FACTORY.getConfigurationManager();
 
     public static Session createTestSession() {
 	Session session = FACTORY.getSessionManager().createSession(null, "TEST", FACTORY);
@@ -44,6 +48,14 @@ public class TUtil {
 	DBConfigManager dbCfgMgr = DBConfigManager.getInstance();
 	long chk = dbCfgMgr.getLong(Config.DB_CONFIG_CHECK_PERIOD);
 	dbCfgMgr.configChanged(Config.DB_CONFIG_CHECK_PERIOD, "" + chk);
+    }
+
+    public static UserRole getAdminRole() throws ExceptionBase {
+	Session session = createTestSession();
+	RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
+	UserRole role = roleManager.getRoleByName(CFG_MANAGER.getString(Config.ADMIN_ROLE_NAME));
+	FACTORY.releaseSession(session);
+	return role;
     }
 
 }

@@ -13,6 +13,7 @@ public class UpdateGroupSQL extends UpdateQuery {
 
     private final Group group;
 
+    // TODO: implement a way to check that we updated the group (result==1)
     public UpdateGroupSQL(BaseJdbcDAO dao, Group group) {
 	super(dao, Group.class);
 	this.group = group;

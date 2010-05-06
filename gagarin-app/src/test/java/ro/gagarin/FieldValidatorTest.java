@@ -3,7 +3,6 @@ package ro.gagarin;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import org.apache.log4j.Logger;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -13,8 +12,6 @@ import ro.gagarin.testobjects.ATestUser;
 import ro.gagarin.utils.FieldValidator;
 
 public class FieldValidatorTest {
-
-    private static final transient Logger LOG = Logger.getLogger(FieldValidatorTest.class);
 
     @BeforeClass
     public static void startup() {

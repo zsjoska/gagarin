@@ -7,30 +7,34 @@ import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.jdbc.BaseJdbcDAO;
 import ro.gagarin.jdbc.UpdateQuery;
 import ro.gagarin.user.Group;
+import ro.gagarin.user.User;
 import ro.gagarin.utils.FieldValidator;
 
-// TODO: delete user assignments
-public class DeleteGroupSQL extends UpdateQuery {
+public class AssignUserToGroupSQL extends UpdateQuery {
 
+    private final User user;
     private final Group group;
 
-    public DeleteGroupSQL(BaseJdbcDAO dao, Group group) {
-	super(dao, Group.class);
+    public AssignUserToGroupSQL(BaseJdbcDAO dao, User user, Group group) {
+	super(dao, User.class);
+	this.user = user;
 	this.group = group;
     }
 
     @Override
     protected void checkInput() throws FieldRequiredException {
+	FieldValidator.requireLongField("id", user);
 	FieldValidator.requireLongField("id", group);
     }
 
     @Override
     protected void fillParameters(PreparedStatement stmnt) throws SQLException {
-	stmnt.setLong(1, group.getId());
+	stmnt.setLong(1, user.getId());
+	stmnt.setLong(2, group.getId());
     }
 
     @Override
     protected String getSQL() {
-	return "DELETE from Groups where id = ?";
+	return "INSERT INTO UserGroupAssignment (user_id, group_id) VALUES (?,?)";
     }
 }

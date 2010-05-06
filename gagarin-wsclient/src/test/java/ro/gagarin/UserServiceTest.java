@@ -16,7 +16,7 @@ public class UserServiceTest {
     public static void setUp() throws WSException_Exception {
 	AuthenticationService service = new AuthenticationService();
 	api = service.getAuthenticationPort();
-	session = api.createSession(null, null);
+	session = api.createSession(null, "TEST");
 	api.login(session, "admin", "password", null);
     }
 

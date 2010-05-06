@@ -11,7 +11,7 @@ public class AuthServiceTest {
     public void testSessionCreateLoginLogout() throws WSException_Exception {
 	AuthenticationService service = new AuthenticationService();
 	Authentication api = service.getAuthenticationPort();
-	String session = api.createSession(null, null);
+	String session = api.createSession(null, "TEST");
 	api.login(session, "admin", "password", null);
 	api.logout(session);
     }

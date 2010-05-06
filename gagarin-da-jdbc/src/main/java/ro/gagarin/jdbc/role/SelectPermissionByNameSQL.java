@@ -10,6 +10,7 @@ import ro.gagarin.jdbc.BaseJdbcDAO;
 import ro.gagarin.jdbc.SelectQuery;
 import ro.gagarin.jdbc.objects.DBUserPermission;
 import ro.gagarin.user.UserPermission;
+import ro.gagarin.utils.FieldValidator;
 
 public class SelectPermissionByNameSQL extends SelectQuery {
 
@@ -48,6 +49,6 @@ public class SelectPermissionByNameSQL extends SelectQuery {
 
     @Override
     protected void checkInput() throws FieldRequiredException {
-	// TODO: validate input
+	FieldValidator.checkStringValue(this.permissionName, "permissionName", 50);
     }
 }

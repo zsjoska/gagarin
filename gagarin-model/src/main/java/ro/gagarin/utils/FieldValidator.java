@@ -112,11 +112,20 @@ public class FieldValidator {
     }
 
     public static String checkStringValue(String str, String name, int maxLength) throws FieldRequiredException {
+	return checkStringValue(str, name, maxLength, true);
+    }
+
+    public static String checkStringValue(String str, String name, int maxLength, boolean trim)
+	    throws FieldRequiredException {
 
 	// TODO: fix this Object.class, maybe with a permisible constructor
 	if (str == null)
 	    throw new FieldRequiredException(name, Object.class);
-	String newStr = str.trim();
+	String newStr;
+	if (trim)
+	    newStr = str.trim();
+	else
+	    newStr = str;
 
 	if (newStr.length() == 0)
 	    throw new FieldRequiredException(name, Object.class);

@@ -14,6 +14,7 @@ import ro.gagarin.jdbc.SelectQuery;
 import ro.gagarin.jdbc.objects.DBUser;
 import ro.gagarin.jdbc.objects.DBUserRole;
 import ro.gagarin.user.User;
+import ro.gagarin.utils.FieldValidator;
 
 /**
  * @author zsido
@@ -22,7 +23,7 @@ import ro.gagarin.user.User;
 public class SelectUserByUsernamePasswordSQL extends SelectQuery {
 
     private DBUser user;
-    private final String username;
+    private String username;
     private final String password;
 
     public SelectUserByUsernamePasswordSQL(BaseJdbcDAO dao, String username, String password) {
@@ -72,7 +73,8 @@ public class SelectUserByUsernamePasswordSQL extends SelectQuery {
 
     @Override
     protected void checkInput() throws FieldRequiredException {
-	// TODO: check input
+	this.username = FieldValidator.checkStringValue(username, "username", 50);
+	FieldValidator.checkStringValue(password, "password", 50, false);
     }
 
 }

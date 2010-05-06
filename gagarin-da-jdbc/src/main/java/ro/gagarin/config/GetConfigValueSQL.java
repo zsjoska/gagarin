@@ -8,6 +8,7 @@ import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.BaseJdbcDAO;
 import ro.gagarin.jdbc.SelectQuery;
+import ro.gagarin.utils.FieldValidator;
 
 public class GetConfigValueSQL extends SelectQuery {
 
@@ -45,6 +46,6 @@ public class GetConfigValueSQL extends SelectQuery {
 
     @Override
     protected void checkInput() throws FieldRequiredException {
-	// TODO check input
+	FieldValidator.checkStringValue(this.config, "config", 100);
     }
 }

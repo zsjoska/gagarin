@@ -10,6 +10,7 @@ import ro.gagarin.jdbc.BaseJdbcDAO;
 import ro.gagarin.jdbc.SelectQuery;
 import ro.gagarin.jdbc.objects.DBGroup;
 import ro.gagarin.user.Group;
+import ro.gagarin.utils.FieldValidator;
 
 public class SelectGroupByNameSQL extends SelectQuery {
 
@@ -51,7 +52,7 @@ public class SelectGroupByNameSQL extends SelectQuery {
 
     @Override
     protected void checkInput() throws FieldRequiredException {
-	// TODO check input
+	FieldValidator.checkStringValue(this.groupname, "groupname", 50);
     }
 
 }

@@ -6,17 +6,18 @@ import ro.gagarin.AuthorizationManager;
 import ro.gagarin.UserDAO;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.session.Session;
-import ro.gagarin.user.Group;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.utils.Statistic;
 import ro.gagarin.ws.executor.WebserviceOperation;
+import ro.gagarin.ws.objects.WSGroup;
+import ro.gagarin.ws.util.WSConversionUtils;
 
 public class GetGroupsOP extends WebserviceOperation {
     private static final Statistic STAT = Statistic.getByName("ws.userserservice.getGroups");
 
     private AuthorizationManager authManager;
     private UserDAO userManager;
-    private List<Group> groups;
+    private List<WSGroup> groups;
 
     public GetGroupsOP(String sessionId) {
 	super(sessionId, GetGroupsOP.class);
@@ -32,7 +33,7 @@ public class GetGroupsOP extends WebserviceOperation {
 	// the session user must have LIST_GROUPS permission
 	authManager.requiresPermission(getSession(), PermissionEnum.LIST_GROUPS);
 
-	groups = userManager.getGroups();
+	groups = WSConversionUtils.convertToGroupList(userManager.getGroups());
     }
 
     @Override
@@ -46,7 +47,7 @@ public class GetGroupsOP extends WebserviceOperation {
 	userManager = FACTORY.getDAOManager().getUserDAO(getSession());
     }
 
-    public List<Group> getGroups() {
+    public List<WSGroup> getGroups() {
 	return this.groups;
     }
 

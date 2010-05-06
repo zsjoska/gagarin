@@ -8,6 +8,7 @@ import ro.gagarin.log.AppLog;
 import ro.gagarin.log.LogEntry;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
+import ro.gagarin.utils.FieldValidator;
 import ro.gagarin.utils.Statistic;
 import ro.gagarin.ws.UserService;
 import ro.gagarin.ws.executor.WebserviceOperation;
@@ -63,6 +64,9 @@ public class GetLogEntriesOP extends WebserviceOperation {
 
     @Override
     public void checkInput(Session session) throws ExceptionBase {
-	// TODO: implement custom verification for username
+	// if the username is null, all logs are retrieved
+	if (username != null) {
+	    FieldValidator.checkStringValue(username, "username", 50);
+	}
     }
 }

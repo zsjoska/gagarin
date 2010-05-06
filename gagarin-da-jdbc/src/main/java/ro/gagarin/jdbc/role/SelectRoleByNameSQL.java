@@ -10,6 +10,7 @@ import ro.gagarin.jdbc.BaseJdbcDAO;
 import ro.gagarin.jdbc.SelectQuery;
 import ro.gagarin.jdbc.objects.DBUserRole;
 import ro.gagarin.user.UserRole;
+import ro.gagarin.utils.FieldValidator;
 
 public class SelectRoleByNameSQL extends SelectQuery {
 
@@ -48,7 +49,7 @@ public class SelectRoleByNameSQL extends SelectQuery {
 
     @Override
     protected void checkInput() throws FieldRequiredException {
-	// TODO check input
+	FieldValidator.checkStringValue(this.roleName, "roleName", 50);
     }
 
 }

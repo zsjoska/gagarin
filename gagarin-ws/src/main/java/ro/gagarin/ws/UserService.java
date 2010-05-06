@@ -5,7 +5,6 @@ import java.util.List;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 
-import ro.gagarin.user.Group;
 import ro.gagarin.ws.executor.WSException;
 import ro.gagarin.ws.executor.WebserviceExecutor;
 import ro.gagarin.ws.objects.WSConfig;
@@ -159,7 +158,7 @@ public class UserService {
 
     // FIXME: Group -> WSGroup
     @WebMethod
-    public List<Group> getGroups(String sessionId) throws WSException {
+    public List<WSGroup> getGroups(String sessionId) throws WSException {
 	GetGroupsOP getGroups = new GetGroupsOP(sessionId);
 	WebserviceExecutor.execute(getGroups);
 	return getGroups.getGroups();

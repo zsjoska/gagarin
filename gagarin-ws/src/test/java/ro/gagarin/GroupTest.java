@@ -1,5 +1,6 @@
 package ro.gagarin;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -10,6 +11,8 @@ import ro.gagarin.exceptions.LoginRequiredException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.exceptions.PermissionDeniedException;
 import ro.gagarin.exceptions.SessionNotFoundException;
+import ro.gagarin.session.Session;
+import ro.gagarin.user.Group;
 import ro.gagarin.ws.Authentication;
 import ro.gagarin.ws.UserService;
 import ro.gagarin.ws.executor.WSException;
@@ -71,32 +74,44 @@ public class GroupTest {
 	gr2.setDescription("TEST");
 	userService.updateGroup(session, gr2);
 
-	// TODO: continue implementation
-	// Group groupByName = usrManager.getGroupByName(name);
-	// assertEquals("TEST", groupByName.getDescription());
-	// assertEquals(name, groupByName.getName());
-	// assertEquals(group.getId(), groupByName.getId());
-	//
-	// gr2 = new WSGroup();
-	// gr2.setId(group.getId());
-	// gr2.setName(name + "update");
-	// usrManager.updateGroup(gr2);
-	//
-	// groupByName = usrManager.getGroupByName(name + "update");
-	// assertEquals("TEST", groupByName.getDescription());
-	// assertEquals(name + "update", groupByName.getName());
-	// assertEquals(group.getId(), groupByName.getId());
-	//
-	// gr2 = new WSGroup();
-	// gr2.setId(group.getId());
-	// gr2.setDescription("TEST2");
-	// gr2.setName(name + "update2");
-	// usrManager.updateGroup(gr2);
-	//
-	// groupByName = usrManager.getGroupByName(name + "update2");
-	// assertEquals("TEST2", groupByName.getDescription());
-	// assertEquals(name + "update2", groupByName.getName());
-	// assertEquals(group.getId(), groupByName.getId());
+	// no getGroupByName in WS and no need for it, so going to lower level
+	Session sameSession = BasicManagerFactory.getInstance().getSessionManager().acquireSession(session);
+	UserDAO usrManager = BasicManagerFactory.getInstance().getDAOManager().getUserDAO(sameSession);
+	Group groupByName = usrManager.getGroupByName(name);
+	BasicManagerFactory.getInstance().releaseSession(sameSession);
+
+	assertEquals("TEST", groupByName.getDescription());
+	assertEquals(name, groupByName.getName());
+	assertEquals(group.getId(), groupByName.getId());
+
+	gr2 = new WSGroup();
+	gr2.setId(group.getId());
+	gr2.setName(name + "update");
+	userService.updateGroup(session, gr2);
+
+	sameSession = BasicManagerFactory.getInstance().getSessionManager().acquireSession(session);
+	usrManager = BasicManagerFactory.getInstance().getDAOManager().getUserDAO(sameSession);
+	groupByName = usrManager.getGroupByName(name + "update");
+	BasicManagerFactory.getInstance().releaseSession(sameSession);
+
+	assertEquals("TEST", groupByName.getDescription());
+	assertEquals(name + "update", groupByName.getName());
+	assertEquals(group.getId(), groupByName.getId());
+
+	gr2 = new WSGroup();
+	gr2.setId(group.getId());
+	gr2.setDescription("TEST2");
+	gr2.setName(name + "update2");
+	userService.updateGroup(session, gr2);
+
+	sameSession = BasicManagerFactory.getInstance().getSessionManager().acquireSession(session);
+	usrManager = BasicManagerFactory.getInstance().getDAOManager().getUserDAO(sameSession);
+	groupByName = usrManager.getGroupByName(name + "update2");
+	BasicManagerFactory.getInstance().releaseSession(sameSession);
+
+	assertEquals("TEST2", groupByName.getDescription());
+	assertEquals(name + "update2", groupByName.getName());
+	assertEquals(group.getId(), groupByName.getId());
     }
 
 }

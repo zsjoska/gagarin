@@ -23,12 +23,14 @@ import ro.gagarin.ws.userservice.DeleteGroupOP;
 import ro.gagarin.ws.userservice.DeleteRoleOP;
 import ro.gagarin.ws.userservice.GetAllPermissionListOP;
 import ro.gagarin.ws.userservice.GetConfigEntriesOP;
+import ro.gagarin.ws.userservice.GetGroupUsersOP;
 import ro.gagarin.ws.userservice.GetGroupsOP;
 import ro.gagarin.ws.userservice.GetLogEntriesOP;
 import ro.gagarin.ws.userservice.GetRoleListOP;
 import ro.gagarin.ws.userservice.GetRolePermissionstOP;
 import ro.gagarin.ws.userservice.GetSessionListOP;
 import ro.gagarin.ws.userservice.GetStatisticsOP;
+import ro.gagarin.ws.userservice.GetUserGroupsOP;
 import ro.gagarin.ws.userservice.GetUsersOP;
 import ro.gagarin.ws.userservice.LogoutSessionOP;
 import ro.gagarin.ws.userservice.SetConfigEntryOP;
@@ -179,18 +181,16 @@ public class UserService {
 
     @WebMethod
     public List<WSGroup> getUserGroups(String sessionId, WSUser user) throws WSException {
-	// GetUserGroupsOP getUserGroups = new GetUserGroupsOP(sessionId);
-	// WebserviceExecutor.execute(getUserGroups);
-	// return getUserGroups.getUserGroups();
-	return null;
+	GetUserGroupsOP getUserGroups = new GetUserGroupsOP(sessionId, user);
+	WebserviceExecutor.execute(getUserGroups);
+	return getUserGroups.getUserGroups();
     }
 
     @WebMethod
     public List<WSUser> getGroupUsers(String sessionId, WSGroup group) throws WSException {
-	// GetGroupUsersOP getGroupUsers = new GetGroupUsersOP(sessionId);
-	// WebserviceExecutor.execute(getGroupUsers);
-	// return getGroupUsers.getGroupUsers();
-	return null;
+	GetGroupUsersOP getGroupUsers = new GetGroupUsersOP(sessionId, group);
+	WebserviceExecutor.execute(getGroupUsers);
+	return getGroupUsers.getGroupUsers();
     }
 
     @WebMethod

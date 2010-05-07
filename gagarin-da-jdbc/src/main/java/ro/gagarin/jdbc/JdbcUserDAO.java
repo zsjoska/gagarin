@@ -16,6 +16,7 @@ import ro.gagarin.jdbc.group.AssignUserToGroupSQL;
 import ro.gagarin.jdbc.group.CreateGroupSQL;
 import ro.gagarin.jdbc.group.DeleteGroupSQL;
 import ro.gagarin.jdbc.group.GetGroupUsersSQL;
+import ro.gagarin.jdbc.group.GetUserGroupsSQL;
 import ro.gagarin.jdbc.group.SelectGroupByNameSQL;
 import ro.gagarin.jdbc.group.SelectGroupsSQL;
 import ro.gagarin.jdbc.group.UpdateGroupSQL;
@@ -218,5 +219,19 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 	}
 
 	return GetGroupUsersSQL.execute(this, gr);
+    }
+
+    @Override
+    public List<Group> getUserGroups(User user) throws ItemNotFoundException, OperationException {
+	// TODO: make a utility
+	User usr = user;
+	if (usr.getId() == null && usr.getUsername() != null) {
+	    usr = SelectUserByUsernameSQL.execute(this, usr.getName());
+	    if (usr == null) {
+		throw new ItemNotFoundException(Group.class, user.getName());
+	    }
+	}
+
+	return GetUserGroupsSQL.execute(this, usr);
     }
 }

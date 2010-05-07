@@ -1,6 +1,5 @@
 package ro.gagarin.ws.userservice;
 
-import java.security.acl.Group;
 import java.util.List;
 
 import ro.gagarin.AuthorizationManager;
@@ -8,6 +7,7 @@ import ro.gagarin.UserDAO;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.session.Session;
+import ro.gagarin.user.Group;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.User;
 import ro.gagarin.utils.FieldValidator;
@@ -16,41 +16,40 @@ import ro.gagarin.ws.objects.WSGroup;
 import ro.gagarin.ws.objects.WSUser;
 import ro.gagarin.ws.util.WSConversionUtils;
 
-public class GetGroupUsersOP extends WebserviceOperation {
+public class GetUserGroupsOP extends WebserviceOperation {
 
-    private final WSGroup group;
+    private final WSUser user;
     private AuthorizationManager authManager;
     private UserDAO userManager;
-    private List<WSUser> groupUsers;
+    private List<WSGroup> userGoups;
 
-    public GetGroupUsersOP(String sessionId, WSGroup group) {
+    public GetUserGroupsOP(String sessionId, WSUser user) {
 	super(sessionId);
-	this.group = group;
+	this.user = user;
     }
 
     @Override
     public void checkInput(Session session) throws ExceptionBase {
-	if (this.group == null) {
-	    throw new FieldRequiredException("group", Group.class);
+	if (this.user == null) {
+	    throw new FieldRequiredException("user", User.class);
 	}
-	if (this.group.getId() == null && this.group.getName() == null) {
-	    throw new FieldRequiredException("id or name", Group.class);
+	if (this.user.getId() == null && this.user.getUsername() == null) {
+	    throw new FieldRequiredException("id or username", User.class);
 	}
-	if (this.group.getId() != null) {
-	    FieldValidator.requireLongField("id", this.group);
+	if (this.user.getId() != null) {
+	    FieldValidator.requireLongField("id", this.user);
 	}
-	if (this.group.getName() != null) {
-	    FieldValidator.requireStringField("name", group, true);
+	if (this.user.getUsername() != null) {
+	    FieldValidator.requireStringField("username", user, true);
 	}
-
     }
 
     @Override
     public void execute() throws ExceptionBase {
-	// the session user must have LIST_USERS permission
-	authManager.requiresPermission(getSession(), PermissionEnum.LIST_USERS);
-	List<User> users = userManager.getGroupUsers(group);
-	this.groupUsers = WSConversionUtils.convertToWSUserList(users);
+	// the session user must have LIST_GROUPS permission
+	authManager.requiresPermission(getSession(), PermissionEnum.LIST_GROUPS);
+	List<Group> groups = userManager.getUserGroups(this.user);
+	this.userGoups = WSConversionUtils.convertToGroupList(groups);
     }
 
     @Override
@@ -59,8 +58,8 @@ public class GetGroupUsersOP extends WebserviceOperation {
 	userManager = FACTORY.getDAOManager().getUserDAO(getSession());
     }
 
-    public List<WSUser> getGroupUsers() {
-	return this.groupUsers;
+    public List<WSGroup> getUserGroups() {
+	return this.userGoups;
     }
 
 }

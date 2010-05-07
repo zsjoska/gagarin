@@ -23,17 +23,17 @@ import ro.gagarin.ws.objects.WSUserPermission;
 
 public class WSConversionUtils {
 
-    public static List<WSUserPermission> convertToWSPermissionList(Collection<UserPermission> allPermissions) {
+    public static List<WSUserPermission> convertToWSPermissionList(Collection<UserPermission> permissions) {
 	ArrayList<WSUserPermission> list = new ArrayList<WSUserPermission>();
-	for (UserPermission userPermission : allPermissions) {
+	for (UserPermission userPermission : permissions) {
 	    list.add(new WSUserPermission(userPermission));
 	}
 	return list;
     }
 
-    public static List<WSUser> convertToWSUserList(Collection<User> allUsers) {
+    public static List<WSUser> convertToWSUserList(Collection<User> users) {
 	ArrayList<WSUser> list = new ArrayList<WSUser>();
-	for (User user : allUsers) {
+	for (User user : users) {
 	    list.add(new WSUser(user));
 	}
 	return list;

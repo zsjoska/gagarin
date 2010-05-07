@@ -159,4 +159,6 @@ public interface UserDAO extends BaseDAO {
      * @throws ItemNotFoundException
      */
     List<User> getGroupUsers(Group group) throws OperationException, ItemNotFoundException;
+
+    List<Group> getUserGroups(User user) throws ItemNotFoundException, OperationException;
 }

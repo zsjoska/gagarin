@@ -6,6 +6,8 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+import ro.gagarin.exceptions.ErrorCodes;
+import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.LoginRequiredException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.exceptions.PermissionDeniedException;
@@ -22,13 +24,15 @@ public class BasicAuthorizationManager implements AuthorizationManager {
     public void checkUserRole(Session session, User user) throws PermissionDeniedException, OperationException {
 	User sessionUser = session.getUser();
 	RoleDAO roleManager = session.getManagerFactory().getDAOManager().getRoleDAO(session);
-	List<UserPermission> leftList = roleManager
-		.substractUsersRolePermissions(user.getRole(), sessionUser.getRole());
-	LOG.debug("left permissions:" + leftList.toString());
-
+	List<UserPermission> leftList;
+	try {
+	    leftList = roleManager.substractUsersRolePermissions(user.getRole(), sessionUser.getRole());
+	    LOG.debug("left permissions:" + leftList.toString());
+	} catch (ItemNotFoundException e) {
+	    throw new OperationException(ErrorCodes.INTERNAL_ERROR, e);
+	}
 	if (leftList.size() != 0)
 	    throw new PermissionDeniedException(sessionUser.getUsername(), leftList.toString());
-
     }
 
     @Override
@@ -39,7 +43,12 @@ public class BasicAuthorizationManager implements AuthorizationManager {
 	User user = null;
 
 	user = session.getUser();
-	Set<UserPermission> perm = roleDAO.getRolePermissions(user.getRole());
+	Set<UserPermission> perm;
+	try {
+	    perm = roleDAO.getRolePermissions(user.getRole());
+	} catch (ItemNotFoundException e) {
+	    throw new OperationException(ErrorCodes.INTERNAL_ERROR, e);
+	}
 
 	// TODO: rewrite with the new method in the ConversionUtils
 	Iterator<? extends UserPermission> iterator = perm.iterator();
@@ -59,7 +68,12 @@ public class BasicAuthorizationManager implements AuthorizationManager {
 	    PermissionDeniedException {
 	UserRole role = session.getUser().getRole();
 	RoleDAO roleDAO = session.getManagerFactory().getDAOManager().getRoleDAO(session);
-	Set<UserPermission> loginUserPermissions = roleDAO.getRolePermissions(role);
+	Set<UserPermission> loginUserPermissions;
+	try {
+	    loginUserPermissions = roleDAO.getRolePermissions(role);
+	} catch (ItemNotFoundException e) {
+	    throw new OperationException(ErrorCodes.INTERNAL_ERROR, e);
+	}
 	for (UserPermission p : matched) {
 	    UserPermission found = null;
 	    for (UserPermission userPermission : loginUserPermissions) {

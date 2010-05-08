@@ -47,7 +47,7 @@ public class RoleTest {
     }
 
     @Test
-    public void createGetDeleteSimpleRole() throws DataConstraintException, OperationException {
+    public void createGetDeleteSimpleRole() throws Exception {
 	RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
 	ATestUserRole role = new ATestUserRole();
 	role.setRoleName("A_ROLE");

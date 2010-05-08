@@ -11,6 +11,7 @@ import ro.gagarin.user.User;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
 
+// TODO: replace all toString methods with call to here
 public class ConversionUtils {
 
     public static String group2String(Group group) {

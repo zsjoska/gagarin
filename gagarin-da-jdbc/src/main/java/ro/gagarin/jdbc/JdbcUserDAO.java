@@ -6,6 +6,7 @@ import static ro.gagarin.utils.ConversionUtils.user2String;
 import java.util.ArrayList;
 import java.util.List;
 
+import ro.gagarin.RoleDAO;
 import ro.gagarin.UserDAO;
 import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ErrorCodes;
@@ -41,6 +42,28 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 	super(session);
     }
 
+    public Group completeGroupId(Group group) throws OperationException, ItemNotFoundException {
+	Group gr = group;
+	if (gr.getId() == null && gr.getName() != null) {
+	    gr = SelectGroupByNameSQL.execute(this, gr.getName());
+	    if (gr == null) {
+		throw new ItemNotFoundException(Group.class, group.getName());
+	    }
+	}
+	return gr;
+    }
+
+    public User completeUserId(User user) throws OperationException, ItemNotFoundException {
+	User usr = user;
+	if (usr.getId() == null && usr.getUsername() != null) {
+	    usr = SelectUserByUsernameSQL.execute(this, usr.getUsername());
+	    if (usr == null) {
+		throw new ItemNotFoundException(User.class, user.getUsername());
+	    }
+	}
+	return usr;
+    }
+
     @Override
     public User userLogin(String username, String password) throws ItemNotFoundException, OperationException {
 
@@ -68,6 +91,9 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
     public long createUser(User user) throws DataConstraintException, OperationException, ItemNotFoundException {
 
 	try {
+
+	    // TODO: role existence is not verified
+	    // TODO: this is nonstandard way to check input: refactor it
 	    if (user.getRole() == null) {
 		APPLOG.error("The role is not completed");
 		markRollback();
@@ -102,10 +128,14 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
     }
 
     @Override
-    public List<User> getUsersWithRole(UserRole role) throws OperationException {
+    public List<User> getUsersWithRole(UserRole role) throws OperationException, ItemNotFoundException {
+
+	// foreign DAO call
+	RoleDAO roleDAO = getDaoManager().getRoleDAO(getSession());
+	UserRole roleWithId = roleDAO.completeRoleId(role);
 
 	try {
-	    ArrayList<User> users = GetUsersWithRoleSQL.execute(this, role);
+	    ArrayList<User> users = GetUsersWithRoleSQL.execute(this, roleWithId);
 	    return users;
 	} catch (OperationException e) {
 	    throw e;
@@ -115,15 +145,16 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
     }
 
     @Override
-    public void deleteUser(User user) throws OperationException, DataConstraintException {
+    public void deleteUser(User user) throws OperationException, DataConstraintException, ItemNotFoundException {
 
+	User usr = completeUserId(user);
 	try {
-	    new DeleteUserSQL(this, user).execute();
-	    APPLOG.action(AppLogAction.DELETE, User.class, user.getUsername(), AppLog.SUCCESS);
-	    APPLOG.info("User " + user.getUsername() + " was deleted");
+	    new DeleteUserSQL(this, usr).execute();
+	    APPLOG.action(AppLogAction.DELETE, User.class, usr.getUsername(), AppLog.SUCCESS);
+	    APPLOG.info("User " + usr.getUsername() + " was deleted");
 	} catch (OperationException e) {
-	    APPLOG.error("Could not delete user:" + user2String(user), e);
-	    APPLOG.action(AppLogAction.DELETE, User.class, user.getUsername(), AppLog.FAILED);
+	    APPLOG.error("Could not delete user:" + user2String(usr), e);
+	    APPLOG.action(AppLogAction.DELETE, User.class, usr.getUsername(), AppLog.FAILED);
 	    throw e;
 	}
     }
@@ -165,18 +196,10 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
     }
 
     @Override
-    public void deleteGroup(Group gr) throws OperationException, DataConstraintException, ItemNotFoundException {
+    public void deleteGroup(Group group) throws OperationException, DataConstraintException, ItemNotFoundException {
 
-	Group group = gr;
-
-	if (group.getId() == null && group.getName() != null) {
-	    group = SelectGroupByNameSQL.execute(this, group.getName());
-	    if (group == null) {
-		throw new ItemNotFoundException(Group.class, gr.getName());
-	    }
-	}
-
-	new DeleteGroupSQL(this, group).execute();
+	Group gr = completeGroupId(group);
+	new DeleteGroupSQL(this, gr).execute();
     }
 
     @Override
@@ -187,21 +210,10 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
     @Override
     public void assignUserToGroup(User user, Group group) throws OperationException, ItemNotFoundException,
 	    DataConstraintException {
-	Group gr = group;
-	User usr = user;
+	Group gr = completeGroupId(group);
+	User usr = completeUserId(user);
 
-	if (gr.getId() == null && gr.getName() != null) {
-	    gr = SelectGroupByNameSQL.execute(this, gr.getName());
-	    if (gr == null) {
-		throw new ItemNotFoundException(Group.class, group.getName());
-	    }
-	}
-
-	if (usr.getId() == null && usr.getUsername() != null) {
-	    usr = SelectUserByUsernameSQL.execute(this, usr.getUsername());
-	    if (usr == null)
-		throw new ItemNotFoundException(User.class, user.getName());
-	}
+	// TODO: add check for group id and user id existence
 
 	new AssignUserToGroupSQL(this, usr, gr).execute();
     }
@@ -209,29 +221,14 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
     @Override
     public List<User> getGroupUsers(Group group) throws OperationException, ItemNotFoundException {
 
-	// TODO: make a utility
-	Group gr = group;
-	if (gr.getId() == null && gr.getName() != null) {
-	    gr = SelectGroupByNameSQL.execute(this, gr.getName());
-	    if (gr == null) {
-		throw new ItemNotFoundException(Group.class, group.getName());
-	    }
-	}
-
+	Group gr = completeGroupId(group);
 	return GetGroupUsersSQL.execute(this, gr);
     }
 
     @Override
     public List<Group> getUserGroups(User user) throws ItemNotFoundException, OperationException {
-	// TODO: make a utility
-	User usr = user;
-	if (usr.getId() == null && usr.getUsername() != null) {
-	    usr = SelectUserByUsernameSQL.execute(this, usr.getName());
-	    if (usr == null) {
-		throw new ItemNotFoundException(Group.class, user.getName());
-	    }
-	}
 
+	User usr = completeUserId(user);
 	return GetUserGroupsSQL.execute(this, usr);
     }
 }

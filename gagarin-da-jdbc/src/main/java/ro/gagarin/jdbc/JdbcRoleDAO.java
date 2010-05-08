@@ -38,6 +38,18 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
     }
 
     @Override
+    public UserRole completeRoleId(UserRole role) throws OperationException, ItemNotFoundException {
+	UserRole r = role;
+	if (r.getId() == null && r.getRoleName() != null) {
+	    r = SelectRoleByNameSQL.execute(this, r.getRoleName());
+	    if (r == null) {
+		throw new ItemNotFoundException(UserRole.class, role.getRoleName());
+	    }
+	}
+	return r;
+    }
+
+    @Override
     public UserRole getRoleByName(String roleName) throws OperationException {
 
 	UserRole role = SelectRoleByNameSQL.execute(this, roleName);
@@ -94,22 +106,23 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
     }
 
     @Override
-    public void deleteRole(UserRole role) throws OperationException {
+    public void deleteRole(UserRole role) throws OperationException, ItemNotFoundException {
 
+	UserRole r = completeRoleId(role);
 	try {
 
-	    new DeleteRoleSQL(this, role).execute();
+	    new DeleteRoleSQL(this, r).execute();
 
-	    APPLOG.action(AppLogAction.DELETE, UserRole.class, role.getRoleName(), AppLog.SUCCESS);
-	    APPLOG.info("Role " + role.getRoleName() + " was deleted");
+	    APPLOG.action(AppLogAction.DELETE, UserRole.class, r.getRoleName(), AppLog.SUCCESS);
+	    APPLOG.info("Role " + r.getRoleName() + " was deleted");
 
 	} catch (OperationException e) {
-	    APPLOG.error("Could not delete role:" + role2String(role), e);
-	    APPLOG.action(AppLogAction.DELETE, UserRole.class, role.getRoleName(), AppLog.FAILED);
+	    APPLOG.error("Could not delete role:" + role2String(r), e);
+	    APPLOG.action(AppLogAction.DELETE, UserRole.class, r.getRoleName(), AppLog.FAILED);
 	    throw e;
 	} catch (DataConstraintException e) {
-	    APPLOG.error("Could not delete role:" + role2String(role), e);
-	    APPLOG.action(AppLogAction.DELETE, UserRole.class, role.getRoleName(), AppLog.FAILED);
+	    APPLOG.error("Could not delete role:" + role2String(r), e);
+	    APPLOG.action(AppLogAction.DELETE, UserRole.class, r.getRoleName(), AppLog.FAILED);
 	    throw new OperationException(ErrorCodes.DB_OP_ERROR, e);
 	}
     }
@@ -146,9 +159,10 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 
     @Override
     public List<UserPermission> substractUsersRolePermissions(UserRole main, UserRole substract)
-	    throws OperationException {
-
-	return SubstractRolesPermissions.execute(this, main, substract);
+	    throws OperationException, ItemNotFoundException {
+	UserRole m = completeRoleId(main);
+	UserRole s = completeRoleId(substract);
+	return SubstractRolesPermissions.execute(this, m, s);
     }
 
     @Override
@@ -166,8 +180,11 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 	    throw new ItemNotFoundException(UserPermission.class, "null");
 	}
 
+	UserRole r = completeRoleId(role);
+	// TODO: complete Permission
+
 	try {
-	    new AssignPermissionToRoleSQL(this, role, perm).execute();
+	    new AssignPermissionToRoleSQL(this, r, perm).execute();
 	} catch (OperationException e) {
 	    throw e;
 	} catch (DataConstraintException e) {
@@ -177,11 +194,8 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
     }
 
     @Override
-    public Set<UserPermission> getRolePermissions(UserRole role) throws OperationException {
-	UserRole foundRole = role;
-	if (role.getId() == null && role.getRoleName() != null) {
-	    foundRole = this.getRoleByName(role.getRoleName());
-	}
+    public Set<UserPermission> getRolePermissions(UserRole role) throws OperationException, ItemNotFoundException {
+	UserRole foundRole = completeRoleId(role);
 	return GetRolePermissionsSQL.execute(this, foundRole);
     }
 
@@ -189,4 +203,5 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
     public Set<UserRole> getPermissionRoles(UserPermission perm) throws OperationException {
 	return GetPermissionRolesSQL.execute(this, perm);
     }
+
 }

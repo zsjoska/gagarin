@@ -62,8 +62,9 @@ public interface UserDAO extends BaseDAO {
      *            the role
      * @return a list of users
      * @throws OperationException
+     * @throws ItemNotFoundException
      */
-    List<User> getUsersWithRole(UserRole role) throws OperationException;
+    List<User> getUsersWithRole(UserRole role) throws OperationException, ItemNotFoundException;
 
     /**
      * Deletes a user
@@ -72,8 +73,9 @@ public interface UserDAO extends BaseDAO {
      *            the user to be deleted
      * @throws OperationException
      * @throws DataConstraintException
+     * @throws ItemNotFoundException
      */
-    void deleteUser(User user) throws OperationException, DataConstraintException;
+    void deleteUser(User user) throws OperationException, DataConstraintException, ItemNotFoundException;
 
     /**
      * Queries a list with all users

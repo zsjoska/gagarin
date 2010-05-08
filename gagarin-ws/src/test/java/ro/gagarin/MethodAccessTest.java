@@ -43,7 +43,7 @@ public class MethodAccessTest {
     private Session aDummySession;
 
     @Before
-    public void setUp() throws WSException, OperationException, DataConstraintException {
+    public void setUp() throws Exception {
 
 	cleanup();
 
@@ -52,13 +52,13 @@ public class MethodAccessTest {
     }
 
     @After
-    public void shutdown() throws WSException, OperationException, DataConstraintException {
+    public void shutdown() throws Exception {
 	authentication.logout(session);
 	FACTORY.releaseSession(aDummySession);
 	cleanup();
     }
 
-    private void cleanup() throws OperationException, DataConstraintException {
+    private void cleanup() throws OperationException, DataConstraintException, ItemNotFoundException {
 
 	Session cleanupSession = TUtil.createTestSession();
 

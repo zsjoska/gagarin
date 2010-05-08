@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 import ro.gagarin.BaseDAO;
 import ro.gagarin.ConfigurationManager;
+import ro.gagarin.DAOManager;
 import ro.gagarin.config.Config;
 import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.OperationException;
@@ -37,6 +38,7 @@ public class BaseJdbcDAO implements BaseDAO {
     private boolean rollback = false;
     private final Session session;
     private boolean changePending = false;
+    private final DAOManager daoManager;
 
     public BaseJdbcDAO(Session session) throws OperationException {
 	if (session == null) {
@@ -52,6 +54,7 @@ public class BaseJdbcDAO implements BaseDAO {
 
 	CFG = session.getManagerFactory().getConfigurationManager();
 	APPLOG = session.getManagerFactory().getLogManager(session, getClass());
+	daoManager = session.getManagerFactory().getDAOManager();
 
 	checkLoadDBDriver(CFG);
 
@@ -287,5 +290,9 @@ public class BaseJdbcDAO implements BaseDAO {
 
     public void markChangePending() {
 	this.changePending = true;
+    }
+
+    protected DAOManager getDaoManager() {
+	return daoManager;
     }
 }

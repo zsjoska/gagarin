@@ -135,4 +135,6 @@ public class GroupTest {
 	assertEquals(user.getUsername(), aUser.getUsername());
 
     }
+
+    // TODO: add assign tests with invalid roupId and invalid userId
 }

@@ -52,7 +52,6 @@ public class Authentication {
 
     @WebMethod
     public void logout(String sessionId) throws WSException {
-
 	WebserviceExecutor.execute(new LogoutOP(sessionId));
     }
 

@@ -64,7 +64,7 @@ public class RoleTest {
     }
 
     @Test
-    public void createGetDeleteSimplePermission() throws DataConstraintException, OperationException {
+    public void createGetDeleteSimplePermission() throws Exception {
 	RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
 
 	ATestUserPermission perm = new ATestUserPermission();

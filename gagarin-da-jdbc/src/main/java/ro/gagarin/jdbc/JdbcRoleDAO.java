@@ -50,6 +50,18 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
     }
 
     @Override
+    public UserPermission completePermissionId(UserPermission perm) throws OperationException, ItemNotFoundException {
+	UserPermission permission = perm;
+	if (permission.getId() == null && permission.getPermissionName() != null) {
+	    permission = SelectPermissionByNameSQL.execute(this, permission.getPermissionName());
+	    if (permission == null) {
+		throw new ItemNotFoundException(UserPermission.class, perm.getPermissionName());
+	    }
+	}
+	return permission;
+    }
+
+    @Override
     public UserRole getRoleByName(String roleName) throws OperationException {
 
 	UserRole role = SelectRoleByNameSQL.execute(this, roleName);
@@ -133,21 +145,22 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
     }
 
     @Override
-    public void deletePermission(UserPermission perm) throws OperationException {
+    public void deletePermission(UserPermission perm) throws OperationException, ItemNotFoundException {
+	UserPermission permission = completePermissionId(perm);
 	try {
 
-	    new DeletePermissionSQL(this, perm).execute();
+	    new DeletePermissionSQL(this, permission).execute();
 
-	    APPLOG.action(AppLogAction.DELETE, UserPermission.class, perm.getPermissionName(), AppLog.SUCCESS);
-	    APPLOG.info("Permission " + perm.getPermissionName() + " was deleted");
+	    APPLOG.action(AppLogAction.DELETE, UserPermission.class, permission.getPermissionName(), AppLog.SUCCESS);
+	    APPLOG.info("Permission " + permission.getPermissionName() + " was deleted");
 
 	} catch (OperationException e) {
-	    APPLOG.error("Could not delete permission:" + perm2String(perm), e);
-	    APPLOG.action(AppLogAction.DELETE, UserPermission.class, perm.getPermissionName(), AppLog.FAILED);
+	    APPLOG.error("Could not delete permission:" + perm2String(permission), e);
+	    APPLOG.action(AppLogAction.DELETE, UserPermission.class, permission.getPermissionName(), AppLog.FAILED);
 	    throw e;
 	} catch (DataConstraintException e) {
-	    APPLOG.error("Could not delete permission:" + perm2String(perm), e);
-	    APPLOG.action(AppLogAction.DELETE, UserPermission.class, perm.getPermissionName(), AppLog.FAILED);
+	    APPLOG.error("Could not delete permission:" + perm2String(permission), e);
+	    APPLOG.action(AppLogAction.DELETE, UserPermission.class, permission.getPermissionName(), AppLog.FAILED);
 	    throw new OperationException(ErrorCodes.DB_OP_ERROR, e);
 	}
     }
@@ -181,10 +194,10 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 	}
 
 	UserRole r = completeRoleId(role);
-	// TODO: complete Permission
+	UserPermission p = completePermissionId(perm);
 
 	try {
-	    new AssignPermissionToRoleSQL(this, r, perm).execute();
+	    new AssignPermissionToRoleSQL(this, r, p).execute();
 	} catch (OperationException e) {
 	    throw e;
 	} catch (DataConstraintException e) {
@@ -200,8 +213,9 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
     }
 
     @Override
-    public Set<UserRole> getPermissionRoles(UserPermission perm) throws OperationException {
-	return GetPermissionRolesSQL.execute(this, perm);
+    public Set<UserRole> getPermissionRoles(UserPermission perm) throws OperationException, ItemNotFoundException {
+	UserPermission permission = completePermissionId(perm);
+	return GetPermissionRolesSQL.execute(this, permission);
     }
 
 }

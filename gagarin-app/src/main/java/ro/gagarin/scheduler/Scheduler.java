@@ -15,6 +15,8 @@ public class Scheduler {
 
     public Scheduler() {
 	// TODO: make this value configurable
+	// but could be tricky since the scheduler is required for ConfigFile
+	// init
 	this(10);
     }
 

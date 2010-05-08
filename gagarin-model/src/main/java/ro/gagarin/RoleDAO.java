@@ -23,7 +23,7 @@ public interface RoleDAO extends BaseDAO {
 
     UserPermission getPermissionByName(String string) throws OperationException;
 
-    void deletePermission(UserPermission perm) throws OperationException;
+    void deletePermission(UserPermission perm) throws OperationException, ItemNotFoundException;
 
     List<UserPermission> substractUsersRolePermissions(UserRole main, UserRole substract) throws OperationException,
 	    ItemNotFoundException;
@@ -34,8 +34,10 @@ public interface RoleDAO extends BaseDAO {
 
     Set<UserPermission> getRolePermissions(UserRole role) throws OperationException, ItemNotFoundException;
 
-    Set<UserRole> getPermissionRoles(UserPermission perm) throws OperationException;
+    Set<UserRole> getPermissionRoles(UserPermission perm) throws OperationException, ItemNotFoundException;
 
     UserRole completeRoleId(UserRole role) throws OperationException, ItemNotFoundException;
+
+    UserPermission completePermissionId(UserPermission perm) throws OperationException, ItemNotFoundException;
 
 }

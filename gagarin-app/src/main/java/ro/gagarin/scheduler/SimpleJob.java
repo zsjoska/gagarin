@@ -35,17 +35,18 @@ class SimpleJob implements JobController {
 
 	// TODO: move to a base method
 
-	String msg = "Job #" + this.getId() + " execution delay:" + delay;
-	if (delay > 2)
-	    if (delay < 10) {
+	if (delay > 10) {
+	    String msg = "Job #" + this.getId() + " execution delay:" + delay;
+	    if (delay < 20) {
 		LOG.debug(msg);
-	    } else if (delay < 20) {
-		LOG.warn(msg);
 	    } else if (delay < 50) {
+		LOG.warn(msg);
+	    } else if (delay < 100) {
 		LOG.info(msg);
-	    } else if (delay >= 50) {
+	    } else if (delay >= 100) {
 		LOG.error(msg);
 	    }
+	}
 
 	try {
 

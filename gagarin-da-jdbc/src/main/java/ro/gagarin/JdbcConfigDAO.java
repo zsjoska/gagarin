@@ -37,7 +37,7 @@ public class JdbcConfigDAO extends BaseJdbcDAO implements ConfigDAO {
 	    Long longValue = Long.valueOf(value);
 	    return longValue;
 	} catch (Exception e) {
-	    throw new OperationException(ErrorCodes.CONFIG_ENTRY_INVALID, e);
+	    throw new OperationException(ErrorCodes.INTERNAL_ERROR, e);
 	}
 
     }

@@ -2,6 +2,7 @@ package ro.gagarin.testobjects;
 
 import ro.gagarin.BaseEntity;
 import ro.gagarin.user.UserPermission;
+import ro.gagarin.utils.ConversionUtils;
 
 public class ATestUserPermission extends BaseEntity implements UserPermission {
 
@@ -25,4 +26,8 @@ public class ATestUserPermission extends BaseEntity implements UserPermission {
 	return permissionName;
     }
 
+    @Override
+    public String toString() {
+	return ConversionUtils.perm2String(this);
+    }
 }

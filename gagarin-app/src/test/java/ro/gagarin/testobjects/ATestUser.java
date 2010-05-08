@@ -3,6 +3,7 @@ package ro.gagarin.testobjects;
 import ro.gagarin.BaseEntity;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserRole;
+import ro.gagarin.utils.ConversionUtils;
 
 public class ATestUser extends BaseEntity implements User {
 
@@ -74,6 +75,11 @@ public class ATestUser extends BaseEntity implements User {
 
     public String getPhone() {
 	return phone;
+    }
+
+    @Override
+    public String toString() {
+	return ConversionUtils.user2String(this);
     }
 
 }

@@ -2,6 +2,7 @@ package ro.gagarin.ws.objects;
 
 import ro.gagarin.BaseEntity;
 import ro.gagarin.log.LogEntry;
+import ro.gagarin.utils.ConversionUtils;
 
 public class WSLogEntry extends BaseEntity implements LogEntry {
 
@@ -12,12 +13,6 @@ public class WSLogEntry extends BaseEntity implements LogEntry {
     private String sessionID;
 
     public WSLogEntry() {
-    }
-
-    @Override
-    public String toString() {
-	return "WSLogEntry [date=" + date + ", logLevel=" + logLevel + ", user=" + user + ", getId()=" + getId()
-		+ ", message=" + message + "]";
     }
 
     public WSLogEntry(LogEntry logEntry) {
@@ -73,4 +68,8 @@ public class WSLogEntry extends BaseEntity implements LogEntry {
 	this.user = user;
     }
 
+    @Override
+    public String toString() {
+	return ConversionUtils.logEntry2String(this);
+    }
 }

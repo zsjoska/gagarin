@@ -3,6 +3,7 @@ package ro.gagarin.ws.objects;
 import ro.gagarin.BaseEntity;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserRole;
+import ro.gagarin.utils.ConversionUtils;
 
 public class WSUser extends BaseEntity implements User {
 
@@ -87,8 +88,6 @@ public class WSUser extends BaseEntity implements User {
 
     @Override
     public String toString() {
-	return "WSUser [email=" + email + ", name=" + name + ", password=" + password + ", phone=" + phone + ", role="
-		+ role + ", username=" + username + ", getId()=" + getId() + "]";
+	return ConversionUtils.user2String(this);
     }
-
 }

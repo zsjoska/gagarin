@@ -2,6 +2,7 @@ package ro.gagarin.application.objects;
 
 import ro.gagarin.BaseEntity;
 import ro.gagarin.user.UserRole;
+import ro.gagarin.utils.ConversionUtils;
 
 public class AppUserRole extends BaseEntity implements UserRole {
 
@@ -23,5 +24,10 @@ public class AppUserRole extends BaseEntity implements UserRole {
 
     public void setRoleName(String roleName) {
 	this.roleName = roleName;
+    }
+
+    @Override
+    public String toString() {
+	return ConversionUtils.role2String(this);
     }
 }

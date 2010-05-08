@@ -61,5 +61,4 @@ public class WSExportedSession {
 	return "WSExportedSession [expires=" + expires + ", reason=" + reason + ", sessionid=" + sessionid
 		+ ", username=" + username + "]";
     }
-
 }

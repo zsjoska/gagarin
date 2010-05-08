@@ -3,6 +3,7 @@ package ro.gagarin.application.objects;
 import ro.gagarin.BaseEntity;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserRole;
+import ro.gagarin.utils.ConversionUtils;
 
 public class AppUser extends BaseEntity implements User {
 
@@ -69,4 +70,8 @@ public class AppUser extends BaseEntity implements User {
 	this.phone = phone;
     }
 
+    @Override
+    public String toString() {
+	return ConversionUtils.user2String(this);
+    }
 }

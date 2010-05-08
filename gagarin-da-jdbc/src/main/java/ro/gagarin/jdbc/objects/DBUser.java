@@ -3,6 +3,7 @@ package ro.gagarin.jdbc.objects;
 import ro.gagarin.BaseEntity;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserRole;
+import ro.gagarin.utils.ConversionUtils;
 
 public class DBUser extends BaseEntity implements User {
 
@@ -78,5 +79,10 @@ public class DBUser extends BaseEntity implements User {
 
     public void setPhone(String phone) {
 	this.phone = phone;
+    }
+
+    @Override
+    public String toString() {
+	return ConversionUtils.user2String(this);
     }
 }

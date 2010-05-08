@@ -2,6 +2,7 @@ package ro.gagarin.jdbc.objects;
 
 import ro.gagarin.BaseEntity;
 import ro.gagarin.user.UserPermission;
+import ro.gagarin.utils.ConversionUtils;
 
 public class DBUserPermission extends BaseEntity implements UserPermission {
 
@@ -23,5 +24,10 @@ public class DBUserPermission extends BaseEntity implements UserPermission {
 
     public String getPermissionName() {
 	return permissionName;
+    }
+
+    @Override
+    public String toString() {
+	return ConversionUtils.perm2String(this);
     }
 }

@@ -2,6 +2,7 @@ package ro.gagarin.jdbc.objects;
 
 import ro.gagarin.BaseEntity;
 import ro.gagarin.user.Group;
+import ro.gagarin.utils.ConversionUtils;
 
 public class DBGroup extends BaseEntity implements Group {
 
@@ -37,7 +38,6 @@ public class DBGroup extends BaseEntity implements Group {
 
     @Override
     public String toString() {
-	return "DBGroup [description=" + description + ", name=" + name + ", getId()=" + getId() + "]";
+	return ConversionUtils.group2String(this);
     }
-
 }

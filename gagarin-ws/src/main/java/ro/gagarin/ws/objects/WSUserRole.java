@@ -2,6 +2,7 @@ package ro.gagarin.ws.objects;
 
 import ro.gagarin.BaseEntity;
 import ro.gagarin.user.UserRole;
+import ro.gagarin.utils.ConversionUtils;
 
 public class WSUserRole extends BaseEntity implements UserRole {
 
@@ -27,5 +28,10 @@ public class WSUserRole extends BaseEntity implements UserRole {
 
     public String getRoleName() {
 	return roleName;
+    }
+
+    @Override
+    public String toString() {
+	return ConversionUtils.role2String(this);
     }
 }

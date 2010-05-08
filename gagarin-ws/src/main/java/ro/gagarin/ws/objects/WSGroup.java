@@ -2,6 +2,7 @@ package ro.gagarin.ws.objects;
 
 import ro.gagarin.BaseEntity;
 import ro.gagarin.user.Group;
+import ro.gagarin.utils.ConversionUtils;
 
 public class WSGroup extends BaseEntity implements Group {
 
@@ -37,7 +38,6 @@ public class WSGroup extends BaseEntity implements Group {
 
     @Override
     public String toString() {
-	return "WSGroup [description=" + description + ", name=" + name + ", getId()=" + getId() + "]";
+	return ConversionUtils.group2String(this);
     }
-
 }

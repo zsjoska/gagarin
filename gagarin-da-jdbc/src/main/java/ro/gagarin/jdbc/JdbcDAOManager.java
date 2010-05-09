@@ -15,6 +15,7 @@ public class JdbcDAOManager implements DAOManager {
     private JdbcDAOManager() {
     }
 
+    // TODO: get rid of this singleton
     public static synchronized JdbcDAOManager getInstance() {
 	if (INSTANCE == null)
 	    INSTANCE = new JdbcDAOManager();
@@ -40,4 +41,8 @@ public class JdbcDAOManager implements DAOManager {
 	return new JdbcConfigDAO(session);
     }
 
+    @Override
+    public void initializeManager() {
+	// nothing to initialize here
+    }
 }

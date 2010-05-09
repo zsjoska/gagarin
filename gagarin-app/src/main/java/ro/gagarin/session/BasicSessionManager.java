@@ -21,6 +21,7 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
 
     private static final transient Logger LOG = Logger.getLogger(BasicSessionManager.class);
 
+    // TODO: get rid of singleton. Application should have an instance
     private static final BasicSessionManager INSTANCE = new BasicSessionManager();
 
     private long USER_SESSION_TIMEOUT;
@@ -166,5 +167,10 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
 	    sessions.add(session);
 	}
 	return sessions;
+    }
+
+    @Override
+    public void initializeManager() {
+	// nothing to initialize
     }
 }

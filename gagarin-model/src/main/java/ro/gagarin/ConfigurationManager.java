@@ -16,7 +16,7 @@ import ro.gagarin.session.Session;
  * @author zsjoska
  * 
  */
-public interface ConfigurationManager {
+public interface ConfigurationManager extends BaseManager {
 
     /**
      * Returns a configuration value converted to long

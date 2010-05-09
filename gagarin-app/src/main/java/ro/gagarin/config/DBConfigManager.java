@@ -31,6 +31,8 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
     // Problem: DBConfig observers are not notified
 
     private static ManagerFactory FACTORY = BasicManagerFactory.getInstance();
+
+    // TODO: get rid of this singleton... Application should have an instance
     private static final DBConfigManager INSTANCE = new DBConfigManager(FileConfigurationManager.getInstance());
     private ConfigImportJob configImportJob;
 
@@ -215,5 +217,10 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
     @Override
     public void loadConfiguration(Object param) {
 
+    }
+
+    @Override
+    public void initializeManager() {
+	// TODO move here the initialization stuff
     }
 }

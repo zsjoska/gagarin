@@ -10,7 +10,7 @@ import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserPermission;
 
-public interface AuthorizationManager {
+public interface AuthorizationManager extends BaseManager {
 
     void requiresPermission(Session session, PermissionEnum create_user) throws PermissionDeniedException,
 	    OperationException;

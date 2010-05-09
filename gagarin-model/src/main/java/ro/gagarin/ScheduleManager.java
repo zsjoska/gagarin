@@ -2,7 +2,7 @@ package ro.gagarin;
 
 import ro.gagarin.scheduler.ScheduledJob;
 
-public interface ScheduleManager {
+public interface ScheduleManager extends BaseManager {
 
     long scheduleJob(ScheduledJob job, boolean createSession);
 

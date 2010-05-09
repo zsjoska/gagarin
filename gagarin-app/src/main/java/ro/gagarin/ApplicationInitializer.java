@@ -124,6 +124,20 @@ public class ApplicationInitializer {
     }
 
     private void initManagers(Session session) throws OperationException {
+	ArrayList<BaseManager> managers = new ArrayList<BaseManager>();
+	managers.add(factory.getConfigurationManager());
+	managers.add(factory.getDAOManager());
+	managers.add(factory.getAuthenticationManager(session));
+	managers.add(factory.getAuthorizationManager(session));
+	managers.add(factory.getSessionManager());
+	managers.add(factory.getScheduleManager());
+
+	// TODO: init somehow the DBConfigManager
+
+	for (BaseManager manager : managers) {
+	    manager.initializeManager();
+	}
+
 	this.cfgManager = factory.getConfigurationManager();
 	this.userManager = factory.getDAOManager().getUserDAO(session);
 	this.roleManager = factory.getDAOManager().getRoleDAO(session);

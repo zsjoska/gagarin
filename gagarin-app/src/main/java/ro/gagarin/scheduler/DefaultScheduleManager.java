@@ -33,4 +33,8 @@ public class DefaultScheduleManager implements ScheduleManager {
 	defaultScheduler.triggerExecution(job.getId());
     }
 
+    @Override
+    public void initializeManager() {
+	// TODO move here the init stuff
+    }
 }

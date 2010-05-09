@@ -99,4 +99,9 @@ public class BasicAuthorizationManager implements AuthorizationManager {
 	if (role == null)
 	    throw new LoginRequiredException();
     }
+
+    @Override
+    public void initializeManager() {
+	// nothing to initialize
+    }
 }

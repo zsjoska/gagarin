@@ -20,6 +20,8 @@ public class FileConfigurationManager extends ConfigHolder implements Configurat
 
     private static final String CONFIG_DIR = "CONFIG_DIR";
     private static final transient Logger LOG = Logger.getLogger(FileConfigurationManager.class);
+
+    // TODO: get rid of this singleton
     private static final ConfigurationManager INSTANCE = new FileConfigurationManager();
     private File cfgDir;
     private MonitoredFile cfgFile;
@@ -139,5 +141,10 @@ public class FileConfigurationManager extends ConfigHolder implements Configurat
 	    LOG.error("IOException while closing the file " + file.getName(), e);
 	}
 
+    }
+
+    @Override
+    public void initializeManager() {
+	// TODO move here the initialization stuff
     }
 }

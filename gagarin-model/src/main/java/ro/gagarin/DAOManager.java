@@ -3,7 +3,7 @@ package ro.gagarin;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.session.Session;
 
-public interface DAOManager {
+public interface DAOManager extends BaseManager {
 
     RoleDAO getRoleDAO(Session session) throws OperationException;
 

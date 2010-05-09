@@ -31,4 +31,9 @@ public class BasicAuthenticationManager implements AuthenticationManager {
 	LOG.info("User " + user.getId() + ":" + user.getUsername() + " was bound to session " + session.getId());
 	return user;
     }
+
+    @Override
+    public void initializeManager() {
+	// nothing to initialize
+    }
 }

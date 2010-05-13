@@ -28,7 +28,7 @@ public abstract class SelectQuery extends UpdateQuery {
     }
 
     @Override
-    public void execute() throws OperationException {
+    public int execute() throws OperationException {
 	try {
 	    long start = System.currentTimeMillis();
 	    super.execute();
@@ -37,6 +37,7 @@ public abstract class SelectQuery extends UpdateQuery {
 	    // select queries shouldn't throw DataConstraintException
 	    throw new OperationException(ErrorCodes.DB_OP_ERROR, e);
 	}
+	return 0;
     };
 
     protected abstract void useResult(ResultSet rs) throws SQLException;

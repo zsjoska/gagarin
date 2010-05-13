@@ -16,6 +16,7 @@ public abstract class UpdateQuery {
     private final BaseJdbcDAO dao;
     private final Class<?> objectClass;
     protected final AppLog LOG;
+    private int updatedRowCount = 0;
 
     public UpdateQuery(BaseJdbcDAO dao, Class<?> objectClass) {
 	this.dao = dao;
@@ -29,7 +30,7 @@ public abstract class UpdateQuery {
 
     protected abstract void checkInput() throws FieldRequiredException;
 
-    public void execute() throws OperationException, DataConstraintException {
+    public int execute() throws OperationException, DataConstraintException {
 	PreparedStatement stmnt = null;
 	boolean success = false;
 	try {
@@ -75,12 +76,14 @@ public abstract class UpdateQuery {
 		}
 	    }
 	}
+	return this.updatedRowCount;
     }
 
     protected void doExecute(PreparedStatement stmnt) throws DataConstraintException {
 	try {
 	    long start = System.currentTimeMillis();
-	    stmnt.executeUpdate();
+	    updatedRowCount = stmnt.executeUpdate();
+	    LOG.debug("Updated " + updatedRowCount + " rows");
 	    Statistic.getByName("db.update." + getSQL()).add(start);
 	} catch (SQLException e) {
 	    // this exception should be converted to our nice exceptions

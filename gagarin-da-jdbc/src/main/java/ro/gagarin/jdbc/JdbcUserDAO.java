@@ -203,8 +203,15 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
     }
 
     @Override
-    public void updateGroup(Group group) throws OperationException, DataConstraintException {
-	new UpdateGroupSQL(this, group).execute();
+    public void updateGroup(Group group) throws OperationException, DataConstraintException, ItemNotFoundException {
+	int recCount = new UpdateGroupSQL(this, group).execute();
+	if (recCount == 0) {
+	    throw new ItemNotFoundException(Group.class, group.getId().toString());
+	}
+	if (recCount != 1) {
+	    throw new OperationException(ErrorCodes.INTERNAL_ERROR, recCount + " rows changed for group ID"
+		    + group.getId());
+	}
     }
 
     @Override

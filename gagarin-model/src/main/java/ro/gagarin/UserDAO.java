@@ -135,8 +135,9 @@ public interface UserDAO extends BaseDAO {
      *            the group to be updated identified by <code>id</code>
      * @throws OperationException
      * @throws DataConstraintException
+     * @throws ItemNotFoundException
      */
-    void updateGroup(Group group) throws OperationException, DataConstraintException;
+    void updateGroup(Group group) throws OperationException, DataConstraintException, ItemNotFoundException;
 
     /**
      * Assigns a user to a group

@@ -3,6 +3,7 @@ package ro.gagarin;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 import java.util.List;
 
@@ -10,6 +11,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import ro.gagarin.exceptions.ErrorCodes;
+import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.session.Session;
 import ro.gagarin.testobjects.ATestGroup;
@@ -134,6 +137,31 @@ public class GroupTest {
 	assertEquals(user.getId(), aUser.getId());
 	assertEquals(user.getUsername(), aUser.getUsername());
 
+	// TODO: add getUserGroups tests
+
+    }
+
+    @Test
+    public void userGroupAssingnmentInexistentGroup() throws Exception {
+
+	UserRole adminRole = TUtil.getAdminRole();
+
+	ATestUser user = new ATestUser();
+	user.setUsername(groupname + "_1");
+	user.setRole(adminRole);
+	user.setId(usrManager.createUser(user));
+
+	ATestGroup group = new ATestGroup();
+	group.setName(groupname + "_NOT");
+
+	try {
+	    usrManager.assignUserToGroup(user, group);
+	    fail("Inexistent group shouldn't be assigned");
+	} catch (ItemNotFoundException e) {
+	    assertEquals("Invalid error code", ErrorCodes.ITEM_NOT_FOUND, e.getErrorCode());
+	}
+
+	// TODO: check that no assignment was made
     }
 
     // TODO: add assign tests with invalid roupId and invalid userId

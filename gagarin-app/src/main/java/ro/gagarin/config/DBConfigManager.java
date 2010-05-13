@@ -24,12 +24,6 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
 
     private static final transient Logger LOG = Logger.getLogger(DBConfigManager.class);
 
-    // TODO: there is a problem with the configuration implementation in the
-    // following scenario:
-    // the config is only in the DB
-    // runtime, the config is added to the file
-    // Problem: DBConfig observers are not notified
-
     private static ManagerFactory FACTORY = BasicManagerFactory.getInstance();
 
     // TODO: get rid of this singleton... Application should have an instance

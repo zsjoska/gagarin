@@ -40,7 +40,7 @@ public class CreateSessionOP extends WebserviceOperation {
 
 	Session session = sessionManager.createSession(language, reason, FACTORY);
 	this.sessionString = session.getSessionString();
-	AppLog log = FACTORY.getLogManager(session, CreateSessionOP.class);
+	AppLog log = FACTORY.getLogManager().getLoggingSession(session, CreateSessionOP.class);
 	log.info("Session created:" + session.getSessionString() + "; reason:" + session.getReason() + "; language:"
 		+ session.getLanguage());
     }

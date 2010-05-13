@@ -134,7 +134,7 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
 
 	// local config has precedence...
 	if (localConfig.isDefined(config)) {
-	    AppLog log = session.getManagerFactory().getLogManager(session, DBConfigManager.class);
+	    AppLog log = session.getManagerFactory().getLogManager().getLoggingSession(session, DBConfigManager.class);
 	    log.error("Changing the local config will not be persisted! " + config.name() + "=" + value);
 	    localConfig.setConfigValue(session, config, value);
 	    return;

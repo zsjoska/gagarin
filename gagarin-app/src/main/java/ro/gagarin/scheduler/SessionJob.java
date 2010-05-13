@@ -51,7 +51,7 @@ class SessionJob extends SimpleJob {
 	    return;
 	}
 
-	AppLog log = FACTORY.getLogManager(session, SessionJob.class);
+	AppLog log = FACTORY.getLogManager().getLoggingSession(session, SessionJob.class);
 	try {
 	    log.debug("Executing job " + getJob().getName() + "#" + getJob().getId());
 

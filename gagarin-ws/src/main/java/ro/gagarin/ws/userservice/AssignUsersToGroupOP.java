@@ -47,7 +47,7 @@ public class AssignUsersToGroupOP extends WebserviceOperation {
 
     @Override
     public void prepareManagers(Session session) throws ExceptionBase {
-	authManager = FACTORY.getAuthorizationManager(getSession());
+	authManager = FACTORY.getAuthorizationManager();
 	userManager = FACTORY.getDAOManager().getUserDAO(getSession());
     }
 

@@ -3,7 +3,6 @@ package ro.gagarin;
 import ro.gagarin.config.FileConfigurationManager;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.JdbcDAOManager;
-import ro.gagarin.log.AppLog;
 import ro.gagarin.log.BasicLogManager;
 import ro.gagarin.scheduler.DefaultScheduleManager;
 import ro.gagarin.session.BasicSessionManager;
@@ -23,6 +22,12 @@ public class BasicManagerFactory implements ManagerFactory {
 
     private ApplicationState state = ApplicationState.INIT;
 
+    private ConfigurationManager configurationManager;
+    private ScheduleManager scheduleManager;
+    private LogManager logManager;
+    private DAOManager daoManager;
+    private SessionManager sessionManager;
+
     static {
 	try {
 	    if (ApplicationInitializer.init(INSTANCE)) {
@@ -32,8 +37,6 @@ public class BasicManagerFactory implements ManagerFactory {
 	    INSTANCE.setApplicationState(ApplicationState.OFFLINE);
 	}
     }
-
-    private ConfigurationManager configurationManager = FileConfigurationManager.getInstance();
 
     public static ManagerFactory getInstance() {
 	return INSTANCE;
@@ -55,11 +58,11 @@ public class BasicManagerFactory implements ManagerFactory {
      * @return the configured {@link SessionManager} implementation
      */
     public SessionManager getSessionManager() {
-	return BasicSessionManager.getInstance();
+	return this.sessionManager;
     }
 
     public DAOManager getDAOManager() {
-	return JdbcDAOManager.getInstance();
+	return this.daoManager;
     }
 
     /**
@@ -72,30 +75,39 @@ public class BasicManagerFactory implements ManagerFactory {
 	return this.configurationManager;
     }
 
-    public AuthorizationManager getAuthorizationManager(Session session) {
+    public AuthorizationManager getAuthorizationManager() {
 	return new BasicAuthorizationManager();
-    }
-
-    public void releaseSession(Session session) {
-	getSessionManager().releaseSession(session);
     }
 
     @Override
     public AuthenticationManager getAuthenticationManager(Session session) {
+	// TODO: remove session parameter
 	return new BasicAuthenticationManager(session);
     }
 
     @Override
-    public AppLog getLogManager(Session session, Class<?> aClass) {
-	return new BasicLogManager(session, aClass);
+    public LogManager getLogManager() {
+	return this.logManager;
     }
 
     @Override
     public ScheduleManager getScheduleManager() {
-	return new DefaultScheduleManager();
+	return this.scheduleManager;
+    }
+
+    public void initializeManagers() {
+	this.configurationManager = FileConfigurationManager.getInstance();
+	this.daoManager = JdbcDAOManager.getInstance();
+	this.scheduleManager = new DefaultScheduleManager();
+	this.logManager = new BasicLogManager();
+	this.sessionManager = BasicSessionManager.getInstance();
     }
 
     public void setConfigurationManager(ConfigurationManager configurationManager) {
 	this.configurationManager = configurationManager;
+    }
+
+    public void releaseSession(Session session) {
+	getSessionManager().releaseSession(session);
     }
 }

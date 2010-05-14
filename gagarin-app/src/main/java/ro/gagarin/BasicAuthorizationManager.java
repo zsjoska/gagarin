@@ -50,7 +50,6 @@ public class BasicAuthorizationManager implements AuthorizationManager {
 	    throw new OperationException(ErrorCodes.INTERNAL_ERROR, e);
 	}
 
-	// TODO: rewrite with the new method in the ConversionUtils
 	Iterator<? extends UserPermission> iterator = perm.iterator();
 	while (iterator.hasNext()) {
 	    UserPermission userPermission = iterator.next();

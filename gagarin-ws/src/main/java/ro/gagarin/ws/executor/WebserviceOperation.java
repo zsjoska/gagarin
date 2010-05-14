@@ -75,7 +75,7 @@ public abstract class WebserviceOperation {
 	this.session = sessionManager.acquireSession(this.getSessionString());
 	this.applog = FACTORY.getLogManager().getLoggingSession(session, this.getClass());
 	if (requiresLogin) {
-	    FACTORY.getAuthorizationManager(session).requireLogin(session);
+	    FACTORY.getAuthorizationManager().requireLogin(session);
 	}
     }
 

@@ -12,6 +12,7 @@ import ro.gagarin.application.objects.AppUserPermission;
 import ro.gagarin.application.objects.AppUserRole;
 import ro.gagarin.config.Config;
 import ro.gagarin.config.DBConfigManager;
+import ro.gagarin.config.FileConfigurationManager;
 import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.ItemNotFoundException;
@@ -41,6 +42,8 @@ public class ApplicationInitializer {
 
     private final BasicManagerFactory factory;
 
+    private ConfigurationManager fileConfigManager;
+
     public ApplicationInitializer(BasicManagerFactory instance) {
 	this.factory = instance;
 
@@ -66,7 +69,7 @@ public class ApplicationInitializer {
 	    }
 	}
 
-	LOG.info("---------------------------- Application initializer finished ----------------------------");
+	LOG.info("\n\n---------------------------- Application initializer finished ----------------------------\n");
 	return true;
     }
 
@@ -83,7 +86,8 @@ public class ApplicationInitializer {
 	return session;
     }
 
-    private void doInit() throws ItemNotFoundException, OperationException, DataConstraintException {
+    private void doInit() throws ItemNotFoundException, OperationException, DataConstraintException,
+	    InterruptedException {
 
 	this.setTask("LOAD_FILE_CONFIGURATION");
 	loadFileConfiguration();
@@ -113,26 +117,36 @@ public class ApplicationInitializer {
 	checkAdminUsers(adminRole);
 
 	this.setTask("CHANGE_CFG_MANAGER");
-	session.getManagerFactory().setConfigurationManager(DBConfigManager.getInstance());
+	changeConfigManager();
 
 	this.setTask("DONE");
 
     }
 
+    private void changeConfigManager() throws InterruptedException {
+	DBConfigManager dbConfigManager = DBConfigManager.getInstance();
+	dbConfigManager.initializeManager();
+	session.getManagerFactory().setConfigurationManager(dbConfigManager);
+	LOG.info("Waiting DB Import");
+	dbConfigManager.waitForDBImport();
+
+    }
+
     private void loadFileConfiguration() {
-	factory.getConfigurationManager().loadConfiguration(null);
+	this.fileConfigManager = FileConfigurationManager.getInstance();
     }
 
     private void initManagers(Session session) throws OperationException {
 	ArrayList<BaseManager> managers = new ArrayList<BaseManager>();
+
+	factory.initializeManagers();
+
 	managers.add(factory.getConfigurationManager());
 	managers.add(factory.getDAOManager());
 	managers.add(factory.getAuthenticationManager(session));
 	managers.add(factory.getAuthorizationManager());
 	managers.add(factory.getSessionManager());
 	managers.add(factory.getScheduleManager());
-
-	// TODO: init somehow the DBConfigManager
 
 	for (BaseManager manager : managers) {
 	    manager.initializeManager();
@@ -220,7 +234,7 @@ public class ApplicationInitializer {
 
     public void setTask(String task) {
 	this.task = task;
-	LOG.info("Executing task " + task);
+	LOG.info(" ######## Executing task " + task);
     }
 
     public String getTask() {

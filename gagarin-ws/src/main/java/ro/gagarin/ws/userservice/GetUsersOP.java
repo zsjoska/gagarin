@@ -26,7 +26,7 @@ public class GetUsersOP extends WebserviceOperation {
 
     @Override
     public void prepareManagers(Session session) throws ExceptionBase {
-	authManager = FACTORY.getAuthorizationManager(getSession());
+	authManager = FACTORY.getAuthorizationManager();
 	userDAO = FACTORY.getDAOManager().getUserDAO(getSession());
     }
 

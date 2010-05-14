@@ -36,7 +36,7 @@ public class ConfigTest {
 
 	Session session = TUtil.createTestSession();
 	DBConfigManager dbCfgMgr = DBConfigManager.getInstance();
-
+	String originalValue = dbCfgMgr.getString(Config._TEST_LOCAL_ONLY_);
 	try {
 	    dbCfgMgr.setConfigValue(session, Config._TEST_LOCAL_ONLY_, "1000");
 	} finally {
@@ -47,8 +47,8 @@ public class ConfigTest {
 	long sleeptime = 150; // dbCfgMgr.getLong(Config.DB_CONFIG_CHECK_PERIOD);
 	LOG.info("Waiting for DB Import " + sleeptime);
 	Thread.sleep(sleeptime);
-	assertEquals("The config should not change because this config is defined locally", FileConfigurationManager
-		.getInstance().getString(Config._TEST_LOCAL_ONLY_), dbCfgMgr.getString(Config._TEST_LOCAL_ONLY_));
+	assertEquals("The config should not change because this config is defined locally", originalValue, dbCfgMgr
+		.getString(Config._TEST_LOCAL_ONLY_));
     }
 
     @Test

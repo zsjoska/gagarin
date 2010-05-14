@@ -21,7 +21,7 @@ public class SetConfigEntryOP extends WebserviceOperation {
 
     @Override
     public void prepareManagers(Session session) throws ExceptionBase {
-	authManager = FACTORY.getAuthorizationManager(getSession());
+	authManager = FACTORY.getAuthorizationManager();
     }
 
     @Override

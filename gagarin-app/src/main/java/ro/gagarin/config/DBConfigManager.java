@@ -27,7 +27,7 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
     private static ManagerFactory FACTORY = BasicManagerFactory.getInstance();
 
     // TODO: get rid of this singleton... Application should have an instance
-    private static final DBConfigManager INSTANCE = new DBConfigManager(FileConfigurationManager.getInstance());
+    private static final DBConfigManager INSTANCE = new DBConfigManager(FACTORY.getConfigurationManager());
     private ConfigImportJob configImportJob;
 
     static {
@@ -35,7 +35,7 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
 	long period = cfgManager.getLong(Config.DB_CONFIG_CHECK_PERIOD);
 
 	INSTANCE.registerForChange(INSTANCE);
-	INSTANCE.configImportJob = new DBConfigManager.ConfigImportJob("DB_CONFIG_IMPORT", period, period);
+	INSTANCE.configImportJob = new DBConfigManager.ConfigImportJob("DB_CONFIG_IMPORT", 0, period);
 	FACTORY.getScheduleManager().scheduleJob(INSTANCE.configImportJob, true);
     }
 
@@ -132,9 +132,10 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
     @Override
     public synchronized void setConfigValue(Session session, Config config, String value) throws OperationException {
 
+	AppLog log = session.getManagerFactory().getLogManager().getLoggingSession(session, DBConfigManager.class);
+	log.info("Config change requested: " + config + "=" + value + "(" + getString(config) + ")");
 	// local config has precedence...
 	if (localConfig.isDefined(config)) {
-	    AppLog log = session.getManagerFactory().getLogManager().getLoggingSession(session, DBConfigManager.class);
 	    log.error("Changing the local config will not be persisted! " + config.name() + "=" + value);
 	    localConfig.setConfigValue(session, config, value);
 	    return;

@@ -31,7 +31,7 @@ public class GetRolePermissionstOP extends WebserviceOperation {
 
     @Override
     public void prepareManagers(Session session) throws ExceptionBase {
-	authManager = FACTORY.getAuthorizationManager(getSession());
+	authManager = FACTORY.getAuthorizationManager();
 	roleManager = FACTORY.getDAOManager().getRoleDAO(getSession());
     }
 

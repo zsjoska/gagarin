@@ -30,7 +30,7 @@ public class GetLogEntriesOP extends WebserviceOperation {
 
     @Override
     public void prepareManagers(Session session) throws ExceptionBase {
-	authManager = FACTORY.getAuthorizationManager(getSession());
+	authManager = FACTORY.getAuthorizationManager();
 	logMgr = FACTORY.getLogManager().getLoggingSession(getSession(), UserService.class);
 
     }

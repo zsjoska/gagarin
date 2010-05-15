@@ -23,7 +23,7 @@ import ro.gagarin.user.User;
 import ro.gagarin.user.UserRole;
 
 /**
- * Unit test for simple App.
+ * Group functionality related tests
  */
 public class GroupTest {
     private String groupname = "Group_" + System.nanoTime();
@@ -126,7 +126,7 @@ public class GroupTest {
 
 	ATestGroup group = new ATestGroup();
 	group.setName(groupname);
-	usrManager.createGroup(group);
+	group.setId(usrManager.createGroup(group));
 
 	usrManager.assignUserToGroup(user, group);
 
@@ -137,7 +137,12 @@ public class GroupTest {
 	assertEquals(user.getId(), aUser.getId());
 	assertEquals(user.getUsername(), aUser.getUsername());
 
-	// TODO: add getUserGroups tests
+	List<Group> userGroups = usrManager.getUserGroups(user);
+	assertNotNull(userGroups);
+	assertEquals(1, userGroups.size());
+	Group aGroup = userGroups.get(0);
+	assertEquals(aGroup.getId(), aGroup.getId());
+	assertEquals(aGroup.getName(), aGroup.getName());
 
     }
 
@@ -153,6 +158,7 @@ public class GroupTest {
 
 	ATestGroup group = new ATestGroup();
 	group.setName(groupname + "_NOT");
+	// don't set Id since then will not look up in GB for existence
 
 	try {
 	    usrManager.assignUserToGroup(user, group);
@@ -164,5 +170,27 @@ public class GroupTest {
 	// TODO: check that no assignment was made
     }
 
-    // TODO: add assign tests with invalid roupId and invalid userId
+    @Test
+    public void userGroupAssingnmentInexistentUser() throws Exception {
+
+	UserRole adminRole = TUtil.getAdminRole();
+
+	ATestUser user = new ATestUser();
+	user.setUsername(groupname + "_NOT");
+	user.setRole(adminRole);
+	// don't set Id since then will not look up in GB for existence
+
+	ATestGroup group = new ATestGroup();
+	group.setName(groupname + "_2");
+	group.setId(usrManager.createGroup(group));
+
+	try {
+	    usrManager.assignUserToGroup(user, group);
+	    fail("Inexistent user shouldn't be assigned");
+	} catch (ItemNotFoundException e) {
+	    assertEquals("Invalid error code", ErrorCodes.ITEM_NOT_FOUND, e.getErrorCode());
+	}
+
+	// TODO: check that no assignment was made
+    }
 }

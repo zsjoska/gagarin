@@ -1,6 +1,7 @@
 package ro.gagarin;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
 
 import java.util.ArrayList;
 
@@ -95,6 +96,9 @@ public class ConfigTest {
     @Test
     public void configNotificationCombined() throws Exception {
 	TUtil.setDBImportRate(2000);
+	String configValue1 = String.valueOf(System.nanoTime());
+	String configValue2 = String.valueOf(System.nanoTime());
+	assertNotSame(configValue1, configValue2);
 	final ArrayList<String> values = new ArrayList<String>();
 	Session session = TUtil.createTestSession();
 	DBConfigManager dbCfgMgr = DBConfigManager.getInstance();
@@ -111,30 +115,31 @@ public class ConfigTest {
 	});
 
 	try {
-	    dbCfgMgr.setConfigValue(session, Config._TEST_DB_AND_FILE_, "DB");
+	    dbCfgMgr.setConfigValue(session, Config._TEST_DB_AND_FILE_, configValue1);
 
 	} finally {
 	    FACTORY.releaseSession(session);
 	}
 	dbCfgMgr.waitForDBImport();
 	assertEquals("We had to be notified", 1, values.size());
-	assertEquals("Wrong value in config", "DB", values.get(0));
-	assertEquals("The config should change", "DB", dbCfgMgr.getString(Config._TEST_DB_AND_FILE_));
+	assertEquals("Wrong value in config", configValue1, values.get(0));
+	assertEquals("The config should change", configValue1, dbCfgMgr.getString(Config._TEST_DB_AND_FILE_));
 
 	// now we change the file config and we expect that DB config listeners
 	// will also be notified
 	session = TUtil.createTestSession();
 	ConfigurationManager cfgManager = FileConfigurationManager.getInstance();
 	try {
-	    cfgManager.setConfigValue(session, Config._TEST_DB_AND_FILE_, "FILE");
+	    cfgManager.setConfigValue(session, Config._TEST_DB_AND_FILE_, configValue2);
 	} finally {
 	    FACTORY.releaseSession(session);
 	}
 
-	assertEquals("The config should change", "FILE", cfgManager.getString(Config._TEST_DB_AND_FILE_));
-	assertEquals("The config should change also for DB", "FILE", dbCfgMgr.getString(Config._TEST_DB_AND_FILE_));
+	assertEquals("The config should change", configValue2, cfgManager.getString(Config._TEST_DB_AND_FILE_));
+	assertEquals("The config should change also for DB", configValue2, dbCfgMgr
+		.getString(Config._TEST_DB_AND_FILE_));
 	assertEquals("We had to be notified", 2, values.size());
-	assertEquals("Wrong value notified", "FILE", values.get(1));
+	assertEquals("Wrong value notified", configValue2, values.get(1));
 
     }
 }

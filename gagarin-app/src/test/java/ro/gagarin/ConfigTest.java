@@ -31,12 +31,23 @@ public class ConfigTest {
 	TUtil.resetDBImportRate();
     }
 
+    /**
+     * 1. Ensures that we set the value in local config.<br>
+     * 2. Changes the config value in the DB<br>
+     * 3. Verifies that the local config was changed, thus the two values are in
+     * sync.
+     * 
+     * @throws Exception
+     */
     @Test
     public void testLocalConfigPriority() throws Exception {
 
 	Session session = TUtil.createTestSession();
+
+	ConfigurationManager localCfgMgr = FileConfigurationManager.getInstance();
+	localCfgMgr.setConfigValue(session, Config._TEST_LOCAL_ONLY_, "A_LOCAL_VALUE");
+
 	DBConfigManager dbCfgMgr = DBConfigManager.getInstance();
-	String originalValue = dbCfgMgr.getString(Config._TEST_LOCAL_ONLY_);
 	try {
 	    dbCfgMgr.setConfigValue(session, Config._TEST_LOCAL_ONLY_, "1000");
 	} finally {
@@ -47,8 +58,8 @@ public class ConfigTest {
 	long sleeptime = 150; // dbCfgMgr.getLong(Config.DB_CONFIG_CHECK_PERIOD);
 	LOG.info("Waiting for DB Import " + sleeptime);
 	Thread.sleep(sleeptime);
-	assertEquals("The config should not change because this config is defined locally", originalValue, dbCfgMgr
-		.getString(Config._TEST_LOCAL_ONLY_));
+	assertEquals("The config should not change because this config is defined locally", FileConfigurationManager
+		.getInstance().getString(Config._TEST_LOCAL_ONLY_), dbCfgMgr.getString(Config._TEST_LOCAL_ONLY_));
     }
 
     @Test

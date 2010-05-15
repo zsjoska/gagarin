@@ -70,7 +70,7 @@ public class ConfigTest {
 	DBConfigManager dbCfgMgr = DBConfigManager.getInstance();
 
 	String aNewValue = String.valueOf(System.nanoTime());
-	String oldValue = dbCfgMgr.getString(Config._TEST_DB_ONLY_);
+	dbCfgMgr.getString(Config._TEST_DB_ONLY_);
 	try {
 
 	    dbCfgMgr.setConfigValue(session, Config._TEST_DB_ONLY_, aNewValue);

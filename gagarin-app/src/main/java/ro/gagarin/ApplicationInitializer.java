@@ -42,8 +42,6 @@ public class ApplicationInitializer {
 
     private final BasicManagerFactory factory;
 
-    private ConfigurationManager fileConfigManager;
-
     public ApplicationInitializer(BasicManagerFactory instance) {
 	this.factory = instance;
 
@@ -136,7 +134,7 @@ public class ApplicationInitializer {
     }
 
     private void loadFileConfiguration() {
-	this.fileConfigManager = FileConfigurationManager.getInstance();
+	this.cfgManager = FileConfigurationManager.getInstance();
     }
 
     private void initManagers(Session session) throws OperationException {

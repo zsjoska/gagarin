@@ -14,7 +14,7 @@ import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.Group;
 import ro.gagarin.ws.Authentication;
-import ro.gagarin.ws.UserService;
+import ro.gagarin.ws.Admin;
 import ro.gagarin.ws.executor.WSException;
 import ro.gagarin.ws.objects.WSGroup;
 
@@ -23,7 +23,7 @@ public class GroupTest {
     private static String username = "_User_" + System.currentTimeMillis();
     private static String groupname = "_Group_" + System.currentTimeMillis();
     private static String session;
-    private static UserService userService = new UserService();
+    private static Admin userService = new Admin();
 
     @BeforeClass
     public static void startup() throws WSException {

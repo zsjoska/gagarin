@@ -20,7 +20,7 @@ import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.UserRole;
 import ro.gagarin.utils.Statistic;
 import ro.gagarin.ws.Authentication;
-import ro.gagarin.ws.UserService;
+import ro.gagarin.ws.Admin;
 import ro.gagarin.ws.executor.WSException;
 import ro.gagarin.ws.objects.WSConfig;
 import ro.gagarin.ws.objects.WSExportedSession;
@@ -37,7 +37,7 @@ public class UserServiceTest {
     private static Authentication authentication = new Authentication();
     private static String username = "_User_" + System.currentTimeMillis();
     private static String session;
-    private static UserService userService = new UserService();
+    private static Admin userService = new Admin();
 
     @BeforeClass
     public static void startup() throws WSException {
@@ -49,7 +49,7 @@ public class UserServiceTest {
     public void testCreateUser() throws SessionNotFoundException, PermissionDeniedException, OperationException,
 	    LoginRequiredException, WSException {
 
-	UserService userService = new UserService();
+	Admin userService = new Admin();
 
 	List<WSUserRole> roles = userService.getRoleList(session);
 
@@ -64,7 +64,7 @@ public class UserServiceTest {
     @Test
     public void testCreateRole() throws WSException, SessionNotFoundException, OperationException,
 	    PermissionDeniedException, LoginRequiredException {
-	UserService userService = new UserService();
+	Admin userService = new Admin();
 
 	// check that ID is enough
 	List<WSUserPermission> allPermissionList = userService.getAllPermissionList(session);
@@ -102,7 +102,7 @@ public class UserServiceTest {
     @Test
     public void testListUsers() throws WSException {
 
-	UserService userService = new UserService();
+	Admin userService = new Admin();
 
 	List<WSUser> users = userService.getUsers(session);
 	for (WSUser wsUser : users) {

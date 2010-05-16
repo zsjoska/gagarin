@@ -23,7 +23,7 @@ import ro.gagarin.user.User;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
 import ro.gagarin.ws.Authentication;
-import ro.gagarin.ws.UserService;
+import ro.gagarin.ws.Admin;
 import ro.gagarin.ws.executor.WSException;
 import ro.gagarin.ws.objects.WSUser;
 import ro.gagarin.ws.objects.WSUserRole;
@@ -36,7 +36,7 @@ public class MethodAccessTest {
     private static final transient ManagerFactory FACTORY = BasicManagerFactory.getInstance();
 
     private static Authentication authentication = new Authentication();
-    private static UserService userService = new UserService();
+    private static Admin userService = new Admin();
 
     private String session = null;
 

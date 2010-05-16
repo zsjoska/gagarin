@@ -9,7 +9,7 @@ import ro.gagarin.log.LogEntry;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.utils.FieldValidator;
-import ro.gagarin.ws.UserService;
+import ro.gagarin.ws.Admin;
 import ro.gagarin.ws.executor.WebserviceOperation;
 import ro.gagarin.ws.objects.WSLogEntry;
 import ro.gagarin.ws.util.WSConversionUtils;
@@ -31,7 +31,7 @@ public class GetLogEntriesOP extends WebserviceOperation {
     @Override
     public void prepareManagers(Session session) throws ExceptionBase {
 	authManager = FACTORY.getAuthorizationManager();
-	logMgr = FACTORY.getLogManager().getLoggingSession(getSession(), UserService.class);
+	logMgr = FACTORY.getLogManager().getLoggingSession(getSession(), Admin.class);
 
     }
 

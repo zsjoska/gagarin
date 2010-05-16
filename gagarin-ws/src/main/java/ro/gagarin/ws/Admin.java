@@ -36,9 +36,8 @@ import ro.gagarin.ws.userservice.LogoutSessionOP;
 import ro.gagarin.ws.userservice.SetConfigEntryOP;
 import ro.gagarin.ws.userservice.UpdateGroupOP;
 
-// TODO: rename to AdminService
 @WebService
-public class UserService {
+public class Admin {
 
     @WebMethod
     public Long createUser(String sessionId, WSUser user) throws WSException {

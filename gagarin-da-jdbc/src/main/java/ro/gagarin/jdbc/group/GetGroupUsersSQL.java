@@ -47,7 +47,7 @@ public class GetGroupUsersSQL extends SelectQuery {
 
     @Override
     protected String getSQL() {
-	return "SELECT Users.id, username, name, email, phone, password, roleid, roleName "
+	return "SELECT Users.id, username, name, email, phone, password, roleid, roleName, authentication, status, created "
 		+ "FROM Users INNER JOIN UserRoles ON Users.roleid = UserRoles.id "
 		+ "INNER JOIN UserGroupAssignment ON Users.id = UserGroupAssignment.user_id "
 		+ "WHERE UserGroupAssignment.group_id = ?";

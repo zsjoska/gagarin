@@ -18,10 +18,12 @@ import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.session.Session;
+import ro.gagarin.user.AuthenticationType;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
+import ro.gagarin.user.UserStatus;
 import ro.gagarin.utils.ConversionUtils;
 
 public class ApplicationInitializer {
@@ -190,6 +192,8 @@ public class ApplicationInitializer {
 	    adminUser.setPassword(adminPassword);
 	    adminUser.setUsername(adminUserName);
 	    adminUser.setRole(adminRole);
+	    adminUser.setAuthentication(AuthenticationType.INTERNAL);
+	    adminUser.setStatus(UserStatus.ACTIVE);
 	    userManager.createUser(adminUser);
 	    if (adminUsers == null)
 		adminUsers = new ArrayList<User>(1);

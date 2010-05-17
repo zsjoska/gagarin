@@ -22,8 +22,9 @@ import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
-import ro.gagarin.ws.Authentication;
+import ro.gagarin.user.UserStatus;
 import ro.gagarin.ws.Admin;
+import ro.gagarin.ws.Authentication;
 import ro.gagarin.ws.executor.WSException;
 import ro.gagarin.ws.objects.WSUser;
 import ro.gagarin.ws.objects.WSUserRole;
@@ -97,6 +98,7 @@ public class MethodAccessTest {
 	weakUser.setUsername("weakUser");
 	weakUser.setPassword("password");
 	weakUser.setRole(role1);
+	weakUser.setStatus(UserStatus.ACTIVE);
 	weakUser.setId(userDAO.createUser(weakUser));
 
 	// have it committed so other sessions to have access to it

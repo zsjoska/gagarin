@@ -29,6 +29,9 @@ CREATE TABLE Users
 	phone varchar(50), 
 	password varchar(50), 
 	roleid bigint NOT NULL,
+	status int NOT NULL,
+	authentication varchar(20),
+	created bigint NOT NULL,	
 	
 	CONSTRAINT PK_USERS_id PRIMARY KEY (id),
 	CONSTRAINT UK_USERS_userName UNIQUE (userName)

@@ -16,4 +16,10 @@ public interface User {
 
     public abstract UserRole getRole();
 
+    public abstract UserStatus getStatus();
+
+    public abstract AuthenticationType getAuthentication();
+
+    public abstract Long getCreated();
+
 }

@@ -43,7 +43,7 @@ public class GetUsersWithRoleSQL extends SelectQuery {
 
     @Override
     protected String getSQL() {
-	return "SELECT id, name, userName, roleid, email, phone FROM Users WHERE roleid = ?";
+	return "SELECT id, name, userName, roleid, email, phone, authentication, status, created FROM Users WHERE roleid = ?";
     }
 
     public static ArrayList<User> execute(BaseJdbcDAO dao, UserRole role) throws OperationException,

@@ -20,6 +20,7 @@ public class ObjectFieldCompatibilityTest {
 	user.setEmail("a");
 	user.setPhone("a");
 	user.setPassword("a");
+	user.setCreated(System.currentTimeMillis());
 	FieldValidator.checkAllFields(user);
     }
 

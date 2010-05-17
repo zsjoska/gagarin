@@ -26,6 +26,7 @@ import ro.gagarin.testutil.TUtil;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
+import ro.gagarin.user.UserStatus;
 
 /**
  * Unit test for simple App.
@@ -189,6 +190,7 @@ public class RoleTest {
 	user.setUsername("username");
 	user.setPassword("password");
 	user.setRole(role);
+	user.setStatus(UserStatus.ACTIVE);
 	user.setId(userDAO.createUser(user));
 
 	List<User> usersWithRole = userDAO.getUsersWithRole(role);

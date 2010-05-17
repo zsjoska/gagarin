@@ -18,9 +18,10 @@ import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.testutil.TUtil;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.UserRole;
+import ro.gagarin.user.UserStatus;
 import ro.gagarin.utils.Statistic;
-import ro.gagarin.ws.Authentication;
 import ro.gagarin.ws.Admin;
+import ro.gagarin.ws.Authentication;
 import ro.gagarin.ws.executor.WSException;
 import ro.gagarin.ws.objects.WSConfig;
 import ro.gagarin.ws.objects.WSExportedSession;
@@ -57,8 +58,10 @@ public class UserServiceTest {
 	user.setUsername(username);
 	user.setPassword("password");
 	user.setRole(roles.get(0));
+	user.setStatus(UserStatus.ACTIVE);
 
 	userService.createUser(session, user);
+	// TODO: check created user
     }
 
     @Test

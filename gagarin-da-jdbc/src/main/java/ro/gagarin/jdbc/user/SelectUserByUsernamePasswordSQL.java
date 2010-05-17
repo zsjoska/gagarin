@@ -51,7 +51,7 @@ public class SelectUserByUsernamePasswordSQL extends SelectQuery {
 
     @Override
     protected String getSQL() {
-	return "SELECT Users.id, username, name, password, email, phone, roleid, roleName "
+	return "SELECT Users.id, username, name, password, email, phone, roleid, roleName, authentication, status, created "
 		+ "FROM Users INNER JOIN UserRoles ON Users.roleid = UserRoles.id "
 		+ "WHERE username = ? and password = ?";
     }

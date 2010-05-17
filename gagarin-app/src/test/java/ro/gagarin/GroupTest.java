@@ -21,6 +21,7 @@ import ro.gagarin.testutil.TUtil;
 import ro.gagarin.user.Group;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserRole;
+import ro.gagarin.user.UserStatus;
 
 /**
  * Group functionality related tests
@@ -122,6 +123,7 @@ public class GroupTest {
 	ATestUser user = new ATestUser();
 	user.setUsername(groupname);
 	user.setRole(adminRole);
+	user.setStatus(UserStatus.ACTIVE);
 	user.setId(usrManager.createUser(user));
 
 	ATestGroup group = new ATestGroup();
@@ -154,6 +156,7 @@ public class GroupTest {
 	ATestUser user = new ATestUser();
 	user.setUsername(groupname + "_1");
 	user.setRole(adminRole);
+	user.setStatus(UserStatus.ACTIVE);
 	user.setId(usrManager.createUser(user));
 
 	ATestGroup group = new ATestGroup();

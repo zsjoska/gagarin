@@ -20,8 +20,10 @@ import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.session.Session;
 import ro.gagarin.testobjects.ATestUser;
 import ro.gagarin.testutil.TUtil;
+import ro.gagarin.user.AuthenticationType;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserRole;
+import ro.gagarin.user.UserStatus;
 
 /**
  * Unit test for simple App.
@@ -68,6 +70,7 @@ public class UserTest {
 	user.setEmail(username + "@gagarin.ro");
 	user.setPhone("any kind of phone");
 	user.setRole(adminRole);
+	user.setStatus(UserStatus.ACTIVE);
 	user.setId(usrManager.createUser(user));
 
 	User user2 = usrManager.getUserByUsername(username);
@@ -78,6 +81,9 @@ public class UserTest {
 	assertEquals("email does not match", user.getEmail(), user2.getEmail());
 	assertEquals("phone does not match", user.getPhone(), user2.getPhone());
 	assertEquals("username does not match", user.getUsername(), user2.getUsername());
+	assertEquals("authentication should be filled", user2.getAuthentication(), AuthenticationType.INTERNAL);
+	assertEquals("status does not match", user.getStatus(), user2.getStatus());
+	assertNotNull("created should be filled", user2.getCreated());
 	assertNotNull("The role field must be filled by queries", user2.getRole());
 
 	usrManager.deleteUser(user);
@@ -167,10 +173,12 @@ public class UserTest {
 	user1.setUsername("UserName2");
 	user1.setPassword("password");
 	user1.setRole(adminRole);
+	user1.setStatus(UserStatus.ACTIVE);
 
 	ATestUser user2 = new ATestUser();
 	user2.setUsername("UserName2");
 	user2.setPassword("password");
+	user2.setStatus(UserStatus.ACTIVE);
 	user2.setRole(adminRole);
 
 	usrManager.createUser(user1);

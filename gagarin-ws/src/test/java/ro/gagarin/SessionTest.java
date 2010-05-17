@@ -24,6 +24,7 @@ import ro.gagarin.session.Session;
 import ro.gagarin.testutil.TUtil;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.UserRole;
+import ro.gagarin.user.UserStatus;
 import ro.gagarin.utils.ConversionUtils;
 import ro.gagarin.ws.Authentication;
 import ro.gagarin.ws.executor.WSException;
@@ -67,6 +68,7 @@ public class SessionTest {
 	user.setUsername("1" + username);
 	user.setPassword("password1");
 	user.setRole(roleManager.getRoleByName(cfgManager.getString(Config.ADMIN_ROLE_NAME)));
+	user.setStatus(UserStatus.ACTIVE);
 	userManager.createUser(user);
 	FACTORY.releaseSession(session);
 
@@ -92,6 +94,7 @@ public class SessionTest {
 	user.setUsername("2" + username);
 	user.setPassword("password2");
 	user.setRole(roleManager.getRoleByName(cfgManager.getString(Config.ADMIN_ROLE_NAME)));
+	user.setStatus(UserStatus.ACTIVE);
 	userManager.createUser(user);
 
 	FACTORY.releaseSession(session);
@@ -128,6 +131,7 @@ public class SessionTest {
 	user.setUsername("3" + username);
 	user.setPassword("password3");
 	user.setRole(roleManager.getRoleByName(cfgManager.getString(Config.ADMIN_ROLE_NAME)));
+	user.setStatus(UserStatus.ACTIVE);
 	userManager.createUser(user);
 
 	FACTORY.releaseSession(session);

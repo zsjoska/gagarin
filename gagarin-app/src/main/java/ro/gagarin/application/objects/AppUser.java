@@ -1,8 +1,10 @@
 package ro.gagarin.application.objects;
 
 import ro.gagarin.BaseEntity;
+import ro.gagarin.user.AuthenticationType;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserRole;
+import ro.gagarin.user.UserStatus;
 import ro.gagarin.utils.ConversionUtils;
 
 public class AppUser extends BaseEntity implements User {
@@ -15,6 +17,17 @@ public class AppUser extends BaseEntity implements User {
     private String password;
     private String username;
     private UserRole role;
+    private AuthenticationType authentication;
+    private UserStatus status;
+    private Long created;
+
+    public void setAuthentication(AuthenticationType authentication) {
+	this.authentication = authentication;
+    }
+
+    public void setStatus(UserStatus status) {
+	this.status = status;
+    }
 
     public String getEmail() {
 	return email;
@@ -73,5 +86,24 @@ public class AppUser extends BaseEntity implements User {
     @Override
     public String toString() {
 	return ConversionUtils.user2String(this);
+    }
+
+    @Override
+    public AuthenticationType getAuthentication() {
+	return this.authentication;
+    }
+
+    @Override
+    public UserStatus getStatus() {
+	return this.status;
+    }
+
+    @Override
+    public Long getCreated() {
+	return this.created;
+    }
+
+    public void setCreated(Long created) {
+	this.created = created;
     }
 }

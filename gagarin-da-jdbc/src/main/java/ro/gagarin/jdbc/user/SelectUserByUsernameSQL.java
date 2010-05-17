@@ -12,7 +12,7 @@ import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.BaseJdbcDAO;
 import ro.gagarin.jdbc.SelectQuery;
 import ro.gagarin.jdbc.objects.DBUser;
-import ro.gagarin.jdbc.objects.DBUserRole;
+import ro.gagarin.jdbc.util.JDBCRSConvert;
 import ro.gagarin.user.User;
 import ro.gagarin.utils.FieldValidator;
 
@@ -33,16 +33,7 @@ public class SelectUserByUsernameSQL extends SelectQuery {
     @Override
     protected void useResult(ResultSet rs) throws SQLException {
 	if (rs.next()) {
-	    user = new DBUser();
-	    user.setId(rs.getLong("id"));
-	    user.setUsername(rs.getString("username"));
-	    user.setName(rs.getString("name"));
-	    user.setEmail(rs.getString("email"));
-	    user.setPhone(rs.getString("phone"));
-	    DBUserRole role = new DBUserRole();
-	    role.setId(rs.getLong("roleid"));
-	    role.setRoleName(rs.getString("roleName"));
-	    user.setRole(role);
+	    user = JDBCRSConvert.convertRSToUserWithRole(rs);
 	} else {
 	    user = null;
 	}

@@ -10,7 +10,7 @@ import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.BaseJdbcDAO;
 import ro.gagarin.jdbc.SelectQuery;
 import ro.gagarin.jdbc.objects.DBUser;
-import ro.gagarin.jdbc.objects.DBUserRole;
+import ro.gagarin.jdbc.util.JDBCRSConvert;
 import ro.gagarin.user.User;
 
 public class SelectUsersSQL extends SelectQuery {
@@ -25,16 +25,7 @@ public class SelectUsersSQL extends SelectQuery {
     protected void useResult(ResultSet rs) throws SQLException {
 	this.users = new ArrayList<User>();
 	while (rs.next()) {
-	    DBUser user = new DBUser();
-	    user.setId(rs.getLong("id"));
-	    user.setName(rs.getString("name"));
-	    user.setEmail(rs.getString("email"));
-	    user.setPhone(rs.getString("phone"));
-	    user.setUsername(rs.getString("userName"));
-	    DBUserRole role = new DBUserRole();
-	    role.setId(rs.getLong("roleid"));
-	    role.setRoleName(rs.getString("roleName"));
-	    user.setRole(role);
+	    DBUser user = JDBCRSConvert.convertRSToUserWithRole(rs);
 	    users.add(user);
 	}
     }

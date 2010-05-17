@@ -11,6 +11,7 @@ import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.BaseJdbcDAO;
 import ro.gagarin.jdbc.SelectQuery;
 import ro.gagarin.jdbc.objects.DBUser;
+import ro.gagarin.jdbc.util.JDBCRSConvert;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserRole;
 import ro.gagarin.utils.FieldValidator;
@@ -29,10 +30,7 @@ public class GetUsersWithRoleSQL extends SelectQuery {
     protected void useResult(ResultSet rs) throws SQLException {
 	this.users = new ArrayList<User>();
 	while (rs.next()) {
-	    DBUser user = new DBUser();
-	    user.setId(rs.getLong("id"));
-	    user.setName(rs.getString("name"));
-	    user.setUsername(rs.getString("userName"));
+	    DBUser user = JDBCRSConvert.convertRSToUser(rs);
 	    user.setRole(role);
 	    users.add(user);
 	}
@@ -45,7 +43,7 @@ public class GetUsersWithRoleSQL extends SelectQuery {
 
     @Override
     protected String getSQL() {
-	return "SELECT id, name, userName, roleid FROM Users WHERE roleid = ?";
+	return "SELECT id, name, userName, roleid, email, phone FROM Users WHERE roleid = ?";
     }
 
     public static ArrayList<User> execute(BaseJdbcDAO dao, UserRole role) throws OperationException,

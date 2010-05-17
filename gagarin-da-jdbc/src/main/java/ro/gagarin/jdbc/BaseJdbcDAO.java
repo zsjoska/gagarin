@@ -126,54 +126,56 @@ public class BaseJdbcDAO implements BaseDAO {
 	Connection tmpConn = this.connection;
 	this.connection = null;
 
-	if (this.ourConnection) {
+	if (!this.ourConnection) {
+	    // not our connection, nothing to do
+	    return;
+	}
 
-	    OperationException exception = null;
-	    if (!this.rollback) {
+	OperationException exception = null;
+	if (!this.rollback) {
 
-		if (!this.changePending) {
-		    try {
-			tmpConn.close();
-			APPLOG.debug("Released connection " + tmpConn.toString());
-			return;
-		    } catch (SQLException e) {
-			exception = new OperationException(ErrorCodes.DB_OP_ERROR, e);
-			APPLOG.error("Exception on connection close", e);
-		    }
-		} else {
+	    if (!this.changePending) {
+		try {
+		    tmpConn.close();
+		    APPLOG.debug("Released connection " + tmpConn.toString());
+		    return;
+		} catch (SQLException e) {
+		    exception = new OperationException(ErrorCodes.DB_OP_ERROR, e);
+		    APPLOG.error("Exception on connection close", e);
+		}
+	    } else {
 
-		    APPLOG.debug("Committing connection " + tmpConn.toString());
-		    try {
-			tmpConn.commit();
-			tmpConn.close();
-			APPLOG.debug("Released connection " + tmpConn.toString());
-			return;
-		    } catch (SQLException e) {
-			// this is the most relevant exception, so keep it then
-			// throw it
-			exception = new OperationException(ErrorCodes.DB_OP_ERROR, e);
-			APPLOG.error("Exception on commit:", e);
-		    }
+		APPLOG.debug("Committing connection " + tmpConn.toString());
+		try {
+		    tmpConn.commit();
+		    tmpConn.close();
+		    APPLOG.debug("Released connection " + tmpConn.toString());
+		    return;
+		} catch (SQLException e) {
+		    // this is the most relevant exception, so keep it then
+		    // throw it
+		    exception = new OperationException(ErrorCodes.DB_OP_ERROR, e);
+		    APPLOG.error("Exception on commit:", e);
 		}
 	    }
-	    APPLOG.debug("Rollback connection " + tmpConn.toString());
-	    try {
-		tmpConn.rollback();
-	    } catch (SQLException e) {
-		if (exception == null)
-		    exception = new OperationException(ErrorCodes.DB_OP_ERROR, e);
-		APPLOG.error("Exception on rollback:", e);
-	    }
-	    try {
-		tmpConn.close();
-	    } catch (SQLException e) {
-		if (exception == null)
-		    exception = new OperationException(ErrorCodes.DB_OP_ERROR, e);
-		APPLOG.error("Exception on close:", e);
-	    }
-	    if (exception != null)
-		throw exception;
 	}
+	APPLOG.debug("Rollback connection " + tmpConn.toString());
+	try {
+	    tmpConn.rollback();
+	} catch (SQLException e) {
+	    if (exception == null)
+		exception = new OperationException(ErrorCodes.DB_OP_ERROR, e);
+	    APPLOG.error("Exception on rollback:", e);
+	}
+	try {
+	    tmpConn.close();
+	} catch (SQLException e) {
+	    if (exception == null)
+		exception = new OperationException(ErrorCodes.DB_OP_ERROR, e);
+	    APPLOG.error("Exception on close:", e);
+	}
+	if (exception != null)
+	    throw exception;
 
     }
 

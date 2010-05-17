@@ -34,10 +34,19 @@ public class UserTest {
     private static final ManagerFactory FACTORY = BasicManagerFactory.getInstance();
 
     private Session session = null;
+    private UserRole adminRole;
+    private RoleDAO roleManager;
+    private UserDAO usrManager;
 
     @Before
-    public void init() {
+    public void init() throws Exception {
 	this.session = TUtil.createTestSession();
+	usrManager = FACTORY.getDAOManager().getUserDAO(session);
+	roleManager = FACTORY.getDAOManager().getRoleDAO(session);
+
+	adminRole = roleManager.getRoleByName(configManager.getString(Config.ADMIN_ROLE_NAME));
+	assertNotNull("this test requires application setup", adminRole);
+
     }
 
     @After
@@ -49,19 +58,12 @@ public class UserTest {
 
     @Test
     public void getUserByNameInexistent() throws OperationException {
-	UserDAO usrManager = FACTORY.getDAOManager().getUserDAO(session);
 	User user = usrManager.getUserByUsername(username);
 	assertNull("The user could not exists", user);
     }
 
     @Test
     public void createUser() throws ItemNotFoundException, DataConstraintException, OperationException {
-
-	UserDAO usrManager = FACTORY.getDAOManager().getUserDAO(session);
-	RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
-
-	UserRole adminRole = roleManager.getRoleByName(configManager.getString(Config.ADMIN_ROLE_NAME));
-	assertNotNull("this test requires application setup", adminRole);
 
 	AppUser user = new AppUser();
 	user.setName("Name Of User");
@@ -92,9 +94,6 @@ public class UserTest {
 
     @Test
     public void createUserNegative() throws Exception {
-
-	UserDAO usrManager = FACTORY.getDAOManager().getUserDAO(session);
-	RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
 
 	UserRole adminRole = roleManager.getRoleByName(configManager.getString(Config.ADMIN_ROLE_NAME));
 	assertNotNull("this test requires application setup", adminRole);
@@ -163,9 +162,6 @@ public class UserTest {
 
     @Test
     public void usersWiththeSameUsername() throws ItemNotFoundException, DataConstraintException, OperationException {
-
-	UserDAO usrManager = FACTORY.getDAOManager().getUserDAO(session);
-	RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
 
 	UserRole adminRole = roleManager.getRoleByName(configManager.getString(Config.ADMIN_ROLE_NAME));
 

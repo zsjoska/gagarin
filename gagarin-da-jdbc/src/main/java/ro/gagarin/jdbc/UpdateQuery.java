@@ -34,6 +34,10 @@ public abstract class UpdateQuery {
 	PreparedStatement stmnt = null;
 	boolean success = false;
 	try {
+
+	    // TODO: UserTest.usersWithoutUsername shows a test where
+	    // Cannot close a connection while a transaction is still active.
+	    // appears
 	    checkInput();
 	    String sqlString = getSQL();
 	    LOG.debug("Got SQL:" + sqlString);

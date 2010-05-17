@@ -17,13 +17,13 @@ public abstract class SelectQuery extends UpdateQuery {
 	super(dao, objectClass);
     }
 
-    protected void doExecute(PreparedStatement stmnt) {
+    protected void doExecute(PreparedStatement stmnt) throws OperationException {
 	ResultSet result;
 	try {
 	    result = stmnt.executeQuery();
 	    useResult(result);
 	} catch (SQLException e) {
-
+	    throw new OperationException(ErrorCodes.DB_OP_ERROR, e);
 	}
     }
 

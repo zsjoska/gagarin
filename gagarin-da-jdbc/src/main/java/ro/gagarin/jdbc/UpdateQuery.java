@@ -79,7 +79,7 @@ public abstract class UpdateQuery {
 	return this.updatedRowCount;
     }
 
-    protected void doExecute(PreparedStatement stmnt) throws DataConstraintException {
+    protected void doExecute(PreparedStatement stmnt) throws DataConstraintException, OperationException {
 	try {
 	    long start = System.currentTimeMillis();
 	    updatedRowCount = stmnt.executeUpdate();

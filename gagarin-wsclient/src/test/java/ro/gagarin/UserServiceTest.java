@@ -27,8 +27,8 @@ public class UserServiceTest {
 
     @Test
     public void createUser() throws WSException_Exception {
-	UserServiceService service = new UserServiceService();
-	UserService userAPI = service.getUserServicePort();
+	AdminService service = new AdminService();
+	Admin userAPI = service.getAdminPort();
 	WsUserRole role = new WsUserRole();
 	role.setRoleName("ADMIN_ROLE");
 

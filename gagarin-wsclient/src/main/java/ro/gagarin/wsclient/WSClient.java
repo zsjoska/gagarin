@@ -5,16 +5,16 @@ import java.net.URL;
 
 import javax.xml.namespace.QName;
 
+import ro.gagarin.Admin;
+import ro.gagarin.AdminService;
 import ro.gagarin.Authentication;
 import ro.gagarin.AuthenticationService;
-import ro.gagarin.UserService;
-import ro.gagarin.UserServiceService;
 
 public class WSClient {
 
     private final String rootURL;
     private Authentication authentication;
-    private UserService userService;
+    private Admin userService;
 
     private WSClient(String rootURL) throws MalformedURLException {
 	new URL(rootURL);
@@ -39,13 +39,13 @@ public class WSClient {
 	return this.authentication;
     }
 
-    public synchronized UserService getUserService() {
+    public synchronized Admin getUserService() {
 	if (this.userService == null) {
-	    UserServiceService service;
+	    AdminService service;
 	    try {
-		service = new UserServiceService(new URL(this.rootURL + "UserService" + "?wsdl"), new QName(
+		service = new AdminService(new URL(this.rootURL + "UserService" + "?wsdl"), new QName(
 			"http://ws.gagarin.ro/", "UserServiceService"));
-		this.userService = service.getUserServicePort();
+		this.userService = service.getAdminPort();
 	    } catch (MalformedURLException e) {
 		e.printStackTrace();
 	    }

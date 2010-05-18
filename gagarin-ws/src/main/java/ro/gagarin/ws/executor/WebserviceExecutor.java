@@ -5,6 +5,7 @@ package ro.gagarin.ws.executor;
 
 import org.apache.log4j.Logger;
 
+import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.utils.Statistic;
 
@@ -23,6 +24,9 @@ public class WebserviceExecutor {
 	} catch (ExceptionBase e) {
 	    LOG.error("Exception executing the operation: " + op.getClass().getName(), e);
 	    throw new WSException(e);
+	} catch (Exception e) {
+	    LOG.error("Exception executing the operation: " + op.getClass().getName(), e);
+	    throw new WSException(ErrorCodes.INTERNAL_ERROR, e.getMessage());
 	} finally {
 	    try {
 		if (op.getSession() != null) {

@@ -34,10 +34,6 @@ public abstract class UpdateQuery {
 	PreparedStatement stmnt = null;
 	boolean success = false;
 	try {
-
-	    // TODO: UserTest.usersWithoutUsername shows a test where
-	    // Cannot close a connection while a transaction is still active.
-	    // appears
 	    checkInput();
 	    String sqlString = getSQL();
 	    LOG.debug("Got SQL:" + sqlString);
@@ -46,14 +42,13 @@ public abstract class UpdateQuery {
 	    fillParameters(stmnt);
 	    LOG.debug("Executing SQL:" + sqlString);
 	    doExecute(stmnt);
-	    this.dao.markChangePending();
+	    stmnt.close();
 	    success = true;
 	} catch (OperationException e) {
 	    LOG.error("Error executing the query", e);
 	    throw e;
 	} catch (DataConstraintException e) {
 	    // catching just to not be caught by the generic exception clause
-	    LOG.error("Error executing the query", e);
 	    throw e;
 	} catch (SQLException e) {
 
@@ -87,6 +82,7 @@ public abstract class UpdateQuery {
 	try {
 	    long start = System.currentTimeMillis();
 	    updatedRowCount = stmnt.executeUpdate();
+	    this.dao.markChangePending();
 	    LOG.debug("Updated " + updatedRowCount + " rows");
 	    Statistic.getByName("db.update." + getSQL()).add(start);
 	} catch (SQLException e) {

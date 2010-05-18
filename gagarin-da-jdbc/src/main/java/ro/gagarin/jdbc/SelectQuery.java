@@ -22,6 +22,7 @@ public abstract class SelectQuery extends UpdateQuery {
 	try {
 	    result = stmnt.executeQuery();
 	    useResult(result);
+	    result.close();
 	} catch (SQLException e) {
 	    throw new OperationException(ErrorCodes.DB_OP_ERROR, e);
 	}

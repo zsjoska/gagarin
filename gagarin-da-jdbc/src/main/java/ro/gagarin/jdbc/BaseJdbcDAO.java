@@ -136,6 +136,9 @@ public class BaseJdbcDAO implements BaseDAO {
 
 	    if (!this.changePending) {
 		try {
+		    // TODO: dig more here why this commit is required:
+		    // AppInit + gerAdminUser + sessionClose = exception
+		    tmpConn.commit();
 		    tmpConn.close();
 		    APPLOG.debug("Released connection " + tmpConn.toString());
 		    return;

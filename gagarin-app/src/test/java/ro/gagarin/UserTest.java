@@ -47,6 +47,7 @@ public class UserTest {
 	adminRole = roleManager.getRoleByName(configManager.getString(Config.ADMIN_ROLE_NAME));
 	assertNotNull("this test requires application setup", adminRole);
 
+	username = "User_" + System.nanoTime();
     }
 
     @After
@@ -220,6 +221,48 @@ public class UserTest {
 	    FACTORY.releaseSession(brokenSession);
 	}
 
+    }
+
+    @Test
+    public void updateUser() throws Exception {
+	AppUser user = new AppUser();
+	user.setName("Name Of User");
+	user.setUsername(username + "_1");
+	user.setPassword("password" + username);
+	user.setEmail(username + "_1@gagarin.ro");
+	user.setPhone("any kind of phone");
+	user.setRole(adminRole);
+	user.setStatus(UserStatus.ACTIVE);
+	long userId = usrManager.createUser(user);
+
+	AppUser user2 = new AppUser();
+	user2.setId(userId);
+
+	user2.setAuthentication(AuthenticationType.INTERNAL);
+	user2.setEmail(username + "_2@gagarin.ro");
+	user2.setName("another name");
+	user2.setPassword("test");
+	user2.setRole(adminRole);
+	user2.setPhone("112233");
+	user2.setStatus(UserStatus.SUSPENDED);
+	user2.setUsername(username + "_2");
+
+	usrManager.updateUser(user2);
+
+	User user3 = usrManager.getUserByUsername(username + "_1");
+	assertNull("the user had to be renamed", user3);
+
+	user3 = usrManager.getUserByUsername(username + "_2");
+	assertNotNull("the user had to be renamed", user3);
+
+	assertEquals("id does not match", userId, user3.getId());
+	assertEquals("name does not match", user2.getName(), user3.getName());
+	assertEquals("email does not match", user2.getEmail(), user3.getEmail());
+	assertEquals("phone does not match", user2.getPhone(), user3.getPhone());
+	assertEquals("username does not match", user2.getUsername(), user3.getUsername());
+	assertEquals("authentication should be filled", user2.getAuthentication(), user3.getAuthentication());
+	assertEquals("status does not match", user2.getStatus(), user3.getStatus());
+	assertEquals("The role field does not match", user2.getRole().getId(), user3.getRole().getId());
     }
 
     // TODO: create tests with empty role

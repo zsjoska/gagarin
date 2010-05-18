@@ -29,6 +29,7 @@ import ro.gagarin.jdbc.user.GetUsersWithRoleSQL;
 import ro.gagarin.jdbc.user.SelectUserByUsernamePasswordSQL;
 import ro.gagarin.jdbc.user.SelectUserByUsernameSQL;
 import ro.gagarin.jdbc.user.SelectUsersSQL;
+import ro.gagarin.jdbc.user.UpdateUserSQL;
 import ro.gagarin.log.AppLog;
 import ro.gagarin.log.AppLogAction;
 import ro.gagarin.session.Session;
@@ -217,6 +218,18 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 	if (recCount != 1) {
 	    throw new OperationException(ErrorCodes.INTERNAL_ERROR, recCount + " rows changed for group ID"
 		    + group.getId());
+	}
+    }
+
+    @Override
+    public void updateUser(User user) throws OperationException, DataConstraintException, ItemNotFoundException {
+	int recCount = new UpdateUserSQL(this, user).execute();
+	if (recCount == 0) {
+	    throw new ItemNotFoundException(Group.class, user.getId().toString());
+	}
+	if (recCount != 1) {
+	    throw new OperationException(ErrorCodes.INTERNAL_ERROR, recCount + " rows changed for group ID"
+		    + user.getId());
 	}
     }
 

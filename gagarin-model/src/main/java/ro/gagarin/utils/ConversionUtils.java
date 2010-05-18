@@ -21,9 +21,9 @@ public class ConversionUtils {
     }
 
     public static String user2String(User user) {
-	return user.getClass().getSimpleName() + " [getEmail()=" + user.getEmail() + ", getName()=" + user.getName()
-		+ ", getPassword()=" + user.getPassword() + ", getPhone()=" + user.getPhone() + ", getRole()="
-		+ user.getRole() + ", getUsername()=" + user.getUsername() + ", getId()=" + user.getId() + "]";
+	return user.getClass().getSimpleName() + " [" + "getId()=" + user.getId() + ", getUsername()="
+		+ user.getUsername() + ", getEmail()=" + user.getEmail() + ", getName()=" + user.getName()
+		+ ", getPhone()=" + user.getPhone() + ", getRole()=" + user.getRole() + "]";
     }
 
     public static String config2String(ConfigEntry config) {

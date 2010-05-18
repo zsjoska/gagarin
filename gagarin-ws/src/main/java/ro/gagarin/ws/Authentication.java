@@ -17,6 +17,7 @@ import ro.gagarin.ws.authentication.CreateSessionOP;
 import ro.gagarin.ws.authentication.GetCurrentUserPermissionsOP;
 import ro.gagarin.ws.authentication.LoginOP;
 import ro.gagarin.ws.authentication.LogoutOP;
+import ro.gagarin.ws.authentication.RegisterUserOP;
 import ro.gagarin.ws.executor.WSException;
 import ro.gagarin.ws.executor.WebserviceExecutor;
 import ro.gagarin.ws.objects.WSUser;
@@ -62,5 +63,12 @@ public class Authentication {
 	WebserviceExecutor.execute(getCurrentUserPermissions);
 	return getCurrentUserPermissions.getCurrentUserPermissions();
 
+    }
+
+    @WebMethod
+    public String registerUser(String sessionId, WSUser user) throws WSException {
+	RegisterUserOP registerUser = new RegisterUserOP(sessionId, user);
+	WebserviceExecutor.execute(registerUser);
+	return registerUser.getConfirmationKey();
     }
 }

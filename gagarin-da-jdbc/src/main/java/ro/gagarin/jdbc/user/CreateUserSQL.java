@@ -33,22 +33,28 @@ public class CreateUserSQL extends UpdateQuery {
 	stmnt.setString(4, user.getEmail());
 	stmnt.setString(5, user.getPhone());
 	stmnt.setString(6, user.getPassword());
-	stmnt.setLong(7, user.getRole().getId());
-	stmnt.setLong(8, user.getStatus().ordinal());
-	stmnt.setLong(9, user.getCreated());
-	stmnt.setString(10, user.getAuthentication().name());
+	stmnt.setLong(7, user.getStatus().ordinal());
+	stmnt.setLong(8, user.getCreated());
+	stmnt.setString(9, user.getAuthentication().name());
+	if (user.getRole() != null) {
+	    stmnt.setLong(10, user.getRole().getId());
+	}
     }
 
     @Override
     protected String getSQL() {
-	return "INSERT INTO Users( id, username, name, email, phone, password, roleid, status, created, authentication) "
-		+ "VALUES (?,?,?,?,?,?,?,?,?,?)";
+	if (user.getRole() != null) {
+	    return "INSERT INTO Users( id, username, name, email, phone, password, status, created, authentication, roleid) "
+		    + "VALUES (?,?,?,?,?,?,?,?,?,?)";
+	}
+	return "INSERT INTO Users( id, username, name, email, phone, password, status, created, authentication) "
+		+ "VALUES (?,?,?,?,?,?,?,?,?)";
+
     }
 
     @Override
     protected void checkInput() throws FieldRequiredException {
 	FieldValidator.requireStringField("username", user, true);
-	FieldValidator.requireField("role", user);
 	FieldValidator.requireField("status", user);
 	FieldValidator.requireField("authentication", user);
 	FieldValidator.requireField("created", user);

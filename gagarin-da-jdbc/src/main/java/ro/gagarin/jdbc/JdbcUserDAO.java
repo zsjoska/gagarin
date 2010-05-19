@@ -10,7 +10,6 @@ import ro.gagarin.RoleDAO;
 import ro.gagarin.UserDAO;
 import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ErrorCodes;
-import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.group.AssignUserToGroupSQL;
@@ -94,19 +93,6 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
     public long createUser(User user) throws DataConstraintException, OperationException, ItemNotFoundException {
 
 	try {
-
-	    // TODO: role existence is not verified
-	    // TODO: this is nonstandard way to check input: refactor it
-	    if (user.getRole() == null) {
-		APPLOG.error("The role is not completed");
-		markRollback();
-		throw new FieldRequiredException("ROLE", User.class);
-	    }
-	    if (user.getRole().getId() == null) {
-		APPLOG.error("The roleid is not completed");
-		markRollback();
-		throw new FieldRequiredException("ROLE", User.class);
-	    }
 
 	    DBUser dbUser = new DBUser(user);
 	    dbUser.setId(DBUser.getNextId());

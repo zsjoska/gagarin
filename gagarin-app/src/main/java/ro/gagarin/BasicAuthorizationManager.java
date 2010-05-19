@@ -39,10 +39,15 @@ public class BasicAuthorizationManager implements AuthorizationManager {
     public void requiresPermission(Session session, PermissionEnum reqPermission) throws PermissionDeniedException,
 	    OperationException {
 
-	RoleDAO roleDAO = session.getManagerFactory().getDAOManager().getRoleDAO(session);
 	User user = null;
-
 	user = session.getUser();
+	if (user.getRole() == null) {
+	    // TODO: remove this requirement for having role
+	    throw new NullPointerException("Role is still required here");
+	}
+
+	RoleDAO roleDAO = session.getManagerFactory().getDAOManager().getRoleDAO(session);
+
 	Set<UserPermission> perm;
 	try {
 	    perm = roleDAO.getRolePermissions(user.getRole());

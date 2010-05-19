@@ -79,6 +79,8 @@ public class RegisterUserOP extends WebserviceOperation {
 	session.setUser(sessionUser);
 	session.setExpires(System.currentTimeMillis() + valid);
 
+	// TODO: Add notification call
+
 	this.confirmationKey = session.getSessionString();
 	getApplog().info("Registration key " + this.confirmationKey + " assigned for user " + user);
     }

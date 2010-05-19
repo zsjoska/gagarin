@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 
 import ro.gagarin.BasicManagerFactory;
 import ro.gagarin.ManagerFactory;
+import ro.gagarin.ws.authentication.ActivateUserOP;
 import ro.gagarin.ws.authentication.CreateSessionOP;
 import ro.gagarin.ws.authentication.GetCurrentUserPermissionsOP;
 import ro.gagarin.ws.authentication.LoginOP;
@@ -71,4 +72,12 @@ public class Authentication {
 	WebserviceExecutor.execute(registerUser);
 	return registerUser.getConfirmationKey();
     }
+
+    @WebMethod
+    public WSUser activateUser(String activationKey) throws WSException {
+	ActivateUserOP activateUser = new ActivateUserOP(activationKey);
+	WebserviceExecutor.execute(activateUser);
+	return activateUser.getUser();
+    }
+
 }

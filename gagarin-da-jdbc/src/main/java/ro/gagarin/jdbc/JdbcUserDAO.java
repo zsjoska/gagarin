@@ -20,6 +20,7 @@ import ro.gagarin.jdbc.group.GetGroupUsersSQL;
 import ro.gagarin.jdbc.group.GetUserGroupsSQL;
 import ro.gagarin.jdbc.group.SelectGroupByNameSQL;
 import ro.gagarin.jdbc.group.SelectGroupsSQL;
+import ro.gagarin.jdbc.group.UnassignUserFromGroupSQL;
 import ro.gagarin.jdbc.group.UpdateGroupSQL;
 import ro.gagarin.jdbc.objects.DBGroup;
 import ro.gagarin.jdbc.objects.DBUser;
@@ -256,5 +257,16 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 
 	User usr = completeUserId(user);
 	return GetUserGroupsSQL.execute(this, usr);
+    }
+
+    @Override
+    public void unassignUserFromGroup(User user, Group group) throws OperationException, ItemNotFoundException,
+	    DataConstraintException {
+	Group gr = completeGroupId(group);
+	User usr = completeUserId(user);
+
+	// TODO: add check for group id and user id existence
+
+	new UnassignUserFromGroupSQL(this, usr, gr).execute();
     }
 }

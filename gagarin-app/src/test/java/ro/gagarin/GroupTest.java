@@ -146,6 +146,9 @@ public class GroupTest {
 	assertEquals(aGroup.getId(), aGroup.getId());
 	assertEquals(aGroup.getName(), aGroup.getName());
 
+	usrManager.unassignUserFromGroup(user, aGroup);
+	userGroups = usrManager.getUserGroups(user);
+	assertEquals(0, userGroups.size());
     }
 
     @Test

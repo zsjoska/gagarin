@@ -34,6 +34,7 @@ import ro.gagarin.ws.userservice.GetUserGroupsOP;
 import ro.gagarin.ws.userservice.GetUsersOP;
 import ro.gagarin.ws.userservice.LogoutSessionOP;
 import ro.gagarin.ws.userservice.SetConfigEntryOP;
+import ro.gagarin.ws.userservice.UnassignUsersFromGroupOP;
 import ro.gagarin.ws.userservice.UpdateGroupOP;
 
 @WebService
@@ -196,5 +197,11 @@ public class Admin {
     public void assignUsersToGroup(String sessionId, WSGroup group, WSUser[] users) throws WSException {
 	AssignUsersToGroupOP assignUsersToGroup = new AssignUsersToGroupOP(sessionId, group, users);
 	WebserviceExecutor.execute(assignUsersToGroup);
+    }
+
+    @WebMethod
+    public void unassignUsersFromGroup(String sessionId, WSGroup group, WSUser[] users) throws WSException {
+	UnassignUsersFromGroupOP unassignUsersFromGroup = new UnassignUsersFromGroupOP(sessionId, group, users);
+	WebserviceExecutor.execute(unassignUsersFromGroup);
     }
 }

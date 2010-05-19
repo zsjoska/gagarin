@@ -166,4 +166,7 @@ public interface UserDAO extends BaseDAO {
     List<Group> getUserGroups(User user) throws ItemNotFoundException, OperationException;
 
     void updateUser(User user) throws OperationException, DataConstraintException, ItemNotFoundException;
+
+    void unassignUserFromGroup(User user, Group group) throws OperationException, ItemNotFoundException,
+	    DataConstraintException;
 }

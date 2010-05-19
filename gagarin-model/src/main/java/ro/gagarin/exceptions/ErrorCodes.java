@@ -72,4 +72,9 @@ public enum ErrorCodes {
      * originated from the user.
      */
     INTERNAL_ERROR,
+
+    /**
+     * This feature is disabled by the current configuration.
+     */
+    FEATURE_DISABLED,
 }

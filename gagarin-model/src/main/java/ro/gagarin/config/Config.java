@@ -55,7 +55,19 @@ public enum Config {
 
     _TEST_DB_ONLY_("_TEST_DB_ONLY_"),
 
-    _TEST_LOCAL_ONLY_("_TEST_LOCAL_ONLY_"), FILE_CHECK_INTERVAL("10000"), _TEST_DB_AND_FILE_("_TEST_DB_AND_FILE_");
+    _TEST_LOCAL_ONLY_("_TEST_LOCAL_ONLY_"), FILE_CHECK_INTERVAL("10000"), _TEST_DB_AND_FILE_("_TEST_DB_AND_FILE_"),
+
+    /**
+     * Controls whether users are allowed to register
+     */
+    ALLOW_USER_REGISTRATION("true"),
+
+    /**
+     * Value in miliseconds, the time until the activation key for a
+     * registration is valid.<br>
+     * 172800000 = 2 days
+     */
+    REGISTRATION_VALIDITY("" + 1000 * 60 * 60 * 48);
 
     private final String defValue;
 

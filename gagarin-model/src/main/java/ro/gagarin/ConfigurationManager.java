@@ -69,4 +69,6 @@ public interface ConfigurationManager extends BaseManager {
 
     void loadConfiguration(Object param);
 
+    boolean getBoolean(Config cfg);
+
 }

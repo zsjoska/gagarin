@@ -6,11 +6,15 @@ import ro.gagarin.UserDAO;
 import ro.gagarin.config.Config;
 import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.ExceptionBase;
+import ro.gagarin.exceptions.ItemExistsException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.session.Session;
+import ro.gagarin.user.Group;
+import ro.gagarin.user.User;
 import ro.gagarin.user.UserStatus;
 import ro.gagarin.utils.FieldValidator;
 import ro.gagarin.ws.executor.WebserviceOperation;
+import ro.gagarin.ws.objects.WSGroup;
 import ro.gagarin.ws.objects.WSUser;
 
 public class RegisterUserOP extends WebserviceOperation {
@@ -20,10 +24,12 @@ public class RegisterUserOP extends WebserviceOperation {
     private SessionManager sessionManager;
     private String confirmationKey;
     private ConfigurationManager cfgManager;
+    private final String defGroupname;
 
-    public RegisterUserOP(String sessionId, WSUser user) {
+    public RegisterUserOP(String sessionId, WSUser user, String defGroupname) {
 	super(false, sessionId);
 	this.user = user;
+	this.defGroupname = defGroupname;
     }
 
     @Override
@@ -42,11 +48,35 @@ public class RegisterUserOP extends WebserviceOperation {
 
     @Override
     public void execute() throws ExceptionBase {
+	User sessionUser = this.user;
 	long valid = cfgManager.getLong(Config.REGISTRATION_VALIDITY);
 
-	user.setId(userManager.createUser(user));
+	User userByUsername = userManager.getUserByUsername(user.getUsername());
+	if (userByUsername != null && userByUsername.getStatus() != UserStatus.INIT) {
+	    throw new ItemExistsException(User.class, "username", null);
+	}
+	if (userByUsername != null) {
+	    sessionUser = userByUsername;
+	} else {
+	    // inexistent user, we will create it
+	    user.setId(userManager.createUser(user));
+	}
+
+	// assign to the default group
+	if (this.defGroupname != null) {
+	    Group group = this.userManager.getGroupByName(defGroupname);
+	    if (group == null) {
+		WSGroup newGroup = new WSGroup();
+		newGroup.setName(defGroupname);
+		newGroup.setDescription("automatically created");
+		newGroup.setId(userManager.createGroup(newGroup));
+		group = newGroup;
+	    }
+	    userManager.assignUserToGroup(sessionUser, group);
+	}
+
 	Session session = sessionManager.createSession(getSession().getLanguage(), "REGISTER", FACTORY);
-	session.setUser(user);
+	session.setUser(sessionUser);
 	session.setExpires(System.currentTimeMillis() + valid);
 
 	this.confirmationKey = session.getSessionString();

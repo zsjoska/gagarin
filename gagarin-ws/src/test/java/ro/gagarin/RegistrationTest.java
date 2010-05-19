@@ -26,6 +26,6 @@ public class RegistrationTest {
 	user.setName(username + " " + username);
 	user.setPassword(username);
 
-	String regKey = authentication.registerUser(sessionId, user);
+	String regKey = authentication.registerUser(sessionId, user, null);
     }
 }

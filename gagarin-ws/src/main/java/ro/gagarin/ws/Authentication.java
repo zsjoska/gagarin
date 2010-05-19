@@ -66,8 +66,8 @@ public class Authentication {
     }
 
     @WebMethod
-    public String registerUser(String sessionId, WSUser user) throws WSException {
-	RegisterUserOP registerUser = new RegisterUserOP(sessionId, user);
+    public String registerUser(String sessionId, WSUser user, String defGroup) throws WSException {
+	RegisterUserOP registerUser = new RegisterUserOP(sessionId, user, defGroup);
 	WebserviceExecutor.execute(registerUser);
 	return registerUser.getConfirmationKey();
     }

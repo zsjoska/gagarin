@@ -6,6 +6,8 @@ import java.util.Set;
 import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.OperationException;
+import ro.gagarin.user.Group;
+import ro.gagarin.user.User;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
 
@@ -40,4 +42,20 @@ public interface RoleDAO extends BaseDAO {
 
     UserPermission completePermissionId(UserPermission perm) throws OperationException, ItemNotFoundException;
 
+    /**
+     * Assigns a role to a person on a specific object.<br>
+     * The person could be a {@link User} or {@link Group}. The object must be
+     * something that extends {@link ControlEntity}.
+     * 
+     * @param role
+     * @param group
+     * @param object
+     * @throws OperationException
+     * @throws DataConstraintException
+     * @throws ItemNotFoundException
+     */
+    void assignRoleToPerson(UserRole role, Person person, ControlEntity object) throws OperationException,
+	    DataConstraintException, ItemNotFoundException;
+
+    Set<UserPermission> getEffectivePermissions(ControlEntity entity, Person... persons) throws OperationException;
 }

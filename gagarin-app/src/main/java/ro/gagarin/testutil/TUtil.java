@@ -16,6 +16,8 @@ public class TUtil {
     private static final ManagerFactory FACTORY = BasicManagerFactory.getInstance();
     private static final ConfigurationManager CFG_MANAGER = FACTORY.getConfigurationManager();
 
+    private static volatile long sequencence = System.currentTimeMillis();
+
     public static Session createTestSession() {
 	Session session = FACTORY.getSessionManager().createSession(null, "TEST", FACTORY);
 	try {
@@ -58,4 +60,7 @@ public class TUtil {
 	return role;
     }
 
+    public static String generateID(String prefix) {
+	return prefix + "_" + String.valueOf(++sequencence);
+    }
 }

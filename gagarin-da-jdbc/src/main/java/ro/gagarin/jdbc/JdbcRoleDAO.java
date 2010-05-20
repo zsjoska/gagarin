@@ -6,6 +6,8 @@ import static ro.gagarin.utils.ConversionUtils.role2String;
 import java.util.List;
 import java.util.Set;
 
+import ro.gagarin.ControlEntity;
+import ro.gagarin.Person;
 import ro.gagarin.RoleDAO;
 import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ErrorCodes;
@@ -14,10 +16,12 @@ import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.objects.DBUserPermission;
 import ro.gagarin.jdbc.objects.DBUserRole;
 import ro.gagarin.jdbc.role.AssignPermissionToRoleSQL;
+import ro.gagarin.jdbc.role.AssignRoleToPersonSQL;
 import ro.gagarin.jdbc.role.CreatePermissionSQL;
 import ro.gagarin.jdbc.role.CreateRoleSQL;
 import ro.gagarin.jdbc.role.DeletePermissionSQL;
 import ro.gagarin.jdbc.role.DeleteRoleSQL;
+import ro.gagarin.jdbc.role.GetEffectivePermissionsSQL;
 import ro.gagarin.jdbc.role.GetPermissionRolesSQL;
 import ro.gagarin.jdbc.role.GetRolePermissionsSQL;
 import ro.gagarin.jdbc.role.SelectPermissionByNameSQL;
@@ -28,6 +32,8 @@ import ro.gagarin.jdbc.role.SubstractRolesPermissions;
 import ro.gagarin.log.AppLog;
 import ro.gagarin.log.AppLogAction;
 import ro.gagarin.session.Session;
+import ro.gagarin.user.Group;
+import ro.gagarin.user.User;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
 
@@ -216,6 +222,31 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
     public Set<UserRole> getPermissionRoles(UserPermission perm) throws OperationException, ItemNotFoundException {
 	UserPermission permission = completePermissionId(perm);
 	return GetPermissionRolesSQL.execute(this, permission);
+    }
+
+    @Override
+    public void assignRoleToPerson(UserRole role, Person person, ControlEntity object) throws OperationException,
+	    DataConstraintException, ItemNotFoundException {
+	String className = null;
+	if (person instanceof User) {
+	    className = User.class.getSimpleName();
+	} else if (person instanceof Group) {
+	    className = Group.class.getSimpleName();
+	} else {
+	    throw new OperationException(ErrorCodes.INTERNAL_ERROR, "Unknow object to assign role");
+	}
+
+	UserRole completeRole = completeRoleId(role);
+
+	new AssignRoleToPersonSQL(this, completeRole, person, className, object).execute();
+    }
+
+    @Override
+    public Set<UserPermission> getEffectivePermissions(ControlEntity entity, Person... persons)
+	    throws OperationException {
+	GetEffectivePermissionsSQL cmd = new GetEffectivePermissionsSQL(this, entity, persons);
+	cmd.execute();
+	return cmd.getPermissions();
     }
 
 }

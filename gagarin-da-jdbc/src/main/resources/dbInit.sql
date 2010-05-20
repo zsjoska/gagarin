@@ -112,3 +112,16 @@ CREATE TABLE Config
 	CONSTRAINT UK_CONFIG_configName UNIQUE (configName)
 )
 --END
+
+--CHECK: RolePersonAssignment
+SELECT * FROM RolePersonAssignment
+--CREATE:
+CREATE TABLE RolePersonAssignment 
+(
+	role_id bigint  NOT NULL, 
+	person_id bigint  NOT NULL,
+	objectType varchar(50),
+	object_id bigint  NOT NULL
+)
+--END
+

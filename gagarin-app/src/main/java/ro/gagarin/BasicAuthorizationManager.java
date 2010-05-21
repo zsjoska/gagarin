@@ -39,33 +39,22 @@ public class BasicAuthorizationManager implements AuthorizationManager {
     }
 
     @Override
-    public void requiresPermission(Session session, PermissionEnum reqPermission, ControlEntity ce)
+    public void requiresPermission(Session session, ControlEntity ce, PermissionEnum... reqPermission)
 	    throws PermissionDeniedException, OperationException {
 
 	User user = null;
 	user = session.getUser();
-	if (user.getRole() == null) {
-	    // TODO: remove this requirement for having role
-	    throw new NullPointerException("Role is still required here");
-	}
 
-	RoleDAO roleDAO = session.getManagerFactory().getDAOManager().getRoleDAO(session);
-
-	Set<UserPermission> perm;
-	try {
-	    perm = roleDAO.getRolePermissions(user.getRole());
-	} catch (ItemNotFoundException e) {
-	    throw new OperationException(ErrorCodes.INTERNAL_ERROR, e);
-	}
-
-	Iterator<? extends UserPermission> iterator = perm.iterator();
-	while (iterator.hasNext()) {
-	    UserPermission userPermission = iterator.next();
-	    if (userPermission.getPermissionName().equals(reqPermission.name())) {
-		LOG.debug(reqPermission.name() + " was found for user " + user.getUsername());
-		return;
+	Set<UserPermission> permSet = session.getEffectivePermissions().get(ce);
+	if (permSet != null) {
+	    Iterator<? extends UserPermission> iterator = permSet.iterator();
+	    while (iterator.hasNext()) {
+		UserPermission userPermission = iterator.next();
+		if (userPermission.getPermissionName().equals(reqPermission.name())) {
+		    LOG.debug(reqPermission.name() + " was found for user " + user.getUsername());
+		    return;
+		}
 	    }
-
 	}
 	throw new PermissionDeniedException(user.getUsername(), reqPermission.name());
     }

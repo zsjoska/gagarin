@@ -1,5 +1,6 @@
 package ro.gagarin.ws.userservice;
 
+import ro.gagarin.BaseControlEntity;
 import ro.gagarin.dao.RoleDAO;
 import ro.gagarin.dao.UserDAO;
 import ro.gagarin.exceptions.ExceptionBase;
@@ -39,7 +40,7 @@ public class CreateUserOP extends WebserviceOperation {
     public void execute() throws ExceptionBase {
 
 	// the session user must have CREATE_USER permission
-	authManager.requiresPermission(getSession(), PermissionEnum.CREATE_USER);
+	authManager.requiresPermission(getSession(), PermissionEnum.CREATE, BaseControlEntity.getAdminEntity());
 
 	// TODO: what for this rollback... no change so far
 	// check user fields

@@ -6,7 +6,6 @@ import ro.gagarin.dao.RoleDAO;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.manager.AuthorizationManager;
 import ro.gagarin.session.Session;
-import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.ws.executor.WebserviceOperation;
 import ro.gagarin.ws.objects.WSUserPermission;
@@ -30,9 +29,6 @@ public class GetAllPermissionListOP extends WebserviceOperation {
 
     @Override
     public void execute() throws ExceptionBase {
-
-	// the session user must have LIST_PERMISSIONS permission
-	authManager.requiresPermission(getSession(), PermissionEnum.LIST_PERMISSIONS);
 
 	List<UserPermission> allPermissions = roleManager.getAllPermissions();
 	this.permissionlist = WSConversionUtils.convertToWSPermissionList(allPermissions);

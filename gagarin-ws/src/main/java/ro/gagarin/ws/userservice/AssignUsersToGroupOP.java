@@ -37,7 +37,7 @@ public class AssignUsersToGroupOP extends WebserviceOperation {
 
     @Override
     public void execute() throws ExceptionBase {
-	authManager.requiresPermission(getSession(), PermissionEnum.UPDATE_GROUP);
+	authManager.requiresPermission(getSession(), PermissionEnum.UPDATE, group);
 
 	for (WSUser user : this.users) {
 	    userManager.assignUserToGroup(user, group);

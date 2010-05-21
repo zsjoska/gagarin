@@ -2,6 +2,7 @@ package ro.gagarin.ws.userservice;
 
 import java.util.List;
 
+import ro.gagarin.BaseControlEntity;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.manager.AuthorizationManager;
 import ro.gagarin.session.Session;
@@ -31,7 +32,7 @@ public class GetStatisticsOP extends WebserviceOperation {
     @Override
     public void execute() throws ExceptionBase {
 
-	authManager.requiresPermission(getSession(), PermissionEnum.ADMIN_OPERATION);
+	authManager.requiresPermission(getSession(), PermissionEnum.AUDIT, BaseControlEntity.getAdminEntity());
 
 	List<Statistic> statistics = StatisticsContainer.exportStatistics(filter);
 

@@ -1,5 +1,6 @@
 package ro.gagarin.ws.userservice;
 
+import ro.gagarin.BaseControlEntity;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.manager.AuthorizationManager;
 import ro.gagarin.manager.SessionManager;
@@ -29,7 +30,7 @@ public class LogoutSessionOP extends WebserviceOperation {
     @Override
     public void execute() throws ExceptionBase {
 
-	authManager.requiresPermission(getSession(), PermissionEnum.ADMIN_OPERATION);
+	authManager.requiresPermission(getSession(), PermissionEnum.ADMIN, BaseControlEntity.getAdminEntity());
 
 	sessionManager.logout(otherSessionId);
 	getApplog().info("LogoutSession " + otherSessionId);

@@ -1,5 +1,6 @@
 package ro.gagarin.ws.userservice;
 
+import ro.gagarin.BaseControlEntity;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.manager.AuthorizationManager;
 import ro.gagarin.manager.ConfigurationManager;
@@ -27,7 +28,7 @@ public class SetConfigEntryOP extends WebserviceOperation {
     @Override
     public void execute() throws ExceptionBase {
 
-	authManager.requiresPermission(getSession(), PermissionEnum.ADMIN_OPERATION);
+	authManager.requiresPermission(getSession(), PermissionEnum.ADMIN, BaseControlEntity.getAdminEntity());
 
 	ConfigurationManager cfgMgr = FACTORY.getConfigurationManager();
 	cfgMgr.setConfigValue(getSession(), wsConfig);

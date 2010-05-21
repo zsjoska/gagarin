@@ -2,6 +2,7 @@ package ro.gagarin.manager;
 
 import java.util.List;
 
+import ro.gagarin.ControlEntity;
 import ro.gagarin.exceptions.LoginRequiredException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.exceptions.PermissionDeniedException;
@@ -12,8 +13,8 @@ import ro.gagarin.user.UserPermission;
 
 public interface AuthorizationManager extends BaseManager {
 
-    void requiresPermission(Session session, PermissionEnum create_user) throws PermissionDeniedException,
-	    OperationException;
+    void requiresPermission(Session session, PermissionEnum permission, ControlEntity ce)
+	    throws PermissionDeniedException, OperationException;
 
     void checkUserRole(Session session, User user) throws PermissionDeniedException, OperationException;
 

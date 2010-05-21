@@ -2,6 +2,7 @@ package ro.gagarin.ws.userservice;
 
 import java.util.List;
 
+import ro.gagarin.BaseControlEntity;
 import ro.gagarin.dao.UserDAO;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.manager.AuthorizationManager;
@@ -34,7 +35,7 @@ public class GetUsersOP extends WebserviceOperation {
     public void execute() throws ExceptionBase {
 
 	// the session user must have LIST_USERS permission
-	authManager.requiresPermission(getSession(), PermissionEnum.LIST_USERS);
+	authManager.requiresPermission(getSession(), PermissionEnum.LIST, BaseControlEntity.getAdminEntity());
 
 	List<User> allUsers = userDAO.getAllUsers();
 	this.users = WSConversionUtils.convertToWSUserList(allUsers);

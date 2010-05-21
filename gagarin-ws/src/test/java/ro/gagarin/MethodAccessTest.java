@@ -123,14 +123,14 @@ public class MethodAccessTest {
 	} catch (WSException e) {
 	    // expected
 	    assertEquals("Wrong error code received", ErrorCodes.PERMISSION_DENIED, e.getErrorCode());
-	    assertEquals("Wrong detail message", PermissionEnum.CREATE_USER.toString(), e.getDetail());
+	    assertEquals("Wrong detail message", PermissionEnum.CREATE.toString(), e.getDetail());
 	}
 
-	roleDAO.assignPermissionToRole(role1, findPermission(PermissionEnum.CREATE_USER, allPermissions));
+	roleDAO.assignPermissionToRole(role1, findPermission(PermissionEnum.CREATE, allPermissions));
 	WSUserRole role2 = new WSUserRole();
 	role2.setRoleName("stronger");
 	role2.setId(roleDAO.createRole(role2));
-	roleDAO.assignPermissionToRole(role2, findPermission(PermissionEnum.LIST_ROLES, allPermissions));
+	roleDAO.assignPermissionToRole(role2, findPermission(PermissionEnum.LIST, allPermissions));
 
 	List<UserPermission> left = roleDAO.substractUsersRolePermissions(role2, role1);
 	assertEquals(1, left.size());

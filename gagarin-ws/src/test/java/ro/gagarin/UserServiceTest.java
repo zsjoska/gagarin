@@ -75,8 +75,8 @@ public class UserServiceTest {
 	permByID.setId(allPermissionList.get(0).getId());
 
 	// check that name is enough
-	WSUserPermission[] perms = new WSUserPermission[] { new WSUserPermission(PermissionEnum.DELETE_ROLE.name()),
-		new WSUserPermission(PermissionEnum.CREATE_ROLE.name()), permByID };
+	WSUserPermission[] perms = new WSUserPermission[] { new WSUserPermission(PermissionEnum.DELETE.name()),
+		new WSUserPermission(PermissionEnum.CREATE.name()), permByID };
 
 	UserRole role = userService.createRoleWithPermissions(session, "WONDER_ROLE", perms);
 	List<WSUserPermission> rolePermissions = userService.getRolePermissions(session, new WSUserRole("WONDER_ROLE"));

@@ -22,6 +22,7 @@ import ro.gagarin.user.UserRole;
 public class BasicAuthorizationManager implements AuthorizationManager {
     private static final transient Logger LOG = Logger.getLogger(BasicAuthorizationManager.class);
 
+    @Deprecated
     @Override
     public void checkUserRole(Session session, User user) throws PermissionDeniedException, OperationException {
 	User sessionUser = session.getUser();
@@ -38,8 +39,8 @@ public class BasicAuthorizationManager implements AuthorizationManager {
     }
 
     @Override
-    public void requiresPermission(Session session, PermissionEnum reqPermission) throws PermissionDeniedException,
-	    OperationException {
+    public void requiresPermission(Session session, PermissionEnum reqPermission, ControlEntity ce)
+	    throws PermissionDeniedException, OperationException {
 
 	User user = null;
 	user = session.getUser();
@@ -69,6 +70,7 @@ public class BasicAuthorizationManager implements AuthorizationManager {
 	throw new PermissionDeniedException(user.getUsername(), reqPermission.name());
     }
 
+    @Deprecated
     @Override
     public void checkUserHasThePermissions(Session session, List<UserPermission> matched) throws OperationException,
 	    PermissionDeniedException {

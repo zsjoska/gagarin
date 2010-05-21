@@ -10,12 +10,15 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import ro.gagarin.dao.RoleDAO;
+import ro.gagarin.dao.UserDAO;
 import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.LoginRequiredException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.exceptions.SessionNotFoundException;
+import ro.gagarin.manager.ManagerFactory;
 import ro.gagarin.session.Session;
 import ro.gagarin.testutil.TUtil;
 import ro.gagarin.user.PermissionEnum;

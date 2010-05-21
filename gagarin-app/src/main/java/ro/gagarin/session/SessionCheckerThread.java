@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 
-import ro.gagarin.SessionManager;
+import ro.gagarin.manager.SessionManager;
 
 public class SessionCheckerThread extends Thread {
 

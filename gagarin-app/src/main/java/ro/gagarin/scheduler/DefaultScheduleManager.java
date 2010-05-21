@@ -2,7 +2,7 @@ package ro.gagarin.scheduler;
 
 import org.apache.log4j.Logger;
 
-import ro.gagarin.ScheduleManager;
+import ro.gagarin.manager.ScheduleManager;
 
 public class DefaultScheduleManager implements ScheduleManager {
 

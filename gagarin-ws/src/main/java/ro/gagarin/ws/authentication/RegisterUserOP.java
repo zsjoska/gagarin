@@ -1,13 +1,13 @@
 package ro.gagarin.ws.authentication;
 
-import ro.gagarin.ConfigurationManager;
-import ro.gagarin.SessionManager;
-import ro.gagarin.UserDAO;
 import ro.gagarin.config.Config;
+import ro.gagarin.dao.UserDAO;
 import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.exceptions.ItemExistsException;
 import ro.gagarin.exceptions.OperationException;
+import ro.gagarin.manager.ConfigurationManager;
+import ro.gagarin.manager.SessionManager;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.Group;
 import ro.gagarin.user.User;

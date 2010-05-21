@@ -2,6 +2,7 @@ package ro.gagarin;
 
 import java.io.Serializable;
 
+// TODO: remove serializable
 @SuppressWarnings("serial")
 public class BaseEntity implements Serializable {
 

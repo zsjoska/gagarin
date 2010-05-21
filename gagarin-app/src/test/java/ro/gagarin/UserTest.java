@@ -11,12 +11,16 @@ import org.junit.Test;
 
 import ro.gagarin.application.objects.AppUser;
 import ro.gagarin.config.Config;
+import ro.gagarin.dao.RoleDAO;
+import ro.gagarin.dao.UserDAO;
 import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.ItemExistsException;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.OperationException;
+import ro.gagarin.manager.ConfigurationManager;
+import ro.gagarin.manager.ManagerFactory;
 import ro.gagarin.session.Session;
 import ro.gagarin.testobjects.ATestUser;
 import ro.gagarin.testutil.TUtil;

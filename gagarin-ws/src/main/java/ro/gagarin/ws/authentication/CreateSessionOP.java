@@ -3,10 +3,10 @@
  */
 package ro.gagarin.ws.authentication;
 
-import ro.gagarin.SessionManager;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.log.AppLog;
+import ro.gagarin.manager.SessionManager;
 import ro.gagarin.session.Session;
 import ro.gagarin.utils.FieldValidator;
 import ro.gagarin.ws.executor.WebserviceOperation;

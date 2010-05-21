@@ -1,13 +1,14 @@
-package ro.gagarin;
+package ro.gagarin.dao;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import ro.gagarin.ControlEntity;
+import ro.gagarin.Person;
 import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.OperationException;
-import ro.gagarin.user.ControlEntity;
 import ro.gagarin.user.Group;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserPermission;

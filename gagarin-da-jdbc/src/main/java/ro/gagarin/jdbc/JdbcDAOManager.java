@@ -1,10 +1,10 @@
 package ro.gagarin.jdbc;
 
-import ro.gagarin.ConfigDAO;
-import ro.gagarin.DAOManager;
 import ro.gagarin.JdbcConfigDAO;
-import ro.gagarin.RoleDAO;
-import ro.gagarin.UserDAO;
+import ro.gagarin.dao.ConfigDAO;
+import ro.gagarin.dao.DAOManager;
+import ro.gagarin.dao.RoleDAO;
+import ro.gagarin.dao.UserDAO;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.session.Session;
 

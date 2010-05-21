@@ -3,11 +3,11 @@ package ro.gagarin.jdbc.role;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import ro.gagarin.ControlEntity;
 import ro.gagarin.Person;
 import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.jdbc.BaseJdbcDAO;
 import ro.gagarin.jdbc.UpdateQuery;
-import ro.gagarin.user.ControlEntity;
 import ro.gagarin.user.UserRole;
 import ro.gagarin.utils.FieldValidator;
 

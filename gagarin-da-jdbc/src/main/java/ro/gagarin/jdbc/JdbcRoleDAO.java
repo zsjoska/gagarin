@@ -7,8 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import ro.gagarin.ControlEntity;
 import ro.gagarin.Person;
-import ro.gagarin.RoleDAO;
+import ro.gagarin.dao.RoleDAO;
 import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.ItemNotFoundException;
@@ -33,7 +34,6 @@ import ro.gagarin.jdbc.role.SubstractRolesPermissions;
 import ro.gagarin.log.AppLog;
 import ro.gagarin.log.AppLogAction;
 import ro.gagarin.session.Session;
-import ro.gagarin.user.ControlEntity;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
 

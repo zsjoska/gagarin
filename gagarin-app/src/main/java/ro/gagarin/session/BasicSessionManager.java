@@ -7,15 +7,15 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
 
-import ro.gagarin.BaseDAO;
 import ro.gagarin.BasicManagerFactory;
-import ro.gagarin.ConfigurationManager;
-import ro.gagarin.ManagerFactory;
-import ro.gagarin.SessionManager;
 import ro.gagarin.config.Config;
 import ro.gagarin.config.SettingsChangeObserver;
+import ro.gagarin.dao.BaseDAO;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.exceptions.SessionNotFoundException;
+import ro.gagarin.manager.ConfigurationManager;
+import ro.gagarin.manager.ManagerFactory;
+import ro.gagarin.manager.SessionManager;
 
 public class BasicSessionManager implements SessionManager, SettingsChangeObserver {
 

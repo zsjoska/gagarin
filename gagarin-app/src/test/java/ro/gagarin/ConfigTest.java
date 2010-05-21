@@ -14,6 +14,8 @@ import ro.gagarin.config.Config;
 import ro.gagarin.config.DBConfigManager;
 import ro.gagarin.config.FileConfigurationManager;
 import ro.gagarin.config.SettingsChangeObserver;
+import ro.gagarin.manager.ConfigurationManager;
+import ro.gagarin.manager.ManagerFactory;
 import ro.gagarin.session.Session;
 import ro.gagarin.testutil.TUtil;
 

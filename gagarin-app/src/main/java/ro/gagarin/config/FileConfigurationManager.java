@@ -11,10 +11,10 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
-import ro.gagarin.ConfigurationManager;
 import ro.gagarin.application.objects.AppConfig;
 import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.OperationException;
+import ro.gagarin.manager.ConfigurationManager;
 
 public class FileConfigurationManager extends ConfigHolder implements ConfigurationManager, FileChangeObserver {
 

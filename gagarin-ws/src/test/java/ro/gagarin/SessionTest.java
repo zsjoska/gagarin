@@ -14,12 +14,17 @@ import org.junit.Test;
 
 import ro.gagarin.application.objects.AppUser;
 import ro.gagarin.config.Config;
+import ro.gagarin.dao.RoleDAO;
+import ro.gagarin.dao.UserDAO;
 import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.jdbc.objects.DBUser;
+import ro.gagarin.manager.ConfigurationManager;
+import ro.gagarin.manager.ManagerFactory;
+import ro.gagarin.manager.SessionManager;
 import ro.gagarin.session.Session;
 import ro.gagarin.testutil.TUtil;
 import ro.gagarin.user.PermissionEnum;

@@ -1,4 +1,4 @@
-package ro.gagarin;
+package ro.gagarin.manager;
 
 import java.util.ArrayList;
 import java.util.List;

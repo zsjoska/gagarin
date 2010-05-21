@@ -3,11 +3,11 @@ package ro.gagarin.scheduler;
 import org.apache.log4j.Logger;
 
 import ro.gagarin.BasicManagerFactory;
-import ro.gagarin.ManagerFactory;
-import ro.gagarin.SessionManager;
 import ro.gagarin.application.objects.AppUser;
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.log.AppLog;
+import ro.gagarin.manager.ManagerFactory;
+import ro.gagarin.manager.SessionManager;
 import ro.gagarin.session.Session;
 import ro.gagarin.utils.Statistic;
 

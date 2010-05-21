@@ -9,10 +9,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import ro.gagarin.dao.RoleDAO;
+import ro.gagarin.dao.UserDAO;
+import ro.gagarin.manager.ManagerFactory;
 import ro.gagarin.session.Session;
 import ro.gagarin.testobjects.ATestGroup;
 import ro.gagarin.testutil.TUtil;
-import ro.gagarin.user.ControlEntity;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
 

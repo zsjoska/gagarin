@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import ro.gagarin.dao.UserDAO;
 import ro.gagarin.exceptions.LoginRequiredException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.exceptions.PermissionDeniedException;

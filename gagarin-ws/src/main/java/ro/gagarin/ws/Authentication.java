@@ -12,7 +12,7 @@ import javax.jws.WebService;
 import org.apache.log4j.Logger;
 
 import ro.gagarin.BasicManagerFactory;
-import ro.gagarin.ManagerFactory;
+import ro.gagarin.manager.ManagerFactory;
 import ro.gagarin.ws.authentication.ActivateUserOP;
 import ro.gagarin.ws.authentication.CreateSessionOP;
 import ro.gagarin.ws.authentication.GetCurrentUserPermissionsOP;

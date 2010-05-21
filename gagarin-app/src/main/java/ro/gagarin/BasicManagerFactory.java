@@ -1,9 +1,17 @@
 package ro.gagarin;
 
 import ro.gagarin.config.FileConfigurationManager;
+import ro.gagarin.dao.DAOManager;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.JdbcDAOManager;
 import ro.gagarin.log.BasicLogManager;
+import ro.gagarin.manager.AuthenticationManager;
+import ro.gagarin.manager.AuthorizationManager;
+import ro.gagarin.manager.ConfigurationManager;
+import ro.gagarin.manager.LogManager;
+import ro.gagarin.manager.ManagerFactory;
+import ro.gagarin.manager.ScheduleManager;
+import ro.gagarin.manager.SessionManager;
 import ro.gagarin.scheduler.DefaultScheduleManager;
 import ro.gagarin.session.BasicSessionManager;
 import ro.gagarin.session.Session;

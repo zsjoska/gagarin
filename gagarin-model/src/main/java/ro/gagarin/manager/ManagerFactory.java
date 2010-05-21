@@ -1,5 +1,7 @@
-package ro.gagarin;
+package ro.gagarin.manager;
 
+import ro.gagarin.ApplicationState;
+import ro.gagarin.dao.DAOManager;
 import ro.gagarin.session.Session;
 
 public interface ManagerFactory {

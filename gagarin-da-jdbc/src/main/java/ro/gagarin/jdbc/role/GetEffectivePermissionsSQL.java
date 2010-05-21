@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 import ro.gagarin.BaseControlEntity;
+import ro.gagarin.ControlEntity;
 import ro.gagarin.ControlEntityCategory;
 import ro.gagarin.Person;
 import ro.gagarin.exceptions.FieldRequiredException;
@@ -16,7 +17,6 @@ import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.BaseJdbcDAO;
 import ro.gagarin.jdbc.SelectQuery;
 import ro.gagarin.jdbc.objects.DBUserPermission;
-import ro.gagarin.user.ControlEntity;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.utils.FieldValidator;
 
@@ -37,7 +37,7 @@ public class GetEffectivePermissionsSQL extends SelectQuery {
 
 	    long objectId = rs.getLong("object_id");
 	    ControlEntityCategory cat = ControlEntityCategory.valueOf(rs.getString("object_type"));
-	    ControlEntity controlEntity = new BaseControlEntity(cat);
+	    BaseControlEntity controlEntity = new BaseControlEntity(cat);
 	    controlEntity.setId(objectId);
 
 	    Set<UserPermission> set = permissions.get(controlEntity);

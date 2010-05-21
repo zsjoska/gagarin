@@ -2,7 +2,7 @@ package ro.gagarin.ws.authentication;
 
 import java.util.Set;
 
-import ro.gagarin.RoleDAO;
+import ro.gagarin.dao.RoleDAO;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.UserPermission;

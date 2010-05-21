@@ -2,8 +2,17 @@ package ro.gagarin;
 
 import java.util.HashSet;
 
-import ro.gagarin.user.ControlEntity;
+import ro.gagarin.user.UserRole;
 
+/**
+ * Base class for entities for which the access could be controlled by the
+ * permission framework.<br>
+ * The permission framework could assign a {@link UserRole} to this object for a
+ * {@link Person}
+ * 
+ * @author ZsJoska
+ * 
+ */
 public class BaseControlEntity extends BaseEntity implements ControlEntity {
 
     /**
@@ -14,7 +23,7 @@ public class BaseControlEntity extends BaseEntity implements ControlEntity {
 
     private static HashSet<ControlEntityCategory> ceHash = new HashSet<ControlEntityCategory>();
 
-    private static final ControlEntity ADMIN_ENTITY;
+    private static final BaseControlEntity ADMIN_ENTITY;
     private final ControlEntityCategory cat;
 
     static {
@@ -42,6 +51,12 @@ public class BaseControlEntity extends BaseEntity implements ControlEntity {
 
     private String name;
 
+    /**
+     * A special control entity is returned which is used for Adminitrator
+     * operations.
+     * 
+     * @return the admin control entity
+     */
     public static ControlEntity getAdminEntity() {
 	return ADMIN_ENTITY;
     }

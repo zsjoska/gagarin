@@ -1,4 +1,4 @@
-package ro.gagarin;
+package ro.gagarin.manager;
 
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.OperationException;

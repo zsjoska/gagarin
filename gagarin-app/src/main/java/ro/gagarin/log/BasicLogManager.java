@@ -1,6 +1,6 @@
 package ro.gagarin.log;
 
-import ro.gagarin.LogManager;
+import ro.gagarin.manager.LogManager;
 import ro.gagarin.session.Session;
 
 public class BasicLogManager implements LogManager {

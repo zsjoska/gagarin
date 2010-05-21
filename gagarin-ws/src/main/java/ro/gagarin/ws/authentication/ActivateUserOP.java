@@ -1,6 +1,6 @@
 package ro.gagarin.ws.authentication;
 
-import ro.gagarin.UserDAO;
+import ro.gagarin.dao.UserDAO;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.UserStatus;

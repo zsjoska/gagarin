@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import org.junit.Test;
 
 import ro.gagarin.log.AppLog;
+import ro.gagarin.manager.ManagerFactory;
+import ro.gagarin.manager.ScheduleManager;
 import ro.gagarin.scheduler.JobController;
 import ro.gagarin.scheduler.ScheduledJob;
 import ro.gagarin.scheduler.Scheduler;

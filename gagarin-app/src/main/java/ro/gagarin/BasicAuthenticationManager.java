@@ -2,8 +2,11 @@ package ro.gagarin;
 
 import org.apache.log4j.Logger;
 
+import ro.gagarin.dao.UserDAO;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.OperationException;
+import ro.gagarin.manager.AuthenticationManager;
+import ro.gagarin.manager.ManagerFactory;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.User;
 

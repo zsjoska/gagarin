@@ -2,10 +2,10 @@ package ro.gagarin.ws.userservice;
 
 import java.util.List;
 
-import ro.gagarin.AuthorizationManager;
-import ro.gagarin.UserDAO;
+import ro.gagarin.dao.UserDAO;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.exceptions.FieldRequiredException;
+import ro.gagarin.manager.AuthorizationManager;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.Group;
 import ro.gagarin.user.PermissionEnum;

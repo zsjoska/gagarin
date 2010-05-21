@@ -6,8 +6,8 @@ import static ro.gagarin.utils.ConversionUtils.user2String;
 import java.util.ArrayList;
 import java.util.List;
 
-import ro.gagarin.RoleDAO;
-import ro.gagarin.UserDAO;
+import ro.gagarin.dao.RoleDAO;
+import ro.gagarin.dao.UserDAO;
 import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.ItemNotFoundException;

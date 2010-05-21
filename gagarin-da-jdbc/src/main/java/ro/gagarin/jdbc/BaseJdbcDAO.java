@@ -10,13 +10,13 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import ro.gagarin.BaseDAO;
-import ro.gagarin.ConfigurationManager;
-import ro.gagarin.DAOManager;
 import ro.gagarin.config.Config;
+import ro.gagarin.dao.BaseDAO;
+import ro.gagarin.dao.DAOManager;
 import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.log.AppLog;
+import ro.gagarin.manager.ConfigurationManager;
 import ro.gagarin.session.Session;
 import ro.gagarin.utils.Triple;
 

@@ -1,14 +1,14 @@
 package ro.gagarin.testutil;
 
 import ro.gagarin.BasicManagerFactory;
-import ro.gagarin.ConfigurationManager;
-import ro.gagarin.ManagerFactory;
-import ro.gagarin.RoleDAO;
 import ro.gagarin.application.objects.AppUser;
 import ro.gagarin.config.Config;
 import ro.gagarin.config.DBConfigManager;
+import ro.gagarin.dao.RoleDAO;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.exceptions.SessionNotFoundException;
+import ro.gagarin.manager.ConfigurationManager;
+import ro.gagarin.manager.ManagerFactory;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.UserRole;
 

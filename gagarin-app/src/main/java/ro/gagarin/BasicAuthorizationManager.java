@@ -6,11 +6,13 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+import ro.gagarin.dao.RoleDAO;
 import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.LoginRequiredException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.exceptions.PermissionDeniedException;
+import ro.gagarin.manager.AuthorizationManager;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.User;

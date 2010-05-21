@@ -2,9 +2,9 @@ package ro.gagarin.session;
 
 import java.util.HashMap;
 
-import ro.gagarin.BaseDAO;
 import ro.gagarin.BaseEntity;
-import ro.gagarin.ManagerFactory;
+import ro.gagarin.dao.BaseDAO;
+import ro.gagarin.manager.ManagerFactory;
 import ro.gagarin.user.User;
 
 public class Session extends BaseEntity {

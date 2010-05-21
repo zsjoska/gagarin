@@ -5,10 +5,10 @@ import java.io.File;
 import org.apache.log4j.Logger;
 
 import ro.gagarin.BasicManagerFactory;
-import ro.gagarin.ConfigurationManager;
-import ro.gagarin.ManagerFactory;
-import ro.gagarin.ScheduleManager;
 import ro.gagarin.log.AppLog;
+import ro.gagarin.manager.ConfigurationManager;
+import ro.gagarin.manager.ManagerFactory;
+import ro.gagarin.manager.ScheduleManager;
 import ro.gagarin.scheduler.DefaultScheduleManager;
 import ro.gagarin.scheduler.JobController;
 import ro.gagarin.scheduler.ScheduledJob;

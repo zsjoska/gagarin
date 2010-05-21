@@ -11,9 +11,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import ro.gagarin.dao.UserDAO;
 import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.OperationException;
+import ro.gagarin.manager.ManagerFactory;
 import ro.gagarin.session.Session;
 import ro.gagarin.testobjects.ATestGroup;
 import ro.gagarin.testobjects.ATestUser;

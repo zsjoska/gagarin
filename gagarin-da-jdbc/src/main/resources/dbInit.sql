@@ -120,8 +120,9 @@ CREATE TABLE RolePersonAssignment
 (
 	role_id bigint  NOT NULL, 
 	person_id bigint  NOT NULL,
-	objectType varchar(50),
-	object_id bigint  NOT NULL
+	person_type varchar(50) NOT NULL,
+	object_id bigint  NOT NULL,
+	object_type varchar(50) NOT NULL
 )
 --END
 

@@ -2,7 +2,9 @@ package ro.gagarin;
 
 import java.util.HashSet;
 
-public class ControlEntity extends BaseEntity {
+import ro.gagarin.user.ControlEntity;
+
+public class BaseControlEntity extends BaseEntity implements ControlEntity {
 
     /**
      * 
@@ -13,14 +15,16 @@ public class ControlEntity extends BaseEntity {
     private static HashSet<ControlEntityCategory> ceHash = new HashSet<ControlEntityCategory>();
 
     private static final ControlEntity ADMIN_ENTITY;
+    private final ControlEntityCategory cat;
 
     static {
-	ADMIN_ENTITY = new ControlEntity(ControlEntityCategory.ADMIN);
+	ADMIN_ENTITY = new BaseControlEntity(ControlEntityCategory.ADMIN);
 	ADMIN_ENTITY.setId(ADMIN_CONTROL_ENTITY_ID);
 	ADMIN_ENTITY.setName("ADMIN");
     }
 
-    public ControlEntity(ControlEntityCategory cat) {
+    public BaseControlEntity(ControlEntityCategory cat) {
+	this.cat = cat;
 	ceHash.add(cat);
     }
 
@@ -40,5 +44,23 @@ public class ControlEntity extends BaseEntity {
 
     public static ControlEntity getAdminEntity() {
 	return ADMIN_ENTITY;
+    }
+
+    @Override
+    public int hashCode() {
+	return this.getId().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+	if (obj instanceof ControlEntity) {
+	    ControlEntity ce = (ControlEntity) obj;
+	    return ce.getId().equals(this.getId());
+	}
+	return false;
+    }
+
+    public ControlEntityCategory getCat() {
+	return cat;
     }
 }

@@ -1,5 +1,8 @@
 package ro.gagarin;
 
+import static org.junit.Assert.assertEquals;
+
+import java.util.Map;
 import java.util.Set;
 
 import org.junit.After;
@@ -9,6 +12,7 @@ import org.junit.Test;
 import ro.gagarin.session.Session;
 import ro.gagarin.testobjects.ATestGroup;
 import ro.gagarin.testutil.TUtil;
+import ro.gagarin.user.ControlEntity;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
 
@@ -45,7 +49,18 @@ public class PermissionTest {
 	UserRole role = TUtil.getAdminRole();
 	ATestGroup group = new ATestGroup();
 	group.setId(10L);
-	roleDAO.assignRoleToPerson(role, group, ControlEntity.getAdminEntity());
-	Set<UserPermission> perms = roleDAO.getEffectivePermissions(ControlEntity.getAdminEntity(), group);
+	roleDAO.assignRoleToPerson(role, group, BaseControlEntity.getAdminEntity());
+	Set<UserPermission> perms = roleDAO.getEffectivePermissionsOnEntity(BaseControlEntity.getAdminEntity(), group);
+	Map<ControlEntity, Set<UserPermission>> allPerms = roleDAO.getEffectivePermissions(group);
+	Set<UserPermission> set = allPerms.get(BaseControlEntity.getAdminEntity());
+	assertEquals("the two permission sets must have the same number of elements", perms.size(), set.size());
+    }
+
+    @Test
+    public void assignToItself() throws Exception {
+	UserRole role = TUtil.getAdminRole();
+	ATestGroup group = new ATestGroup();
+	group.setId(10L);
+	roleDAO.assignRoleToPerson(role, group, group);
     }
 }

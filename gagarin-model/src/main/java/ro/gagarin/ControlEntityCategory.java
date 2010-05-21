@@ -1,5 +1,5 @@
 package ro.gagarin;
 
 public enum ControlEntityCategory {
-    ADMIN
+    ADMIN, GROUP
 }

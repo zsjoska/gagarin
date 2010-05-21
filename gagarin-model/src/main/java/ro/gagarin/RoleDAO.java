@@ -1,11 +1,13 @@
 package ro.gagarin;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.OperationException;
+import ro.gagarin.user.ControlEntity;
 import ro.gagarin.user.Group;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserPermission;
@@ -57,5 +59,30 @@ public interface RoleDAO extends BaseDAO {
     void assignRoleToPerson(UserRole role, Person person, ControlEntity object) throws OperationException,
 	    DataConstraintException, ItemNotFoundException;
 
-    Set<UserPermission> getEffectivePermissions(ControlEntity entity, Person... persons) throws OperationException;
+    /**
+     * Returns a set of permission that the enumerated persons have on the given
+     * {@link ControlEntity}.<br>
+     * 
+     * @param entity
+     *            the entity for query the permissions
+     * @param persons
+     *            a list of persons (user or group)
+     * @return the distinct set of user permissions
+     * @throws OperationException
+     */
+    Set<UserPermission> getEffectivePermissionsOnEntity(ControlEntity entity, Person... persons)
+	    throws OperationException;
+
+    /**
+     * Returns all {@link ControlEntity} objects and their permissions that the
+     * given persons have.<br>
+     * The result is a map where the key is the control entity and the value is
+     * a set of {@link UserPermission}
+     * 
+     * @param persons
+     * @return the effective permissions for all objects where the given persons
+     *         have assignments
+     * @throws OperationException
+     */
+    Map<ControlEntity, Set<UserPermission>> getEffectivePermissions(Person... persons) throws OperationException;
 }

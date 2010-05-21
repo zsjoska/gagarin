@@ -1,17 +1,21 @@
 package ro.gagarin.session;
 
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 import ro.gagarin.BaseEntity;
+import ro.gagarin.ControlEntity;
 import ro.gagarin.dao.BaseDAO;
 import ro.gagarin.manager.ManagerFactory;
 import ro.gagarin.user.User;
+import ro.gagarin.user.UserPermission;
 
 public class Session extends BaseEntity {
 
     /**
-	 * 
-	 */
+     *
+     */
     private static final long serialVersionUID = -3676125918206947624L;
     private long sessionTimeout = 0;
     private long expires;
@@ -25,6 +29,7 @@ public class Session extends BaseEntity {
     HashMap<String, Object> properties = new HashMap<String, Object>();
     private ManagerFactory managerFactory;
     private Throwable t;
+    private Map<ControlEntity, Set<UserPermission>> effectivePermissions;
 
     public Session() {
 	// TODO: make the reason mandatory
@@ -78,6 +83,7 @@ public class Session extends BaseEntity {
 	return sessionTimeout;
     }
 
+    // TODO: rename
     public BaseDAO getManager() {
 	return this.manager;
     }
@@ -130,5 +136,14 @@ public class Session extends BaseEntity {
     public Throwable getCreationStacktrace() {
 
 	return this.t;
+    }
+
+    public void assignUser(User user, Map<ControlEntity, Set<UserPermission>> effectivePermissions) {
+	this.effectivePermissions = effectivePermissions;
+	setUser(user);
+    }
+
+    public Map<ControlEntity, Set<UserPermission>> getEffectivePermissions() {
+	return this.effectivePermissions;
     }
 }

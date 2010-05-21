@@ -95,15 +95,15 @@ public class BasicAuthorizationManager implements AuthorizationManager {
 
     @Override
     public void requireLogin(Session session) throws LoginRequiredException {
-	UserRole role = null;
 	if (session != null) {
 	    User user = session.getUser();
 	    if (user != null) {
-		role = user.getRole();
+		if (session.getEffectivePermissions() != null) {
+		    return;
+		}
 	    }
 	}
-	if (role == null)
-	    throw new LoginRequiredException();
+	throw new LoginRequiredException();
     }
 
     @Override

@@ -1,6 +1,7 @@
 package ro.gagarin.application.objects;
 
 import ro.gagarin.BaseEntity;
+import ro.gagarin.PersonTypesEnum;
 import ro.gagarin.user.AuthenticationType;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserRole;
@@ -105,5 +106,10 @@ public class AppUser extends BaseEntity implements User {
 
     public void setCreated(Long created) {
 	this.created = created;
+    }
+
+    @Override
+    public PersonTypesEnum getType() {
+	return PersonTypesEnum.USER;
     }
 }

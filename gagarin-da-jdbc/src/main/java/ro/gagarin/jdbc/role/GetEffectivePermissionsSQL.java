@@ -61,7 +61,7 @@ public class GetEffectivePermissionsSQL extends SelectQuery {
 	StringBuilder sb = new StringBuilder();
 	sb.append("SELECT UserPermissions.id, UserPermissions.permissionName FROM RolePersonAssignment ");
 	sb.append("INNER JOIN PermissionAssignment ON RolePersonAssignment.role_id = PermissionAssignment.role_id ");
-	sb.append("INNER JOIN UserPermissions ON PermissionAssignment.role_id = UserPermissions.id ");
+	sb.append("INNER JOIN UserPermissions ON PermissionAssignment.perm_id = UserPermissions.id ");
 	sb.append("WHERE RolePersonAssignment.object_id = ? AND (");
 	for (Person person : persons) {
 	    sb.append(" RolePersonAssignment.person_id = ? OR");

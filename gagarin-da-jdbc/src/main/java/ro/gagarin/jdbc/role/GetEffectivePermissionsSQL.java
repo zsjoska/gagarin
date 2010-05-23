@@ -63,7 +63,7 @@ public class GetEffectivePermissionsSQL extends SelectQuery {
     protected void fillParameters(PreparedStatement stmnt) throws SQLException {
 	int index = 1;
 	for (Person person : persons) {
-	    stmnt.setLong(index, person.getId());
+	    stmnt.setLong(index++, person.getId());
 	}
     }
 

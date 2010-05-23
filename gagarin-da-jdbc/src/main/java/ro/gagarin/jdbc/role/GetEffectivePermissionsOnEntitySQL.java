@@ -51,7 +51,7 @@ public class GetEffectivePermissionsOnEntitySQL extends SelectQuery {
 	stmnt.setLong(1, this.entity.getId());
 	int index = 2;
 	for (Person person : persons) {
-	    stmnt.setLong(index, person.getId());
+	    stmnt.setLong(index++, person.getId());
 	}
     }
 

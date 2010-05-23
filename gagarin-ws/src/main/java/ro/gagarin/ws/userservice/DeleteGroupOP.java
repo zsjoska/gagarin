@@ -2,7 +2,6 @@ package ro.gagarin.ws.userservice;
 
 import java.security.acl.Group;
 
-import ro.gagarin.BaseControlEntity;
 import ro.gagarin.dao.UserDAO;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.exceptions.FieldRequiredException;
@@ -39,10 +38,12 @@ public class DeleteGroupOP extends WebserviceOperation {
 
     @Override
     public void execute() throws ExceptionBase {
-	// the session user must have DELETE_GROUP permission
-	// TODO: review permissions: the problem if has ADMIN could delete?
-	authManager.requiresPermission(getSession(), BaseControlEntity.getAdminEntity(), PermissionEnum.DELETE);
+	// TODO: the group may not have Id
+	// TODO: we need that DELETE on ADMIN should be able to delete
+	authManager.requiresPermission(getSession(), group, PermissionEnum.DELETE);
 	userManager.deleteGroup(this.group);
+
+	// TODO: clean up the group assignments, rolePersonAssignments
     }
 
     @Override

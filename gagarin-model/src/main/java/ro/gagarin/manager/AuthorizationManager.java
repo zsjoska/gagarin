@@ -3,10 +3,13 @@ package ro.gagarin.manager;
 import java.util.List;
 
 import ro.gagarin.ControlEntity;
+import ro.gagarin.exceptions.DataConstraintException;
+import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.LoginRequiredException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.exceptions.PermissionDeniedException;
 import ro.gagarin.session.Session;
+import ro.gagarin.user.Group;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserPermission;
@@ -43,5 +46,8 @@ public interface AuthorizationManager extends BaseManager {
 	    PermissionDeniedException;
 
     void requireLogin(Session session) throws LoginRequiredException;
+
+    void addCreatorPermission(Group group, Session session) throws OperationException, DataConstraintException,
+	    ItemNotFoundException;
 
 }

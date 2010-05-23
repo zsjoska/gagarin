@@ -5,18 +5,23 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+import ro.gagarin.config.Config;
 import ro.gagarin.dao.RoleDAO;
+import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.LoginRequiredException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.exceptions.PermissionDeniedException;
 import ro.gagarin.manager.AuthorizationManager;
+import ro.gagarin.manager.ConfigurationManager;
 import ro.gagarin.session.Session;
+import ro.gagarin.user.Group;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
+import ro.gagarin.util.Utils;
 
 public class BasicAuthorizationManager implements AuthorizationManager {
     private static final transient Logger LOG = Logger.getLogger(BasicAuthorizationManager.class);
@@ -103,5 +108,19 @@ public class BasicAuthorizationManager implements AuthorizationManager {
     @Override
     public void initializeManager() {
 	// nothing to initialize
+    }
+
+    @Override
+    public void addCreatorPermission(Group group, Session session) throws OperationException, DataConstraintException,
+	    ItemNotFoundException {
+	// TODO: some optimization could help here
+	ConfigurationManager cfgMgr = session.getManagerFactory().getConfigurationManager();
+	RoleDAO roleDAO = session.getManagerFactory().getDAOManager().getRoleDAO(session);
+	String adminRoleName = cfgMgr.getString(Config.ADMIN_ROLE_NAME);
+	UserRole adminRole = roleDAO.getRoleByName(adminRoleName);
+	roleDAO.assignRoleToPerson(adminRole, session.getUser(), group);
+	Set<UserPermission> permissions = roleDAO.getRolePermissions(adminRole);
+	Set<PermissionEnum> permSet = Utils.convertPermissionSet(permissions);
+	session.getEffectivePermissions().put(group, permSet);
     }
 }

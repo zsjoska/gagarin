@@ -52,12 +52,9 @@ public class UserServiceTest {
 
 	Admin userService = new Admin();
 
-	List<WSUserRole> roles = userService.getRoleList(session);
-
 	WSUser user = new WSUser();
 	user.setUsername(username);
 	user.setPassword("password");
-	user.setRole(roles.get(0));
 	user.setStatus(UserStatus.ACTIVE);
 
 	userService.createUser(session, user);

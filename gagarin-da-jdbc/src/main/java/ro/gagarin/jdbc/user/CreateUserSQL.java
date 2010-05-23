@@ -36,17 +36,10 @@ public class CreateUserSQL extends UpdateQuery {
 	stmnt.setLong(7, user.getStatus().ordinal());
 	stmnt.setLong(8, user.getCreated());
 	stmnt.setString(9, user.getAuthentication().name());
-	if (user.getRole() != null) {
-	    stmnt.setLong(10, user.getRole().getId());
-	}
     }
 
     @Override
     protected String getSQL() {
-	if (user.getRole() != null) {
-	    return "INSERT INTO Users( id, username, name, email, phone, password, status, created, authentication, roleid) "
-		    + "VALUES (?,?,?,?,?,?,?,?,?,?)";
-	}
 	return "INSERT INTO Users( id, username, name, email, phone, password, status, created, authentication) "
 		+ "VALUES (?,?,?,?,?,?,?,?,?)";
 

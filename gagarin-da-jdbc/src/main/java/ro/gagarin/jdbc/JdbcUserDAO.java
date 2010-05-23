@@ -6,7 +6,6 @@ import static ro.gagarin.utils.ConversionUtils.user2String;
 import java.util.ArrayList;
 import java.util.List;
 
-import ro.gagarin.dao.RoleDAO;
 import ro.gagarin.dao.UserDAO;
 import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ErrorCodes;
@@ -25,7 +24,6 @@ import ro.gagarin.jdbc.objects.DBGroup;
 import ro.gagarin.jdbc.objects.DBUser;
 import ro.gagarin.jdbc.user.CreateUserSQL;
 import ro.gagarin.jdbc.user.DeleteUserSQL;
-import ro.gagarin.jdbc.user.GetUsersWithRoleSQL;
 import ro.gagarin.jdbc.user.SelectUserByUsernamePasswordSQL;
 import ro.gagarin.jdbc.user.SelectUserByUsernameSQL;
 import ro.gagarin.jdbc.user.SelectUsersSQL;
@@ -36,7 +34,6 @@ import ro.gagarin.session.Session;
 import ro.gagarin.user.AuthenticationType;
 import ro.gagarin.user.Group;
 import ro.gagarin.user.User;
-import ro.gagarin.user.UserRole;
 
 public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 
@@ -119,23 +116,6 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 
 	User user = SelectUserByUsernameSQL.execute(this, username);
 	return user;
-    }
-
-    @Override
-    public List<User> getUsersWithRole(UserRole role) throws OperationException, ItemNotFoundException {
-
-	// foreign DAO call
-	RoleDAO roleDAO = getDaoManager().getRoleDAO(getSession());
-	UserRole roleWithId = roleDAO.completeRoleId(role);
-
-	try {
-	    ArrayList<User> users = GetUsersWithRoleSQL.execute(this, roleWithId);
-	    return users;
-	} catch (OperationException e) {
-	    throw e;
-	} catch (DataConstraintException e) {
-	    throw new OperationException(ErrorCodes.DB_OP_ERROR, e);
-	}
     }
 
     @Override

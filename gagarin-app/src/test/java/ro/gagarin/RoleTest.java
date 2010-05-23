@@ -5,7 +5,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
-import java.util.List;
 import java.util.Set;
 
 import org.junit.After;
@@ -13,7 +12,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ro.gagarin.dao.RoleDAO;
-import ro.gagarin.dao.UserDAO;
 import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.ItemExistsException;
@@ -22,14 +20,11 @@ import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.manager.ManagerFactory;
 import ro.gagarin.session.Session;
-import ro.gagarin.testobjects.ATestUser;
 import ro.gagarin.testobjects.ATestUserPermission;
 import ro.gagarin.testobjects.ATestUserRole;
 import ro.gagarin.testutil.TUtil;
-import ro.gagarin.user.User;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
-import ro.gagarin.user.UserStatus;
 
 /**
  * Unit test for simple App.
@@ -177,33 +172,6 @@ public class RoleTest {
 
 	permission.setId(roleManager.createPermission(permission));
 	roleManager.assignPermissionToRole(role, permission);
-    }
-
-    @Test
-    public void testGetUsersWithRole() throws DataConstraintException, OperationException, ItemNotFoundException {
-	RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
-	UserDAO userDAO = FACTORY.getDAOManager().getUserDAO(session);
-
-	ATestUserRole role = new ATestUserRole();
-	role.setRoleName("A_ROLE");
-	role.setId(roleManager.createRole(role));
-
-	ATestUser user = new ATestUser();
-	user.setName("name");
-	user.setUsername("username");
-	user.setPassword("password");
-	user.setRole(role);
-	user.setStatus(UserStatus.ACTIVE);
-	user.setId(userDAO.createUser(user));
-
-	List<User> usersWithRole = userDAO.getUsersWithRole(role);
-
-	assertNotNull(usersWithRole);
-	assertEquals(1, usersWithRole.size());
-	assertEquals(user.getId(), usersWithRole.get(0).getId());
-
-	userDAO.deleteUser(user);
-	roleManager.deleteRole(role);
     }
 
     @Test

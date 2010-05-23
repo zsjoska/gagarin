@@ -39,12 +39,11 @@ public class CreateRoleWithPermissionsOP extends WebserviceOperation {
     @Override
     public void execute() throws ExceptionBase {
 
-	// the session user must have LIST_PERMISSIONS permission
 	authManager.requiresPermission(getSession(), BaseControlEntity.getAdminEntity(), PermissionEnum.CREATE);
+
 	List<UserPermission> allPermissions = roleManager.getAllPermissions();
 	List<UserPermission> matched;
 	matched = ConversionUtils.matchPermissions(allPermissions, permissions);
-	authManager.checkUserHasThePermissions(getSession(), matched);
 
 	WSUserRole role = new WSUserRole();
 	role.setRoleName(roleName);

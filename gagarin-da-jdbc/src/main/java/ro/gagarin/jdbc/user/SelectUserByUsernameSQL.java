@@ -33,7 +33,7 @@ public class SelectUserByUsernameSQL extends SelectQuery {
     @Override
     protected void useResult(ResultSet rs) throws SQLException {
 	if (rs.next()) {
-	    user = JDBCRSConvert.convertRSToUserWithRole(rs);
+	    user = JDBCRSConvert.convertRSToUser(rs);
 	} else {
 	    user = null;
 	}
@@ -48,8 +48,8 @@ public class SelectUserByUsernameSQL extends SelectQuery {
 
     @Override
     protected String getSQL() {
-	return "SELECT Users.id, username, name, email, phone, password, roleid, roleName, status, authentication, created "
-		+ "FROM Users INNER JOIN UserRoles ON Users.roleid = UserRoles.id " + "WHERE username = ?";
+	return "SELECT Users.id, username, name, email, phone, password, status, authentication, created "
+		+ "FROM Users WHERE username = ?";
     }
 
     public static User execute(BaseJdbcDAO dao, String username) throws OperationException {

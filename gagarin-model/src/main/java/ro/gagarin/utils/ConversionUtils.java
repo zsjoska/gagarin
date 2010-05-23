@@ -23,7 +23,7 @@ public class ConversionUtils {
     public static String user2String(User user) {
 	return user.getClass().getSimpleName() + " [" + "getId()=" + user.getId() + ", getUsername()="
 		+ user.getUsername() + ", getEmail()=" + user.getEmail() + ", getName()=" + user.getName()
-		+ ", getPhone()=" + user.getPhone() + ", getRole()=" + user.getRole() + "]";
+		+ ", getPhone()=" + user.getPhone() + "]";
     }
 
     public static String config2String(ConfigEntry config) {

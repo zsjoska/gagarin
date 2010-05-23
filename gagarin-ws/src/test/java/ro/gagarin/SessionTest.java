@@ -60,7 +60,6 @@ public class SessionTest {
 
 	UserDAO userManager = FACTORY.getDAOManager().getUserDAO(session);
 	RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
-	ConfigurationManager cfgManager = FACTORY.getConfigurationManager();
 
 	List<UserRole> allRoles = roleManager.getAllRoles();
 	LOG.debug("Roles in system:");
@@ -72,7 +71,6 @@ public class SessionTest {
 	AppUser user = new AppUser();
 	user.setUsername("1" + username);
 	user.setPassword("password1");
-	user.setRole(roleManager.getRoleByName(cfgManager.getString(Config.ADMIN_ROLE_NAME)));
 	user.setStatus(UserStatus.ACTIVE);
 	userManager.createUser(user);
 	FACTORY.releaseSession(session);
@@ -92,13 +90,10 @@ public class SessionTest {
 	session = TUtil.createTestSession();
 
 	UserDAO userManager = FACTORY.getDAOManager().getUserDAO(session);
-	ConfigurationManager cfgManager = FACTORY.getConfigurationManager();
-	RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
 
 	DBUser user = new DBUser();
 	user.setUsername("2" + username);
 	user.setPassword("password2");
-	user.setRole(roleManager.getRoleByName(cfgManager.getString(Config.ADMIN_ROLE_NAME)));
 	user.setStatus(UserStatus.ACTIVE);
 	userManager.createUser(user);
 
@@ -129,13 +124,10 @@ public class SessionTest {
 	session = TUtil.createTestSession();
 
 	UserDAO userManager = FACTORY.getDAOManager().getUserDAO(session);
-	ConfigurationManager cfgManager = FACTORY.getConfigurationManager();
-	RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
 
 	DBUser user = new DBUser();
 	user.setUsername("3" + username);
 	user.setPassword("password3");
-	user.setRole(roleManager.getRoleByName(cfgManager.getString(Config.ADMIN_ROLE_NAME)));
 	user.setStatus(UserStatus.ACTIVE);
 	userManager.createUser(user);
 

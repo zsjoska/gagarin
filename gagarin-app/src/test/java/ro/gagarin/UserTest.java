@@ -38,7 +38,6 @@ public class UserTest {
     private static final ManagerFactory FACTORY = BasicManagerFactory.getInstance();
 
     private Session session = null;
-    private UserRole adminRole;
     private RoleDAO roleManager;
     private UserDAO usrManager;
 
@@ -47,9 +46,6 @@ public class UserTest {
 	this.session = TUtil.createTestSession();
 	usrManager = FACTORY.getDAOManager().getUserDAO(session);
 	roleManager = FACTORY.getDAOManager().getRoleDAO(session);
-
-	adminRole = roleManager.getRoleByName(configManager.getString(Config.ADMIN_ROLE_NAME));
-	assertNotNull("this test requires application setup", adminRole);
 
 	username = "User_" + System.nanoTime();
     }
@@ -76,7 +72,6 @@ public class UserTest {
 	user.setPassword("password" + username);
 	user.setEmail(username + "@gagarin.ro");
 	user.setPhone("any kind of phone");
-	user.setRole(adminRole);
 	user.setStatus(UserStatus.ACTIVE);
 	user.setId(usrManager.createUser(user));
 
@@ -91,7 +86,6 @@ public class UserTest {
 	assertEquals("authentication should be filled", user2.getAuthentication(), AuthenticationType.INTERNAL);
 	assertEquals("status does not match", user.getStatus(), user2.getStatus());
 	assertNotNull("created should be filled", user2.getCreated());
-	assertNotNull("The role field must be filled by queries", user2.getRole());
 
 	usrManager.deleteUser(user);
 	assertNull("We just deleted the user; must not exists", usrManager.getUserByUsername(username));
@@ -110,7 +104,6 @@ public class UserTest {
 	    user.setPassword("");
 	    user.setEmail("");
 	    user.setPhone("");
-	    user.setRole(adminRole);
 	    long userid = usrManager.createUser(user);
 	    user.setId(userid);
 	    usrManager.deleteUser(user);
@@ -168,19 +161,15 @@ public class UserTest {
     @Test
     public void usersWiththeSameUsername() throws ItemNotFoundException, DataConstraintException, OperationException {
 
-	UserRole adminRole = roleManager.getRoleByName(configManager.getString(Config.ADMIN_ROLE_NAME));
-
 	ATestUser user1 = new ATestUser();
 	user1.setUsername("UserName2");
 	user1.setPassword("password");
-	user1.setRole(adminRole);
 	user1.setStatus(UserStatus.ACTIVE);
 
 	ATestUser user2 = new ATestUser();
 	user2.setUsername("UserName2");
 	user2.setPassword("password");
 	user2.setStatus(UserStatus.ACTIVE);
-	user2.setRole(adminRole);
 
 	usrManager.createUser(user1);
 
@@ -208,13 +197,9 @@ public class UserTest {
 	Session brokenSession = TUtil.createTestSession();
 
 	UserDAO usrManager = FACTORY.getDAOManager().getUserDAO(brokenSession);
-	RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(brokenSession);
-
-	UserRole adminRole = roleManager.getRoleByName(configManager.getString(Config.ADMIN_ROLE_NAME));
 
 	ATestUser user1 = new ATestUser();
 	user1.setPassword("password");
-	user1.setRole(adminRole);
 
 	try {
 	    usrManager.createUser(user1);
@@ -235,7 +220,6 @@ public class UserTest {
 	user.setPassword("password" + username);
 	user.setEmail(username + "_1@gagarin.ro");
 	user.setPhone("any kind of phone");
-	user.setRole(adminRole);
 	user.setStatus(UserStatus.ACTIVE);
 	long userId = usrManager.createUser(user);
 
@@ -246,7 +230,6 @@ public class UserTest {
 	user2.setEmail(username + "_2@gagarin.ro");
 	user2.setName("another name");
 	user2.setPassword("test");
-	user2.setRole(adminRole);
 	user2.setPhone("112233");
 	user2.setStatus(UserStatus.SUSPENDED);
 	user2.setUsername(username + "_2");
@@ -266,7 +249,6 @@ public class UserTest {
 	assertEquals("username does not match", user2.getUsername(), user3.getUsername());
 	assertEquals("authentication should be filled", user2.getAuthentication(), user3.getAuthentication());
 	assertEquals("status does not match", user2.getStatus(), user3.getStatus());
-	assertEquals("The role field does not match", user2.getRole().getId(), user3.getRole().getId());
     }
 
     // TODO: create tests with empty role

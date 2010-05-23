@@ -4,7 +4,6 @@ import ro.gagarin.BaseEntity;
 import ro.gagarin.PersonTypesEnum;
 import ro.gagarin.user.AuthenticationType;
 import ro.gagarin.user.User;
-import ro.gagarin.user.UserRole;
 import ro.gagarin.user.UserStatus;
 import ro.gagarin.utils.ConversionUtils;
 
@@ -17,7 +16,6 @@ public class WSUser extends BaseEntity implements User {
     private String email;
     private String phone;
     private String password;
-    private WSUserRole role;
     private AuthenticationType authentication;
     private UserStatus status;
     private Long created;
@@ -29,7 +27,6 @@ public class WSUser extends BaseEntity implements User {
 	this.setId(user.getId());
 	this.setName(user.getName());
 	this.setPassword(user.getPassword());
-	this.setRole(user.getRole());
 	this.setUsername(user.getUsername());
 	this.setEmail(user.getEmail());
 	this.setPhone(user.getPhone());
@@ -49,11 +46,6 @@ public class WSUser extends BaseEntity implements User {
     }
 
     @Override
-    public WSUserRole getRole() {
-	return this.role;
-    }
-
-    @Override
     public String getUsername() {
 	return this.username;
     }
@@ -68,15 +60,6 @@ public class WSUser extends BaseEntity implements User {
 
     public void setPassword(String password) {
 	this.password = password;
-    }
-
-    public void setRole(WSUserRole role) {
-	this.role = role;
-    }
-
-    public void setRole(UserRole role) {
-	if (role != null)
-	    this.role = new WSUserRole(role);
     }
 
     public String getEmail() {

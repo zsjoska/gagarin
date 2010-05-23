@@ -28,7 +28,6 @@ CREATE TABLE Users
 	email varchar(50), 
 	phone varchar(50), 
 	password varchar(50), 
-	roleid bigint,
 	status int NOT NULL,
 	authentication varchar(20),
 	created bigint NOT NULL,	

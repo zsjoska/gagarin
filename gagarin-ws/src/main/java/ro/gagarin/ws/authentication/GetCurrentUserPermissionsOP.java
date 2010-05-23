@@ -5,11 +5,10 @@ import java.util.Set;
 import ro.gagarin.dao.RoleDAO;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.session.Session;
-import ro.gagarin.user.UserPermission;
 import ro.gagarin.ws.executor.WebserviceOperation;
 import ro.gagarin.ws.objects.WSUserPermission;
-import ro.gagarin.ws.util.WSConversionUtils;
 
+// TODO: completly rewrite and refactor: the effective permissions should be returned here
 public class GetCurrentUserPermissionsOP extends WebserviceOperation {
 
     private Set<WSUserPermission> currentUserPermissions;
@@ -27,9 +26,6 @@ public class GetCurrentUserPermissionsOP extends WebserviceOperation {
 
     @Override
     public void execute() throws ExceptionBase {
-
-	Set<UserPermission> perm = roleDAO.getRolePermissions(getSession().getUser().getRole());
-	this.currentUserPermissions = WSConversionUtils.convertToWSPermissionSet(perm);
 
     }
 

@@ -16,8 +16,6 @@ public interface User extends Person {
 
     public abstract Long getId();
 
-    public abstract UserRole getRole();
-
     public abstract UserStatus getStatus();
 
     public abstract AuthenticationType getAuthentication();

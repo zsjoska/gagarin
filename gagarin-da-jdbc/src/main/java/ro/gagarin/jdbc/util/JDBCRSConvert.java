@@ -4,7 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import ro.gagarin.jdbc.objects.DBUser;
-import ro.gagarin.jdbc.objects.DBUserRole;
 import ro.gagarin.user.AuthenticationType;
 import ro.gagarin.user.UserStatus;
 
@@ -31,14 +30,4 @@ public class JDBCRSConvert {
     private static AuthenticationType convertToAuthenticationType(String string) {
 	return AuthenticationType.valueOf(string);
     }
-
-    public static DBUser convertRSToUserWithRole(ResultSet rs) throws SQLException {
-	DBUser user = convertRSToUser(rs);
-	DBUserRole role = new DBUserRole();
-	role.setId(rs.getLong("roleid"));
-	role.setRoleName(rs.getString("roleName"));
-	user.setRole(role);
-	return user;
-    }
-
 }

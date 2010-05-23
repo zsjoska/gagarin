@@ -120,7 +120,7 @@ public class ApplicationInitializer {
 	checkAdminRolePermissionList(adminRole);
 
 	this.setTask("CHK_CREATE_ADMIN_USERS");
-	checkAdminUsers(adminRole);
+	checkAdminUser();
 
 	this.setTask("CHK_CREATE_ADMIN_GROUP");
 	checkAdminGroup(adminRole);
@@ -221,8 +221,7 @@ public class ApplicationInitializer {
 	return adminRole;
     }
 
-    private void checkAdminUsers(final UserRole adminRole) throws ItemNotFoundException, DataConstraintException,
-	    OperationException {
+    private void checkAdminUser() throws ItemNotFoundException, DataConstraintException, OperationException {
 	LOG.info("Checking admin user");
 	final String adminUserName = cfgManager.getString(Config.ADMIN_USER_NAME);
 	final String adminPassword = cfgManager.getString(Config.ADMIN_PASSWORD);
@@ -233,7 +232,6 @@ public class ApplicationInitializer {
 	    adminUser.setName("Gagarin");
 	    adminUser.setPassword(adminPassword);
 	    adminUser.setUsername(adminUserName);
-	    adminUser.setRole(adminRole);
 	    adminUser.setAuthentication(AuthenticationType.INTERNAL);
 	    adminUser.setStatus(UserStatus.ACTIVE);
 	    userManager.createUser(adminUser);

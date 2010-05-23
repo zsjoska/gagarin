@@ -46,9 +46,6 @@ public class UpdateUserSQL extends UpdateQuery {
 	if (user.getPhone() != null) {
 	    stmnt.setString(index++, user.getPhone());
 	}
-	if (user.getRole() != null) {
-	    stmnt.setLong(index++, user.getRole().getId());
-	}
 	if (user.getAuthentication() != null) {
 	    stmnt.setString(index++, user.getAuthentication().name());
 	}
@@ -77,9 +74,6 @@ public class UpdateUserSQL extends UpdateQuery {
 	}
 	if (user.getPhone() != null) {
 	    sb.append(" phone = ?,");
-	}
-	if (user.getRole() != null) {
-	    sb.append(" roleid = ?,");
 	}
 	if (user.getAuthentication() != null) {
 	    sb.append(" authentication = ?,");

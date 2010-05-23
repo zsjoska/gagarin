@@ -8,7 +8,6 @@ import ro.gagarin.utils.ConversionUtils;
 
 public class WSGroup extends BaseControlEntity implements Group {
 
-    private String name;
     private String description;
 
     public WSGroup() {
@@ -25,15 +24,6 @@ public class WSGroup extends BaseControlEntity implements Group {
     @Override
     public String getDescription() {
 	return this.description;
-    }
-
-    @Override
-    public String getName() {
-	return this.name;
-    }
-
-    public void setName(String name) {
-	this.name = name;
     }
 
     public void setDescription(String description) {

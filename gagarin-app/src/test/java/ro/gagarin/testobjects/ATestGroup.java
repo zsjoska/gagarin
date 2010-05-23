@@ -8,7 +8,6 @@ import ro.gagarin.utils.ConversionUtils;
 
 public class ATestGroup extends BaseControlEntity implements Group {
 
-    private String name;
     private String description;
 
     public ATestGroup(Group group) {
@@ -25,15 +24,6 @@ public class ATestGroup extends BaseControlEntity implements Group {
     @Override
     public String getDescription() {
 	return this.description;
-    }
-
-    @Override
-    public String getName() {
-	return this.name;
-    }
-
-    public void setName(String name) {
-	this.name = name;
     }
 
     public void setDescription(String description) {

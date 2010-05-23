@@ -33,7 +33,7 @@ public class GetSessionListOP extends WebserviceOperation {
     @Override
     public void execute() throws ExceptionBase {
 
-	authManager.requiresPermission(getSession(), PermissionEnum.AUDIT, BaseControlEntity.getAdminEntity());
+	authManager.requiresPermission(getSession(), BaseControlEntity.getAdminEntity(), PermissionEnum.AUDIT);
 	List<Session> sessions = sessionManager.getSessionList();
 
 	this.sessionList = WSConversionUtils.convertToSessionList(sessions);

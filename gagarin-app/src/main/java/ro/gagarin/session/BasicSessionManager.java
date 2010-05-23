@@ -2,6 +2,7 @@ package ro.gagarin.session;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -27,6 +28,7 @@ import ro.gagarin.manager.LogManager;
 import ro.gagarin.manager.ManagerFactory;
 import ro.gagarin.manager.SessionManager;
 import ro.gagarin.user.Group;
+import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserPermission;
 
@@ -206,7 +208,21 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
 	// get the user effective permissions
 	Map<ControlEntity, Set<UserPermission>> effectivePermissions = roleDAO.getEffectivePermissions(persons);
 
-	session.assignUser(user, effectivePermissions);
+	// TODO: move this to an utility
+	// transform the effective permissions to a more friendly format
+	Map<ControlEntity, Set<PermissionEnum>> permMap = new HashMap<ControlEntity, Set<PermissionEnum>>();
+	for (ControlEntity ce : effectivePermissions.keySet()) {
+	    Set<UserPermission> set = effectivePermissions.get(ce);
+	    Set<PermissionEnum> newSet = new HashSet<PermissionEnum>();
+	    permMap.put(ce, newSet);
+	    for (UserPermission userPermission : set) {
+		PermissionEnum perm = PermissionEnum.valueOf(userPermission.getPermissionName());
+		newSet.add(perm);
+
+	    }
+	}
+
+	session.assignUser(user, permMap);
 	appLog.info("User " + user.getId() + ":" + user.getUsername() + " was bound to session " + session.getId());
     }
 }

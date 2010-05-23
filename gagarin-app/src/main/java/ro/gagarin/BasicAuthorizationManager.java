@@ -1,6 +1,5 @@
 package ro.gagarin;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -45,18 +44,22 @@ public class BasicAuthorizationManager implements AuthorizationManager {
 	User user = null;
 	user = session.getUser();
 
-	Set<UserPermission> permSet = session.getEffectivePermissions().get(ce);
-	if (permSet != null) {
-	    Iterator<? extends UserPermission> iterator = permSet.iterator();
-	    while (iterator.hasNext()) {
-		UserPermission userPermission = iterator.next();
-		if (userPermission.getPermissionName().equals(reqPermission.name())) {
-		    LOG.debug(reqPermission.name() + " was found for user " + user.getUsername());
-		    return;
-		}
+	Set<PermissionEnum> permSet = session.getEffectivePermissions().get(ce);
+	if (permSet == null) {
+	    // TODO: reqPermission[0].name() is not the right way... and we have
+	    // to track the object ID and name too
+	    throw new PermissionDeniedException(user.getUsername(), reqPermission[0].name());
+	}
+
+	for (PermissionEnum reqPerm : reqPermission) {
+	    if (permSet.contains(reqPerm)) {
+		LOG.debug(reqPerm.name() + " was found for user " + user.getUsername());
+		return;
 	    }
 	}
-	throw new PermissionDeniedException(user.getUsername(), reqPermission.name());
+	// TODO: reqPermission[0].name() is not the right way... and we have
+	// to track the object ID and name too
+	throw new PermissionDeniedException(user.getUsername(), reqPermission[0].name());
     }
 
     @Deprecated

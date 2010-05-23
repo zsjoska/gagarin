@@ -35,7 +35,7 @@ public class GetUsersOP extends WebserviceOperation {
     public void execute() throws ExceptionBase {
 
 	// the session user must have LIST_USERS permission
-	authManager.requiresPermission(getSession(), PermissionEnum.LIST, BaseControlEntity.getAdminEntity());
+	authManager.requiresPermission(getSession(), BaseControlEntity.getAdminEntity(), PermissionEnum.LIST);
 
 	List<User> allUsers = userDAO.getAllUsers();
 	this.users = WSConversionUtils.convertToWSUserList(allUsers);

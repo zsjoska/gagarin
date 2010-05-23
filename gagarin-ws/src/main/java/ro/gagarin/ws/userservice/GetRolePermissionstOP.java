@@ -41,7 +41,7 @@ public class GetRolePermissionstOP extends WebserviceOperation {
     public void execute() throws ExceptionBase {
 
 	// the session user must have LIST_PERMISSIONS permission
-	authManager.requiresPermission(getSession(), PermissionEnum.LIST, BaseControlEntity.getAdminEntity());
+	authManager.requiresPermission(getSession(), BaseControlEntity.getAdminEntity(), PermissionEnum.LIST);
 
 	Set<UserPermission> permissions = roleManager.getRolePermissions(wsUserRole);
 	this.permList = WSConversionUtils.convertToWSPermissionList(permissions);

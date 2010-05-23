@@ -32,7 +32,7 @@ public class GetRoleListOP extends WebserviceOperation {
     @Override
     public void execute() throws ExceptionBase {
 	// the session user must have LIST_ROLES permission
-	authorizationManager.requiresPermission(getSession(), PermissionEnum.LIST, BaseControlEntity.getAdminEntity());
+	authorizationManager.requiresPermission(getSession(), BaseControlEntity.getAdminEntity(), PermissionEnum.LIST);
 
 	List<UserRole> allRoles = roleManager.getAllRoles();
 	List<WSUserRole> convRoles = new ArrayList<WSUserRole>();

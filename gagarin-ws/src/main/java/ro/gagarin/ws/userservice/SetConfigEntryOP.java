@@ -28,7 +28,7 @@ public class SetConfigEntryOP extends WebserviceOperation {
     @Override
     public void execute() throws ExceptionBase {
 
-	authManager.requiresPermission(getSession(), PermissionEnum.ADMIN, BaseControlEntity.getAdminEntity());
+	authManager.requiresPermission(getSession(), BaseControlEntity.getAdminEntity(), PermissionEnum.ADMIN);
 
 	ConfigurationManager cfgMgr = FACTORY.getConfigurationManager();
 	cfgMgr.setConfigValue(getSession(), wsConfig);

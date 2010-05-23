@@ -30,7 +30,7 @@ public class LogoutSessionOP extends WebserviceOperation {
     @Override
     public void execute() throws ExceptionBase {
 
-	authManager.requiresPermission(getSession(), PermissionEnum.ADMIN, BaseControlEntity.getAdminEntity());
+	authManager.requiresPermission(getSession(), BaseControlEntity.getAdminEntity(), PermissionEnum.ADMIN);
 
 	sessionManager.logout(otherSessionId);
 	getApplog().info("LogoutSession " + otherSessionId);

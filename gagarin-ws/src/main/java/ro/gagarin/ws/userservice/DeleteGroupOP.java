@@ -41,7 +41,7 @@ public class DeleteGroupOP extends WebserviceOperation {
     public void execute() throws ExceptionBase {
 	// the session user must have DELETE_GROUP permission
 	// TODO: review permissions: the problem if has ADMIN could delete?
-	authManager.requiresPermission(getSession(), PermissionEnum.DELETE, BaseControlEntity.getAdminEntity());
+	authManager.requiresPermission(getSession(), BaseControlEntity.getAdminEntity(), PermissionEnum.DELETE);
 	userManager.deleteGroup(this.group);
     }
 

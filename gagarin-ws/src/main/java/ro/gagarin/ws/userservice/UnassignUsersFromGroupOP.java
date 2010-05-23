@@ -35,7 +35,7 @@ public class UnassignUsersFromGroupOP extends WebserviceOperation {
 
     @Override
     public void execute() throws ExceptionBase {
-	authManager.requiresPermission(getSession(), PermissionEnum.UPDATE, group);
+	authManager.requiresPermission(getSession(), group, PermissionEnum.UPDATE);
 
 	for (WSUser user : this.users) {
 	    userManager.unassignUserFromGroup(user, group);

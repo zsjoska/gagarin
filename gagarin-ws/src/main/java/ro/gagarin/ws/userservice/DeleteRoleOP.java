@@ -33,7 +33,7 @@ public class DeleteRoleOP extends WebserviceOperation {
     @Override
     public void execute() throws ExceptionBase {
 
-	authManager.requiresPermission(getSession(), PermissionEnum.DELETE, BaseControlEntity.getAdminEntity());
+	authManager.requiresPermission(getSession(), BaseControlEntity.getAdminEntity(), PermissionEnum.DELETE);
 
 	roleManager.deleteRole(role);
 	getApplog().info("Role " + role.getRoleName() + " deleted");

@@ -8,8 +8,8 @@ import ro.gagarin.BaseEntity;
 import ro.gagarin.ControlEntity;
 import ro.gagarin.dao.BaseDAO;
 import ro.gagarin.manager.ManagerFactory;
+import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.User;
-import ro.gagarin.user.UserPermission;
 
 public class Session extends BaseEntity {
 
@@ -29,7 +29,7 @@ public class Session extends BaseEntity {
     HashMap<String, Object> properties = new HashMap<String, Object>();
     private ManagerFactory managerFactory;
     private Throwable t;
-    private Map<ControlEntity, Set<UserPermission>> effectivePermissions;
+    private Map<ControlEntity, Set<PermissionEnum>> effectivePermissions;
 
     public Session() {
 	// TODO: make the reason mandatory
@@ -138,12 +138,12 @@ public class Session extends BaseEntity {
 	return this.t;
     }
 
-    public void assignUser(User user, Map<ControlEntity, Set<UserPermission>> effectivePermissions) {
-	this.effectivePermissions = effectivePermissions;
+    public void assignUser(User user, Map<ControlEntity, Set<PermissionEnum>> permMap) {
+	this.effectivePermissions = permMap;
 	setUser(user);
     }
 
-    public Map<ControlEntity, Set<UserPermission>> getEffectivePermissions() {
+    public Map<ControlEntity, Set<PermissionEnum>> getEffectivePermissions() {
 	return this.effectivePermissions;
     }
 }

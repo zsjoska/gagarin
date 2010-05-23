@@ -49,7 +49,7 @@ public class GetGroupUsersOP extends WebserviceOperation {
     @Override
     public void execute() throws ExceptionBase {
 	// the session user must have LIST_USERS permission
-	authManager.requiresPermission(getSession(), PermissionEnum.LIST, BaseControlEntity.getAdminEntity());
+	authManager.requiresPermission(getSession(), BaseControlEntity.getAdminEntity(), PermissionEnum.LIST);
 	List<User> users = userManager.getGroupUsers(group);
 	this.groupUsers = WSConversionUtils.convertToWSUserList(users);
     }

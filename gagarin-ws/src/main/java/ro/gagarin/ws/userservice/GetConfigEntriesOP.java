@@ -32,7 +32,7 @@ public class GetConfigEntriesOP extends WebserviceOperation {
     @Override
     public void execute() throws ExceptionBase {
 
-	authManager.requiresPermission(getSession(), PermissionEnum.LIST, BaseControlEntity.getAdminEntity());
+	authManager.requiresPermission(getSession(), BaseControlEntity.getAdminEntity(), PermissionEnum.LIST);
 
 	List<ConfigEntry> configValues = cfgMgr.getConfigValues();
 	List<WSConfig> wsConfigList = WSConversionUtils.toWSConfigList(configValues);

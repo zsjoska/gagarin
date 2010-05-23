@@ -32,7 +32,7 @@ public class GetStatisticsOP extends WebserviceOperation {
     @Override
     public void execute() throws ExceptionBase {
 
-	authManager.requiresPermission(getSession(), PermissionEnum.AUDIT, BaseControlEntity.getAdminEntity());
+	authManager.requiresPermission(getSession(), BaseControlEntity.getAdminEntity(), PermissionEnum.AUDIT);
 
 	List<Statistic> statistics = StatisticsContainer.exportStatistics(filter);
 

@@ -40,7 +40,7 @@ public class CreateRoleWithPermissionsOP extends WebserviceOperation {
     public void execute() throws ExceptionBase {
 
 	// the session user must have LIST_PERMISSIONS permission
-	authManager.requiresPermission(getSession(), PermissionEnum.CREATE, BaseControlEntity.getAdminEntity());
+	authManager.requiresPermission(getSession(), BaseControlEntity.getAdminEntity(), PermissionEnum.CREATE);
 	List<UserPermission> allPermissions = roleManager.getAllPermissions();
 	List<UserPermission> matched;
 	matched = ConversionUtils.matchPermissions(allPermissions, permissions);

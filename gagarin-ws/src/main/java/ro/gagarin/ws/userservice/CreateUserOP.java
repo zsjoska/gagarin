@@ -40,7 +40,7 @@ public class CreateUserOP extends WebserviceOperation {
     public void execute() throws ExceptionBase {
 
 	// the session user must have CREATE_USER permission
-	authManager.requiresPermission(getSession(), PermissionEnum.CREATE, BaseControlEntity.getAdminEntity());
+	authManager.requiresPermission(getSession(), BaseControlEntity.getAdminEntity(), PermissionEnum.CREATE);
 
 	// TODO: what for this rollback... no change so far
 	// check user fields

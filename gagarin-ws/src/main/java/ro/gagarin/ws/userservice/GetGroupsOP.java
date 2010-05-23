@@ -30,7 +30,7 @@ public class GetGroupsOP extends WebserviceOperation {
     @Override
     public void execute() throws ExceptionBase {
 	// the session user must have LIST_GROUPS permission
-	authManager.requiresPermission(getSession(), PermissionEnum.LIST, BaseControlEntity.getAdminEntity());
+	authManager.requiresPermission(getSession(), BaseControlEntity.getAdminEntity(), PermissionEnum.LIST);
 
 	groups = WSConversionUtils.convertToGroupList(userManager.getGroups());
     }

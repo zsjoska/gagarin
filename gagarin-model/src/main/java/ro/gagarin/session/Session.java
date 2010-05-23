@@ -26,6 +26,8 @@ public class Session extends BaseEntity {
     private String sessionString;
     private boolean busy;
 
+    private boolean adminSession = false;
+
     HashMap<String, Object> properties = new HashMap<String, Object>();
     private ManagerFactory managerFactory;
     private Throwable t;
@@ -145,5 +147,13 @@ public class Session extends BaseEntity {
 
     public Map<ControlEntity, Set<PermissionEnum>> getEffectivePermissions() {
 	return this.effectivePermissions;
+    }
+
+    public void setAdminSession(boolean adminSession) {
+	this.adminSession = adminSession;
+    }
+
+    public boolean isAdminSession() {
+	return adminSession;
     }
 }

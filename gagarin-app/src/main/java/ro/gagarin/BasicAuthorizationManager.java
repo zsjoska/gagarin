@@ -16,7 +16,6 @@ import ro.gagarin.exceptions.PermissionDeniedException;
 import ro.gagarin.manager.AuthorizationManager;
 import ro.gagarin.manager.ConfigurationManager;
 import ro.gagarin.session.Session;
-import ro.gagarin.user.Group;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserPermission;
@@ -49,6 +48,12 @@ public class BasicAuthorizationManager implements AuthorizationManager {
 	User user = null;
 	user = session.getUser();
 
+	// check if the session is admin session
+	if (session.isAdminSession()) {
+	    LOG.debug("Admin session, skipping permission check");
+	    return;
+	}
+
 	Set<PermissionEnum> permSet = session.getEffectivePermissions().get(ce);
 	if (permSet == null) {
 	    // TODO: reqPermission[0].name() is not the right way... and we have
@@ -62,6 +67,16 @@ public class BasicAuthorizationManager implements AuthorizationManager {
 		return;
 	    }
 	}
+
+	// check if it has the permission for ADMIN_ENTITY
+	permSet = session.getEffectivePermissions().get(BaseControlEntity.getAdminEntity());
+	for (PermissionEnum reqPerm : reqPermission) {
+	    if (permSet.contains(reqPerm)) {
+		LOG.debug("ADMIN " + reqPerm.name() + " was found for user " + user.getUsername());
+		return;
+	    }
+	}
+
 	// TODO: reqPermission[0].name() is not the right way... and we have
 	// to track the object ID and name too
 	throw new PermissionDeniedException(user.getUsername(), reqPermission[0].name());
@@ -111,16 +126,16 @@ public class BasicAuthorizationManager implements AuthorizationManager {
     }
 
     @Override
-    public void addCreatorPermission(Group group, Session session) throws OperationException, DataConstraintException,
-	    ItemNotFoundException {
+    public void addCreatorPermission(ControlEntity ce, Session session) throws OperationException,
+	    DataConstraintException, ItemNotFoundException {
 	// TODO: some optimization could help here
 	ConfigurationManager cfgMgr = session.getManagerFactory().getConfigurationManager();
 	RoleDAO roleDAO = session.getManagerFactory().getDAOManager().getRoleDAO(session);
 	String adminRoleName = cfgMgr.getString(Config.ADMIN_ROLE_NAME);
 	UserRole adminRole = roleDAO.getRoleByName(adminRoleName);
-	roleDAO.assignRoleToPerson(adminRole, session.getUser(), group);
+	roleDAO.assignRoleToPerson(adminRole, session.getUser(), ce);
 	Set<UserPermission> permissions = roleDAO.getRolePermissions(adminRole);
 	Set<PermissionEnum> permSet = Utils.convertPermissionSet(permissions);
-	session.getEffectivePermissions().put(group, permSet);
+	session.getEffectivePermissions().put(ce, permSet);
     }
 }

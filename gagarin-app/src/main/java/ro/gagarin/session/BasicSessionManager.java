@@ -195,13 +195,19 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
 	UserDAO userDAO = daoManager.getUserDAO(session);
 	LogManager logManager = managerFactory.getLogManager();
 	AppLog appLog = logManager.getLoggingSession(session, getClass());
+	ConfigurationManager cfgManager = managerFactory.getConfigurationManager();
+	String adminGroupName = cfgManager.getString(Config.ADMIN_GROUP_NAME);
 
+	session.setAdminSession(false);
 	// get the user groups
 	List<Group> userGroups = userDAO.getUserGroups(user);
 	Person[] persons = new Person[userGroups.size() + 1];
 	int index = 0;
 	for (Group group : userGroups) {
 	    persons[index++] = group;
+	    if (adminGroupName.equals(group.getName())) {
+		session.setAdminSession(true);
+	    }
 	}
 	persons[index] = user;
 

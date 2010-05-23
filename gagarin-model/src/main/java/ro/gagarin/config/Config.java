@@ -67,7 +67,9 @@ public enum Config {
      * registration is valid.<br>
      * 172800000 = 2 days
      */
-    REGISTRATION_VALIDITY("" + 1000 * 60 * 60 * 48);
+    REGISTRATION_VALIDITY("" + 1000 * 60 * 60 * 48),
+
+    ADMIN_GROUP_NAME("Admin Group");
 
     private final String defValue;
 

@@ -1,10 +1,8 @@
 package ro.gagarin.ws.userservice;
 
-import ro.gagarin.dao.RoleDAO;
 import ro.gagarin.dao.UserDAO;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.manager.AuthorizationManager;
-import ro.gagarin.manager.ConfigurationManager;
 import ro.gagarin.session.Session;
 import ro.gagarin.utils.FieldValidator;
 import ro.gagarin.ws.executor.WebserviceOperation;
@@ -14,12 +12,10 @@ public class CreateGroupOP extends WebserviceOperation {
 
     private AuthorizationManager authManager;
     private UserDAO userDAO;
-    private RoleDAO roleDAO;
 
     private final WSGroup group;
 
     private Long groupId = null;
-    private ConfigurationManager cfgMgr;
 
     public CreateGroupOP(String sessionId, WSGroup group) {
 	super(sessionId);
@@ -45,8 +41,6 @@ public class CreateGroupOP extends WebserviceOperation {
     public void prepareManagers(Session session) throws ExceptionBase {
 	authManager = FACTORY.getAuthorizationManager();
 	userDAO = FACTORY.getDAOManager().getUserDAO(session);
-	roleDAO = FACTORY.getDAOManager().getRoleDAO(session);
-	cfgMgr = FACTORY.getConfigurationManager();
     }
 
     public Long getGroupId() {

@@ -4,7 +4,6 @@ import java.util.List;
 
 import ro.gagarin.dao.RoleDAO;
 import ro.gagarin.exceptions.ExceptionBase;
-import ro.gagarin.manager.AuthorizationManager;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.ws.executor.WebserviceOperation;
@@ -14,7 +13,6 @@ import ro.gagarin.ws.util.WSConversionUtils;
 public class GetAllPermissionListOP extends WebserviceOperation {
 
     private List<WSUserPermission> permissionlist;
-    private AuthorizationManager authManager;
     private RoleDAO roleManager;
 
     public GetAllPermissionListOP(String sessionId) {
@@ -23,7 +21,6 @@ public class GetAllPermissionListOP extends WebserviceOperation {
 
     @Override
     public void prepareManagers(Session session) throws ExceptionBase {
-	authManager = FACTORY.getAuthorizationManager();
 	roleManager = FACTORY.getDAOManager().getRoleDAO(getSession());
     }
 

@@ -29,13 +29,10 @@ public class UserServiceTest {
     public void createUser() throws WSException_Exception {
 	AdminService service = new AdminService();
 	Admin userAPI = service.getAdminPort();
-	WsUserRole role = new WsUserRole();
-	role.setRoleName("ADMIN_ROLE");
 
 	WsUser user = new WsUser();
 	user.setUsername("wsUser1" + System.nanoTime());
 	user.setPassword("wspassword1");
-	user.setRole(role);
 	userAPI.createUser(session, user);
     }
 }

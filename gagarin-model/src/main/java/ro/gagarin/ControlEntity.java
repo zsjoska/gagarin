@@ -1,6 +1,5 @@
 package ro.gagarin;
 
-
 /**
  * Interface declaring an object for which the access can be controlled by the
  * permission framework.<br>
@@ -13,6 +12,8 @@ package ro.gagarin;
 public interface ControlEntity {
 
     Long getId();
+
+    public String getName();
 
     // TODO: rename
     ControlEntityCategory getCat();

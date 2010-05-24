@@ -1,18 +1,18 @@
 package ro.gagarin.ws.authentication;
 
+import java.util.HashMap;
 import java.util.Set;
 
-import ro.gagarin.dao.RoleDAO;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.session.Session;
+import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.ws.executor.WebserviceOperation;
-import ro.gagarin.ws.objects.WSUserPermission;
+import ro.gagarin.ws.objects.WSControlEntity;
+import ro.gagarin.ws.util.WSConversionUtils;
 
-// TODO: completly rewrite and refactor: the effective permissions should be returned here
 public class GetCurrentUserPermissionsOP extends WebserviceOperation {
 
-    private Set<WSUserPermission> currentUserPermissions;
-    private RoleDAO roleDAO;
+    private HashMap<WSControlEntity, Set<PermissionEnum>> permissions;
 
     public GetCurrentUserPermissionsOP(String sessionId) {
 	super(sessionId);
@@ -20,17 +20,15 @@ public class GetCurrentUserPermissionsOP extends WebserviceOperation {
 
     @Override
     public void prepareManagers(Session session) throws ExceptionBase {
-	roleDAO = FACTORY.getDAOManager().getRoleDAO(getSession());
-
     }
 
     @Override
     public void execute() throws ExceptionBase {
-
+	this.permissions = WSConversionUtils.convertEffectivePermissions(getSession().getEffectivePermissions());
     }
 
-    public Set<WSUserPermission> getCurrentUserPermissions() {
-	return currentUserPermissions;
+    public HashMap<WSControlEntity, Set<PermissionEnum>> getCurrentUserPermissions() {
+	return this.permissions;
     }
 
     @Override

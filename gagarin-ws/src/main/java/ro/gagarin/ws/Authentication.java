@@ -4,6 +4,7 @@
 package ro.gagarin.ws;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Set;
 
 import javax.jws.WebMethod;
@@ -13,6 +14,7 @@ import org.apache.log4j.Logger;
 
 import ro.gagarin.BasicManagerFactory;
 import ro.gagarin.manager.ManagerFactory;
+import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.ws.authentication.ActivateUserOP;
 import ro.gagarin.ws.authentication.CreateSessionOP;
 import ro.gagarin.ws.authentication.GetCurrentUserPermissionsOP;
@@ -21,8 +23,8 @@ import ro.gagarin.ws.authentication.LogoutOP;
 import ro.gagarin.ws.authentication.RegisterUserOP;
 import ro.gagarin.ws.executor.WSException;
 import ro.gagarin.ws.executor.WebserviceExecutor;
+import ro.gagarin.ws.objects.WSControlEntity;
 import ro.gagarin.ws.objects.WSUser;
-import ro.gagarin.ws.objects.WSUserPermission;
 
 /**
  * @author zsjoska
@@ -58,7 +60,7 @@ public class Authentication {
     }
 
     @WebMethod
-    public Set<WSUserPermission> getCurrentUserPermissions(String sessionId) throws WSException {
+    public HashMap<WSControlEntity, Set<PermissionEnum>> getCurrentUserPermissions(String sessionId) throws WSException {
 
 	GetCurrentUserPermissionsOP getCurrentUserPermissions = new GetCurrentUserPermissionsOP(sessionId);
 	WebserviceExecutor.execute(getCurrentUserPermissions);

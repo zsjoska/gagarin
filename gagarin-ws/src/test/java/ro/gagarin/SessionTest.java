@@ -2,12 +2,9 @@ package ro.gagarin;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.junit.Test;
@@ -27,13 +24,10 @@ import ro.gagarin.manager.ManagerFactory;
 import ro.gagarin.manager.SessionManager;
 import ro.gagarin.session.Session;
 import ro.gagarin.testutil.TUtil;
-import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.UserRole;
 import ro.gagarin.user.UserStatus;
-import ro.gagarin.utils.ConversionUtils;
 import ro.gagarin.ws.Authentication;
 import ro.gagarin.ws.executor.WSException;
-import ro.gagarin.ws.objects.WSUserPermission;
 
 /**
  * Unit test for simple App.
@@ -191,22 +185,5 @@ public class SessionTest {
 	}
 
 	TUtil.resetDBImportRate();
-    }
-
-    @Test
-    public void testGetCurrentUserPermissions() throws Exception {
-	ConfigurationManager cfgMgr = FACTORY.getConfigurationManager();
-	String session = authentication.createSession(null, "TEST");
-	authentication.login(session, cfgMgr.getString(Config.ADMIN_USER_NAME),
-		cfgMgr.getString(Config.ADMIN_PASSWORD), null);
-
-	Set<WSUserPermission> perm = authentication.getCurrentUserPermissions(session);
-	assertEquals("The admin permission list size does not match with all permission size.",
-		PermissionEnum.values().length, perm.size());
-	HashSet<String> permStrSet = ConversionUtils.convertPermissionsToStringSet(perm);
-	for (PermissionEnum pe : PermissionEnum.values()) {
-	    assertTrue("The admin permission list must contain all code-defined permissions; " + pe.name()
-		    + " was not found.", permStrSet.contains(pe.name()));
-	}
     }
 }

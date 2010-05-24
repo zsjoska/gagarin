@@ -1,23 +1,24 @@
 package ro.gagarin.ws.objects;
 
-import ro.gagarin.BaseControlEntity;
+import ro.gagarin.BaseEntity;
+import ro.gagarin.ControlEntity;
 import ro.gagarin.ControlEntityCategory;
 import ro.gagarin.PersonTypesEnum;
 import ro.gagarin.user.Group;
 import ro.gagarin.utils.ConversionUtils;
 
-public class WSGroup extends BaseControlEntity implements Group {
+public class WSGroup extends BaseEntity implements Group, ControlEntity {
 
     private String description;
+    private String name;
 
     public WSGroup() {
-	super(ControlEntityCategory.GROUP);
     }
 
     public WSGroup(Group group) {
 	this();
-	this.setId(group.getId());
-	this.setName(group.getName());
+	super.setId(group.getId());
+	this.name = group.getName();
 	this.setDescription(group.getDescription());
     }
 
@@ -38,5 +39,19 @@ public class WSGroup extends BaseControlEntity implements Group {
     @Override
     public PersonTypesEnum getType() {
 	return PersonTypesEnum.GROUP;
+    }
+
+    @Override
+    public String getName() {
+	return this.name;
+    }
+
+    @Override
+    public ControlEntityCategory getCat() {
+	return ControlEntityCategory.GROUP;
+    }
+
+    public void setName(String name) {
+	this.name = name;
     }
 }

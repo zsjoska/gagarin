@@ -28,6 +28,7 @@ import ro.gagarin.user.UserRole;
 import ro.gagarin.user.UserStatus;
 import ro.gagarin.ws.Authentication;
 import ro.gagarin.ws.executor.WSException;
+import ro.gagarin.ws.objects.WSEffectivePermission;
 
 /**
  * Unit test for simple App.
@@ -186,4 +187,21 @@ public class SessionTest {
 
 	TUtil.resetDBImportRate();
     }
+
+    @Test
+    public void testEffectivePermissions() throws Exception {
+
+	Session adminSession = TUtil.createAdminSession();
+
+	List<WSEffectivePermission> currentUserPermissions = authentication.getCurrentUserPermissions(adminSession
+		.getSessionString());
+	for (WSEffectivePermission wsEffectivePermission : currentUserPermissions) {
+	    System.err.println(wsEffectivePermission.getName());
+	    System.err.println(wsEffectivePermission.getCat());
+	    System.err.println(wsEffectivePermission.getId());
+	    System.err.println(wsEffectivePermission.getPermissions());
+	}
+	authentication.logout(adminSession.getSessionString());
+    }
+
 }

@@ -3,6 +3,7 @@ package ro.gagarin.jdbc;
 import static ro.gagarin.utils.ConversionUtils.perm2String;
 import static ro.gagarin.utils.ConversionUtils.role2String;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -22,6 +23,7 @@ import ro.gagarin.jdbc.role.CreatePermissionSQL;
 import ro.gagarin.jdbc.role.CreateRoleSQL;
 import ro.gagarin.jdbc.role.DeletePermissionSQL;
 import ro.gagarin.jdbc.role.DeleteRoleSQL;
+import ro.gagarin.jdbc.role.GetControlEntityByIdAndCategorySQL;
 import ro.gagarin.jdbc.role.GetEffectivePermissionsOnEntitySQL;
 import ro.gagarin.jdbc.role.GetEffectivePermissionsSQL;
 import ro.gagarin.jdbc.role.GetPermissionRolesSQL;
@@ -243,7 +245,27 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 
     @Override
     public Map<ControlEntity, Set<UserPermission>> getEffectivePermissions(Person... persons) throws OperationException {
-	return GetEffectivePermissionsSQL.execute(this, persons);
-    }
+	Map<ControlEntity, Set<UserPermission>> effectivePermissions = GetEffectivePermissionsSQL
+		.execute(this, persons);
 
+	// at this point, all control entities are missing the name field
+	// the only way to figure it out is to do additional queries
+	// this would be nice to have cached
+
+	Map<ControlEntity, Set<UserPermission>> newMap = new HashMap<ControlEntity, Set<UserPermission>>();
+	for (ControlEntity ce : effectivePermissions.keySet()) {
+	    if (ce.getCat().table() != null) {
+		ControlEntity completeCe = GetControlEntityByIdAndCategorySQL.execute(this, ce.getId(), ce.getCat());
+		if (completeCe == null) {
+		    APPLOG.error("Inconsistent control entity found. Cleanup was not done properly. Id=" + ce.getId()
+			    + " Category = " + ce.getCat());
+		} else {
+		    newMap.put(completeCe, effectivePermissions.get(ce));
+		}
+	    } else {
+
+	    }
+	}
+	return newMap;
+    }
 }

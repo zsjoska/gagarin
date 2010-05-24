@@ -2,7 +2,6 @@ package ro.gagarin.ws.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +17,7 @@ import ro.gagarin.user.User;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.utils.Statistic;
 import ro.gagarin.ws.objects.WSConfig;
-import ro.gagarin.ws.objects.WSControlEntity;
+import ro.gagarin.ws.objects.WSEffectivePermission;
 import ro.gagarin.ws.objects.WSExportedSession;
 import ro.gagarin.ws.objects.WSGroup;
 import ro.gagarin.ws.objects.WSLogEntry;
@@ -92,10 +91,16 @@ public class WSConversionUtils {
 	return list;
     }
 
-    public static HashMap<WSControlEntity, Set<PermissionEnum>> convertEffectivePermissions(
-	    Map<ControlEntity, Set<PermissionEnum>> effectivePermissions) {
-	// TODO:(0) Auto-generated method stub
-	return null;
+    public static List<WSEffectivePermission> convertEffectivePermissions(
+	    Map<ControlEntity, Set<PermissionEnum>> effPerms) {
+
+	List<WSEffectivePermission> permList = new ArrayList<WSEffectivePermission>();
+
+	for (ControlEntity ce : effPerms.keySet()) {
+	    Set<PermissionEnum> set = effPerms.get(ce);
+	    permList.add(new WSEffectivePermission(ce, new ArrayList<PermissionEnum>(set)));
+	}
+	return permList;
     }
 
 }

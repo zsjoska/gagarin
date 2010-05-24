@@ -219,6 +219,7 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
 		.convertUserPermissionSetToPermissionEnumSet(effectivePermissions);
 
 	session.assignUser(user, permMap);
-	appLog.info("User " + user.getId() + ":" + user.getUsername() + " was bound to session " + session.getId());
+	appLog.info("User " + user.getId() + ":" + user.getUsername() + " was bound to session "
+		+ session.getSessionString());
     }
 }

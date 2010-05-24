@@ -5,11 +5,16 @@ import ro.gagarin.application.objects.AppUser;
 import ro.gagarin.config.Config;
 import ro.gagarin.config.DBConfigManager;
 import ro.gagarin.dao.RoleDAO;
+import ro.gagarin.dao.UserDAO;
 import ro.gagarin.exceptions.ExceptionBase;
+import ro.gagarin.exceptions.ItemNotFoundException;
+import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.manager.ConfigurationManager;
 import ro.gagarin.manager.ManagerFactory;
+import ro.gagarin.manager.SessionManager;
 import ro.gagarin.session.Session;
+import ro.gagarin.user.User;
 import ro.gagarin.user.UserRole;
 
 public class TUtil {
@@ -62,5 +67,25 @@ public class TUtil {
 
     public static String generateID(String prefix) {
 	return prefix + "_" + String.valueOf(++sequencence);
+    }
+
+    public static User getAdminUser() throws OperationException {
+	Session session = createTestSession();
+	UserDAO userDAO = FACTORY.getDAOManager().getUserDAO(session);
+	User user = userDAO.getUserByUsername(CFG_MANAGER.getString(Config.ADMIN_USER_NAME));
+	FACTORY.releaseSession(session);
+	return user;
+    }
+
+    public static Session createAdminSession() throws OperationException, ItemNotFoundException,
+	    SessionNotFoundException {
+	Session session = FACTORY.getSessionManager().createSession(null, "TEST", FACTORY);
+	FACTORY.getSessionManager().acquireSession(session.getSessionString());
+	UserDAO userDAO = FACTORY.getDAOManager().getUserDAO(session);
+	User adminUser = userDAO.getUserByUsername(CFG_MANAGER.getString(Config.ADMIN_USER_NAME));
+	SessionManager sessionManager = FACTORY.getSessionManager();
+	sessionManager.assignUserToSession(adminUser, session);
+	sessionManager.releaseSession(session);
+	return session;
     }
 }

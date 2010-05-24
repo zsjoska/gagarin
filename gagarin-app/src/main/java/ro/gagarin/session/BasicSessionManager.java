@@ -81,7 +81,7 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
     public void logout(String id) {
 	Session session = this.sessions.get(id);
 	if (session != null) {
-	    // TODO: do something useful here
+	    // TODO:(4) do something useful here
 	}
 	this.sessions.remove(id);
     }
@@ -185,7 +185,7 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
     @Override
     public void assignUserToSession(User user, Session session) throws OperationException, ItemNotFoundException {
 
-	// TODO: check that the session has no user assignment
+	// TODO:(2) check that the session has no user assignment
 	// may interfere with the register user implementation
 
 	// get the required managers
@@ -214,7 +214,6 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
 	// get the user effective permissions
 	Map<ControlEntity, Set<UserPermission>> effectivePermissions = roleDAO.getEffectivePermissions(persons);
 
-	// TODO: move this to an utility
 	// transform the effective permissions to a more friendly format
 	Map<ControlEntity, Set<PermissionEnum>> permMap = Utils
 		.convertUserPermissionSetToPermissionEnumSet(effectivePermissions);

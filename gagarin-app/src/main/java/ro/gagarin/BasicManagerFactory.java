@@ -89,7 +89,7 @@ public class BasicManagerFactory implements ManagerFactory {
 
     @Override
     public AuthenticationManager getAuthenticationManager(Session session) {
-	// TODO: remove session parameter
+	// TODO:(1) remove session parameter
 	return new BasicAuthenticationManager(session);
     }
 

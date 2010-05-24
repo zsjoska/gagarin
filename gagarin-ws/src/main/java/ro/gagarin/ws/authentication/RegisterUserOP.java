@@ -43,7 +43,6 @@ public class RegisterUserOP extends WebserviceOperation {
 	FieldValidator.requireStringField("password", user, true);
 	FieldValidator.requireStringField("email", user, true);
 	user.setStatus(UserStatus.INIT);
-	// TODO: verify that admin is not permitted to register
     }
 
     @Override
@@ -79,7 +78,7 @@ public class RegisterUserOP extends WebserviceOperation {
 	session.setUser(sessionUser);
 	session.setExpires(System.currentTimeMillis() + valid);
 
-	// TODO: Add notification call
+	// TODO:(3) Add notification call
 
 	this.confirmationKey = session.getSessionString();
 	getApplog().info("Registration key " + this.confirmationKey + " assigned for user " + user);

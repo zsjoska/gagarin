@@ -22,7 +22,7 @@ public class SchedulerThread extends Thread {
 		parent.releaseJob(nextJob);
 	    }
 	} catch (InterruptedException e) {
-	    // TODO: handle exception
+	    // TODO:(3) handle exception
 	}
 
     }

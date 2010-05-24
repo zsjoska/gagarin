@@ -206,7 +206,7 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 	Group gr = completeGroupId(group);
 	User usr = completeUserId(user);
 
-	// TODO: add check for group id and user id existence
+	// TODO:(2) add check for group id and user id existence
 
 	new AssignUserToGroupSQL(this, usr, gr).execute();
     }
@@ -231,7 +231,7 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 	Group gr = completeGroupId(group);
 	User usr = completeUserId(user);
 
-	// TODO: add check for group id and user id existence
+	// TODO:(2) add check for group id and user id existence
 
 	new UnassignUserFromGroupSQL(this, usr, gr).execute();
     }

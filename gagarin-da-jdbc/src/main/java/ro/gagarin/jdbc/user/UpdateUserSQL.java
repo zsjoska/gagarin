@@ -23,8 +23,8 @@ public class UpdateUserSQL extends UpdateQuery {
 	// id is required for identification
 	FieldValidator.requireLongField("id", user);
 
-	// TODO: check that at least one field is not null
-	// TODO: check some key fields if they are empty
+	// TODO:(2) check that at least one field is not null
+	// TODO:(2) check some key fields if they are empty
 
     }
 

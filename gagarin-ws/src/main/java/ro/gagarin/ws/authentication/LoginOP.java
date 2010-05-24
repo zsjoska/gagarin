@@ -36,7 +36,7 @@ public class LoginOP extends WebserviceOperation {
     @Override
     public void execute() throws ExceptionBase {
 	User user = authenticationManager.userLogin(username, password, extra);
-	// TODO: check if user is active
+	// TODO:(2) check if user is active
 	this.loginUser = new WSUser(user);
 	getApplog().info("Login completed for user " + this.username);
     }

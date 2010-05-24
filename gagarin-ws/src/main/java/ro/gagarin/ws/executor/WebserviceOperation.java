@@ -50,7 +50,7 @@ public abstract class WebserviceOperation {
 	finish();
     }
 
-    // TODO: make protected
+    // TODO:(3) make protected
     public abstract void execute() throws ExceptionBase;
 
     public abstract void prepareManagers(Session session) throws ExceptionBase;

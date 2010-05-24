@@ -32,7 +32,7 @@ public class AssignUsersToGroupOP extends WebserviceOperation {
 	    throw new FieldRequiredException("group", Group.class);
 	if (group.getId() == null && group.getName() == null)
 	    throw new FieldRequiredException("id or name", Group.class);
-	// TODO: check users
+	// TODO:(2) check users
     }
 
     @Override

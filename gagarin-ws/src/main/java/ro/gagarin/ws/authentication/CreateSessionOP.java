@@ -34,7 +34,7 @@ public class CreateSessionOP extends WebserviceOperation {
     public void execute() {
 	String language = this.language;
 	if (language == null) {
-	    // TODO move this to the configuration
+	    // TODO:(3) move this to the configuration
 	    language = "en_us";
 	}
 
@@ -66,7 +66,7 @@ public class CreateSessionOP extends WebserviceOperation {
 
     @Override
     public void checkInput(Session session) throws ExceptionBase {
-	// TODO: custom check for language
+	// TODO:(2) custom check for language
 	this.reason = FieldValidator.checkStringValue(reason, "reason", 20);
     }
 }

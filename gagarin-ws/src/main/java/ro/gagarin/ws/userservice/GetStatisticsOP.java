@@ -50,7 +50,7 @@ public class GetStatisticsOP extends WebserviceOperation {
 
     @Override
     public void checkInput(Session session) throws ExceptionBase {
-	// TODO: add custom check for filter
+	// TODO:(2) add custom check for filter
     }
 
 }

@@ -58,7 +58,7 @@ public class UserServiceTest {
 	user.setStatus(UserStatus.ACTIVE);
 
 	userService.createUser(session, user);
-	// TODO: check created user
+	// TODO:(4) check created user
     }
 
     @Test
@@ -124,7 +124,7 @@ public class UserServiceTest {
 
     @Test
     public void getLogEntries() throws Exception {
-	// TODO: add some more meaningful test
+	// TODO:(4) add some more meaningful test
 	List<WSLogEntry> logEntries = userService.getLogEntries(session, null);
 	// for (WSLogEntry wsLogEntry : logEntries) {
 	// System.out.println(wsLogEntry);

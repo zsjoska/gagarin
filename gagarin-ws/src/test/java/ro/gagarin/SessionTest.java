@@ -42,9 +42,9 @@ public class SessionTest {
 
     private Session session = new Session();
 
-    // TODO: add test with null session for all WS methods
+    // TODO:(5) add test with null session for all WS methods
 
-    // TODO: add test without login for all WS methods
+    // TODO:(5) add test without login for all WS methods
 
     @Test
     public void testSuccessLogin() throws OperationException, DataConstraintException, ItemNotFoundException,

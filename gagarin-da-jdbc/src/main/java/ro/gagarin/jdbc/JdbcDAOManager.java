@@ -15,7 +15,7 @@ public class JdbcDAOManager implements DAOManager {
     private JdbcDAOManager() {
     }
 
-    // TODO: get rid of this singleton
+    // TODO :(1) get rid of this singleton
     public static synchronized JdbcDAOManager getInstance() {
 	if (INSTANCE == null)
 	    INSTANCE = new JdbcDAOManager();

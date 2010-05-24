@@ -4,7 +4,7 @@ import ro.gagarin.ApplicationState;
 import ro.gagarin.dao.DAOManager;
 import ro.gagarin.session.Session;
 
-// TODO:rename to application
+// TODO:(2) rename to application
 public interface ManagerFactory {
     ConfigurationManager getConfigurationManager();
 

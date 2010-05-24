@@ -15,7 +15,7 @@ public interface ControlEntity {
 
     public String getName();
 
-    // TODO: rename
+    // TODO:(1) rename
     ControlEntityCategory getCat();
 
 }

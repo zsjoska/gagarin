@@ -18,7 +18,7 @@ public class DeleteRoleOP extends WebserviceOperation {
 
     private RoleDAO roleManager;
 
-    // TODO: delete also by role name
+    // TODO:(2) delete also by role name
     public DeleteRoleOP(String sessionId, WSUserRole role) {
 	super(sessionId);
 	this.role = role;

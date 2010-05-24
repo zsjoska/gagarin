@@ -34,7 +34,7 @@ public class Session extends BaseEntity {
     private Map<ControlEntity, Set<PermissionEnum>> effectivePermissions;
 
     public Session() {
-	// TODO: make the reason mandatory
+	// TODO:(3) make the reason mandatory
     }
 
     public Session(ManagerFactory managerFactory) {
@@ -85,7 +85,7 @@ public class Session extends BaseEntity {
 	return sessionTimeout;
     }
 
-    // TODO: rename
+    // TODO:(1) rename
     public BaseDAO getManager() {
 	return this.manager;
     }

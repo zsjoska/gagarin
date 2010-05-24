@@ -15,7 +15,7 @@ import ro.gagarin.ws.objects.WSUserPermission;
 import ro.gagarin.ws.objects.WSUserRole;
 import ro.gagarin.ws.util.WSConversionUtils;
 
-// TODO: rename: 't'
+// TODO:(1) rename: 't'
 public class GetRolePermissionstOP extends WebserviceOperation {
 
     private final WSUserRole wsUserRole;
@@ -58,7 +58,7 @@ public class GetRolePermissionstOP extends WebserviceOperation {
 
     @Override
     public void checkInput(Session session) throws ExceptionBase {
-	// TODO: implement combined verification for id and roleName
+	// TODO:(2) implement combined verification for id and roleName
     }
 
 }

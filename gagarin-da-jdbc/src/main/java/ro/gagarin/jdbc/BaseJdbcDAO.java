@@ -84,7 +84,7 @@ public class BaseJdbcDAO implements BaseDAO {
 	String user = cfgManager.getString(Config.JDBC_DB_USER);
 	String password = cfgManager.getString(Config.JDBC_DB_PASSWORD);
 	try {
-	    // TODO: use a connection pool for the DB
+	    // TODO:(3) use a connection pool for the DB
 	    Connection connection = DriverManager.getConnection(url, user, password);
 	    connection.setAutoCommit(false);
 	    return connection;
@@ -136,7 +136,7 @@ public class BaseJdbcDAO implements BaseDAO {
 
 	    if (!this.changePending) {
 		try {
-		    // TODO: dig more here why this commit is required:
+		    // TODO:(3) dig more here why this commit is required:
 		    // AppInit + gerAdminUser + sessionClose = exception
 		    tmpConn.commit();
 		    tmpConn.close();

@@ -170,9 +170,9 @@ public class ApplicationInitializer {
 	dbConfigManager.initializeManager();
 	session.getManagerFactory().setConfigurationManager(dbConfigManager);
 	LOG.info("Waiting DB Import");
-	// TODO: would be nice to have the DB import done at this point but our
-	// session is not committed and the import job is running on a different
-	// session. This causes dead lock especially with empty DB
+	// TODO:(3) would be nice to have the DB import done at this point but
+	// our session is not committed and the import job is running on a
+	// different session. This causes dead lock especially with empty DB
 	// dbConfigManager.waitForDBImport();
 
     }

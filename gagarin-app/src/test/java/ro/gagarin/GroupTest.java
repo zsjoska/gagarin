@@ -168,7 +168,7 @@ public class GroupTest {
 	    assertEquals("Invalid error code", ErrorCodes.ITEM_NOT_FOUND, e.getErrorCode());
 	}
 
-	// TODO: check that no assignment was made
+	// TODO:(4) check that no assignment was made
     }
 
     @Test
@@ -189,6 +189,6 @@ public class GroupTest {
 	    assertEquals("Invalid error code", ErrorCodes.ITEM_NOT_FOUND, e.getErrorCode());
 	}
 
-	// TODO: check that no assignment was made
+	// TODO:(4) check that no assignment was made
     }
 }

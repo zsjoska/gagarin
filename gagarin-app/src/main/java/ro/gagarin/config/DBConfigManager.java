@@ -50,7 +50,7 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
 	    log.debug("DBLUT = " + lastUpdateTime + " CacheLUT=" + INSTANCE.getLastUpdateTime());
 	    if (lastUpdateTime > INSTANCE.getLastUpdateTime()) {
 
-		// TODO: use TB generated timestamp
+		// TODO:(3) use TB generated timestamp
 		synchronized (INSTANCE) {
 		    long lastQuery = System.currentTimeMillis();
 		    ArrayList<ConfigEntry> cfgValues = configDAO.listConfigurations();

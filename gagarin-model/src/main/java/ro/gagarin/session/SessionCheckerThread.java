@@ -6,7 +6,7 @@ import org.apache.log4j.Logger;
 
 import ro.gagarin.manager.SessionManager;
 
-// TODO: move this to the application module
+// TODO:(1) move this to the application module
 public class SessionCheckerThread extends Thread {
 
     private static final transient Logger LOG = Logger.getLogger(SessionCheckerThread.class);

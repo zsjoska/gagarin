@@ -45,7 +45,7 @@ public class UpdateGroupOP extends WebserviceOperation {
     @Override
     public void execute() throws ExceptionBase {
 
-	// TODO: The group Id here could be null
+	// TODO:(1) The group Id here could be null
 	authManager.requiresPermission(getSession(), group, PermissionEnum.UPDATE);
 	userManager.updateGroup(this.group);
     }

@@ -38,8 +38,8 @@ public class BasicAuthorizationManager implements AuthorizationManager {
 
 	Set<PermissionEnum> permSet = session.getEffectivePermissions().get(ce);
 	if (permSet == null) {
-	    // TODO: reqPermission[0].name() is not the right way... and we have
-	    // to track the object ID and name too
+	    // TODO:(1) reqPermission[0].name() is not the right way... and we
+	    // have to track the object ID and name too
 	    throw new PermissionDeniedException(user.getUsername(), reqPermission[0].name());
 	}
 
@@ -59,7 +59,7 @@ public class BasicAuthorizationManager implements AuthorizationManager {
 	    }
 	}
 
-	// TODO: reqPermission[0].name() is not the right way... and we have
+	// TODO:(1) reqPermission[0].name() is not the right way... and we have
 	// to track the object ID and name too
 	throw new PermissionDeniedException(user.getUsername(), reqPermission[0].name());
     }
@@ -85,7 +85,7 @@ public class BasicAuthorizationManager implements AuthorizationManager {
     @Override
     public void addCreatorPermission(ControlEntity ce, Session session) throws OperationException,
 	    DataConstraintException, ItemNotFoundException {
-	// TODO: some optimization could help here
+	// TODO:(2) some optimization could help here
 	ConfigurationManager cfgMgr = session.getManagerFactory().getConfigurationManager();
 	RoleDAO roleDAO = session.getManagerFactory().getDAOManager().getRoleDAO(session);
 	String adminRoleName = cfgMgr.getString(Config.ADMIN_ROLE_NAME);

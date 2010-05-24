@@ -30,8 +30,6 @@ public interface SessionManager extends BaseManager {
      */
     Session createSession(String language, String reason, ManagerFactory factory);
 
-    // TODO: create associateUser
-
     /**
      * Returns the session identified by the given session ID.
      * 

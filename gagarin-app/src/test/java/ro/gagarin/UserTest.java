@@ -250,7 +250,4 @@ public class UserTest {
 	assertEquals("authentication should be filled", user2.getAuthentication(), user3.getAuthentication());
 	assertEquals("status does not match", user2.getStatus(), user3.getStatus());
     }
-
-    // TODO: create tests with empty role
-    // TODO: create tests with invalid role
 }

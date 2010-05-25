@@ -52,6 +52,9 @@ public class WSConversionUtils {
     }
 
     public static List<WSLogEntry> toWSLogList(Collection<LogEntry> logValues) {
+
+	// TODO:(2) A ConcurrentModificationException was seen here!
+
 	ArrayList<WSLogEntry> list = new ArrayList<WSLogEntry>();
 	for (LogEntry logEntry : logValues) {
 	    list.add(new WSLogEntry(logEntry));

@@ -24,6 +24,7 @@ import ro.gagarin.jdbc.objects.DBGroup;
 import ro.gagarin.jdbc.objects.DBUser;
 import ro.gagarin.jdbc.user.CreateUserSQL;
 import ro.gagarin.jdbc.user.DeleteGroupAssignmentsSQL;
+import ro.gagarin.jdbc.user.DeleteUserGroupAssignments;
 import ro.gagarin.jdbc.user.DeleteUserSQL;
 import ro.gagarin.jdbc.user.SelectUserByUsernamePasswordSQL;
 import ro.gagarin.jdbc.user.SelectUserByUsernameSQL;
@@ -125,6 +126,7 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 	User usr = completeUserId(user);
 	try {
 	    new DeleteUserSQL(this, usr).execute();
+	    new DeleteUserGroupAssignments(this, usr).execute();
 	    APPLOG.action(AppLogAction.DELETE, User.class, usr.getUsername(), AppLog.SUCCESS);
 	    APPLOG.info("User " + usr.getUsername() + " was deleted");
 	} catch (OperationException e) {

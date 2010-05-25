@@ -18,7 +18,7 @@ public class AuthServiceTest {
 	List<WsEffectivePermission> cup = api.getCurrentUserPermissions(session);
 	WsEffectivePermission wsEffectivePermission = cup.get(0);
 	System.err.println(wsEffectivePermission.getName());
-	System.err.println(wsEffectivePermission.getCat());
+	System.err.println(wsEffectivePermission.getCategory());
 	System.err.println(wsEffectivePermission.getId());
 	System.err.println(wsEffectivePermission.getPermissions());
 	api.logout(session);

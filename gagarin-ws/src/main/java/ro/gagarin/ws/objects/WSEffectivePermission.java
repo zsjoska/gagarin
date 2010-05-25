@@ -10,7 +10,7 @@ import ro.gagarin.user.PermissionEnum;
 public class WSEffectivePermission extends BaseEntity implements ControlEntity {
 
     private List<PermissionEnum> permissions;
-    private ControlEntityCategory cat;
+    private ControlEntityCategory category;
     private String name;
 
     public WSEffectivePermission() {
@@ -20,7 +20,7 @@ public class WSEffectivePermission extends BaseEntity implements ControlEntity {
 	this.setId(ce.getId());
 	this.name = ce.getName();
 	this.permissions = permissions;
-	this.cat = ce.getCategory();
+	this.category = ce.getCategory();
     }
 
     public void setPermissions(List<PermissionEnum> permissions) {
@@ -33,7 +33,7 @@ public class WSEffectivePermission extends BaseEntity implements ControlEntity {
 
     @Override
     public ControlEntityCategory getCategory() {
-	return this.cat;
+	return this.category;
     }
 
     @Override
@@ -45,7 +45,7 @@ public class WSEffectivePermission extends BaseEntity implements ControlEntity {
 	this.name = name;
     }
 
-    public void setCat(ControlEntityCategory cat) {
-	this.cat = cat;
+    public void setCategory(ControlEntityCategory cat) {
+	this.category = cat;
     }
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 
+import ro.gagarin.ControlEntityCategory;
 import ro.gagarin.ws.executor.WSException;
 import ro.gagarin.ws.executor.WebserviceExecutor;
 import ro.gagarin.ws.objects.WSConfig;
@@ -23,6 +24,7 @@ import ro.gagarin.ws.userservice.DeleteGroupOP;
 import ro.gagarin.ws.userservice.DeleteRoleOP;
 import ro.gagarin.ws.userservice.GetAllPermissionListOP;
 import ro.gagarin.ws.userservice.GetConfigEntriesOP;
+import ro.gagarin.ws.userservice.GetControlEntityCategoriesOP;
 import ro.gagarin.ws.userservice.GetGroupUsersOP;
 import ro.gagarin.ws.userservice.GetGroupsOP;
 import ro.gagarin.ws.userservice.GetLogEntriesOP;
@@ -204,4 +206,27 @@ public class Admin {
 	UnassignUsersFromGroupOP unassignUsersFromGroup = new UnassignUsersFromGroupOP(sessionId, group, users);
 	WebserviceExecutor.execute(unassignUsersFromGroup);
     }
+
+    @WebMethod
+    public List<ControlEntityCategory> getControlEntityCategories(String sessionId) throws WSException {
+	GetControlEntityCategoriesOP getControlEntityCategories = new GetControlEntityCategoriesOP(sessionId);
+	WebserviceExecutor.execute(getControlEntityCategories);
+	return getControlEntityCategories.getControlEntities();
+    }
+
+    @WebMethod
+    public List<String> getControlEntityListForCategory(String sessionId, String category) {
+	return null;
+    }
+
+    @WebMethod
+    public List<String> assignRoleToControlEntity(String sessionId, String ce, WSUserRole role, String person) {
+	return null;
+    }
+
+    @WebMethod
+    public List<String> unAssignRoleFromControlEntity(String sessionId, String ce, WSUserRole role, String person) {
+	return null;
+    }
+
 }

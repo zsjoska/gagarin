@@ -41,6 +41,7 @@ import ro.gagarin.session.Session;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
 
+// TODO:(1) Remove unneeded permission related methods and SQL classes
 public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 
     public JdbcRoleDAO(Session session) throws OperationException {
@@ -257,7 +258,8 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 	Map<ControlEntity, Set<UserPermission>> newMap = new HashMap<ControlEntity, Set<UserPermission>>();
 	for (ControlEntity ce : effectivePermissions.keySet()) {
 	    if (ce.getCategory().table() != null) {
-		ControlEntity completeCe = GetControlEntityByIdAndCategorySQL.execute(this, ce.getId(), ce.getCategory());
+		ControlEntity completeCe = GetControlEntityByIdAndCategorySQL.execute(this, ce.getId(), ce
+			.getCategory());
 		if (completeCe == null) {
 		    APPLOG.error("Inconsistent control entity found. Cleanup was not done properly. Id=" + ce.getId()
 			    + " Category = " + ce.getCategory());

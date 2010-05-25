@@ -51,6 +51,7 @@ public abstract class WebserviceOperation {
     }
 
     // TODO:(3) make protected
+    // TODO:(2) Give the session as parameter
     public abstract void execute() throws ExceptionBase;
 
     public abstract void prepareManagers(Session session) throws ExceptionBase;

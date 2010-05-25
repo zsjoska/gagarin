@@ -17,6 +17,7 @@ import ro.gagarin.user.User;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.utils.Statistic;
 import ro.gagarin.ws.objects.WSConfig;
+import ro.gagarin.ws.objects.WSControlEntity;
 import ro.gagarin.ws.objects.WSEffectivePermission;
 import ro.gagarin.ws.objects.WSExportedSession;
 import ro.gagarin.ws.objects.WSGroup;
@@ -104,6 +105,14 @@ public class WSConversionUtils {
 	    permList.add(new WSEffectivePermission(ce, new ArrayList<PermissionEnum>(set)));
 	}
 	return permList;
+    }
+
+    public static List<WSControlEntity> convertEntityList(List<ControlEntity> ceList) {
+	List<WSControlEntity> aa = new ArrayList<WSControlEntity>(ceList.size());
+	for (ControlEntity controlEntity : ceList) {
+	    aa.add(new WSControlEntity(controlEntity));
+	}
+	return aa;
     }
 
 }

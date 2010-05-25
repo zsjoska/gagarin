@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
+import ro.gagarin.ControlEntity;
 import ro.gagarin.config.ConfigEntry;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.log.LogEntry;
@@ -76,5 +77,10 @@ public class ConversionUtils {
 	    permSet.add(userPermission.getPermissionName());
 	}
 	return permSet;
+    }
+
+    public static String controlEntity2String(ControlEntity ce) {
+	return ce.getClass().getSimpleName() + "[ id=" + ce.getId() + ", name=" + ce.getName() + ", category="
+		+ ce.getCategory() + "]";
     }
 }

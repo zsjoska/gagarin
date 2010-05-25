@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 import ro.gagarin.ControlEntity;
+import ro.gagarin.ControlEntityCategory;
 import ro.gagarin.Person;
 import ro.gagarin.dao.RoleDAO;
 import ro.gagarin.exceptions.DataConstraintException;
@@ -24,6 +25,7 @@ import ro.gagarin.jdbc.role.CreateRoleSQL;
 import ro.gagarin.jdbc.role.DeletePermissionSQL;
 import ro.gagarin.jdbc.role.DeleteRoleSQL;
 import ro.gagarin.jdbc.role.GetControlEntityByIdAndCategorySQL;
+import ro.gagarin.jdbc.role.GetControlEntityListForCategorySQL;
 import ro.gagarin.jdbc.role.GetEffectivePermissionsOnEntitySQL;
 import ro.gagarin.jdbc.role.GetEffectivePermissionsSQL;
 import ro.gagarin.jdbc.role.GetPermissionRolesSQL;
@@ -282,5 +284,11 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
     @Override
     public void removePersonFromAssignment(Person person) throws OperationException, DataConstraintException {
 	new RemovePersonFromAssignmentSQL(this, person).execute();
+    }
+
+    @Override
+    public List<ControlEntity> getControlEntityListForCategory(ControlEntityCategory categoryEnum)
+	    throws OperationException {
+	return GetControlEntityListForCategorySQL.execute(this, categoryEnum);
     }
 }

@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.junit.BeforeClass;
@@ -16,6 +17,7 @@ import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.exceptions.PermissionDeniedException;
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.testutil.TUtil;
+import ro.gagarin.user.Group;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.UserRole;
 import ro.gagarin.user.UserStatus;
@@ -24,7 +26,9 @@ import ro.gagarin.ws.Admin;
 import ro.gagarin.ws.Authentication;
 import ro.gagarin.ws.executor.WSException;
 import ro.gagarin.ws.objects.WSConfig;
+import ro.gagarin.ws.objects.WSControlEntity;
 import ro.gagarin.ws.objects.WSExportedSession;
+import ro.gagarin.ws.objects.WSGroup;
 import ro.gagarin.ws.objects.WSLogEntry;
 import ro.gagarin.ws.objects.WSStatistic;
 import ro.gagarin.ws.objects.WSUser;
@@ -161,11 +165,39 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testgetControlEntityCategories() throws Exception {
+    public void testGetControlEntityCategories() throws Exception {
 	List<ControlEntityCategory> controlEntityCategories = userService.getControlEntityCategories(session);
 	assertEquals(ControlEntityCategory.values().length, controlEntityCategories.size());
 	for (int i = 0; i < ControlEntityCategory.values().length; i++) {
 	    assertEquals(ControlEntityCategory.values()[i], controlEntityCategories.get(i));
+	}
+    }
+
+    @Test
+    public void testGetControlEntityListForCategoryAdmin() throws Exception {
+	List<WSControlEntity> controlEntityListForCategory = userService.getControlEntityListForCategory(session,
+		"ADMIN");
+	assertEquals("We expect only one ADMIN entity", 1, controlEntityListForCategory.size());
+	WSControlEntity wsControlEntity = controlEntityListForCategory.get(0);
+	assertEquals(BaseControlEntity.getAdminEntity().getName(), wsControlEntity.getName());
+	assertEquals(BaseControlEntity.getAdminEntity().getId(), wsControlEntity.getId());
+	assertEquals(BaseControlEntity.getAdminEntity().getCategory(), wsControlEntity.getCategory());
+    }
+
+    @Test
+    public void testGetControlEntityListForCategoryGroups() throws Exception {
+	List<WSControlEntity> controlEntityListForCategory = userService.getControlEntityListForCategory(session,
+		"GROUP");
+	List<WSGroup> groups = userService.getGroups(session);
+	assertEquals(groups.size(), controlEntityListForCategory.size());
+	HashMap<Long, Group> groupSet = new HashMap<Long, Group>();
+	for (Group group : groups) {
+	    groupSet.put(group.getId(), group);
+	}
+
+	for (WSControlEntity wsControlEntity : controlEntityListForCategory) {
+	    Group group = groupSet.get(wsControlEntity.getId());
+	    assertEquals(group.getName(), wsControlEntity.getName());
 	}
     }
 }

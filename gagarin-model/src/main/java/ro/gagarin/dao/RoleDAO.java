@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 import ro.gagarin.ControlEntity;
+import ro.gagarin.ControlEntityCategory;
 import ro.gagarin.Person;
 import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ItemNotFoundException;
@@ -104,4 +105,14 @@ public interface RoleDAO extends BaseDAO {
      * @throws OperationException
      */
     void removePersonFromAssignment(Person person) throws OperationException, DataConstraintException;
+
+    /**
+     * Returns all control entities for the given entity category.<br>
+     * This means all rows from the table given by the <code>categoryEnum</code>
+     * parameter.
+     * 
+     * @param categoryEnum
+     * @throws OperationException
+     */
+    List<ControlEntity> getControlEntityListForCategory(ControlEntityCategory categoryEnum) throws OperationException;
 }

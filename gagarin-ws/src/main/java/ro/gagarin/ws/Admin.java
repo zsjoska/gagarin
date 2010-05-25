@@ -9,6 +9,7 @@ import ro.gagarin.ControlEntityCategory;
 import ro.gagarin.ws.executor.WSException;
 import ro.gagarin.ws.executor.WebserviceExecutor;
 import ro.gagarin.ws.objects.WSConfig;
+import ro.gagarin.ws.objects.WSControlEntity;
 import ro.gagarin.ws.objects.WSExportedSession;
 import ro.gagarin.ws.objects.WSGroup;
 import ro.gagarin.ws.objects.WSLogEntry;
@@ -25,6 +26,7 @@ import ro.gagarin.ws.userservice.DeleteRoleOP;
 import ro.gagarin.ws.userservice.GetAllPermissionListOP;
 import ro.gagarin.ws.userservice.GetConfigEntriesOP;
 import ro.gagarin.ws.userservice.GetControlEntityCategoriesOP;
+import ro.gagarin.ws.userservice.GetControlEntityListForCategoryOP;
 import ro.gagarin.ws.userservice.GetGroupUsersOP;
 import ro.gagarin.ws.userservice.GetGroupsOP;
 import ro.gagarin.ws.userservice.GetLogEntriesOP;
@@ -215,12 +217,15 @@ public class Admin {
     }
 
     @WebMethod
-    public List<String> getControlEntityListForCategory(String sessionId, String category) {
-	return null;
+    public List<WSControlEntity> getControlEntityListForCategory(String sessionId, String category) throws WSException {
+	GetControlEntityListForCategoryOP getControlEntityListForCategory = new GetControlEntityListForCategoryOP(
+		sessionId, category);
+	WebserviceExecutor.execute(getControlEntityListForCategory);
+	return getControlEntityListForCategory.getControlEntities();
     }
 
     @WebMethod
-    public List<String> assignRoleToControlEntity(String sessionId, String ce, WSUserRole role, String person) {
+    public List<String> assignRoleToControlEntity(String sessionId, WSControlEntity ce, WSUserRole role, String person) {
 	return null;
     }
 

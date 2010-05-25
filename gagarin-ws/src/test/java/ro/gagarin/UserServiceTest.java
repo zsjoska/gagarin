@@ -159,4 +159,13 @@ public class UserServiceTest {
 	assertEquals(20, gotStat.getMax());
 	assertEquals(3, gotStat.getMin());
     }
+
+    @Test
+    public void testgetControlEntityCategories() throws Exception {
+	List<ControlEntityCategory> controlEntityCategories = userService.getControlEntityCategories(session);
+	assertEquals(ControlEntityCategory.values().length, controlEntityCategories.size());
+	for (int i = 0; i < ControlEntityCategory.values().length; i++) {
+	    assertEquals(ControlEntityCategory.values()[i], controlEntityCategories.get(i));
+	}
+    }
 }

@@ -23,6 +23,7 @@ import ro.gagarin.jdbc.group.UpdateGroupSQL;
 import ro.gagarin.jdbc.objects.DBGroup;
 import ro.gagarin.jdbc.objects.DBUser;
 import ro.gagarin.jdbc.user.CreateUserSQL;
+import ro.gagarin.jdbc.user.DeleteGroupAssignmentsSQL;
 import ro.gagarin.jdbc.user.DeleteUserSQL;
 import ro.gagarin.jdbc.user.SelectUserByUsernamePasswordSQL;
 import ro.gagarin.jdbc.user.SelectUserByUsernameSQL;
@@ -234,5 +235,10 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 	// TODO:(2) add check for group id and user id existence
 
 	new UnassignUserFromGroupSQL(this, usr, gr).execute();
+    }
+
+    @Override
+    public void deleteGroupAssignments(Group group) throws OperationException, DataConstraintException {
+	new DeleteGroupAssignmentsSQL(this, group).execute();
     }
 }

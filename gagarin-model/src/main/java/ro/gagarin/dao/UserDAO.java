@@ -157,4 +157,7 @@ public interface UserDAO extends BaseDAO {
 
     void unassignUserFromGroup(User user, Group group) throws OperationException, ItemNotFoundException,
 	    DataConstraintException;
+
+    void deleteGroupAssignments(Group group) throws OperationException, DataConstraintException;
+
 }

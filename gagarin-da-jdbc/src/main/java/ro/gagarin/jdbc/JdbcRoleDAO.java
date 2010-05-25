@@ -28,6 +28,8 @@ import ro.gagarin.jdbc.role.GetEffectivePermissionsOnEntitySQL;
 import ro.gagarin.jdbc.role.GetEffectivePermissionsSQL;
 import ro.gagarin.jdbc.role.GetPermissionRolesSQL;
 import ro.gagarin.jdbc.role.GetRolePermissionsSQL;
+import ro.gagarin.jdbc.role.RemoveControlEntityFromAssignmentSQL;
+import ro.gagarin.jdbc.role.RemovePersonFromAssignmentSQL;
 import ro.gagarin.jdbc.role.SelectPermissionByNameSQL;
 import ro.gagarin.jdbc.role.SelectPermissionsSQL;
 import ro.gagarin.jdbc.role.SelectRoleByNameSQL;
@@ -267,5 +269,16 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 	    }
 	}
 	return newMap;
+    }
+
+    @Override
+    public void removeControlEntityFromAssignment(ControlEntity ce) throws OperationException, DataConstraintException {
+	new RemoveControlEntityFromAssignmentSQL(this, ce).execute();
+
+    }
+
+    @Override
+    public void removePersonFromAssignment(Person person) throws OperationException, DataConstraintException {
+	new RemovePersonFromAssignmentSQL(this, person).execute();
     }
 }

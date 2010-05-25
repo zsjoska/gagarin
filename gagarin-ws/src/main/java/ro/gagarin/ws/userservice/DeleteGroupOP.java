@@ -39,10 +39,12 @@ public class DeleteGroupOP extends WebserviceOperation {
     @Override
     public void execute() throws ExceptionBase {
 	// TODO:(1) the group may not have Id
+
 	authManager.requiresPermission(getSession(), group, PermissionEnum.DELETE);
 	userManager.deleteGroup(this.group);
-
-	// TODO:(1) clean up the group assignments, rolePersonAssignments
+	userManager.deleteGroupAssignments(this.group);
+	authManager.removeControlEntityFromAssignment(getSession(), group);
+	authManager.removePersonFromAssignment(getSession(), group);
     }
 
     @Override

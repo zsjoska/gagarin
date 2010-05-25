@@ -86,4 +86,22 @@ public interface RoleDAO extends BaseDAO {
      * @throws OperationException
      */
     Map<ControlEntity, Set<UserPermission>> getEffectivePermissions(Person... persons) throws OperationException;
+
+    /**
+     * Removes all references to this control entity from the assignment table
+     * 
+     * @param ce
+     * @throws DataConstraintException
+     * @throws OperationException
+     */
+    void removeControlEntityFromAssignment(ControlEntity ce) throws OperationException, DataConstraintException;
+
+    /**
+     * Removes all references to this person from the assignment table
+     * 
+     * @param person
+     * @throws DataConstraintException
+     * @throws OperationException
+     */
+    void removePersonFromAssignment(Person person) throws OperationException, DataConstraintException;
 }

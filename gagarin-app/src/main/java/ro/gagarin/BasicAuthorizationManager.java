@@ -95,4 +95,19 @@ public class BasicAuthorizationManager implements AuthorizationManager {
 	Set<PermissionEnum> permSet = Utils.convertPermissionSet(permissions);
 	session.getEffectivePermissions().put(ce, permSet);
     }
+
+    @Override
+    public void removeControlEntityFromAssignment(Session session, ControlEntity ce) throws OperationException,
+	    DataConstraintException {
+	RoleDAO roleDAO = session.getManagerFactory().getDAOManager().getRoleDAO(session);
+	roleDAO.removeControlEntityFromAssignment(ce);
+    }
+
+    @Override
+    public void removePersonFromAssignment(Session session, Person person) throws OperationException,
+	    DataConstraintException {
+	RoleDAO roleDAO = session.getManagerFactory().getDAOManager().getRoleDAO(session);
+	roleDAO.removePersonFromAssignment(person);
+    }
+
 }

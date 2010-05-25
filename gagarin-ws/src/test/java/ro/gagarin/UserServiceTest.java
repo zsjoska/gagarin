@@ -19,6 +19,7 @@ import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.testutil.TUtil;
 import ro.gagarin.user.Group;
 import ro.gagarin.user.PermissionEnum;
+import ro.gagarin.user.User;
 import ro.gagarin.user.UserRole;
 import ro.gagarin.user.UserStatus;
 import ro.gagarin.utils.Statistic;
@@ -30,6 +31,7 @@ import ro.gagarin.ws.objects.WSControlEntity;
 import ro.gagarin.ws.objects.WSExportedSession;
 import ro.gagarin.ws.objects.WSGroup;
 import ro.gagarin.ws.objects.WSLogEntry;
+import ro.gagarin.ws.objects.WSPerson;
 import ro.gagarin.ws.objects.WSStatistic;
 import ro.gagarin.ws.objects.WSUser;
 import ro.gagarin.ws.objects.WSUserPermission;
@@ -198,6 +200,27 @@ public class UserServiceTest {
 	for (WSControlEntity wsControlEntity : controlEntityListForCategory) {
 	    Group group = groupSet.get(wsControlEntity.getId());
 	    assertEquals(group.getName(), wsControlEntity.getName());
+	}
+    }
+
+    @Test
+    public void testgetPersons() throws Exception {
+	List<WSPerson> persons = userService.getPersons(session);
+	List<WSUser> users = userService.getUsers(session);
+	List<WSGroup> groups = userService.getGroups(session);
+
+	assertEquals(users.size() + groups.size(), persons.size());
+	HashMap<Long, Person> personsMap = new HashMap<Long, Person>();
+	for (User user : users) {
+	    personsMap.put(user.getId(), user);
+	}
+	for (Group group : groups) {
+	    personsMap.put(group.getId(), group);
+	}
+	for (WSPerson wsPerson : persons) {
+	    Person person = personsMap.get(wsPerson.getId());
+	    assertEquals(person.getType(), wsPerson.getType());
+	    assertEquals(person.getTitle(), wsPerson.getTitle());
 	}
     }
 }

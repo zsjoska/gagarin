@@ -13,6 +13,7 @@ import ro.gagarin.ws.objects.WSControlEntity;
 import ro.gagarin.ws.objects.WSExportedSession;
 import ro.gagarin.ws.objects.WSGroup;
 import ro.gagarin.ws.objects.WSLogEntry;
+import ro.gagarin.ws.objects.WSPerson;
 import ro.gagarin.ws.objects.WSStatistic;
 import ro.gagarin.ws.objects.WSUser;
 import ro.gagarin.ws.objects.WSUserPermission;
@@ -30,6 +31,7 @@ import ro.gagarin.ws.userservice.GetControlEntityListForCategoryOP;
 import ro.gagarin.ws.userservice.GetGroupUsersOP;
 import ro.gagarin.ws.userservice.GetGroupsOP;
 import ro.gagarin.ws.userservice.GetLogEntriesOP;
+import ro.gagarin.ws.userservice.GetPersonsOP;
 import ro.gagarin.ws.userservice.GetRoleListOP;
 import ro.gagarin.ws.userservice.GetRolePermissionstOP;
 import ro.gagarin.ws.userservice.GetSessionListOP;
@@ -225,13 +227,18 @@ public class Admin {
     }
 
     @WebMethod
-    public List<String> assignRoleToControlEntity(String sessionId, WSControlEntity ce, WSUserRole role, String person) {
-	return null;
+    public List<WSPerson> getPersons(String sessionId) throws WSException {
+	GetPersonsOP getPersons = new GetPersonsOP(sessionId);
+	WebserviceExecutor.execute(getPersons);
+	return getPersons.getPersons();
     }
 
     @WebMethod
-    public List<String> unAssignRoleFromControlEntity(String sessionId, String ce, WSUserRole role, String person) {
-	return null;
+    public void assignRoleToControlEntity(String sessionId, WSControlEntity ce, WSUserRole role, String person) {
+    }
+
+    @WebMethod
+    public void unAssignRoleFromControlEntity(String sessionId, String ce, WSUserRole role, String person) {
     }
 
 }

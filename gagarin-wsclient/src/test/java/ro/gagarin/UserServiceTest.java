@@ -33,6 +33,7 @@ public class UserServiceTest {
 	WsUser user = new WsUser();
 	user.setUsername("wsUser1" + System.nanoTime());
 	user.setPassword("wspassword1");
+	user.setStatus(UserStatus.ACTIVE);
 	userAPI.createUser(session, user);
     }
 }

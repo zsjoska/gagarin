@@ -39,4 +39,9 @@ public class AppGroup extends BaseControlEntity implements Group {
     public String toString() {
 	return ConversionUtils.group2String(this);
     }
+
+    @Override
+    public String getTitle() {
+	return this.getName();
+    }
 }

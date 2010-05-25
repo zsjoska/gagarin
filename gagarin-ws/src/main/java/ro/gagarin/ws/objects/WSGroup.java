@@ -54,4 +54,9 @@ public class WSGroup extends BaseEntity implements Group, ControlEntity {
     public void setName(String name) {
 	this.name = name;
     }
+
+    @Override
+    public String getTitle() {
+	return this.getName();
+    }
 }

@@ -40,4 +40,9 @@ public class ATestGroup extends BaseControlEntity implements Group {
 	return PersonTypesEnum.GROUP;
     }
 
+    @Override
+    public String getTitle() {
+	return this.getName();
+    }
+
 }

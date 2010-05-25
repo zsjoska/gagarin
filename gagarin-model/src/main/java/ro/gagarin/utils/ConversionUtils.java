@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import ro.gagarin.ControlEntity;
+import ro.gagarin.Person;
 import ro.gagarin.config.ConfigEntry;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.log.LogEntry;
@@ -82,5 +83,11 @@ public class ConversionUtils {
     public static String controlEntity2String(ControlEntity ce) {
 	return ce.getClass().getSimpleName() + "[ id=" + ce.getId() + ", name=" + ce.getName() + ", category="
 		+ ce.getCategory() + "]";
+    }
+
+    public static String person2String(Person person) {
+	return person.getClass().getSimpleName() + "[ id=" + person.getId() + ", title=" + person.getTitle()
+		+ ", type=" + person.getType() + "]";
+
     }
 }

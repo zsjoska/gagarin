@@ -111,4 +111,9 @@ public class ATestUser extends BaseEntity implements User {
     public PersonTypesEnum getType() {
 	return PersonTypesEnum.USER;
     }
+
+    @Override
+    public String getTitle() {
+	return this.getUsername();
+    }
 }

@@ -39,4 +39,9 @@ public class DBGroup extends BaseControlEntity implements Group {
     public PersonTypesEnum getType() {
 	return PersonTypesEnum.GROUP;
     }
+
+    @Override
+    public String getTitle() {
+	return this.getName();
+    }
 }

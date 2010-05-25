@@ -37,13 +37,14 @@ import ro.gagarin.jdbc.role.SelectPermissionsSQL;
 import ro.gagarin.jdbc.role.SelectRoleByNameSQL;
 import ro.gagarin.jdbc.role.SelectRolesSQL;
 import ro.gagarin.jdbc.role.SubstractRolesPermissions;
+import ro.gagarin.jdbc.role.UnAssignRoleFromPersonSQL;
 import ro.gagarin.log.AppLog;
 import ro.gagarin.log.AppLogAction;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
 
-// TODO:(1) Remove unneeded permission related methods and SQL classes
+// TODO:(0) Remove unneeded permission related methods and SQL classes
 public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 
     public JdbcRoleDAO(Session session) throws OperationException {
@@ -157,6 +158,8 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 	return SelectPermissionByNameSQL.execute(this, permissionName);
     }
 
+    // TODO:(1) Think again: why we would delete a permission; it is recreated
+    // at application startup
     @Override
     public void deletePermission(UserPermission perm) throws OperationException, ItemNotFoundException {
 	UserPermission permission = completePermissionId(perm);
@@ -235,6 +238,7 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
     public void assignRoleToPerson(UserRole role, Person person, ControlEntity object) throws OperationException,
 	    DataConstraintException, ItemNotFoundException {
 
+	// TODO:(0) Why is this here?
 	UserRole completeRole = completeRoleId(role);
 
 	new AssignRoleToPersonSQL(this, completeRole, person, object).execute();
@@ -290,5 +294,11 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
     public List<ControlEntity> getControlEntityListForCategory(ControlEntityCategory categoryEnum)
 	    throws OperationException {
 	return GetControlEntityListForCategorySQL.execute(this, categoryEnum);
+    }
+
+    @Override
+    public void unAssignRoleFromPerson(UserRole role, Person person, ControlEntity ce) throws OperationException,
+	    DataConstraintException {
+	new UnAssignRoleFromPersonSQL(this, role, person, ce).execute();
     }
 }

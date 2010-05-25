@@ -11,13 +11,13 @@ import ro.gagarin.jdbc.UpdateQuery;
 import ro.gagarin.user.UserRole;
 import ro.gagarin.utils.FieldValidator;
 
-public class AssignRoleToPersonSQL extends UpdateQuery {
+public class UnAssignRoleFromPersonSQL extends UpdateQuery {
 
     private final UserRole role;
     private final Person person;
     private final ControlEntity object;
 
-    public AssignRoleToPersonSQL(BaseJdbcDAO dao, UserRole role, Person person, ControlEntity object) {
+    public UnAssignRoleFromPersonSQL(BaseJdbcDAO dao, UserRole role, Person person, ControlEntity object) {
 	super(dao, role.getClass());
 	this.role = role;
 	this.person = person;
@@ -29,20 +29,17 @@ public class AssignRoleToPersonSQL extends UpdateQuery {
 	FieldValidator.requireLongField("id", this.role);
 	FieldValidator.requireLongField("id", this.person);
 	FieldValidator.requireLongField("id", this.object);
-	// TODO:(1) check the other saved values
     }
 
     @Override
     protected void fillParameters(PreparedStatement stmnt) throws SQLException {
 	stmnt.setLong(1, this.role.getId());
 	stmnt.setLong(2, this.person.getId());
-	stmnt.setString(3, this.person.getType().name());
-	stmnt.setLong(4, this.object.getId());
-	stmnt.setString(5, this.object.getCategory().name());
+	stmnt.setLong(3, this.object.getId());
     }
 
     @Override
     protected String getSQL() {
-	return "INSERT INTO RolePersonAssignment (role_id, person_id, person_type, object_id, object_type) VALUES ( ?, ?, ?, ?, ?)";
+	return "DELETE FROM RolePersonAssignment WHERE role_id = ? AND person_id = ? AND object_id = ?";
     }
 }

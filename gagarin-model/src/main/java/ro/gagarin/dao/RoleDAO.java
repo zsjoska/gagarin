@@ -62,6 +62,19 @@ public interface RoleDAO extends BaseDAO {
 	    DataConstraintException, ItemNotFoundException;
 
     /**
+     * Removes the {@link UserRole} assignment from the {@link Person} on the
+     * given {@link ControlEntity} object.
+     * 
+     * @param role
+     * @param person
+     * @param ce
+     * @throws DataConstraintException
+     * @throws OperationException
+     */
+    void unAssignRoleFromPerson(UserRole role, Person person, ControlEntity ce) throws OperationException,
+	    DataConstraintException;
+
+    /**
      * Returns a set of permission that the enumerated persons have on the given
      * {@link ControlEntity}.<br>
      * 
@@ -115,4 +128,5 @@ public interface RoleDAO extends BaseDAO {
      * @throws OperationException
      */
     List<ControlEntity> getControlEntityListForCategory(ControlEntityCategory categoryEnum) throws OperationException;
+
 }

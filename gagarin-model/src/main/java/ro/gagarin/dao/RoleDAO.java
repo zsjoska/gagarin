@@ -70,9 +70,10 @@ public interface RoleDAO extends BaseDAO {
      * @param ce
      * @throws DataConstraintException
      * @throws OperationException
+     * @throws ItemNotFoundException
      */
     void unAssignRoleFromPerson(UserRole role, Person person, ControlEntity ce) throws OperationException,
-	    DataConstraintException;
+	    DataConstraintException, ItemNotFoundException;
 
     /**
      * Returns a set of permission that the enumerated persons have on the given

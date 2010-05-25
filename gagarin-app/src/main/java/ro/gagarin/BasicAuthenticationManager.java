@@ -23,6 +23,8 @@ public class BasicAuthenticationManager implements AuthenticationManager {
     public User userLogin(String username, String password, String[] extra) throws ItemNotFoundException,
 	    OperationException {
 	UserDAO userDAO = factory.getDAOManager().getUserDAO(this.session);
+	// TODO:(2) rewrite to get the user first, then authenticate in a
+	// pluggable way
 	User user = userDAO.userLogin(username, password);
 	factory.getSessionManager().assignUserToSession(user, session);
 	return user;

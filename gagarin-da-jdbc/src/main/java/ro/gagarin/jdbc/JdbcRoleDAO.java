@@ -44,7 +44,6 @@ import ro.gagarin.session.Session;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
 
-// TODO:(0) Remove unneeded permission related methods and SQL classes
 public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 
     public JdbcRoleDAO(Session session) throws OperationException {
@@ -158,8 +157,9 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 	return SelectPermissionByNameSQL.execute(this, permissionName);
     }
 
-    // TODO:(1) Think again: why we would delete a permission; it is recreated
-    // at application startup
+    // TODO:(3) Think again: why we would delete a permission;
+    // it is recreated at application startup
+    // What should happen on application upgrade when a permission is removed
     @Override
     public void deletePermission(UserPermission perm) throws OperationException, ItemNotFoundException {
 	UserPermission permission = completePermissionId(perm);
@@ -186,6 +186,7 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 	return SelectRolesSQL.execute(this);
     }
 
+    // TODO:(4) This is not used since the new permission framework
     @Override
     public List<UserPermission> substractUsersRolePermissions(UserRole main, UserRole substract)
 	    throws OperationException, ItemNotFoundException {
@@ -238,10 +239,17 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
     public void assignRoleToPerson(UserRole role, Person person, ControlEntity object) throws OperationException,
 	    DataConstraintException, ItemNotFoundException {
 
-	// TODO:(0) Why is this here?
 	UserRole completeRole = completeRoleId(role);
 
 	new AssignRoleToPersonSQL(this, completeRole, person, object).execute();
+    }
+
+    @Override
+    public void unAssignRoleFromPerson(UserRole role, Person person, ControlEntity ce) throws OperationException,
+	    DataConstraintException, ItemNotFoundException {
+	UserRole completeRole = completeRoleId(role);
+
+	new UnAssignRoleFromPersonSQL(this, completeRole, person, ce).execute();
     }
 
     @Override
@@ -294,11 +302,5 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
     public List<ControlEntity> getControlEntityListForCategory(ControlEntityCategory categoryEnum)
 	    throws OperationException {
 	return GetControlEntityListForCategorySQL.execute(this, categoryEnum);
-    }
-
-    @Override
-    public void unAssignRoleFromPerson(UserRole role, Person person, ControlEntity ce) throws OperationException,
-	    DataConstraintException {
-	new UnAssignRoleFromPersonSQL(this, role, person, ce).execute();
     }
 }

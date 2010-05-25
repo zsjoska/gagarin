@@ -1,6 +1,5 @@
 package ro.gagarin.jdbc;
 
-import ro.gagarin.JdbcConfigDAO;
 import ro.gagarin.dao.ConfigDAO;
 import ro.gagarin.dao.DAOManager;
 import ro.gagarin.dao.RoleDAO;

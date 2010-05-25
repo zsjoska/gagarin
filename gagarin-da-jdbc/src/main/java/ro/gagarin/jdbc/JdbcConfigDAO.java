@@ -1,4 +1,4 @@
-package ro.gagarin;
+package ro.gagarin.jdbc;
 
 import java.util.ArrayList;
 
@@ -12,7 +12,6 @@ import ro.gagarin.dao.ConfigDAO;
 import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.OperationException;
-import ro.gagarin.jdbc.BaseJdbcDAO;
 import ro.gagarin.jdbc.objects.DBConfig;
 import ro.gagarin.session.Session;
 

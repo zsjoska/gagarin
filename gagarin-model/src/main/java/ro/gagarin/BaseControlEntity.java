@@ -75,7 +75,7 @@ public class BaseControlEntity extends BaseEntity implements ControlEntity {
 	return false;
     }
 
-    public ControlEntityCategory getCat() {
+    public ControlEntityCategory getCategory() {
 	return cat;
     }
 }

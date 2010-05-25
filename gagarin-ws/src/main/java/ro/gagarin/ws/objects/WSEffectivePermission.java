@@ -20,7 +20,7 @@ public class WSEffectivePermission extends BaseEntity implements ControlEntity {
 	this.setId(ce.getId());
 	this.name = ce.getName();
 	this.permissions = permissions;
-	this.cat = ce.getCat();
+	this.cat = ce.getCategory();
     }
 
     public void setPermissions(List<PermissionEnum> permissions) {
@@ -32,7 +32,7 @@ public class WSEffectivePermission extends BaseEntity implements ControlEntity {
     }
 
     @Override
-    public ControlEntityCategory getCat() {
+    public ControlEntityCategory getCategory() {
 	return this.cat;
     }
 

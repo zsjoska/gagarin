@@ -47,7 +47,7 @@ public class WSGroup extends BaseEntity implements Group, ControlEntity {
     }
 
     @Override
-    public ControlEntityCategory getCat() {
+    public ControlEntityCategory getCategory() {
 	return ControlEntityCategory.GROUP;
     }
 

@@ -256,11 +256,11 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 
 	Map<ControlEntity, Set<UserPermission>> newMap = new HashMap<ControlEntity, Set<UserPermission>>();
 	for (ControlEntity ce : effectivePermissions.keySet()) {
-	    if (ce.getCat().table() != null) {
-		ControlEntity completeCe = GetControlEntityByIdAndCategorySQL.execute(this, ce.getId(), ce.getCat());
+	    if (ce.getCategory().table() != null) {
+		ControlEntity completeCe = GetControlEntityByIdAndCategorySQL.execute(this, ce.getId(), ce.getCategory());
 		if (completeCe == null) {
 		    APPLOG.error("Inconsistent control entity found. Cleanup was not done properly. Id=" + ce.getId()
-			    + " Category = " + ce.getCat());
+			    + " Category = " + ce.getCategory());
 		} else {
 		    newMap.put(completeCe, effectivePermissions.get(ce));
 		}

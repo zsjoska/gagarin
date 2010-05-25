@@ -37,7 +37,7 @@ public class AssignRoleToPersonSQL extends UpdateQuery {
 	stmnt.setLong(2, this.person.getId());
 	stmnt.setString(3, this.person.getType().name());
 	stmnt.setLong(4, this.object.getId());
-	stmnt.setString(5, this.object.getCat().name());
+	stmnt.setString(5, this.object.getCategory().name());
     }
 
     @Override

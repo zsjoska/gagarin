@@ -197,7 +197,7 @@ public class SessionTest {
 		.getSessionString());
 	for (WSEffectivePermission wsEffectivePermission : currentUserPermissions) {
 	    System.err.println(wsEffectivePermission.getName());
-	    System.err.println(wsEffectivePermission.getCat());
+	    System.err.println(wsEffectivePermission.getCategory());
 	    System.err.println(wsEffectivePermission.getId());
 	    System.err.println(wsEffectivePermission.getPermissions());
 	}

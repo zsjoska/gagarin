@@ -21,7 +21,7 @@ public class GetPermissionRolesSQL extends SelectQuery {
     private final UserPermission perm;
 
     public GetPermissionRolesSQL(BaseJdbcDAO dao, UserPermission perm) {
-	super(dao, UserRole.class);
+	super(dao);
 	this.perm = perm;
     }
 

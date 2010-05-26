@@ -20,7 +20,7 @@ public class GetControlEntityListForCategorySQL extends SelectQuery {
     private List<ControlEntity> controlEntities;
 
     public GetControlEntityListForCategorySQL(BaseJdbcDAO dao, ControlEntityCategory categoryEnum) {
-	super(dao, categoryEnum.getClass());
+	super(dao);
 	this.categoryEnum = categoryEnum;
     }
 

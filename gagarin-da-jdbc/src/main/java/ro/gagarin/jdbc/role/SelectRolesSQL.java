@@ -18,7 +18,7 @@ public class SelectRolesSQL extends SelectQuery {
     private List<UserRole> roles = null;
 
     public SelectRolesSQL(BaseJdbcDAO dao) {
-	super(dao, UserRole.class);
+	super(dao);
     }
 
     @Override

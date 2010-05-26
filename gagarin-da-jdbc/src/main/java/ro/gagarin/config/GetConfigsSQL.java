@@ -17,7 +17,7 @@ public class GetConfigsSQL extends SelectQuery {
     private ArrayList<ConfigEntry> configs;
 
     public GetConfigsSQL(BaseJdbcDAO dao) {
-	super(dao, null);
+	super(dao);
     }
 
     @Override

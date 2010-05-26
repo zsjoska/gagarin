@@ -20,7 +20,7 @@ public class GetControlEntityByIdAndCategorySQL extends SelectQuery {
     private BaseControlEntity ce;
 
     public GetControlEntityByIdAndCategorySQL(BaseJdbcDAO dao, Long id, ControlEntityCategory cat) {
-	super(dao, ControlEntity.class);
+	super(dao);
 	this.id = id;
 	this.cat = cat;
     }
@@ -38,9 +38,9 @@ public class GetControlEntityByIdAndCategorySQL extends SelectQuery {
 
     @Override
     protected void checkInput() throws FieldRequiredException {
-	FieldValidator.requireLongValue(id, "id");
+	FieldValidator.requireLongValue(id, "id", "GetControlEntityByIdAndCategory");
 	if (cat == null) {
-	    throw new FieldRequiredException("category", Object.class);
+	    throw new FieldRequiredException("category", "GetControlEntityByIdAndCategory");
 	}
     }
 

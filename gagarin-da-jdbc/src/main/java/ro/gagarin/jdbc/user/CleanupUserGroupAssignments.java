@@ -14,7 +14,7 @@ public class CleanupUserGroupAssignments extends UpdateQuery {
     private final User user;
 
     public CleanupUserGroupAssignments(BaseJdbcDAO dao, User user) {
-	super(dao, user.getClass());
+	super(dao);
 	this.user = user;
     }
 

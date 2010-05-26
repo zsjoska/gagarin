@@ -3,8 +3,6 @@ package ro.gagarin.jdbc.role;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import javax.management.relation.Role;
-
 import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.jdbc.BaseJdbcDAO;
 import ro.gagarin.jdbc.UpdateQuery;
@@ -18,7 +16,7 @@ public class AssignPermissionToRoleSQL extends UpdateQuery {
     private final UserPermission perm;
 
     public AssignPermissionToRoleSQL(BaseJdbcDAO dao, UserRole role, UserPermission perm) {
-	super(dao, Role.class);
+	super(dao);
 	this.role = role;
 	this.perm = perm;
     }

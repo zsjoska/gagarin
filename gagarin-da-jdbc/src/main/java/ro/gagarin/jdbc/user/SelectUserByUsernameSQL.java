@@ -26,7 +26,7 @@ public class SelectUserByUsernameSQL extends SelectQuery {
     private final String username;
 
     public SelectUserByUsernameSQL(BaseJdbcDAO dao, String username) {
-	super(dao, User.class);
+	super(dao);
 	this.username = username;
     }
 

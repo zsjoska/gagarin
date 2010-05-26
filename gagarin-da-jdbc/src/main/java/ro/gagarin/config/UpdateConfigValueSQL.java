@@ -14,7 +14,7 @@ public class UpdateConfigValueSQL extends UpdateQuery {
     private final DBConfig config;
 
     public UpdateConfigValueSQL(BaseJdbcDAO dao, DBConfig config) {
-	super(dao, ConfigEntry.class);
+	super(dao);
 	this.config = config;
     }
 

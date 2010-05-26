@@ -21,7 +21,7 @@ public class GetUserGroupsSQL extends SelectQuery {
     private ArrayList<Group> groups = null;
 
     public GetUserGroupsSQL(BaseJdbcDAO dao, User user) {
-	super(dao, User.class);
+	super(dao);
 	this.user = user;
     }
 

@@ -16,7 +16,7 @@ public class UnassignUserFromGroupSQL extends UpdateQuery {
     private final Group gr;
 
     public UnassignUserFromGroupSQL(BaseJdbcDAO dao, User usr, Group gr) {
-	super(dao, Group.class);
+	super(dao);
 	this.usr = usr;
 	this.gr = gr;
     }

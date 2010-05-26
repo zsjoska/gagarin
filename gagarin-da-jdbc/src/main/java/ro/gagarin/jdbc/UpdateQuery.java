@@ -14,13 +14,11 @@ import ro.gagarin.utils.Statistic;
 public abstract class UpdateQuery {
 
     private final BaseJdbcDAO dao;
-    private final Class<?> objectClass;
     protected final AppLog LOG;
     private int updatedRowCount = 0;
 
-    public UpdateQuery(BaseJdbcDAO dao, Class<?> objectClass) {
+    public UpdateQuery(BaseJdbcDAO dao) {
 	this.dao = dao;
-	this.objectClass = objectClass;
 	this.LOG = dao.getLogger();
     }
 
@@ -84,7 +82,7 @@ public abstract class UpdateQuery {
 	} catch (SQLException e) {
 	    // this exception should be converted to our nice exceptions
 	    LOG.error("Error executing the query", e);
-	    throw DataConstraintException.createException(e, objectClass);
+	    throw DataConstraintException.createException(e, getClass());
 	}
     }
 

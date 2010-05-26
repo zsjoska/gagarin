@@ -22,7 +22,7 @@ public class GetGroupUsersSQL extends SelectQuery {
     private ArrayList<User> users;
 
     public GetGroupUsersSQL(BaseJdbcDAO dao, Group group) {
-	super(dao, Group.class);
+	super(dao);
 	this.group = group;
     }
 

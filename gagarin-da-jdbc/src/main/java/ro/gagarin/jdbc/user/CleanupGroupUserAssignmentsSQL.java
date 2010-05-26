@@ -20,7 +20,7 @@ public class CleanupGroupUserAssignmentsSQL extends UpdateQuery {
     private final Group group;
 
     public CleanupGroupUserAssignmentsSQL(BaseJdbcDAO dao, Group group) {
-	super(dao, group.getClass());
+	super(dao);
 	this.group = group;
     }
 

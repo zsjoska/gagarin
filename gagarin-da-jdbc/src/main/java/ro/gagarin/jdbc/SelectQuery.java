@@ -11,10 +11,8 @@ import ro.gagarin.utils.Statistic;
 
 public abstract class SelectQuery extends UpdateQuery {
 
-    // TODO:(1) review the use of ojectClass since there are some SQLs which
-    // requires more or is unsure which one
-    public SelectQuery(BaseJdbcDAO dao, Class<?> objectClass) {
-	super(dao, objectClass);
+    public SelectQuery(BaseJdbcDAO dao) {
+	super(dao);
     }
 
     protected void doExecute(PreparedStatement stmnt) throws OperationException {

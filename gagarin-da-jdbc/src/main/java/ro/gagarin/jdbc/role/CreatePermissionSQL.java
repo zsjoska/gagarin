@@ -14,7 +14,7 @@ public class CreatePermissionSQL extends UpdateQuery {
     private final UserPermission perm;
 
     public CreatePermissionSQL(BaseJdbcDAO dao, UserPermission perm) {
-	super(dao, UserPermission.class);
+	super(dao);
 	this.perm = perm;
     }
 

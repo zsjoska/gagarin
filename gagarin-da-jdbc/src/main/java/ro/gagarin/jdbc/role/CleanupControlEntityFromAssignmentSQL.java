@@ -20,7 +20,7 @@ public class CleanupControlEntityFromAssignmentSQL extends UpdateQuery {
     private final ControlEntity ce;
 
     public CleanupControlEntityFromAssignmentSQL(BaseJdbcDAO dao, ControlEntity ce) {
-	super(dao, ce.getClass());
+	super(dao);
 	this.ce = ce;
     }
 

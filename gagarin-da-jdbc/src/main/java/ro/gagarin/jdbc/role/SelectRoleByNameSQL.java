@@ -18,7 +18,7 @@ public class SelectRoleByNameSQL extends SelectQuery {
     private DBUserRole role = null;
 
     public SelectRoleByNameSQL(BaseJdbcDAO dao, String roleName) {
-	super(dao, UserRole.class);
+	super(dao);
 	this.roleName = roleName;
     }
 

@@ -14,7 +14,7 @@ public class UpdateGroupSQL extends UpdateQuery {
     private final Group group;
 
     public UpdateGroupSQL(BaseJdbcDAO dao, Group group) {
-	super(dao, Group.class);
+	super(dao);
 	this.group = group;
     }
 

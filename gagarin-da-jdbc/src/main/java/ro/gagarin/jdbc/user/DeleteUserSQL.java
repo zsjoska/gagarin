@@ -14,7 +14,7 @@ public class DeleteUserSQL extends UpdateQuery {
     private final User user;
 
     public DeleteUserSQL(BaseJdbcDAO dao, User user) {
-	super(dao, User.class);
+	super(dao);
 	this.user = user;
     }
 

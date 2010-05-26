@@ -20,7 +20,7 @@ public class CleanupRolePermissionAssignments extends UpdateQuery {
     private final UserRole role;
 
     public CleanupRolePermissionAssignments(BaseJdbcDAO dao, UserRole role) {
-	super(dao, role.getClass());
+	super(dao);
 	this.role = role;
     }
 

@@ -14,7 +14,7 @@ public class UpdateUserSQL extends UpdateQuery {
     private final User user;
 
     public UpdateUserSQL(BaseJdbcDAO dao, User user) {
-	super(dao, User.class);
+	super(dao);
 	this.user = user;
     }
 

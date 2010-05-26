@@ -22,7 +22,7 @@ public class SubstractRolesPermissions extends SelectQuery {
     private List<UserPermission> perm = null;
 
     public SubstractRolesPermissions(BaseJdbcDAO dao, UserRole main, UserRole sub) {
-	super(dao, UserRole.class);
+	super(dao);
 	this.main = main;
 	this.sub = sub;
     }

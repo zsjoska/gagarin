@@ -14,7 +14,7 @@ public class DeleteRoleSQL extends UpdateQuery {
     private final UserRole role;
 
     public DeleteRoleSQL(BaseJdbcDAO dao, UserRole role) {
-	super(dao, UserRole.class);
+	super(dao);
 	this.role = role;
     }
 

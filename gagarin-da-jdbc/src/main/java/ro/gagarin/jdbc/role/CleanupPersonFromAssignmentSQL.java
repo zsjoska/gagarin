@@ -20,7 +20,7 @@ public class CleanupPersonFromAssignmentSQL extends UpdateQuery {
     private final Person person;
 
     public CleanupPersonFromAssignmentSQL(BaseJdbcDAO dao, Person person) {
-	super(dao, person.getClass());
+	super(dao);
 	this.person = person;
     }
 

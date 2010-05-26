@@ -18,7 +18,7 @@ public class SelectUsersSQL extends SelectQuery {
     private ArrayList<User> users = null;
 
     public SelectUsersSQL(BaseJdbcDAO dao) {
-	super(dao, User.class);
+	super(dao);
     }
 
     @Override

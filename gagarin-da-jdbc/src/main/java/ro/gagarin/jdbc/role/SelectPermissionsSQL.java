@@ -18,7 +18,7 @@ public class SelectPermissionsSQL extends SelectQuery {
     private List<UserPermission> permissions = null;
 
     public SelectPermissionsSQL(BaseJdbcDAO dao) {
-	super(dao, UserPermission.class);
+	super(dao);
     }
 
     @Override

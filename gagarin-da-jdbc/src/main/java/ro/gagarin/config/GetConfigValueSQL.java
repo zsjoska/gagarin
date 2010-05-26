@@ -16,7 +16,7 @@ public class GetConfigValueSQL extends SelectQuery {
     private String lastUpdateTime = null;
 
     public GetConfigValueSQL(BaseJdbcDAO dao, String config) {
-	super(dao, null);
+	super(dao);
 	this.config = config;
     }
 

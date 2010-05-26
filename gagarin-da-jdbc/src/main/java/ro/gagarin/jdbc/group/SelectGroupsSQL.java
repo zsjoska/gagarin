@@ -17,7 +17,7 @@ public class SelectGroupsSQL extends SelectQuery {
     private ArrayList<Group> groups;
 
     public SelectGroupsSQL(BaseJdbcDAO dao) {
-	super(dao, Group.class);
+	super(dao);
     }
 
     @Override

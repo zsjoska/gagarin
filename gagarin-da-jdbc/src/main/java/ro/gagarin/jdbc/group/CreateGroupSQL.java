@@ -1,6 +1,5 @@
 package ro.gagarin.jdbc.group;
 
-import java.security.acl.Group;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
@@ -15,7 +14,7 @@ public class CreateGroupSQL extends UpdateQuery {
     private final DBGroup dbGroup;
 
     public CreateGroupSQL(BaseJdbcDAO dao, DBGroup dbGroup) {
-	super(dao, Group.class);
+	super(dao);
 	this.dbGroup = dbGroup;
     }
 

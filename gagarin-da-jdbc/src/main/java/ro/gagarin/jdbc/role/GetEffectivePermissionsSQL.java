@@ -26,7 +26,7 @@ public class GetEffectivePermissionsSQL extends SelectQuery {
     private Map<ControlEntity, Set<UserPermission>> permissions;
 
     public GetEffectivePermissionsSQL(BaseJdbcDAO dao, Person[] persons) {
-	super(dao, ControlEntity.class);
+	super(dao);
 	this.persons = persons;
     }
 

@@ -16,7 +16,7 @@ public class AssignUserToGroupSQL extends UpdateQuery {
     private final Group group;
 
     public AssignUserToGroupSQL(BaseJdbcDAO dao, User user, Group group) {
-	super(dao, User.class);
+	super(dao);
 	this.user = user;
 	this.group = group;
     }

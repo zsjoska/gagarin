@@ -118,9 +118,8 @@ public class FieldValidator {
     public static String requireStringValue(String str, String name, int maxLength, boolean trim)
 	    throws FieldRequiredException {
 
-	// TODO:(1) fix this Object.class, maybe with a permisible constructor
 	if (str == null)
-	    throw new FieldRequiredException(name, Object.class);
+	    throw new FieldRequiredException(name);
 	String newStr;
 	if (trim)
 	    newStr = str.trim();
@@ -128,7 +127,7 @@ public class FieldValidator {
 	    newStr = str;
 
 	if (newStr.length() == 0)
-	    throw new FieldRequiredException(name, Object.class);
+	    throw new FieldRequiredException(name);
 
 	if (newStr.length() > maxLength)
 	    newStr = newStr.substring(0, maxLength);
@@ -148,9 +147,9 @@ public class FieldValidator {
 	}
     }
 
-    public static void requireLongValue(Long id, String string) throws FieldRequiredException {
+    public static void requireLongValue(Long id, String field, String place) throws FieldRequiredException {
 	if (id == null || id <= 0) {
-	    throw new FieldRequiredException(string, Object.class);
+	    throw new FieldRequiredException(field, place);
 	}
     }
 }

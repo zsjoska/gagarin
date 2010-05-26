@@ -14,7 +14,7 @@ public class InsertConfigValueSQL extends UpdateQuery {
     private final DBConfig config;
 
     public InsertConfigValueSQL(BaseJdbcDAO dao, DBConfig config) {
-	super(dao, ConfigEntry.class);
+	super(dao);
 	this.config = config;
     }
 

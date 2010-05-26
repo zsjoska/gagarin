@@ -14,7 +14,7 @@ public class DeletePermissionSQL extends UpdateQuery {
     private final UserPermission perm;
 
     public DeletePermissionSQL(BaseJdbcDAO dao, UserPermission perm) {
-	super(dao, UserPermission.class);
+	super(dao);
 	this.perm = perm;
     }
 

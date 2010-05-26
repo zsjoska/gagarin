@@ -18,7 +18,7 @@ public class SelectPermissionByNameSQL extends SelectQuery {
     private final String permissionName;
 
     public SelectPermissionByNameSQL(BaseJdbcDAO dao, String permissionName) {
-	super(dao, UserPermission.class);
+	super(dao);
 	this.permissionName = permissionName;
     }
 

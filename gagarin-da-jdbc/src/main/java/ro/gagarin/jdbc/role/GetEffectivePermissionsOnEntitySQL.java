@@ -22,7 +22,7 @@ public class GetEffectivePermissionsOnEntitySQL extends SelectQuery {
     private Set<UserPermission> permissions;
 
     public GetEffectivePermissionsOnEntitySQL(BaseJdbcDAO dao, ControlEntity entity, Person[] persons) {
-	super(dao, ControlEntity.class);
+	super(dao);
 	this.entity = entity;
 	this.persons = persons;
     }

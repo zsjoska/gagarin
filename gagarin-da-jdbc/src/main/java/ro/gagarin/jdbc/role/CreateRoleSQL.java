@@ -21,7 +21,7 @@ public class CreateRoleSQL extends UpdateQuery {
     private final UserRole role;
 
     public CreateRoleSQL(BaseJdbcDAO dao, UserRole role) {
-	super(dao, UserRole.class);
+	super(dao);
 	this.role = role;
 
     }

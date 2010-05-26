@@ -14,7 +14,7 @@ public class DeleteGroupSQL extends UpdateQuery {
     private final Group group;
 
     public DeleteGroupSQL(BaseJdbcDAO dao, Group group) {
-	super(dao, Group.class);
+	super(dao);
 	this.group = group;
     }
 

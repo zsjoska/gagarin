@@ -18,7 +18,7 @@ public class SelectGroupByNameSQL extends SelectQuery {
     private DBGroup group;
 
     public SelectGroupByNameSQL(BaseJdbcDAO dao, String groupname) {
-	super(dao, Group.class);
+	super(dao);
 	this.groupname = groupname;
     }
 

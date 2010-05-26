@@ -18,7 +18,7 @@ public class AssignRoleToPersonSQL extends UpdateQuery {
     private final ControlEntity object;
 
     public AssignRoleToPersonSQL(BaseJdbcDAO dao, UserRole role, Person person, ControlEntity object) {
-	super(dao, role.getClass());
+	super(dao);
 	this.role = role;
 	this.person = person;
 	this.object = object;

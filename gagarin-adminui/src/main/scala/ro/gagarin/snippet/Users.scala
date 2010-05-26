@@ -38,11 +38,6 @@ class Users {
          "name" -> text("", (x) => user.setName(x)),
          "email" -> text("", (x) => user.setEmail(x)),
          "phone" -> text("", (x) => user.setPhone(x)),
-         "role" -> select(roles,Empty,(x) => {
-           val role = new WsUserRole()
-           role.setId(x.toLong)
-           user.setRole(role)
-         }),
          "submit" -> submit("Create", () => {
         	 	userService.createUser(user)
                 redirectTo("/users") 
@@ -59,7 +54,6 @@ class Users {
          "name" -> text( if(user.getName() != null) user.getName() else "", (x) => user.setName(x)),
          "email" -> text( if(user.getEmail()!=null) user.getEmail else "", (x) => user.setEmail(x)),
          "phone" -> text( if(user.getPhone() != null) user.getPhone() else "", (x) => user.setPhone(x)),
-         "role" -> text( if(user.getRole().getRoleName() != null) user.getRole().getRoleName() else "", (x) => user.setRole(wsSession.user.getRole())),
          "submit" -> submit("Update", () => {
         	 	// getUserService.createUser(wsSessionId.session, user)
                 redirectTo("/users") 

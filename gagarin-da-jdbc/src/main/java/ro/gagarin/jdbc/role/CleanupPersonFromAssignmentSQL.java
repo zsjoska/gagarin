@@ -9,11 +9,17 @@ import ro.gagarin.jdbc.BaseJdbcDAO;
 import ro.gagarin.jdbc.UpdateQuery;
 import ro.gagarin.utils.FieldValidator;
 
-public class RemovePersonFromAssignmentSQL extends UpdateQuery {
+/**
+ * Removes all references to this person from the assignment table
+ * 
+ * @author ZsJoska
+ * 
+ */
+public class CleanupPersonFromAssignmentSQL extends UpdateQuery {
 
     private final Person person;
 
-    public RemovePersonFromAssignmentSQL(BaseJdbcDAO dao, Person person) {
+    public CleanupPersonFromAssignmentSQL(BaseJdbcDAO dao, Person person) {
 	super(dao, person.getClass());
 	this.person = person;
     }

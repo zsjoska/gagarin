@@ -9,11 +9,17 @@ import ro.gagarin.jdbc.UpdateQuery;
 import ro.gagarin.user.Group;
 import ro.gagarin.utils.FieldValidator;
 
-public class DeleteGroupAssignmentsSQL extends UpdateQuery {
+/**
+ * Removes all references to this group from the UserGroupAssignment table
+ * 
+ * @author ZsJoska
+ * 
+ */
+public class CleanupGroupAssignmentsSQL extends UpdateQuery {
 
     private final Group group;
 
-    public DeleteGroupAssignmentsSQL(BaseJdbcDAO dao, Group group) {
+    public CleanupGroupAssignmentsSQL(BaseJdbcDAO dao, Group group) {
 	super(dao, group.getClass());
 	this.group = group;
     }

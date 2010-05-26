@@ -1,7 +1,6 @@
 package ro.gagarin.manager;
 
 import ro.gagarin.ControlEntity;
-import ro.gagarin.Person;
 import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.LoginRequiredException;
@@ -40,28 +39,5 @@ public interface AuthorizationManager extends BaseManager {
 
     void addCreatorPermission(ControlEntity ce, Session session) throws OperationException, DataConstraintException,
 	    ItemNotFoundException;
-
-    /**
-     * Removes all references to this control entity from the assignment table
-     * 
-     * @param session
-     * 
-     * @param ce
-     * @throws OperationException
-     * @throws DataConstraintException
-     */
-    void removeControlEntityFromAssignment(Session session, ControlEntity ce) throws OperationException,
-	    DataConstraintException;
-
-    /**
-     * Removes all references to this person from the assignment table
-     * 
-     * @param session
-     * 
-     * @param person
-     * @throws OperationException
-     * @throws DataConstraintException
-     */
-    void removePersonFromAssignment(Session session, Person person) throws OperationException, DataConstraintException;
 
 }

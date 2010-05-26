@@ -48,8 +48,5 @@ public class DeleteGroupOP extends WebserviceOperation {
     @Override
     protected void execute(Session session) throws ExceptionBase {
 	userDAO.deleteGroup(this.group);
-	userDAO.deleteGroupAssignments(this.group);
-	getAuthorizationManager().removeControlEntityFromAssignment(getSession(), group);
-	getAuthorizationManager().removePersonFromAssignment(session, group);
     }
 }

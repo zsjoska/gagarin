@@ -9,11 +9,17 @@ import ro.gagarin.jdbc.BaseJdbcDAO;
 import ro.gagarin.jdbc.UpdateQuery;
 import ro.gagarin.utils.FieldValidator;
 
-public class RemoveControlEntityFromAssignmentSQL extends UpdateQuery {
+/**
+ * Removes all references to this control entity from the assignment table
+ * 
+ * @author ZsJoska
+ * 
+ */
+public class CleanupControlEntityFromAssignmentSQL extends UpdateQuery {
 
     private final ControlEntity ce;
 
-    public RemoveControlEntityFromAssignmentSQL(BaseJdbcDAO dao, ControlEntity ce) {
+    public CleanupControlEntityFromAssignmentSQL(BaseJdbcDAO dao, ControlEntity ce) {
 	super(dao, ce.getClass());
 	this.ce = ce;
     }

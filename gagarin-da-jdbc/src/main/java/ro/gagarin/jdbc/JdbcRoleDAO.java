@@ -21,6 +21,8 @@ import ro.gagarin.jdbc.objects.DBUserPermission;
 import ro.gagarin.jdbc.objects.DBUserRole;
 import ro.gagarin.jdbc.role.AssignPermissionToRoleSQL;
 import ro.gagarin.jdbc.role.AssignRoleToPersonSQL;
+import ro.gagarin.jdbc.role.CleanupRolePermissionAssignments;
+import ro.gagarin.jdbc.role.CleanupRolePersonAssignments;
 import ro.gagarin.jdbc.role.CreatePermissionSQL;
 import ro.gagarin.jdbc.role.CreateRoleSQL;
 import ro.gagarin.jdbc.role.DeletePermissionSQL;
@@ -31,8 +33,6 @@ import ro.gagarin.jdbc.role.GetEffectivePermissionsOnEntitySQL;
 import ro.gagarin.jdbc.role.GetEffectivePermissionsSQL;
 import ro.gagarin.jdbc.role.GetPermissionRolesSQL;
 import ro.gagarin.jdbc.role.GetRolePermissionsSQL;
-import ro.gagarin.jdbc.role.RemoveControlEntityFromAssignmentSQL;
-import ro.gagarin.jdbc.role.RemovePersonFromAssignmentSQL;
 import ro.gagarin.jdbc.role.SelectPermissionByNameSQL;
 import ro.gagarin.jdbc.role.SelectPermissionsSQL;
 import ro.gagarin.jdbc.role.SelectRoleByNameSQL;
@@ -138,6 +138,8 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 	try {
 
 	    new DeleteRoleSQL(this, r).execute();
+	    new CleanupRolePermissionAssignments(this, r).execute();
+	    new CleanupRolePersonAssignments(this, r).execute();
 
 	    APPLOG.action(AppLogAction.DELETE, UserRole.class, r.getRoleName(), AppLog.SUCCESS);
 	    APPLOG.info("Role " + r.getRoleName() + " was deleted");
@@ -290,17 +292,6 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 	    }
 	}
 	return newMap;
-    }
-
-    @Override
-    public void removeControlEntityFromAssignment(ControlEntity ce) throws OperationException, DataConstraintException {
-	new RemoveControlEntityFromAssignmentSQL(this, ce).execute();
-
-    }
-
-    @Override
-    public void removePersonFromAssignment(Person person) throws OperationException, DataConstraintException {
-	new RemovePersonFromAssignmentSQL(this, person).execute();
     }
 
     @Override

@@ -11,6 +11,7 @@ import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.BaseJdbcDAO;
 import ro.gagarin.jdbc.SelectQuery;
+import ro.gagarin.utils.FieldValidator;
 
 public class GetControlEntityByIdAndCategorySQL extends SelectQuery {
 
@@ -37,7 +38,10 @@ public class GetControlEntityByIdAndCategorySQL extends SelectQuery {
 
     @Override
     protected void checkInput() throws FieldRequiredException {
-	// TODO:(2) Check input
+	FieldValidator.requireLongValue(id, "id");
+	if (cat == null) {
+	    throw new FieldRequiredException("category", Object.class);
+	}
     }
 
     @Override

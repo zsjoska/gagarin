@@ -111,10 +111,12 @@ public class FieldValidator {
 	}.check();
     }
 
+    // TODO:(1) Rename to requireStringValue
     public static String checkStringValue(String str, String name, int maxLength) throws FieldRequiredException {
 	return checkStringValue(str, name, maxLength, true);
     }
 
+    // TODO:(1) Rename to requireStringValue
     public static String checkStringValue(String str, String name, int maxLength, boolean trim)
 	    throws FieldRequiredException {
 
@@ -145,6 +147,12 @@ public class FieldValidator {
 	    } else if (Long.class.equals(declaringClass)) {
 		requireLongField(field.getName(), object);
 	    }
+	}
+    }
+
+    public static void requireLongValue(Long id, String string) throws FieldRequiredException {
+	if (id == null || id <= 0) {
+	    throw new FieldRequiredException(string, Object.class);
 	}
     }
 }

@@ -31,12 +31,12 @@
 						</configuration>
 					</execution>
 					<execution>
-						<id>UserService</id>
+						<id>Admin</id>
 						<goals>
 							<goal>wsgen</goal>
 						</goals>
 						<configuration>
-							<sei>ro.gagarin.ws.UserService</sei>
+							<sei>ro.gagarin.ws.Admin</sei>
 							<genWsdl>true</genWsdl>
 							<keep>true</keep>
 							<verbose>false</verbose>

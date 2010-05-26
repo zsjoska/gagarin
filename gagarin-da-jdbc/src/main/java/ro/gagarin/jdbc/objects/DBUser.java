@@ -1,19 +1,22 @@
 package ro.gagarin.jdbc.objects;
 
-import ro.gagarin.user.BaseEntity;
+import ro.gagarin.BaseEntity;
+import ro.gagarin.PersonTypesEnum;
+import ro.gagarin.user.AuthenticationType;
 import ro.gagarin.user.User;
-import ro.gagarin.user.UserRole;
+import ro.gagarin.user.UserStatus;
+import ro.gagarin.utils.ConversionUtils;
 
 public class DBUser extends BaseEntity implements User {
-
-    private static final long serialVersionUID = 4384614532696714328L;
 
     private String username;
     private String password;
     private String name;
     private String email;
     private String phone;
-    private UserRole role;
+    private AuthenticationType authentication;
+    private UserStatus status;
+    private Long created;
 
     public DBUser(User user) {
 	super.setId(user.getId());
@@ -22,7 +25,9 @@ public class DBUser extends BaseEntity implements User {
 	this.name = user.getName();
 	this.email = user.getEmail();
 	this.phone = user.getPhone();
-	this.role = user.getRole();
+	this.authentication = user.getAuthentication();
+	this.status = user.getStatus();
+	this.created = user.getCreated();
     }
 
     public DBUser() {
@@ -56,14 +61,6 @@ public class DBUser extends BaseEntity implements User {
 	return super.getId();
     }
 
-    public void setRole(UserRole role) {
-	this.role = role;
-    }
-
-    public UserRole getRole() {
-	return role;
-    }
-
     public String getEmail() {
 	return email;
     }
@@ -78,5 +75,47 @@ public class DBUser extends BaseEntity implements User {
 
     public void setPhone(String phone) {
 	this.phone = phone;
+    }
+
+    @Override
+    public String toString() {
+	return ConversionUtils.user2String(this);
+    }
+
+    @Override
+    public AuthenticationType getAuthentication() {
+	return this.authentication;
+    }
+
+    @Override
+    public UserStatus getStatus() {
+	return this.status;
+    }
+
+    public void setAuthentication(AuthenticationType authentication) {
+	this.authentication = authentication;
+    }
+
+    public void setStatus(UserStatus status) {
+	this.status = status;
+    }
+
+    @Override
+    public Long getCreated() {
+	return this.created;
+    }
+
+    public void setCreated(Long created) {
+	this.created = created;
+    }
+
+    @Override
+    public PersonTypesEnum getType() {
+	return PersonTypesEnum.USER;
+    }
+
+    @Override
+    public String getTitle() {
+	return this.getUsername();
     }
 }

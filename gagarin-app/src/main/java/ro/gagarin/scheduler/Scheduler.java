@@ -14,7 +14,9 @@ public class Scheduler {
     private HashMap<Long, SimpleJob> allJobStore = new HashMap<Long, SimpleJob>();
 
     public Scheduler() {
-	// TODO: make this value configurable
+	// TODO:(2) make this value configurable
+	// but could be tricky since the scheduler is required for ConfigFile
+	// init
 	this(10);
     }
 

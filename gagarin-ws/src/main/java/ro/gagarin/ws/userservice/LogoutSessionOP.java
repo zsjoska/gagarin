@@ -1,37 +1,41 @@
 package ro.gagarin.ws.userservice;
 
-import ro.gagarin.AuthorizationManager;
-import ro.gagarin.SessionManager;
+import ro.gagarin.BaseControlEntity;
 import ro.gagarin.exceptions.ExceptionBase;
+import ro.gagarin.manager.AuthorizationManager;
+import ro.gagarin.manager.SessionManager;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
-import ro.gagarin.utils.Statistic;
+import ro.gagarin.utils.FieldValidator;
 import ro.gagarin.ws.executor.WebserviceOperation;
 
 public class LogoutSessionOP extends WebserviceOperation {
-    private static final Statistic STAT_LOGOUT_SESSION = new Statistic("ws.userserservice.logoutSession");
-
     private final String otherSessionId;
-
-    private AuthorizationManager authManager;
 
     private SessionManager sessionManager;
 
     public LogoutSessionOP(String sessionId, String otherSessionId) {
-	super(sessionId, LogoutSessionOP.class);
+	super(sessionId);
 	this.otherSessionId = otherSessionId;
     }
 
     @Override
-    public void prepareManagers(Session session) throws ExceptionBase {
-	authManager = FACTORY.getAuthorizationManager(getSession());
+    protected void checkInput(Session session) throws ExceptionBase {
+	FieldValidator.requireStringValue(otherSessionId, "otherSessionId", 50);
+    }
+
+    @Override
+    protected void checkPermissions(Session session, AuthorizationManager authMgr) throws ExceptionBase {
+	authMgr.requiresPermission(session, BaseControlEntity.getAdminEntity(), PermissionEnum.ADMIN);
+    }
+
+    @Override
+    protected void prepareManagers(Session session) throws ExceptionBase {
 	sessionManager = FACTORY.getSessionManager();
     }
 
     @Override
-    public void execute() throws ExceptionBase {
-
-	authManager.requiresPermission(getSession(), PermissionEnum.ADMIN_OPERATION);
+    protected void execute(Session session) throws ExceptionBase {
 
 	sessionManager.logout(otherSessionId);
 	getApplog().info("LogoutSession " + otherSessionId);
@@ -39,13 +43,7 @@ public class LogoutSessionOP extends WebserviceOperation {
     }
 
     @Override
-    public Statistic getStatistic() {
-	return STAT_LOGOUT_SESSION;
-    }
-
-    @Override
     public String toString() {
 	return "LogoutSessionOP [otherSessionId=" + otherSessionId + "]";
     }
-
 }

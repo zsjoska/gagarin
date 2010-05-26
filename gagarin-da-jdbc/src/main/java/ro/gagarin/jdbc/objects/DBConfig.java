@@ -1,8 +1,9 @@
 package ro.gagarin.jdbc.objects;
 
+import ro.gagarin.BaseEntity;
 import ro.gagarin.config.ConfigEntry;
 import ro.gagarin.config.ConfigScope;
-import ro.gagarin.user.BaseEntity;
+import ro.gagarin.utils.ConversionUtils;
 
 public class DBConfig extends BaseEntity implements ConfigEntry {
 
@@ -43,5 +44,10 @@ public class DBConfig extends BaseEntity implements ConfigEntry {
 
     public void setConfigScope(ConfigScope configScope) {
 	this.configScope = configScope;
+    }
+
+    @Override
+    public String toString() {
+	return ConversionUtils.config2String(this);
     }
 }

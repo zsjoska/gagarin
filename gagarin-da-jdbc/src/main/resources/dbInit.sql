@@ -28,12 +28,39 @@ CREATE TABLE Users
 	email varchar(50), 
 	phone varchar(50), 
 	password varchar(50), 
-	roleid bigint NOT NULL,
+	status int NOT NULL,
+	authentication varchar(20),
+	created bigint NOT NULL,	
 	
 	CONSTRAINT PK_USERS_id PRIMARY KEY (id),
 	CONSTRAINT UK_USERS_userName UNIQUE (userName)
 )
 --END
+
+--CHECK: Groups
+SELECT * FROM Groups
+--CREATE:
+CREATE TABLE Groups 
+(
+	id bigint, 
+	name varchar(50) NOT NULL, 
+	description varchar(500), 
+	
+	CONSTRAINT PK_GROUPS_id PRIMARY KEY (id),
+	CONSTRAINT UK_GROUPS_name UNIQUE (name)
+)
+--END
+
+--CHECK: UserGroupAssignment
+SELECT * FROM UserGroupAssignment
+--CREATE:
+CREATE TABLE UserGroupAssignment 
+(
+	user_id bigint  NOT NULL, 
+	group_id bigint  NOT NULL
+)
+--END
+
 
 --CHECK: UserRoles
 SELECT * FROM UserRoles
@@ -84,3 +111,17 @@ CREATE TABLE Config
 	CONSTRAINT UK_CONFIG_configName UNIQUE (configName)
 )
 --END
+
+--CHECK: RolePersonAssignment
+SELECT * FROM RolePersonAssignment
+--CREATE:
+CREATE TABLE RolePersonAssignment 
+(
+	role_id bigint  NOT NULL, 
+	person_id bigint  NOT NULL,
+	person_type varchar(50) NOT NULL,
+	object_id bigint  NOT NULL,
+	object_type varchar(50) NOT NULL
+)
+--END
+

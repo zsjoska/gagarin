@@ -5,11 +5,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.BaseJdbcDAO;
 import ro.gagarin.jdbc.SelectQuery;
 import ro.gagarin.jdbc.objects.DBUser;
-import ro.gagarin.jdbc.objects.DBUserRole;
+import ro.gagarin.jdbc.util.JDBCRSConvert;
 import ro.gagarin.user.User;
 
 public class SelectUsersSQL extends SelectQuery {
@@ -17,23 +18,14 @@ public class SelectUsersSQL extends SelectQuery {
     private ArrayList<User> users = null;
 
     public SelectUsersSQL(BaseJdbcDAO dao) {
-	super(dao, User.class);
+	super(dao);
     }
 
     @Override
     protected void useResult(ResultSet rs) throws SQLException {
 	this.users = new ArrayList<User>();
 	while (rs.next()) {
-	    DBUser user = new DBUser();
-	    user.setId(rs.getLong("id"));
-	    user.setName(rs.getString("name"));
-	    user.setEmail(rs.getString("email"));
-	    user.setPhone(rs.getString("phone"));
-	    user.setUsername(rs.getString("userName"));
-	    DBUserRole role = new DBUserRole();
-	    role.setId(rs.getLong("roleid"));
-	    role.setRoleName(rs.getString("roleName"));
-	    user.setRole(role);
+	    DBUser user = JDBCRSConvert.convertRSToUser(rs);
 	    users.add(user);
 	}
     }
@@ -44,14 +36,19 @@ public class SelectUsersSQL extends SelectQuery {
 
     @Override
     protected String getSQL() {
-	return "SELECT Users.id, username, name, email, phone, password, roleid, roleName "
-		+ "FROM Users INNER JOIN UserRoles ON Users.roleid = UserRoles.id";
+	return "SELECT Users.id, username, name, email, phone, password, authentication, status, created "
+		+ "FROM Users";
     }
 
     public static ArrayList<User> execute(BaseJdbcDAO dao) throws OperationException {
 	SelectUsersSQL q = new SelectUsersSQL(dao);
 	q.execute();
 	return q.users;
+    }
+
+    @Override
+    protected void checkInput() throws FieldRequiredException {
+	// no input
     }
 
 }

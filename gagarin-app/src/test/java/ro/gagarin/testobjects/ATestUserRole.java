@@ -1,11 +1,10 @@
 package ro.gagarin.testobjects;
 
-import ro.gagarin.user.BaseEntity;
+import ro.gagarin.BaseEntity;
 import ro.gagarin.user.UserRole;
+import ro.gagarin.utils.ConversionUtils;
 
 public class ATestUserRole extends BaseEntity implements UserRole {
-
-    private static final long serialVersionUID = -566662791080932756L;
 
     private String roleName;
 
@@ -23,5 +22,10 @@ public class ATestUserRole extends BaseEntity implements UserRole {
 
     public String getRoleName() {
 	return roleName;
+    }
+
+    @Override
+    public String toString() {
+	return ConversionUtils.role2String(this);
     }
 }

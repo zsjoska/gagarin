@@ -1,6 +1,8 @@
 package ro.gagarin.user;
 
-public interface User {
+import ro.gagarin.Person;
+
+public interface User extends Person {
 
     public abstract String getUsername();
 
@@ -14,6 +16,10 @@ public interface User {
 
     public abstract Long getId();
 
-    public abstract UserRole getRole();
+    public abstract UserStatus getStatus();
+
+    public abstract AuthenticationType getAuthentication();
+
+    public abstract Long getCreated();
 
 }

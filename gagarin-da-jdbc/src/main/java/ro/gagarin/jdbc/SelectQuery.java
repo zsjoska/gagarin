@@ -11,22 +11,23 @@ import ro.gagarin.utils.Statistic;
 
 public abstract class SelectQuery extends UpdateQuery {
 
-    public SelectQuery(BaseJdbcDAO dao, Class<?> objectClass) {
-	super(dao, objectClass);
+    public SelectQuery(BaseJdbcDAO dao) {
+	super(dao);
     }
 
-    protected void doExecute(PreparedStatement stmnt) {
+    protected void doExecute(PreparedStatement stmnt) throws OperationException {
 	ResultSet result;
 	try {
 	    result = stmnt.executeQuery();
 	    useResult(result);
+	    result.close();
 	} catch (SQLException e) {
-
+	    throw new OperationException(ErrorCodes.DB_OP_ERROR, e);
 	}
     }
 
     @Override
-    public void execute() throws OperationException {
+    public int execute() throws OperationException {
 	try {
 	    long start = System.currentTimeMillis();
 	    super.execute();
@@ -35,6 +36,7 @@ public abstract class SelectQuery extends UpdateQuery {
 	    // select queries shouldn't throw DataConstraintException
 	    throw new OperationException(ErrorCodes.DB_OP_ERROR, e);
 	}
+	return 0;
     };
 
     protected abstract void useResult(ResultSet rs) throws SQLException;

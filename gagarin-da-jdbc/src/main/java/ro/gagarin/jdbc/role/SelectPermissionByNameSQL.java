@@ -4,11 +4,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.BaseJdbcDAO;
 import ro.gagarin.jdbc.SelectQuery;
 import ro.gagarin.jdbc.objects.DBUserPermission;
 import ro.gagarin.user.UserPermission;
+import ro.gagarin.utils.FieldValidator;
 
 public class SelectPermissionByNameSQL extends SelectQuery {
 
@@ -16,7 +18,7 @@ public class SelectPermissionByNameSQL extends SelectQuery {
     private final String permissionName;
 
     public SelectPermissionByNameSQL(BaseJdbcDAO dao, String permissionName) {
-	super(dao, UserPermission.class);
+	super(dao);
 	this.permissionName = permissionName;
     }
 
@@ -43,5 +45,10 @@ public class SelectPermissionByNameSQL extends SelectQuery {
     @Override
     protected String getSQL() {
 	return "SELECT id, permissionName FROM UserPermissions WHERE permissionName = ?";
+    }
+
+    @Override
+    protected void checkInput() throws FieldRequiredException {
+	FieldValidator.requireStringValue(this.permissionName, "permissionName", 50);
     }
 }

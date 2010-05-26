@@ -6,12 +6,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.BaseJdbcDAO;
 import ro.gagarin.jdbc.SelectQuery;
 import ro.gagarin.jdbc.objects.DBUserPermission;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
+import ro.gagarin.utils.FieldValidator;
 
 public class SubstractRolesPermissions extends SelectQuery {
 
@@ -20,7 +22,7 @@ public class SubstractRolesPermissions extends SelectQuery {
     private List<UserPermission> perm = null;
 
     public SubstractRolesPermissions(BaseJdbcDAO dao, UserRole main, UserRole sub) {
-	super(dao, UserRole.class);
+	super(dao);
 	this.main = main;
 	this.sub = sub;
     }
@@ -54,6 +56,12 @@ public class SubstractRolesPermissions extends SelectQuery {
 	SubstractRolesPermissions q = new SubstractRolesPermissions(dao, main, sub);
 	q.execute();
 	return q.perm;
+    }
+
+    @Override
+    protected void checkInput() throws FieldRequiredException {
+	FieldValidator.requireLongField("id", main);
+	FieldValidator.requireLongField("id", sub);
     }
 
 }

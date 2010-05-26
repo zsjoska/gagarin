@@ -1,11 +1,10 @@
 package ro.gagarin.jdbc.objects;
 
-import ro.gagarin.user.BaseEntity;
+import ro.gagarin.BaseEntity;
 import ro.gagarin.user.UserRole;
+import ro.gagarin.utils.ConversionUtils;
 
 public class DBUserRole extends BaseEntity implements UserRole {
-
-    private static final long serialVersionUID = -566662791080932756L;
 
     private String roleName;
 
@@ -27,6 +26,6 @@ public class DBUserRole extends BaseEntity implements UserRole {
 
     @Override
     public String toString() {
-	return "DBUserRole [roleName=" + roleName + ", getId()=" + getId() + "]";
+	return ConversionUtils.role2String(this);
     }
 }

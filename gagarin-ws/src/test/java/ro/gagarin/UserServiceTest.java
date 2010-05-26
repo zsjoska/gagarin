@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.junit.BeforeClass;
@@ -16,15 +17,21 @@ import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.exceptions.PermissionDeniedException;
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.testutil.TUtil;
+import ro.gagarin.user.Group;
 import ro.gagarin.user.PermissionEnum;
+import ro.gagarin.user.User;
 import ro.gagarin.user.UserRole;
+import ro.gagarin.user.UserStatus;
 import ro.gagarin.utils.Statistic;
+import ro.gagarin.ws.Admin;
 import ro.gagarin.ws.Authentication;
-import ro.gagarin.ws.UserService;
 import ro.gagarin.ws.executor.WSException;
 import ro.gagarin.ws.objects.WSConfig;
+import ro.gagarin.ws.objects.WSControlEntity;
 import ro.gagarin.ws.objects.WSExportedSession;
+import ro.gagarin.ws.objects.WSGroup;
 import ro.gagarin.ws.objects.WSLogEntry;
+import ro.gagarin.ws.objects.WSPerson;
 import ro.gagarin.ws.objects.WSStatistic;
 import ro.gagarin.ws.objects.WSUser;
 import ro.gagarin.ws.objects.WSUserPermission;
@@ -37,11 +44,11 @@ public class UserServiceTest {
     private static Authentication authentication = new Authentication();
     private static String username = "_User_" + System.currentTimeMillis();
     private static String session;
-    private static UserService userService = new UserService();
+    private static Admin userService = new Admin();
 
     @BeforeClass
     public static void startup() throws WSException {
-	session = authentication.createSession(null, null);
+	session = authentication.createSession(null, "TEST");
 	authentication.login(session, "admin", "password", null);
     }
 
@@ -49,22 +56,21 @@ public class UserServiceTest {
     public void testCreateUser() throws SessionNotFoundException, PermissionDeniedException, OperationException,
 	    LoginRequiredException, WSException {
 
-	UserService userService = new UserService();
-
-	List<WSUserRole> roles = userService.getRoleList(session);
+	Admin userService = new Admin();
 
 	WSUser user = new WSUser();
 	user.setUsername(username);
 	user.setPassword("password");
-	user.setRole(roles.get(0));
+	user.setStatus(UserStatus.ACTIVE);
 
 	userService.createUser(session, user);
+	// TODO:(4) check created user
     }
 
     @Test
     public void testCreateRole() throws WSException, SessionNotFoundException, OperationException,
 	    PermissionDeniedException, LoginRequiredException {
-	UserService userService = new UserService();
+	Admin userService = new Admin();
 
 	// check that ID is enough
 	List<WSUserPermission> allPermissionList = userService.getAllPermissionList(session);
@@ -72,8 +78,8 @@ public class UserServiceTest {
 	permByID.setId(allPermissionList.get(0).getId());
 
 	// check that name is enough
-	WSUserPermission[] perms = new WSUserPermission[] { new WSUserPermission(PermissionEnum.DELETE_ROLE.name()),
-		new WSUserPermission(PermissionEnum.CREATE_ROLE.name()), permByID };
+	WSUserPermission[] perms = new WSUserPermission[] { new WSUserPermission(PermissionEnum.DELETE.name()),
+		new WSUserPermission(PermissionEnum.CREATE.name()), permByID };
 
 	UserRole role = userService.createRoleWithPermissions(session, "WONDER_ROLE", perms);
 	List<WSUserPermission> rolePermissions = userService.getRolePermissions(session, new WSUserRole("WONDER_ROLE"));
@@ -102,7 +108,7 @@ public class UserServiceTest {
     @Test
     public void testListUsers() throws WSException {
 
-	UserService userService = new UserService();
+	Admin userService = new Admin();
 
 	List<WSUser> users = userService.getUsers(session);
 	for (WSUser wsUser : users) {
@@ -124,7 +130,7 @@ public class UserServiceTest {
 
     @Test
     public void getLogEntries() throws Exception {
-	// TODO: add some more meaningful test
+	// TODO:(4) add some more meaningful test
 	List<WSLogEntry> logEntries = userService.getLogEntries(session, null);
 	// for (WSLogEntry wsLogEntry : logEntries) {
 	// System.out.println(wsLogEntry);
@@ -143,7 +149,7 @@ public class UserServiceTest {
 
     @Test
     public void getStatistics() throws Exception {
-	Statistic testStat = new Statistic("_test_statistic_");
+	Statistic testStat = Statistic.getByName("_test_statistic_");
 	testStat.addDuration(10);
 	testStat.addDuration(7);
 	testStat.addDuration(20);
@@ -158,5 +164,63 @@ public class UserServiceTest {
 	assertEquals(40, gotStat.getTotalDuration());
 	assertEquals(20, gotStat.getMax());
 	assertEquals(3, gotStat.getMin());
+    }
+
+    @Test
+    public void testGetControlEntityCategories() throws Exception {
+	List<ControlEntityCategory> controlEntityCategories = userService.getControlEntityCategories(session);
+	assertEquals(ControlEntityCategory.values().length, controlEntityCategories.size());
+	for (int i = 0; i < ControlEntityCategory.values().length; i++) {
+	    assertEquals(ControlEntityCategory.values()[i], controlEntityCategories.get(i));
+	}
+    }
+
+    @Test
+    public void testGetControlEntityListForCategoryAdmin() throws Exception {
+	List<WSControlEntity> controlEntityListForCategory = userService.getControlEntityListForCategory(session,
+		"ADMIN");
+	assertEquals("We expect only one ADMIN entity", 1, controlEntityListForCategory.size());
+	WSControlEntity wsControlEntity = controlEntityListForCategory.get(0);
+	assertEquals(BaseControlEntity.getAdminEntity().getName(), wsControlEntity.getName());
+	assertEquals(BaseControlEntity.getAdminEntity().getId(), wsControlEntity.getId());
+	assertEquals(BaseControlEntity.getAdminEntity().getCategory(), wsControlEntity.getCategory());
+    }
+
+    @Test
+    public void testGetControlEntityListForCategoryGroups() throws Exception {
+	List<WSControlEntity> controlEntityListForCategory = userService.getControlEntityListForCategory(session,
+		"GROUP");
+	List<WSGroup> groups = userService.getGroups(session);
+	assertEquals(groups.size(), controlEntityListForCategory.size());
+	HashMap<Long, Group> groupSet = new HashMap<Long, Group>();
+	for (Group group : groups) {
+	    groupSet.put(group.getId(), group);
+	}
+
+	for (WSControlEntity wsControlEntity : controlEntityListForCategory) {
+	    Group group = groupSet.get(wsControlEntity.getId());
+	    assertEquals(group.getName(), wsControlEntity.getName());
+	}
+    }
+
+    @Test
+    public void testgetPersons() throws Exception {
+	List<WSPerson> persons = userService.getPersons(session);
+	List<WSUser> users = userService.getUsers(session);
+	List<WSGroup> groups = userService.getGroups(session);
+
+	assertEquals(users.size() + groups.size(), persons.size());
+	HashMap<Long, Person> personsMap = new HashMap<Long, Person>();
+	for (User user : users) {
+	    personsMap.put(user.getId(), user);
+	}
+	for (Group group : groups) {
+	    personsMap.put(group.getId(), group);
+	}
+	for (WSPerson wsPerson : persons) {
+	    Person person = personsMap.get(wsPerson.getId());
+	    assertEquals(person.getType(), wsPerson.getType());
+	    assertEquals(person.getTitle(), wsPerson.getTitle());
+	}
     }
 }

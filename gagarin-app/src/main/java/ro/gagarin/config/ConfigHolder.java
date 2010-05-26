@@ -58,6 +58,17 @@ public class ConfigHolder {
 	}
     }
 
+    public boolean getBoolean(Config config) {
+	String strValue = getString(config);
+	try {
+	    boolean value = Boolean.valueOf(strValue);
+	    return value;
+	} catch (RuntimeException e) {
+	    LOG.error(config.name() + "=" + strValue + " is invalid", e);
+	    throw e;
+	}
+    }
+
     public boolean isDefined(Config config) {
 	return configuration.get(config.ordinal()) != null;
     }

@@ -78,7 +78,7 @@
 						<configuration>
 							<wsdlUrls>
 								<wsdlUrl>http://localhost:8080/gagarin-ws/ws/AuthService?wsdl</wsdlUrl>
-								<wsdlUrl>http://localhost:8080/gagarin-ws/ws/UserService?wsdl</wsdlUrl>
+								<wsdlUrl>http://localhost:8080/gagarin-ws/ws/Admin?wsdl</wsdlUrl>
 							</wsdlUrls>
 							<packageName>ro.gagarin</packageName>
 							<verbose>false</verbose>

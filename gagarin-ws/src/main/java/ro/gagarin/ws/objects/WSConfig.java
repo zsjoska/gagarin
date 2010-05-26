@@ -1,8 +1,9 @@
 package ro.gagarin.ws.objects;
 
+import ro.gagarin.BaseEntity;
 import ro.gagarin.config.ConfigEntry;
 import ro.gagarin.config.ConfigScope;
-import ro.gagarin.user.BaseEntity;
+import ro.gagarin.utils.ConversionUtils;
 
 public class WSConfig extends BaseEntity implements ConfigEntry {
 
@@ -47,8 +48,6 @@ public class WSConfig extends BaseEntity implements ConfigEntry {
 
     @Override
     public String toString() {
-	return "WSConfig [configName=" + configName + ", configScope=" + configScope + ", configValue=" + configValue
-		+ ", getId()=" + getId() + "]";
+	return ConversionUtils.config2String(this);
     }
-
 }

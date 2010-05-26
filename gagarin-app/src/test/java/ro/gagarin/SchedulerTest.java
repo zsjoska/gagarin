@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import org.junit.Test;
 
 import ro.gagarin.log.AppLog;
+import ro.gagarin.manager.ManagerFactory;
+import ro.gagarin.manager.ScheduleManager;
 import ro.gagarin.scheduler.JobController;
 import ro.gagarin.scheduler.ScheduledJob;
 import ro.gagarin.scheduler.Scheduler;
@@ -94,16 +96,14 @@ public class SchedulerTest {
 	ScheduleManager scheduleManager = FACTORY.getScheduleManager();
 	final ArrayList<Long> xTimes = new ArrayList<Long>();
 	long start = System.currentTimeMillis();
-	scheduleManager.scheduleJob(new ScheduledJob("testMultipleExecutionManager", 10, 35) {
+	scheduleManager.scheduleJob(new ScheduledJob("testMultipleExecutionManager", 10, 55) {
 	    @Override
 	    public void execute(Session session, AppLog log, JobController jc) {
 		xTimes.add(System.currentTimeMillis());
 	    }
 	}, false);
 	Thread.sleep(100);
-	for (Long l : xTimes) {
-	}
-	assertEquals("Only 2 times of execution was expected", 3, xTimes.size());
+	assertEquals("Only 2 times of execution was expected", 2, xTimes.size());
     }
 
     @Test

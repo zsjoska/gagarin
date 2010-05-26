@@ -1,11 +1,10 @@
 package ro.gagarin.ws.objects;
 
-import ro.gagarin.user.BaseEntity;
+import ro.gagarin.BaseEntity;
 import ro.gagarin.user.UserPermission;
+import ro.gagarin.utils.ConversionUtils;
 
 public class WSUserPermission extends BaseEntity implements UserPermission {
-
-    private static final long serialVersionUID = 1399484581989890777L;
 
     private String permissionName;
 
@@ -31,7 +30,6 @@ public class WSUserPermission extends BaseEntity implements UserPermission {
 
     @Override
     public String toString() {
-	return "WSUserPermission [permissionName=" + permissionName + ", getId()=" + getId() + "]";
+	return ConversionUtils.perm2String(this);
     }
-
 }

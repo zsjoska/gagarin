@@ -3,61 +3,67 @@
  */
 package ro.gagarin.ws.authentication;
 
-import ro.gagarin.SessionManager;
+import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.log.AppLog;
+import ro.gagarin.manager.AuthorizationManager;
+import ro.gagarin.manager.SessionManager;
 import ro.gagarin.session.Session;
-import ro.gagarin.utils.Statistic;
+import ro.gagarin.utils.FieldValidator;
 import ro.gagarin.ws.executor.WebserviceOperation;
 
 public class CreateSessionOP extends WebserviceOperation {
 
-    private static final Statistic STAT_CREATE_SESSION = new Statistic("ws.auth.createSession");
-
-    private final String language;
-    private final String reason;
+    private String language;
+    private String reason;
 
     private String sessionString = null;
     private SessionManager sessionManager;
 
     public CreateSessionOP(String language, String reason) {
-	super(false, null, CreateSessionOP.class);
+	super(false, null);
 	this.language = language;
 	this.reason = reason;
     }
 
     @Override
-    public void prepareManagers(Session session) {
+    protected void prepareSession() throws SessionNotFoundException {
+	// just to override the default: do nothing
+    }
+
+    @Override
+    protected void checkInput(Session session) throws ExceptionBase {
+	// TODO:(2) custom check for language
+	this.reason = FieldValidator.requireStringValue(reason, "reason", 20);
+    }
+
+    @Override
+    protected void checkPermissions(Session session, AuthorizationManager authMgr) throws ExceptionBase {
+	// nothing to check
+    }
+
+    @Override
+    protected void prepareManagers(Session session) {
 	sessionManager = FACTORY.getSessionManager();
     }
 
     @Override
-    public void execute() {
+    protected void execute(Session _) {
 	String language = this.language;
 	if (language == null) {
-	    // TODO move this to the configuration
+	    // TODO:(3) move this to the configuration
 	    language = "en_us";
 	}
 
 	Session session = sessionManager.createSession(language, reason, FACTORY);
 	this.sessionString = session.getSessionString();
-	AppLog log = FACTORY.getLogManager(session, CreateSessionOP.class);
+	AppLog log = FACTORY.getLogManager().getLoggingSession(session, CreateSessionOP.class);
 	log.info("Session created:" + session.getSessionString() + "; reason:" + session.getReason() + "; language:"
 		+ session.getLanguage());
     }
 
-    @Override
-    public Statistic getStatistic() {
-	return STAT_CREATE_SESSION;
-    }
-
     public String getSessionString() {
 	return this.sessionString;
-    }
-
-    @Override
-    public void prepareSession() throws SessionNotFoundException {
-	// just to override the default: do nothing
     }
 
     @Override
@@ -69,4 +75,5 @@ public class CreateSessionOP extends WebserviceOperation {
     public String toString() {
 	return "CreateSessionOP [language=" + language + ", reason=" + reason + "]";
     }
+
 }

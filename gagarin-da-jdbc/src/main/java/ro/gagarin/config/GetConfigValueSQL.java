@@ -4,9 +4,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.BaseJdbcDAO;
 import ro.gagarin.jdbc.SelectQuery;
+import ro.gagarin.utils.FieldValidator;
 
 public class GetConfigValueSQL extends SelectQuery {
 
@@ -14,7 +16,7 @@ public class GetConfigValueSQL extends SelectQuery {
     private String lastUpdateTime = null;
 
     public GetConfigValueSQL(BaseJdbcDAO dao, String config) {
-	super(dao, null);
+	super(dao);
 	this.config = config;
     }
 
@@ -40,5 +42,10 @@ public class GetConfigValueSQL extends SelectQuery {
 	GetConfigValueSQL q = new GetConfigValueSQL(dao, lastUpdateTime);
 	q.execute();
 	return q.lastUpdateTime;
+    }
+
+    @Override
+    protected void checkInput() throws FieldRequiredException {
+	FieldValidator.requireStringValue(this.config, "config", 100);
     }
 }

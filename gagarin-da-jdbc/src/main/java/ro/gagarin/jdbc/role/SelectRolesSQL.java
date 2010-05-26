@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.BaseJdbcDAO;
 import ro.gagarin.jdbc.SelectQuery;
@@ -17,7 +18,7 @@ public class SelectRolesSQL extends SelectQuery {
     private List<UserRole> roles = null;
 
     public SelectRolesSQL(BaseJdbcDAO dao) {
-	super(dao, UserRole.class);
+	super(dao);
     }
 
     @Override
@@ -44,5 +45,11 @@ public class SelectRolesSQL extends SelectQuery {
 	SelectRolesSQL q = new SelectRolesSQL(dao);
 	q.execute();
 	return q.roles;
+    }
+
+    @Override
+    protected void checkInput() throws FieldRequiredException {
+	// no input
+
     }
 }

@@ -3,35 +3,38 @@
  */
 package ro.gagarin.ws.authentication;
 
-import ro.gagarin.SessionManager;
 import ro.gagarin.exceptions.ExceptionBase;
+import ro.gagarin.manager.AuthorizationManager;
+import ro.gagarin.manager.SessionManager;
 import ro.gagarin.session.Session;
-import ro.gagarin.utils.Statistic;
 import ro.gagarin.ws.executor.WebserviceOperation;
 
 public class LogoutOP extends WebserviceOperation {
 
-    private static final Statistic STAT_LOGOUT = new Statistic("ws.auth.logout");
     private SessionManager sessionManager;
 
     public LogoutOP(String sessionId) {
-	super(false, sessionId, LogoutOP.class);
+	super(false, sessionId);
     }
 
     @Override
-    public void prepareManagers(Session session) throws ExceptionBase {
+    protected void checkInput(Session session) throws ExceptionBase {
+	// no input
+    }
+
+    @Override
+    protected void checkPermissions(Session session, AuthorizationManager authMgr) throws ExceptionBase {
+	// no special permission required
+    }
+
+    @Override
+    protected void prepareManagers(Session session) throws ExceptionBase {
 	sessionManager = FACTORY.getSessionManager();
     }
 
     @Override
-    public void execute() throws ExceptionBase {
+    protected void execute(Session session) throws ExceptionBase {
 	sessionManager.logout(getSessionString());
 	getApplog().info("Logout completed");
     }
-
-    @Override
-    public Statistic getStatistic() {
-	return STAT_LOGOUT;
-    }
-
 }

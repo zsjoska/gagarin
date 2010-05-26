@@ -77,5 +77,4 @@ public class WSStatistic {
 	return "WSStatistic [count=" + count + ", max=" + max + ", min=" + min + ", name=" + name + ", totalDuration="
 		+ totalDuration + "]";
     }
-
 }

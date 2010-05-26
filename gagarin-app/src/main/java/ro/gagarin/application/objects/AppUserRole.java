@@ -1,11 +1,11 @@
 package ro.gagarin.application.objects;
 
-import ro.gagarin.user.BaseEntity;
+import ro.gagarin.BaseEntity;
 import ro.gagarin.user.UserRole;
+import ro.gagarin.utils.ConversionUtils;
 
 public class AppUserRole extends BaseEntity implements UserRole {
 
-    private static final long serialVersionUID = -6987428071490775538L;
     private String roleName;
 
     public AppUserRole(UserRole role) {
@@ -23,5 +23,10 @@ public class AppUserRole extends BaseEntity implements UserRole {
 
     public void setRoleName(String roleName) {
 	this.roleName = roleName;
+    }
+
+    @Override
+    public String toString() {
+	return ConversionUtils.role2String(this);
     }
 }

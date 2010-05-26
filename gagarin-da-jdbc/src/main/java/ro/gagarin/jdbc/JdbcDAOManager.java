@@ -1,24 +1,15 @@
 package ro.gagarin.jdbc;
 
-import ro.gagarin.ConfigDAO;
-import ro.gagarin.DAOManager;
-import ro.gagarin.JdbcConfigDAO;
-import ro.gagarin.RoleDAO;
-import ro.gagarin.UserDAO;
+import ro.gagarin.dao.ConfigDAO;
+import ro.gagarin.dao.DAOManager;
+import ro.gagarin.dao.RoleDAO;
+import ro.gagarin.dao.UserDAO;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.session.Session;
 
 public class JdbcDAOManager implements DAOManager {
 
-    private static JdbcDAOManager INSTANCE = null;
-
-    private JdbcDAOManager() {
-    }
-
-    public static synchronized JdbcDAOManager getInstance() {
-	if (INSTANCE == null)
-	    INSTANCE = new JdbcDAOManager();
-	return INSTANCE;
+    public JdbcDAOManager() {
     }
 
     public RoleDAO getRoleDAO(Session session) throws OperationException {
@@ -40,4 +31,8 @@ public class JdbcDAOManager implements DAOManager {
 	return new JdbcConfigDAO(session);
     }
 
+    @Override
+    public void initializeManager() {
+	// nothing to initialize here
+    }
 }

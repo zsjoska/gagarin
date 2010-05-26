@@ -7,12 +7,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.BaseJdbcDAO;
 import ro.gagarin.jdbc.SelectQuery;
 import ro.gagarin.jdbc.objects.DBUser;
-import ro.gagarin.jdbc.objects.DBUserRole;
+import ro.gagarin.jdbc.util.JDBCRSConvert;
 import ro.gagarin.user.User;
+import ro.gagarin.utils.FieldValidator;
 
 /**
  * @author zsido
@@ -21,11 +23,11 @@ import ro.gagarin.user.User;
 public class SelectUserByUsernamePasswordSQL extends SelectQuery {
 
     private DBUser user;
-    private final String username;
+    private String username;
     private final String password;
 
     public SelectUserByUsernamePasswordSQL(BaseJdbcDAO dao, String username, String password) {
-	super(dao, User.class);
+	super(dao);
 	this.username = username;
 	this.password = password;
     }
@@ -33,14 +35,7 @@ public class SelectUserByUsernamePasswordSQL extends SelectQuery {
     @Override
     protected void useResult(ResultSet rs) throws SQLException {
 	if (rs.next()) {
-	    user = new DBUser();
-	    user.setId(rs.getLong("id"));
-	    user.setUsername(rs.getString("username"));
-	    user.setName(rs.getString("name"));
-	    DBUserRole role = new DBUserRole();
-	    role.setId(rs.getLong("roleid"));
-	    role.setRoleName(rs.getString("roleName"));
-	    user.setRole(role);
+	    user = JDBCRSConvert.convertRSToUser(rs);
 	} else {
 	    user = null;
 	}
@@ -56,9 +51,8 @@ public class SelectUserByUsernamePasswordSQL extends SelectQuery {
 
     @Override
     protected String getSQL() {
-	return "SELECT Users.id, username, name, password, roleid, roleName "
-		+ "FROM Users INNER JOIN UserRoles ON Users.roleid = UserRoles.id "
-		+ "WHERE username = ? and password = ?";
+	return "SELECT Users.id, username, name, password, email, phone, authentication, status, created "
+		+ "FROM Users WHERE username = ? and password = ?";
     }
 
     public static User execute(BaseJdbcDAO dao, String username, String password) throws OperationException {
@@ -67,6 +61,12 @@ public class SelectUserByUsernamePasswordSQL extends SelectQuery {
 	select.execute();
 	return select.user;
 
+    }
+
+    @Override
+    protected void checkInput() throws FieldRequiredException {
+	this.username = FieldValidator.requireStringValue(username, "username", 50);
+	FieldValidator.requireStringValue(password, "password", 50, false);
     }
 
 }

@@ -4,11 +4,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.BaseJdbcDAO;
 import ro.gagarin.jdbc.SelectQuery;
 import ro.gagarin.jdbc.objects.DBUserRole;
 import ro.gagarin.user.UserRole;
+import ro.gagarin.utils.FieldValidator;
 
 public class SelectRoleByNameSQL extends SelectQuery {
 
@@ -16,7 +18,7 @@ public class SelectRoleByNameSQL extends SelectQuery {
     private DBUserRole role = null;
 
     public SelectRoleByNameSQL(BaseJdbcDAO dao, String roleName) {
-	super(dao, UserRole.class);
+	super(dao);
 	this.roleName = roleName;
     }
 
@@ -43,6 +45,11 @@ public class SelectRoleByNameSQL extends SelectQuery {
 	SelectRoleByNameSQL q = new SelectRoleByNameSQL(dao, roleName);
 	q.execute();
 	return q.role;
+    }
+
+    @Override
+    protected void checkInput() throws FieldRequiredException {
+	FieldValidator.requireStringValue(this.roleName, "roleName", 50);
     }
 
 }

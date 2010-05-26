@@ -1,8 +1,9 @@
 package ro.gagarin.application.objects;
 
+import ro.gagarin.BaseEntity;
 import ro.gagarin.log.LogEntry;
-import ro.gagarin.user.BaseEntity;
 import ro.gagarin.user.User;
+import ro.gagarin.utils.ConversionUtils;
 
 public class AppLogEntry extends BaseEntity implements LogEntry {
 
@@ -60,6 +61,11 @@ public class AppLogEntry extends BaseEntity implements LogEntry {
 
     public void setUser(User user) {
 	this.user = user;
+    }
+
+    @Override
+    public String toString() {
+	return ConversionUtils.logEntry2String(this);
     }
 
 }

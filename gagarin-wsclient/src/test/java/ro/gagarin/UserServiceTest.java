@@ -16,7 +16,7 @@ public class UserServiceTest {
     public static void setUp() throws WSException_Exception {
 	AuthenticationService service = new AuthenticationService();
 	api = service.getAuthenticationPort();
-	session = api.createSession(null, null);
+	session = api.createSession(null, "TEST");
 	api.login(session, "admin", "password", null);
     }
 
@@ -27,15 +27,13 @@ public class UserServiceTest {
 
     @Test
     public void createUser() throws WSException_Exception {
-	UserServiceService service = new UserServiceService();
-	UserService userAPI = service.getUserServicePort();
-	WsUserRole role = new WsUserRole();
-	role.setRoleName("ADMIN_ROLE");
+	AdminService service = new AdminService();
+	Admin userAPI = service.getAdminPort();
 
 	WsUser user = new WsUser();
 	user.setUsername("wsUser1" + System.nanoTime());
 	user.setPassword("wspassword1");
-	user.setRole(role);
+	user.setStatus(UserStatus.ACTIVE);
 	userAPI.createUser(session, user);
     }
 }

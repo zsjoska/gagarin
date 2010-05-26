@@ -4,16 +4,23 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import ro.gagarin.ControlEntity;
 import ro.gagarin.config.ConfigEntry;
 import ro.gagarin.log.LogEntry;
 import ro.gagarin.session.Session;
+import ro.gagarin.user.Group;
+import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.utils.Statistic;
 import ro.gagarin.ws.objects.WSConfig;
+import ro.gagarin.ws.objects.WSControlEntity;
+import ro.gagarin.ws.objects.WSEffectivePermission;
 import ro.gagarin.ws.objects.WSExportedSession;
+import ro.gagarin.ws.objects.WSGroup;
 import ro.gagarin.ws.objects.WSLogEntry;
 import ro.gagarin.ws.objects.WSStatistic;
 import ro.gagarin.ws.objects.WSUser;
@@ -21,17 +28,17 @@ import ro.gagarin.ws.objects.WSUserPermission;
 
 public class WSConversionUtils {
 
-    public static List<WSUserPermission> convertToWSPermissionList(Collection<UserPermission> allPermissions) {
+    public static List<WSUserPermission> convertToWSPermissionList(Collection<UserPermission> permissions) {
 	ArrayList<WSUserPermission> list = new ArrayList<WSUserPermission>();
-	for (UserPermission userPermission : allPermissions) {
+	for (UserPermission userPermission : permissions) {
 	    list.add(new WSUserPermission(userPermission));
 	}
 	return list;
     }
 
-    public static List<WSUser> convertToWSUserList(Collection<User> allUsers) {
+    public static List<WSUser> convertToWSUserList(Collection<User> users) {
 	ArrayList<WSUser> list = new ArrayList<WSUser>();
-	for (User user : allUsers) {
+	for (User user : users) {
 	    list.add(new WSUser(user));
 	}
 	return list;
@@ -46,6 +53,9 @@ public class WSConversionUtils {
     }
 
     public static List<WSLogEntry> toWSLogList(Collection<LogEntry> logValues) {
+
+	// TODO:(2) A ConcurrentModificationException was seen here!
+
 	ArrayList<WSLogEntry> list = new ArrayList<WSLogEntry>();
 	for (LogEntry logEntry : logValues) {
 	    list.add(new WSLogEntry(logEntry));
@@ -75,6 +85,34 @@ public class WSConversionUtils {
 	    list.add(new WSStatistic(stat));
 	}
 	return list;
+    }
+
+    public static List<WSGroup> convertToGroupList(List<Group> groups) {
+	ArrayList<WSGroup> list = new ArrayList<WSGroup>();
+	for (Group group : groups) {
+	    list.add(new WSGroup(group));
+	}
+	return list;
+    }
+
+    public static List<WSEffectivePermission> convertEffectivePermissions(
+	    Map<ControlEntity, Set<PermissionEnum>> effPerms) {
+
+	List<WSEffectivePermission> permList = new ArrayList<WSEffectivePermission>();
+
+	for (ControlEntity ce : effPerms.keySet()) {
+	    Set<PermissionEnum> set = effPerms.get(ce);
+	    permList.add(new WSEffectivePermission(ce, new ArrayList<PermissionEnum>(set)));
+	}
+	return permList;
+    }
+
+    public static List<WSControlEntity> convertEntityList(List<ControlEntity> ceList) {
+	List<WSControlEntity> aa = new ArrayList<WSControlEntity>(ceList.size());
+	for (ControlEntity controlEntity : ceList) {
+	    aa.add(new WSControlEntity(controlEntity));
+	}
+	return aa;
     }
 
 }

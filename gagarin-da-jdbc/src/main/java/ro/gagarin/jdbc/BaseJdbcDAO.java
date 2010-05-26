@@ -10,12 +10,13 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import ro.gagarin.BaseDAO;
-import ro.gagarin.ConfigurationManager;
 import ro.gagarin.config.Config;
+import ro.gagarin.dao.BaseDAO;
+import ro.gagarin.dao.DAOManager;
 import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.log.AppLog;
+import ro.gagarin.manager.ConfigurationManager;
 import ro.gagarin.session.Session;
 import ro.gagarin.utils.Triple;
 
@@ -37,6 +38,7 @@ public class BaseJdbcDAO implements BaseDAO {
     private boolean rollback = false;
     private final Session session;
     private boolean changePending = false;
+    private final DAOManager daoManager;
 
     public BaseJdbcDAO(Session session) throws OperationException {
 	if (session == null) {
@@ -51,7 +53,8 @@ public class BaseJdbcDAO implements BaseDAO {
 	this.session = session;
 
 	CFG = session.getManagerFactory().getConfigurationManager();
-	APPLOG = session.getManagerFactory().getLogManager(session, getClass());
+	APPLOG = session.getManagerFactory().getLogManager().getLoggingSession(session, getClass());
+	daoManager = session.getManagerFactory().getDAOManager();
 
 	checkLoadDBDriver(CFG);
 
@@ -81,7 +84,7 @@ public class BaseJdbcDAO implements BaseDAO {
 	String user = cfgManager.getString(Config.JDBC_DB_USER);
 	String password = cfgManager.getString(Config.JDBC_DB_PASSWORD);
 	try {
-	    // TODO: use a connection pool for the DB
+	    // TODO:(3) use a connection pool for the DB
 	    Connection connection = DriverManager.getConnection(url, user, password);
 	    connection.setAutoCommit(false);
 	    return connection;
@@ -93,8 +96,12 @@ public class BaseJdbcDAO implements BaseDAO {
     }
 
     protected Connection getConnection() throws OperationException {
-	if (this.rollback)
+	if (this.rollback) {
 	    throw new OperationException(ErrorCodes.DB_OP_ERROR, "The connection was marked to rollback");
+	}
+	if (this.connection == null) {
+	    throw new OperationException(ErrorCodes.DB_OP_ERROR, "The DAO session was released.");
+	}
 	return this.connection;
     }
 
@@ -119,54 +126,59 @@ public class BaseJdbcDAO implements BaseDAO {
 	Connection tmpConn = this.connection;
 	this.connection = null;
 
-	if (this.ourConnection) {
+	if (!this.ourConnection) {
+	    // not our connection, nothing to do
+	    return;
+	}
 
-	    OperationException exception = null;
-	    if (!this.rollback) {
+	OperationException exception = null;
+	if (!this.rollback) {
 
-		if (!this.changePending) {
-		    try {
-			tmpConn.close();
-			APPLOG.debug("Released connection " + tmpConn.toString());
-			return;
-		    } catch (SQLException e) {
-			exception = new OperationException(ErrorCodes.DB_OP_ERROR, e);
-			APPLOG.error("Exception on connection close", e);
-		    }
-		} else {
+	    if (!this.changePending) {
+		try {
+		    // TODO:(3) dig more here why this commit is required:
+		    // AppInit + gerAdminUser + sessionClose = exception
+		    tmpConn.commit();
+		    tmpConn.close();
+		    APPLOG.debug("Released connection " + tmpConn.toString());
+		    return;
+		} catch (SQLException e) {
+		    exception = new OperationException(ErrorCodes.DB_OP_ERROR, e);
+		    APPLOG.error("Exception on connection close", e);
+		}
+	    } else {
 
-		    APPLOG.debug("Committing connection " + tmpConn.toString());
-		    try {
-			tmpConn.commit();
-			tmpConn.close();
-			APPLOG.debug("Released connection " + tmpConn.toString());
-			return;
-		    } catch (SQLException e) {
-			// this is the most relevant exception, so keep it then
-			// throw it
-			exception = new OperationException(ErrorCodes.DB_OP_ERROR, e);
-			APPLOG.error("Exception on commit:", e);
-		    }
+		APPLOG.debug("Committing connection " + tmpConn.toString());
+		try {
+		    tmpConn.commit();
+		    tmpConn.close();
+		    APPLOG.debug("Released connection " + tmpConn.toString());
+		    return;
+		} catch (SQLException e) {
+		    // this is the most relevant exception, so keep it then
+		    // throw it
+		    exception = new OperationException(ErrorCodes.DB_OP_ERROR, e);
+		    APPLOG.error("Exception on commit:", e);
 		}
 	    }
-	    APPLOG.debug("Rollback connection " + tmpConn.toString());
-	    try {
-		tmpConn.rollback();
-	    } catch (SQLException e) {
-		if (exception == null)
-		    exception = new OperationException(ErrorCodes.DB_OP_ERROR, e);
-		APPLOG.error("Exception on rollback:", e);
-	    }
-	    try {
-		tmpConn.close();
-	    } catch (SQLException e) {
-		if (exception == null)
-		    exception = new OperationException(ErrorCodes.DB_OP_ERROR, e);
-		APPLOG.error("Exception on close:", e);
-	    }
-	    if (exception != null)
-		throw exception;
 	}
+	APPLOG.debug("Rollback connection " + tmpConn.toString());
+	try {
+	    tmpConn.rollback();
+	} catch (SQLException e) {
+	    if (exception == null)
+		exception = new OperationException(ErrorCodes.DB_OP_ERROR, e);
+	    APPLOG.error("Exception on rollback:", e);
+	}
+	try {
+	    tmpConn.close();
+	} catch (SQLException e) {
+	    if (exception == null)
+		exception = new OperationException(ErrorCodes.DB_OP_ERROR, e);
+	    APPLOG.error("Exception on close:", e);
+	}
+	if (exception != null)
+	    throw exception;
 
     }
 
@@ -283,5 +295,9 @@ public class BaseJdbcDAO implements BaseDAO {
 
     public void markChangePending() {
 	this.changePending = true;
+    }
+
+    protected DAOManager getDaoManager() {
+	return daoManager;
     }
 }

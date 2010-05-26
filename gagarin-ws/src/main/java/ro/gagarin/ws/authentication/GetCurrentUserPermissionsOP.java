@@ -1,47 +1,42 @@
 package ro.gagarin.ws.authentication;
 
-import java.util.Set;
+import java.util.List;
 
-import ro.gagarin.RoleDAO;
 import ro.gagarin.exceptions.ExceptionBase;
+import ro.gagarin.manager.AuthorizationManager;
 import ro.gagarin.session.Session;
-import ro.gagarin.user.UserPermission;
-import ro.gagarin.utils.Statistic;
 import ro.gagarin.ws.executor.WebserviceOperation;
-import ro.gagarin.ws.objects.WSUserPermission;
+import ro.gagarin.ws.objects.WSEffectivePermission;
 import ro.gagarin.ws.util.WSConversionUtils;
 
 public class GetCurrentUserPermissionsOP extends WebserviceOperation {
 
-    private static final Statistic STAT_CURRENT_USER_PERMISSION = new Statistic("ws.auth.getCurrentUserPermissions");
-    private Set<WSUserPermission> currentUserPermissions;
-    private RoleDAO roleDAO;
+    private List<WSEffectivePermission> permissions;
 
     public GetCurrentUserPermissionsOP(String sessionId) {
-	super(sessionId, GetCurrentUserPermissionsOP.class);
+	super(sessionId);
     }
 
     @Override
-    public void prepareManagers(Session session) throws ExceptionBase {
-	roleDAO = FACTORY.getDAOManager().getRoleDAO(getSession());
-
+    protected void checkInput(Session session) throws ExceptionBase {
+	// no input
     }
 
     @Override
-    public void execute() throws ExceptionBase {
-
-	Set<UserPermission> perm = roleDAO.getRolePermissions(getSession().getUser().getRole());
-	this.currentUserPermissions = WSConversionUtils.convertToWSPermissionSet(perm);
-
+    protected void checkPermissions(Session session, AuthorizationManager authMgr) throws ExceptionBase {
+	// no special permissions required
     }
 
     @Override
-    public Statistic getStatistic() {
-	return STAT_CURRENT_USER_PERMISSION;
+    protected void prepareManagers(Session session) throws ExceptionBase {
     }
 
-    public Set<WSUserPermission> getCurrentUserPermissions() {
-	return currentUserPermissions;
+    @Override
+    protected void execute(Session session) throws ExceptionBase {
+	this.permissions = WSConversionUtils.convertEffectivePermissions(session.getEffectivePermissions());
     }
 
+    public List<WSEffectivePermission> getCurrentUserPermissions() {
+	return this.permissions;
+    }
 }

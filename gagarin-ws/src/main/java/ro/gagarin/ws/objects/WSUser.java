@@ -1,19 +1,22 @@
 package ro.gagarin.ws.objects;
 
-import ro.gagarin.user.BaseEntity;
+import ro.gagarin.BaseEntity;
+import ro.gagarin.PersonTypesEnum;
+import ro.gagarin.user.AuthenticationType;
 import ro.gagarin.user.User;
-import ro.gagarin.user.UserRole;
+import ro.gagarin.user.UserStatus;
+import ro.gagarin.utils.ConversionUtils;
 
 public class WSUser extends BaseEntity implements User {
-
-    private static final long serialVersionUID = -9100286781286495864L;
 
     private String username;
     private String name;
     private String email;
     private String phone;
     private String password;
-    private WSUserRole role;
+    private AuthenticationType authentication;
+    private UserStatus status;
+    private Long created;
 
     public WSUser() {
     }
@@ -22,10 +25,12 @@ public class WSUser extends BaseEntity implements User {
 	this.setId(user.getId());
 	this.setName(user.getName());
 	this.setPassword(user.getPassword());
-	this.setRole(user.getRole());
 	this.setUsername(user.getUsername());
 	this.setEmail(user.getEmail());
 	this.setPhone(user.getPhone());
+	this.authentication = user.getAuthentication();
+	this.status = user.getStatus();
+	this.created = user.getCreated();
     }
 
     @Override
@@ -36,11 +41,6 @@ public class WSUser extends BaseEntity implements User {
     @Override
     public String getPassword() {
 	return this.password;
-    }
-
-    @Override
-    public WSUserRole getRole() {
-	return this.role;
     }
 
     @Override
@@ -58,15 +58,6 @@ public class WSUser extends BaseEntity implements User {
 
     public void setPassword(String password) {
 	this.password = password;
-    }
-
-    public void setRole(WSUserRole role) {
-	this.role = role;
-    }
-
-    public void setRole(UserRole role) {
-	if (role != null)
-	    this.role = new WSUserRole(role);
     }
 
     public String getEmail() {
@@ -87,8 +78,43 @@ public class WSUser extends BaseEntity implements User {
 
     @Override
     public String toString() {
-	return "WSUser [email=" + email + ", name=" + name + ", password=" + password + ", phone=" + phone + ", role="
-		+ role + ", username=" + username + ", getId()=" + getId() + "]";
+	return ConversionUtils.user2String(this);
     }
 
+    @Override
+    public AuthenticationType getAuthentication() {
+	return this.authentication;
+    }
+
+    @Override
+    public UserStatus getStatus() {
+	return this.status;
+    }
+
+    public void setAuthentication(AuthenticationType authentication) {
+	this.authentication = authentication;
+    }
+
+    public void setStatus(UserStatus status) {
+	this.status = status;
+    }
+
+    @Override
+    public Long getCreated() {
+	return this.created;
+    }
+
+    public void setCreated(Long created) {
+	this.created = created;
+    }
+
+    @Override
+    public PersonTypesEnum getType() {
+	return PersonTypesEnum.USER;
+    }
+
+    @Override
+    public String getTitle() {
+	return getUsername();
+    }
 }

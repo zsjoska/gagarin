@@ -20,6 +20,22 @@ public class FieldRequiredException extends DataConstraintException {
 	LOG.error(message);
     }
 
+    public FieldRequiredException(String fieldname, String className) {
+	super(ErrorCodes.FIELD_REQUIRED);
+	this.message = "Field " + fieldname + " is required for " + className;
+	this.fieldName = fieldname;
+	this.className = className;
+	LOG.error(message);
+    }
+
+    public FieldRequiredException(String fieldname) {
+	super(ErrorCodes.FIELD_REQUIRED);
+	this.message = "Field " + fieldname + " is required";
+	this.fieldName = fieldname;
+	this.className = "unknown";
+	LOG.error(message);
+    }
+
     public FieldRequiredException(String fieldname, Class<?> pojoClass, Exception e) {
 	super(ErrorCodes.FIELD_REQUIRED, e);
 	this.message = "Field " + fieldname + " is required for " + pojoClass.getName();

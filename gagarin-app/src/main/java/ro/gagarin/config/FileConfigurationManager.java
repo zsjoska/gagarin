@@ -11,15 +11,16 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
-import ro.gagarin.ConfigurationManager;
 import ro.gagarin.application.objects.AppConfig;
 import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.OperationException;
+import ro.gagarin.manager.ConfigurationManager;
 
 public class FileConfigurationManager extends ConfigHolder implements ConfigurationManager, FileChangeObserver {
 
     private static final String CONFIG_DIR = "CONFIG_DIR";
     private static final transient Logger LOG = Logger.getLogger(FileConfigurationManager.class);
+
     private static final ConfigurationManager INSTANCE = new FileConfigurationManager();
     private File cfgDir;
     private MonitoredFile cfgFile;
@@ -139,5 +140,9 @@ public class FileConfigurationManager extends ConfigHolder implements Configurat
 	    LOG.error("IOException while closing the file " + file.getName(), e);
 	}
 
+    }
+
+    @Override
+    public void initializeManager() {
     }
 }

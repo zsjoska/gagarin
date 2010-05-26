@@ -1,53 +1,51 @@
 package ro.gagarin.ws.userservice;
 
-import ro.gagarin.AuthorizationManager;
-import ro.gagarin.RoleDAO;
+import ro.gagarin.BaseControlEntity;
+import ro.gagarin.dao.RoleDAO;
 import ro.gagarin.exceptions.ExceptionBase;
+import ro.gagarin.manager.AuthorizationManager;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
-import ro.gagarin.utils.Statistic;
+import ro.gagarin.utils.FieldValidator;
 import ro.gagarin.ws.executor.WebserviceOperation;
 import ro.gagarin.ws.objects.WSUserRole;
 
 public class DeleteRoleOP extends WebserviceOperation {
 
-    private static final Statistic STAT_DELETE_ROLE = new Statistic("ws.userserservice.deleteRole");
-
     private final WSUserRole role;
 
-    private AuthorizationManager authManager;
+    private RoleDAO roleDAO;
 
-    private RoleDAO roleManager;
-
+    // TODO:(2) delete also by role name
     public DeleteRoleOP(String sessionId, WSUserRole role) {
-	super(sessionId, DeleteRoleOP.class);
+	super(sessionId);
 	this.role = role;
     }
 
     @Override
-    public void prepareManagers(Session session) throws ExceptionBase {
-	authManager = FACTORY.getAuthorizationManager(getSession());
-	roleManager = FACTORY.getDAOManager().getRoleDAO(getSession());
+    protected void checkInput(Session session) throws ExceptionBase {
+	FieldValidator.requireLongField("id", role);
     }
 
     @Override
-    public void execute() throws ExceptionBase {
+    protected void checkPermissions(Session session, AuthorizationManager authMgr) throws ExceptionBase {
+	authMgr.requiresPermission(getSession(), BaseControlEntity.getAdminEntity(), PermissionEnum.DELETE);
+    }
 
-	// the session user must have LIST_PERMISSIONS permission
-	authManager.requiresPermission(getSession(), PermissionEnum.DELETE_ROLE);
+    @Override
+    protected void prepareManagers(Session session) throws ExceptionBase {
+	roleDAO = FACTORY.getDAOManager().getRoleDAO(getSession());
+    }
 
-	roleManager.deleteRole(role);
+    @Override
+    protected void execute(Session session) throws ExceptionBase {
+
+	roleDAO.deleteRole(role);
 	getApplog().info("Role " + role.getRoleName() + " deleted");
-    }
-
-    @Override
-    public Statistic getStatistic() {
-	return STAT_DELETE_ROLE;
     }
 
     @Override
     public String toString() {
 	return "DeleteRoleOP [role=" + role + "]";
     }
-
 }

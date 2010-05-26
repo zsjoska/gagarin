@@ -1,12 +1,10 @@
 package ro.gagarin.scheduler;
 
+import ro.gagarin.BaseEntity;
 import ro.gagarin.log.AppLog;
 import ro.gagarin.session.Session;
-import ro.gagarin.user.BaseEntity;
 
 public abstract class ScheduledJob extends BaseEntity {
-
-    protected static final long serialVersionUID = -238225317665931596L;
 
     private final String name;
     private final long initialWait;

@@ -12,6 +12,12 @@ public class WSException extends Exception {
     private ErrorCodes errorCode;
     private String detail;
 
+    public WSException(ErrorCodes e, String detail) {
+	super(e + ": " + detail);
+	this.errorCode = e;
+	this.detail = detail;
+    }
+
     public WSException(ExceptionBase e) {
 	super(e);
 	errorCode = e.getErrorCode();

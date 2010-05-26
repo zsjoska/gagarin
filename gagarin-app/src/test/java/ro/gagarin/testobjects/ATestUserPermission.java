@@ -1,11 +1,10 @@
 package ro.gagarin.testobjects;
 
-import ro.gagarin.user.BaseEntity;
+import ro.gagarin.BaseEntity;
 import ro.gagarin.user.UserPermission;
+import ro.gagarin.utils.ConversionUtils;
 
 public class ATestUserPermission extends BaseEntity implements UserPermission {
-
-    private static final long serialVersionUID = 1399484581989890777L;
 
     private String permissionName;
 
@@ -25,4 +24,8 @@ public class ATestUserPermission extends BaseEntity implements UserPermission {
 	return permissionName;
     }
 
+    @Override
+    public String toString() {
+	return ConversionUtils.perm2String(this);
+    }
 }

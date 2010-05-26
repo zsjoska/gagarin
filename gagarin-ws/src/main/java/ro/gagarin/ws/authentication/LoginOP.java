@@ -5,45 +5,52 @@ package ro.gagarin.ws.authentication;
 
 import java.util.Arrays;
 
-import ro.gagarin.AuthenticationManager;
 import ro.gagarin.exceptions.ExceptionBase;
+import ro.gagarin.manager.AuthenticationManager;
+import ro.gagarin.manager.AuthorizationManager;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.User;
-import ro.gagarin.utils.Statistic;
+import ro.gagarin.utils.FieldValidator;
 import ro.gagarin.ws.executor.WebserviceOperation;
 import ro.gagarin.ws.objects.WSUser;
 
 public class LoginOP extends WebserviceOperation {
 
-    private static final Statistic STAT_LOGIN = new Statistic("ws.auth.login");
     private WSUser loginUser = null;
-    private final String username;
-    private final String password;
+    private String username;
+    private String password;
     private final String[] extra;
     private AuthenticationManager authenticationManager;
 
     public LoginOP(String sessionID, String username, String password, String[] extra) {
-	super(false, sessionID, LoginOP.class);
+	super(false, sessionID);
 	this.username = username;
 	this.password = password;
 	this.extra = extra;
     }
 
     @Override
-    public void prepareManagers(Session session) throws ExceptionBase {
+    protected void checkInput(Session session) throws ExceptionBase {
+	this.username = FieldValidator.requireStringValue(username, "username", 50);
+	this.password = FieldValidator.requireStringValue(password, "password", 50);
+    }
+
+    @Override
+    protected void checkPermissions(Session session, AuthorizationManager authMgr) throws ExceptionBase {
+	// no special permission required
+    }
+
+    @Override
+    protected void prepareManagers(Session session) throws ExceptionBase {
 	authenticationManager = FACTORY.getAuthenticationManager(getSession());
     }
 
     @Override
-    public void execute() throws ExceptionBase {
+    protected void execute(Session session) throws ExceptionBase {
 	User user = authenticationManager.userLogin(username, password, extra);
+	// TODO:(2) check if user is active
 	this.loginUser = new WSUser(user);
 	getApplog().info("Login completed for user " + this.username);
-    }
-
-    @Override
-    public Statistic getStatistic() {
-	return STAT_LOGIN;
     }
 
     public WSUser getLoginUser() {

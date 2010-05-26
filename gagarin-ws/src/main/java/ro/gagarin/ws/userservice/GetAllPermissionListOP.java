@@ -2,48 +2,44 @@ package ro.gagarin.ws.userservice;
 
 import java.util.List;
 
-import ro.gagarin.AuthorizationManager;
-import ro.gagarin.RoleDAO;
+import ro.gagarin.dao.RoleDAO;
 import ro.gagarin.exceptions.ExceptionBase;
+import ro.gagarin.manager.AuthorizationManager;
 import ro.gagarin.session.Session;
-import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.UserPermission;
-import ro.gagarin.utils.Statistic;
 import ro.gagarin.ws.executor.WebserviceOperation;
 import ro.gagarin.ws.objects.WSUserPermission;
 import ro.gagarin.ws.util.WSConversionUtils;
 
 public class GetAllPermissionListOP extends WebserviceOperation {
 
-    private static final Statistic STAT_CREATE_ROLE_WITH_PERMISSIONS = new Statistic(
-	    "ws.userserservice.getAllPermissionListOP");
     private List<WSUserPermission> permissionlist;
-    private AuthorizationManager authManager;
-    private RoleDAO roleManager;
+    private RoleDAO roleDAO;
 
     public GetAllPermissionListOP(String sessionId) {
-	super(sessionId, GetAllPermissionListOP.class);
+	super(sessionId);
     }
 
     @Override
-    public void prepareManagers(Session session) throws ExceptionBase {
-	authManager = FACTORY.getAuthorizationManager(getSession());
-	roleManager = FACTORY.getDAOManager().getRoleDAO(getSession());
+    protected void checkInput(Session session) throws ExceptionBase {
+	// no input
     }
 
     @Override
-    public void execute() throws ExceptionBase {
+    protected void checkPermissions(Session session, AuthorizationManager authMgr) throws ExceptionBase {
+	// no permission requirement
+    }
 
-	// the session user must have LIST_PERMISSIONS permission
-	authManager.requiresPermission(getSession(), PermissionEnum.LIST_PERMISSIONS);
+    @Override
+    protected void prepareManagers(Session session) throws ExceptionBase {
+	roleDAO = FACTORY.getDAOManager().getRoleDAO(getSession());
+    }
 
-	List<UserPermission> allPermissions = roleManager.getAllPermissions();
+    @Override
+    protected void execute(Session session) throws ExceptionBase {
+
+	List<UserPermission> allPermissions = roleDAO.getAllPermissions();
 	this.permissionlist = WSConversionUtils.convertToWSPermissionList(allPermissions);
-    }
-
-    @Override
-    public Statistic getStatistic() {
-	return STAT_CREATE_ROLE_WITH_PERMISSIONS;
     }
 
     public List<WSUserPermission> getPermissionList() {

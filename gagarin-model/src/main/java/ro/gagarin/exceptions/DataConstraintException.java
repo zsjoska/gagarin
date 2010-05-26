@@ -32,8 +32,7 @@ public class DataConstraintException extends ExceptionBase {
 	    return new ItemExistsException(aClass, constrait2Field(matcher.group(1)), e);
 	}
 
-	// TODO: quite interesting could be throwing the nothing
-	return null;
+	return new DataConstraintException(ErrorCodes.DB_OP_ERROR, e);
 
     }
 

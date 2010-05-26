@@ -7,15 +7,15 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import ro.gagarin.BasicManagerFactory;
-import ro.gagarin.ConfigDAO;
-import ro.gagarin.ConfigurationManager;
-import ro.gagarin.ManagerFactory;
 import ro.gagarin.application.objects.AppConfig;
+import ro.gagarin.dao.ConfigDAO;
 import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.objects.DBConfig;
 import ro.gagarin.log.AppLog;
+import ro.gagarin.manager.ConfigurationManager;
+import ro.gagarin.manager.ManagerFactory;
 import ro.gagarin.scheduler.JobController;
 import ro.gagarin.scheduler.ScheduledJob;
 import ro.gagarin.session.Session;
@@ -24,14 +24,9 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
 
     private static final transient Logger LOG = Logger.getLogger(DBConfigManager.class);
 
-    // TODO: there is a problem with the configuration implementation in the
-    // following scenario:
-    // the config is only in the DB
-    // runtime, the config is added to the file
-    // Problem: DBConfig observers are not notified
-
     private static ManagerFactory FACTORY = BasicManagerFactory.getInstance();
-    private static final DBConfigManager INSTANCE = new DBConfigManager(FileConfigurationManager.getInstance());
+
+    private static final DBConfigManager INSTANCE = new DBConfigManager(FACTORY.getConfigurationManager());
     private ConfigImportJob configImportJob;
 
     static {
@@ -39,7 +34,7 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
 	long period = cfgManager.getLong(Config.DB_CONFIG_CHECK_PERIOD);
 
 	INSTANCE.registerForChange(INSTANCE);
-	INSTANCE.configImportJob = new DBConfigManager.ConfigImportJob("DB_CONFIG_IMPORT", period, period);
+	INSTANCE.configImportJob = new DBConfigManager.ConfigImportJob("DB_CONFIG_IMPORT", 0, period);
 	FACTORY.getScheduleManager().scheduleJob(INSTANCE.configImportJob, true);
     }
 
@@ -55,7 +50,7 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
 	    log.debug("DBLUT = " + lastUpdateTime + " CacheLUT=" + INSTANCE.getLastUpdateTime());
 	    if (lastUpdateTime > INSTANCE.getLastUpdateTime()) {
 
-		// TODO: use TB generated timestamp
+		// TODO:(3) use TB generated timestamp
 		synchronized (INSTANCE) {
 		    long lastQuery = System.currentTimeMillis();
 		    ArrayList<ConfigEntry> cfgValues = configDAO.listConfigurations();
@@ -136,9 +131,10 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
     @Override
     public synchronized void setConfigValue(Session session, Config config, String value) throws OperationException {
 
+	AppLog log = session.getManagerFactory().getLogManager().getLoggingSession(session, DBConfigManager.class);
+	log.info("Config change requested: " + config + "=" + value + "(" + getString(config) + ")");
 	// local config has precedence...
 	if (localConfig.isDefined(config)) {
-	    AppLog log = session.getManagerFactory().getLogManager(session, DBConfigManager.class);
 	    log.error("Changing the local config will not be persisted! " + config.name() + "=" + value);
 	    localConfig.setConfigValue(session, config, value);
 	    return;
@@ -215,5 +211,9 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
     @Override
     public void loadConfiguration(Object param) {
 
+    }
+
+    @Override
+    public void initializeManager() {
     }
 }

@@ -188,7 +188,7 @@ public class ApplicationInitializer {
 
 	managers.add(factory.getConfigurationManager());
 	managers.add(factory.getDAOManager());
-	managers.add(factory.getAuthenticationManager(session));
+	managers.add(factory.getAuthenticationManager());
 	managers.add(factory.getAuthorizationManager());
 	managers.add(factory.getSessionManager());
 	managers.add(factory.getScheduleManager());

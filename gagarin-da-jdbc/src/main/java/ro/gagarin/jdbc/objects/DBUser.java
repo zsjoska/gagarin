@@ -9,8 +9,6 @@ import ro.gagarin.utils.ConversionUtils;
 
 public class DBUser extends BaseEntity implements User {
 
-    private static final long serialVersionUID = 4384614532696714328L;
-
     private String username;
     private String password;
     private String name;

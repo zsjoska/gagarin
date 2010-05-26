@@ -6,8 +6,6 @@ import ro.gagarin.utils.ConversionUtils;
 
 public class DBUserRole extends BaseEntity implements UserRole {
 
-    private static final long serialVersionUID = -566662791080932756L;
-
     private String roleName;
 
     public DBUserRole(UserRole role) {

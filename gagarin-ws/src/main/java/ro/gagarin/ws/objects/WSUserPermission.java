@@ -6,8 +6,6 @@ import ro.gagarin.utils.ConversionUtils;
 
 public class WSUserPermission extends BaseEntity implements UserPermission {
 
-    private static final long serialVersionUID = 1399484581989890777L;
-
     private String permissionName;
 
     public WSUserPermission() {

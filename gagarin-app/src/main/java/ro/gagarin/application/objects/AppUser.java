@@ -9,7 +9,6 @@ import ro.gagarin.utils.ConversionUtils;
 
 public class AppUser extends BaseEntity implements User {
 
-    private static final long serialVersionUID = 5758900527022073273L;
     private String name;
     private String email;
 

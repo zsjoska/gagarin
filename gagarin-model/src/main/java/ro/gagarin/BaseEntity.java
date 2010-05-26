@@ -1,10 +1,6 @@
 package ro.gagarin;
 
-import java.io.Serializable;
-
-// TODO:(1) remove serializable
-@SuppressWarnings("serial")
-public class BaseEntity implements Serializable {
+public class BaseEntity {
 
     private static long nextId = System.currentTimeMillis();
 

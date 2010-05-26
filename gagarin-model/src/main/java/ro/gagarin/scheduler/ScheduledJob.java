@@ -6,8 +6,6 @@ import ro.gagarin.session.Session;
 
 public abstract class ScheduledJob extends BaseEntity {
 
-    protected static final long serialVersionUID = -238225317665931596L;
-
     private final String name;
     private final long initialWait;
     private final long period;

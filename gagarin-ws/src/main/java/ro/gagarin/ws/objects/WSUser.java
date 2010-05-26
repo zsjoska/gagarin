@@ -9,8 +9,6 @@ import ro.gagarin.utils.ConversionUtils;
 
 public class WSUser extends BaseEntity implements User {
 
-    private static final long serialVersionUID = -9100286781286495864L;
-
     private String username;
     private String name;
     private String email;

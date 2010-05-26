@@ -6,8 +6,6 @@ import ro.gagarin.utils.ConversionUtils;
 
 public class WSUserRole extends BaseEntity implements UserRole {
 
-    private static final long serialVersionUID = -566662791080932756L;
-
     private String roleName;
 
     public WSUserRole(UserRole role) {

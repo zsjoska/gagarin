@@ -15,10 +15,6 @@ import ro.gagarin.user.UserRole;
  */
 public class BaseControlEntity extends BaseEntity implements ControlEntity {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -4483417459434469304L;
     private static final Long ADMIN_CONTROL_ENTITY_ID = 1L;
 
     private static HashSet<ControlEntityCategory> ceHash = new HashSet<ControlEntityCategory>();

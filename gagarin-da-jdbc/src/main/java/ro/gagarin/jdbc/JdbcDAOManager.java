@@ -9,16 +9,7 @@ import ro.gagarin.session.Session;
 
 public class JdbcDAOManager implements DAOManager {
 
-    private static JdbcDAOManager INSTANCE = null;
-
-    private JdbcDAOManager() {
-    }
-
-    // TODO :(1) get rid of this singleton
-    public static synchronized JdbcDAOManager getInstance() {
-	if (INSTANCE == null)
-	    INSTANCE = new JdbcDAOManager();
-	return INSTANCE;
+    public JdbcDAOManager() {
     }
 
     public RoleDAO getRoleDAO(Session session) throws OperationException {

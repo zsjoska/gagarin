@@ -105,7 +105,7 @@ public class BasicManagerFactory implements ManagerFactory {
 
     public void initializeManagers() {
 	this.configurationManager = FileConfigurationManager.getInstance();
-	this.daoManager = JdbcDAOManager.getInstance();
+	this.daoManager = new JdbcDAOManager();
 	this.scheduleManager = new DefaultScheduleManager();
 	this.logManager = new BasicLogManager();
 	this.sessionManager = new BasicSessionManager();

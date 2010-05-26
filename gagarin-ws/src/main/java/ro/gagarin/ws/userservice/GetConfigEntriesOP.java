@@ -16,7 +16,6 @@ import ro.gagarin.ws.util.WSConversionUtils;
 public class GetConfigEntriesOP extends WebserviceOperation {
 
     private List<WSConfig> configList;
-    private AuthorizationManager authManager;
     private ConfigurationManager cfgMgr;
 
     public GetConfigEntriesOP(String sessionId) {
@@ -24,15 +23,22 @@ public class GetConfigEntriesOP extends WebserviceOperation {
     }
 
     @Override
+    protected void checkInput(Session session) throws ExceptionBase {
+	// no input
+    }
+
+    @Override
+    protected void checkPermissions(Session session, AuthorizationManager authMgr) throws ExceptionBase {
+	authMgr.requiresPermission(session, BaseControlEntity.getAdminEntity(), PermissionEnum.LIST);
+    }
+
+    @Override
     protected void prepareManagers(Session session) throws ExceptionBase {
-	authManager = FACTORY.getAuthorizationManager();
 	cfgMgr = FACTORY.getConfigurationManager();
     }
 
     @Override
     protected void execute(Session session) throws ExceptionBase {
-
-	authManager.requiresPermission(session, BaseControlEntity.getAdminEntity(), PermissionEnum.LIST);
 
 	List<ConfigEntry> configValues = cfgMgr.getConfigValues();
 	List<WSConfig> wsConfigList = WSConversionUtils.toWSConfigList(configValues);
@@ -41,10 +47,5 @@ public class GetConfigEntriesOP extends WebserviceOperation {
 
     public List<WSConfig> getConfigEntries() {
 	return configList;
-    }
-
-    @Override
-    protected void checkInput(Session session) throws ExceptionBase {
-	// no input
     }
 }

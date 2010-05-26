@@ -6,6 +6,7 @@ package ro.gagarin.ws.authentication;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.log.AppLog;
+import ro.gagarin.manager.AuthorizationManager;
 import ro.gagarin.manager.SessionManager;
 import ro.gagarin.session.Session;
 import ro.gagarin.utils.FieldValidator;
@@ -23,6 +24,22 @@ public class CreateSessionOP extends WebserviceOperation {
 	super(false, null);
 	this.language = language;
 	this.reason = reason;
+    }
+
+    @Override
+    protected void prepareSession() throws SessionNotFoundException {
+	// just to override the default: do nothing
+    }
+
+    @Override
+    protected void checkInput(Session session) throws ExceptionBase {
+	// TODO:(2) custom check for language
+	this.reason = FieldValidator.requireStringValue(reason, "reason", 20);
+    }
+
+    @Override
+    protected void checkPermissions(Session session, AuthorizationManager authMgr) throws ExceptionBase {
+	// nothing to check
     }
 
     @Override
@@ -50,12 +67,7 @@ public class CreateSessionOP extends WebserviceOperation {
     }
 
     @Override
-    protected void prepareSession() throws SessionNotFoundException {
-	// just to override the default: do nothing
-    }
-
-    @Override
-    protected void releaseSession() {
+    public void releaseSession() {
 	// just to override the default: do nothing
     }
 
@@ -64,9 +76,4 @@ public class CreateSessionOP extends WebserviceOperation {
 	return "CreateSessionOP [language=" + language + ", reason=" + reason + "]";
     }
 
-    @Override
-    protected void checkInput(Session session) throws ExceptionBase {
-	// TODO:(2) custom check for language
-	this.reason = FieldValidator.requireStringValue(reason, "reason", 20);
-    }
 }

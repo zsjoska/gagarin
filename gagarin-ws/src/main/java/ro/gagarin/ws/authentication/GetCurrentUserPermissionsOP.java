@@ -3,6 +3,7 @@ package ro.gagarin.ws.authentication;
 import java.util.List;
 
 import ro.gagarin.exceptions.ExceptionBase;
+import ro.gagarin.manager.AuthorizationManager;
 import ro.gagarin.session.Session;
 import ro.gagarin.ws.executor.WebserviceOperation;
 import ro.gagarin.ws.objects.WSEffectivePermission;
@@ -17,6 +18,16 @@ public class GetCurrentUserPermissionsOP extends WebserviceOperation {
     }
 
     @Override
+    protected void checkInput(Session session) throws ExceptionBase {
+	// no input
+    }
+
+    @Override
+    protected void checkPermissions(Session session, AuthorizationManager authMgr) throws ExceptionBase {
+	// no special permissions required
+    }
+
+    @Override
     protected void prepareManagers(Session session) throws ExceptionBase {
     }
 
@@ -25,13 +36,7 @@ public class GetCurrentUserPermissionsOP extends WebserviceOperation {
 	this.permissions = WSConversionUtils.convertEffectivePermissions(session.getEffectivePermissions());
     }
 
-    @Override
-    protected void checkInput(Session session) throws ExceptionBase {
-	// no input
-    }
-
     public List<WSEffectivePermission> getCurrentUserPermissions() {
 	return this.permissions;
     }
-
 }

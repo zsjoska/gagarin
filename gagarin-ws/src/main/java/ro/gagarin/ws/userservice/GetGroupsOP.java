@@ -14,7 +14,6 @@ import ro.gagarin.ws.util.WSConversionUtils;
 
 public class GetGroupsOP extends WebserviceOperation {
 
-    private AuthorizationManager authManager;
     private UserDAO userDAO;
     private List<WSGroup> groups;
 
@@ -28,21 +27,23 @@ public class GetGroupsOP extends WebserviceOperation {
     }
 
     @Override
-    protected void execute(Session session) throws ExceptionBase {
+    protected void checkPermissions(Session session, AuthorizationManager authMgr) throws ExceptionBase {
 	// the session user must have LIST_GROUPS permission
-	authManager.requiresPermission(session, BaseControlEntity.getAdminEntity(), PermissionEnum.LIST);
-
-	groups = WSConversionUtils.convertToGroupList(userDAO.getGroups());
+	authMgr.requiresPermission(session, BaseControlEntity.getAdminEntity(), PermissionEnum.LIST);
     }
 
     @Override
     protected void prepareManagers(Session session) throws ExceptionBase {
-	authManager = FACTORY.getAuthorizationManager();
 	userDAO = FACTORY.getDAOManager().getUserDAO(getSession());
+    }
+
+    @Override
+    protected void execute(Session session) throws ExceptionBase {
+
+	groups = WSConversionUtils.convertToGroupList(userDAO.getGroups());
     }
 
     public List<WSGroup> getGroups() {
 	return this.groups;
     }
-
 }

@@ -20,8 +20,6 @@ public class GetLogEntriesOP extends WebserviceOperation {
     private final String username;
     private List<WSLogEntry> configList;
 
-    private AuthorizationManager authManager;
-
     private AppLog logMgr;
 
     public GetLogEntriesOP(String sessionId, String user) {
@@ -30,16 +28,25 @@ public class GetLogEntriesOP extends WebserviceOperation {
     }
 
     @Override
-    protected void prepareManagers(Session session) throws ExceptionBase {
-	authManager = FACTORY.getAuthorizationManager();
-	logMgr = FACTORY.getLogManager().getLoggingSession(getSession(), Admin.class);
+    protected void checkInput(Session session) throws ExceptionBase {
+	// if the username is null, all logs are retrieved
+	if (username != null) {
+	    FieldValidator.requireStringValue(username, "username", 50);
+	}
+    }
 
+    @Override
+    protected void checkPermissions(Session session, AuthorizationManager authMgr) throws ExceptionBase {
+	authMgr.requiresPermission(getSession(), BaseControlEntity.getAdminEntity(), PermissionEnum.AUDIT);
+    }
+
+    @Override
+    protected void prepareManagers(Session session) throws ExceptionBase {
+	logMgr = FACTORY.getLogManager().getLoggingSession(getSession(), Admin.class);
     }
 
     @Override
     protected void execute(Session session) throws ExceptionBase {
-
-	authManager.requiresPermission(getSession(), BaseControlEntity.getAdminEntity(), PermissionEnum.AUDIT);
 
 	List<LogEntry> logValues = logMgr.getLogEntries(username);
 	List<WSLogEntry> wsConfigList = WSConversionUtils.toWSLogList(logValues);
@@ -53,13 +60,5 @@ public class GetLogEntriesOP extends WebserviceOperation {
     @Override
     public String toString() {
 	return "GetLogEntriesOP [user=" + username + "]";
-    }
-
-    @Override
-    protected void checkInput(Session session) throws ExceptionBase {
-	// if the username is null, all logs are retrieved
-	if (username != null) {
-	    FieldValidator.requireStringValue(username, "username", 50);
-	}
     }
 }

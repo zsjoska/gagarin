@@ -7,6 +7,7 @@ import java.util.Arrays;
 
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.manager.AuthenticationManager;
+import ro.gagarin.manager.AuthorizationManager;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.User;
 import ro.gagarin.utils.FieldValidator;
@@ -29,6 +30,17 @@ public class LoginOP extends WebserviceOperation {
     }
 
     @Override
+    protected void checkInput(Session session) throws ExceptionBase {
+	this.username = FieldValidator.requireStringValue(username, "username", 50);
+	this.password = FieldValidator.requireStringValue(password, "password", 50);
+    }
+
+    @Override
+    protected void checkPermissions(Session session, AuthorizationManager authMgr) throws ExceptionBase {
+	// no special permission required
+    }
+
+    @Override
     protected void prepareManagers(Session session) throws ExceptionBase {
 	authenticationManager = FACTORY.getAuthenticationManager(getSession());
     }
@@ -48,11 +60,5 @@ public class LoginOP extends WebserviceOperation {
     @Override
     public String toString() {
 	return "LoginOP [extra=" + Arrays.toString(extra) + ", password=" + password + ", username=" + username + "]";
-    }
-
-    @Override
-    protected void checkInput(Session session) throws ExceptionBase {
-	this.username = FieldValidator.requireStringValue(username, "username", 50);
-	this.password = FieldValidator.requireStringValue(password, "password", 50);
     }
 }

@@ -16,8 +16,6 @@ public class UpdateGroupOP extends WebserviceOperation {
 
     private final WSGroup group;
 
-    private AuthorizationManager authManager;
-
     private UserDAO userDAO;
 
     public UpdateGroupOP(String sessionId, WSGroup group) {
@@ -43,17 +41,19 @@ public class UpdateGroupOP extends WebserviceOperation {
     }
 
     @Override
-    protected void execute(Session session) throws ExceptionBase {
-
+    protected void checkPermissions(Session session, AuthorizationManager authMgr) throws ExceptionBase {
 	// TODO:(1) The group Id here could be null
-	authManager.requiresPermission(session, group, PermissionEnum.UPDATE);
-	userDAO.updateGroup(this.group);
+	authMgr.requiresPermission(session, group, PermissionEnum.UPDATE);
     }
 
     @Override
     protected void prepareManagers(Session session) throws ExceptionBase {
-	authManager = FACTORY.getAuthorizationManager();
 	userDAO = FACTORY.getDAOManager().getUserDAO(getSession());
     }
 
+    @Override
+    protected void execute(Session session) throws ExceptionBase {
+
+	userDAO.updateGroup(this.group);
+    }
 }

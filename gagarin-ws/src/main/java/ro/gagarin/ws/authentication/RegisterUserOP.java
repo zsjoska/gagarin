@@ -6,6 +6,7 @@ import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.exceptions.ItemExistsException;
 import ro.gagarin.exceptions.OperationException;
+import ro.gagarin.manager.AuthorizationManager;
 import ro.gagarin.manager.ConfigurationManager;
 import ro.gagarin.manager.SessionManager;
 import ro.gagarin.session.Session;
@@ -43,6 +44,17 @@ public class RegisterUserOP extends WebserviceOperation {
 	FieldValidator.requireStringField("password", user, true);
 	FieldValidator.requireStringField("email", user, true);
 	user.setStatus(UserStatus.INIT);
+    }
+
+    @Override
+    protected void checkPermissions(Session session, AuthorizationManager authMgr) throws ExceptionBase {
+	// no special permission required
+    }
+
+    @Override
+    protected void prepareManagers(Session session) throws ExceptionBase {
+	sessionManager = FACTORY.getSessionManager();
+	userDAO = FACTORY.getDAOManager().getUserDAO(getSession());
     }
 
     @Override
@@ -84,14 +96,7 @@ public class RegisterUserOP extends WebserviceOperation {
 	getApplog().info("Registration key " + this.confirmationKey + " assigned for user " + user);
     }
 
-    @Override
-    protected void prepareManagers(Session session) throws ExceptionBase {
-	sessionManager = FACTORY.getSessionManager();
-	userDAO = FACTORY.getDAOManager().getUserDAO(getSession());
-    }
-
     public String getConfirmationKey() {
 	return this.confirmationKey;
     }
-
 }

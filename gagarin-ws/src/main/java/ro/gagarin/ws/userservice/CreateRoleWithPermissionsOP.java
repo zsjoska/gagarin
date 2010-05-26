@@ -21,7 +21,6 @@ public class CreateRoleWithPermissionsOP extends WebserviceOperation {
     private final String roleName;
     private final WSUserPermission[] permissions;
     private WSUserRole role;
-    private AuthorizationManager authManager;
     private RoleDAO roleDAO;
 
     public CreateRoleWithPermissionsOP(String sessionId, String roleName, WSUserPermission[] permissions) {
@@ -31,15 +30,23 @@ public class CreateRoleWithPermissionsOP extends WebserviceOperation {
     }
 
     @Override
+    protected void checkInput(Session session) throws ExceptionBase {
+	FieldValidator.requireStringValue(roleName, "roleName", 50);
+	// TODO:(2) check permissions
+    }
+
+    @Override
+    protected void checkPermissions(Session session, AuthorizationManager authMgr) throws ExceptionBase {
+	authMgr.requiresPermission(session, BaseControlEntity.getAdminEntity(), PermissionEnum.CREATE);
+    }
+
+    @Override
     protected void prepareManagers(Session session) throws ExceptionBase {
-	authManager = FACTORY.getAuthorizationManager();
 	roleDAO = FACTORY.getDAOManager().getRoleDAO(session);
     }
 
     @Override
     protected void execute(Session session) throws ExceptionBase {
-
-	authManager.requiresPermission(session, BaseControlEntity.getAdminEntity(), PermissionEnum.CREATE);
 
 	List<UserPermission> allPermissions = roleDAO.getAllPermissions();
 	List<UserPermission> matched;
@@ -66,12 +73,6 @@ public class CreateRoleWithPermissionsOP extends WebserviceOperation {
     public String toString() {
 	return "CreateRoleWithPermissionsOP [permissions=" + Arrays.toString(permissions) + ", roleName=" + roleName
 		+ "]";
-    }
-
-    @Override
-    protected void checkInput(Session session) throws ExceptionBase {
-	FieldValidator.requireStringValue(roleName, "roleName", 50);
-	// TODO:(2) check permissions
     }
 
 }

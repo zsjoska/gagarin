@@ -15,7 +15,6 @@ public class UnassignUsersFromGroupOP extends WebserviceOperation {
 
     private final WSGroup group;
     private final WSUser[] users;
-    private AuthorizationManager authManager;
     private UserDAO userDAO;
 
     public UnassignUsersFromGroupOP(String sessionId, WSGroup group, WSUser[] users) {
@@ -34,18 +33,20 @@ public class UnassignUsersFromGroupOP extends WebserviceOperation {
     }
 
     @Override
+    protected void checkPermissions(Session session, AuthorizationManager authMgr) throws ExceptionBase {
+	authMgr.requiresPermission(session, group, PermissionEnum.UPDATE);
+    }
+
+    @Override
+    protected void prepareManagers(Session session) throws ExceptionBase {
+	userDAO = FACTORY.getDAOManager().getUserDAO(getSession());
+    }
+
+    @Override
     protected void execute(Session session) throws ExceptionBase {
-	authManager.requiresPermission(session, group, PermissionEnum.UPDATE);
 
 	for (WSUser user : this.users) {
 	    userDAO.unassignUserFromGroup(user, group);
 	}
     }
-
-    @Override
-    protected void prepareManagers(Session session) throws ExceptionBase {
-	authManager = FACTORY.getAuthorizationManager();
-	userDAO = FACTORY.getDAOManager().getUserDAO(getSession());
-    }
-
 }

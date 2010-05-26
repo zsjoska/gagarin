@@ -17,7 +17,6 @@ public class AssignRoleToControlEntityOP extends WebserviceOperation {
     private final WSUserRole role;
     private final WSPerson person;
     private RoleDAO roleDAO;
-    private AuthorizationManager authorizationManager;
 
     public AssignRoleToControlEntityOP(String sessionId, WSControlEntity ce, WSUserRole role, WSPerson person) {
 	super(sessionId);
@@ -36,19 +35,20 @@ public class AssignRoleToControlEntityOP extends WebserviceOperation {
     }
 
     @Override
-    protected void execute(Session session) throws ExceptionBase {
-
+    protected void checkPermissions(Session session, AuthorizationManager authMgr) throws ExceptionBase {
 	// TODO:(2) review if this is OK: Admin can assign any role
-	authorizationManager.requiresPermission(session, ce, PermissionEnum.ADMIN);
-
-	roleDAO.assignRoleToPerson(role, person, ce);
-
+	authMgr.requiresPermission(session, ce, PermissionEnum.ADMIN);
     }
 
     @Override
     public void prepareManagers(Session session) throws ExceptionBase {
 	roleDAO = session.getManagerFactory().getDAOManager().getRoleDAO(session);
-	authorizationManager = session.getManagerFactory().getAuthorizationManager();
     }
 
+    @Override
+    protected void execute(Session session) throws ExceptionBase {
+
+	roleDAO.assignRoleToPerson(role, person, ce);
+
+    }
 }

@@ -16,8 +16,6 @@ public class GetSessionListOP extends WebserviceOperation {
 
     private List<WSExportedSession> sessionList;
 
-    private AuthorizationManager authManager;
-
     private SessionManager sessionManager;
 
     public GetSessionListOP(String sessionId) {
@@ -25,15 +23,23 @@ public class GetSessionListOP extends WebserviceOperation {
     }
 
     @Override
+    protected void checkInput(Session session) throws ExceptionBase {
+	// no input
+    }
+
+    @Override
+    protected void checkPermissions(Session session, AuthorizationManager authMgr) throws ExceptionBase {
+	authMgr.requiresPermission(session, BaseControlEntity.getAdminEntity(), PermissionEnum.AUDIT);
+    }
+
+    @Override
     protected void prepareManagers(Session session) throws ExceptionBase {
-	authManager = FACTORY.getAuthorizationManager();
 	sessionManager = FACTORY.getSessionManager();
     }
 
     @Override
     protected void execute(Session session) throws ExceptionBase {
 
-	authManager.requiresPermission(session, BaseControlEntity.getAdminEntity(), PermissionEnum.AUDIT);
 	List<Session> sessions = sessionManager.getSessionList();
 
 	this.sessionList = WSConversionUtils.convertToSessionList(sessions);
@@ -42,10 +48,4 @@ public class GetSessionListOP extends WebserviceOperation {
     public List<WSExportedSession> getSessionList() {
 	return this.sessionList;
     }
-
-    @Override
-    protected void checkInput(Session session) throws ExceptionBase {
-	// no input
-    }
-
 }

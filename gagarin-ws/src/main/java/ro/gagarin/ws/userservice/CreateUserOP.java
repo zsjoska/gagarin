@@ -14,7 +14,6 @@ public class CreateUserOP extends WebserviceOperation {
 
     private final WSUser user;
     private long userId = -1;
-    private AuthorizationManager authManager;
     private UserDAO userDAO;
 
     public CreateUserOP(String sessionId, WSUser user) {
@@ -23,17 +22,23 @@ public class CreateUserOP extends WebserviceOperation {
     }
 
     @Override
-    protected void prepareManagers(Session session) throws ExceptionBase {
-	authManager = FACTORY.getAuthorizationManager();
-	userDAO = FACTORY.getDAOManager().getUserDAO(getSession());
+    protected void checkInput(Session session) throws ExceptionBase {
+	FieldValidator.requireStringField("username", user, true);
+    }
 
+    @Override
+    protected void checkPermissions(Session session, AuthorizationManager authMgr) throws ExceptionBase {
+	// the session user must have CREATE_USER permission
+	authMgr.requiresPermission(session, BaseControlEntity.getAdminEntity(), PermissionEnum.CREATE);
+    }
+
+    @Override
+    protected void prepareManagers(Session session) throws ExceptionBase {
+	userDAO = FACTORY.getDAOManager().getUserDAO(getSession());
     }
 
     @Override
     protected void execute(Session session) throws ExceptionBase {
-
-	// the session user must have CREATE_USER permission
-	authManager.requiresPermission(session, BaseControlEntity.getAdminEntity(), PermissionEnum.CREATE);
 
 	this.userId = userDAO.createUser(user);
 	getApplog().info("Created User " + user.getId() + ":" + user.getUsername() + "; session:" + getSessionString());
@@ -47,10 +52,4 @@ public class CreateUserOP extends WebserviceOperation {
     public String toString() {
 	return "CreateUserOP [user=" + user + "]";
     }
-
-    @Override
-    protected void checkInput(Session session) throws ExceptionBase {
-	FieldValidator.requireStringField("username", user, true);
-    }
-
 }

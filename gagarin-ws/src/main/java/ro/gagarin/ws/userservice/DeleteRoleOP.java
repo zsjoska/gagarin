@@ -14,8 +14,6 @@ public class DeleteRoleOP extends WebserviceOperation {
 
     private final WSUserRole role;
 
-    private AuthorizationManager authManager;
-
     private RoleDAO roleDAO;
 
     // TODO:(2) delete also by role name
@@ -25,15 +23,22 @@ public class DeleteRoleOP extends WebserviceOperation {
     }
 
     @Override
+    protected void checkInput(Session session) throws ExceptionBase {
+	FieldValidator.requireLongField("id", role);
+    }
+
+    @Override
+    protected void checkPermissions(Session session, AuthorizationManager authMgr) throws ExceptionBase {
+	authMgr.requiresPermission(getSession(), BaseControlEntity.getAdminEntity(), PermissionEnum.DELETE);
+    }
+
+    @Override
     protected void prepareManagers(Session session) throws ExceptionBase {
-	authManager = FACTORY.getAuthorizationManager();
 	roleDAO = FACTORY.getDAOManager().getRoleDAO(getSession());
     }
 
     @Override
     protected void execute(Session session) throws ExceptionBase {
-
-	authManager.requiresPermission(getSession(), BaseControlEntity.getAdminEntity(), PermissionEnum.DELETE);
 
 	roleDAO.deleteRole(role);
 	getApplog().info("Role " + role.getRoleName() + " deleted");
@@ -42,10 +47,5 @@ public class DeleteRoleOP extends WebserviceOperation {
     @Override
     public String toString() {
 	return "DeleteRoleOP [role=" + role + "]";
-    }
-
-    @Override
-    protected void checkInput(Session session) throws ExceptionBase {
-	FieldValidator.requireLongField("id", role);
     }
 }

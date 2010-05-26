@@ -17,22 +17,27 @@ public class GetStatisticsOP extends WebserviceOperation {
     private final String filter;
     private List<WSStatistic> statisticsList;
 
-    private AuthorizationManager authManager;
-
     public GetStatisticsOP(String sessionId, String filter) {
 	super(sessionId);
 	this.filter = filter;
     }
 
     @Override
+    protected void checkInput(Session session) throws ExceptionBase {
+	// TODO:(2) add custom check for filter
+    }
+
+    @Override
+    protected void checkPermissions(Session session, AuthorizationManager authMgr) throws ExceptionBase {
+	authMgr.requiresPermission(session, BaseControlEntity.getAdminEntity(), PermissionEnum.AUDIT);
+    }
+
+    @Override
     protected void prepareManagers(Session session) throws ExceptionBase {
-	authManager = FACTORY.getAuthorizationManager();
     }
 
     @Override
     protected void execute(Session session) throws ExceptionBase {
-
-	authManager.requiresPermission(session, BaseControlEntity.getAdminEntity(), PermissionEnum.AUDIT);
 
 	List<Statistic> statistics = StatisticsContainer.exportStatistics(filter);
 
@@ -47,10 +52,4 @@ public class GetStatisticsOP extends WebserviceOperation {
     public String toString() {
 	return "GetStatisticsOP [filter=" + filter + "]";
     }
-
-    @Override
-    protected void checkInput(Session session) throws ExceptionBase {
-	// TODO:(2) add custom check for filter
-    }
-
 }

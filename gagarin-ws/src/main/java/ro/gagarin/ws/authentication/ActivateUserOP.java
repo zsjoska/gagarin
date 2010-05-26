@@ -2,6 +2,7 @@ package ro.gagarin.ws.authentication;
 
 import ro.gagarin.dao.UserDAO;
 import ro.gagarin.exceptions.ExceptionBase;
+import ro.gagarin.manager.AuthorizationManager;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.UserStatus;
 import ro.gagarin.ws.executor.WebserviceOperation;
@@ -22,6 +23,17 @@ public class ActivateUserOP extends WebserviceOperation {
     }
 
     @Override
+    protected void checkPermissions(Session session, AuthorizationManager authMgr) throws ExceptionBase {
+	// no special permission required
+
+    }
+
+    @Override
+    protected void prepareManagers(Session session) throws ExceptionBase {
+	userDAO = FACTORY.getDAOManager().getUserDAO(session);
+    }
+
+    @Override
     protected void execute(Session session) throws ExceptionBase {
 
 	WSUser wsUser = new WSUser();
@@ -36,13 +48,7 @@ public class ActivateUserOP extends WebserviceOperation {
 	getSession().setUser(user);
     }
 
-    @Override
-    protected void prepareManagers(Session session) throws ExceptionBase {
-	userDAO = FACTORY.getDAOManager().getUserDAO(session);
-    }
-
     public WSUser getUser() {
 	return user;
     }
-
 }

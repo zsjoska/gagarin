@@ -16,7 +16,6 @@ import ro.gagarin.ws.objects.WSUserRole;
 public class GetRoleListOP extends WebserviceOperation {
 
     private List<WSUserRole> roles = null;
-    private AuthorizationManager authorizationManager;
     private RoleDAO roleDAO;
 
     public GetRoleListOP(String sessionId) {
@@ -24,15 +23,23 @@ public class GetRoleListOP extends WebserviceOperation {
     }
 
     @Override
+    protected void checkInput(Session session) throws ExceptionBase {
+	// no input
+    }
+
+    @Override
+    protected void checkPermissions(Session session, AuthorizationManager authMgr) throws ExceptionBase {
+	// the session user must have LIST permission
+	authMgr.requiresPermission(session, BaseControlEntity.getAdminEntity(), PermissionEnum.LIST);
+    }
+
+    @Override
     protected void prepareManagers(Session session) throws ExceptionBase {
-	authorizationManager = FACTORY.getAuthorizationManager();
 	roleDAO = FACTORY.getDAOManager().getRoleDAO(getSession());
     }
 
     @Override
     protected void execute(Session session) throws ExceptionBase {
-	// the session user must have LIST_ROLES permission
-	authorizationManager.requiresPermission(session, BaseControlEntity.getAdminEntity(), PermissionEnum.LIST);
 
 	List<UserRole> allRoles = roleDAO.getAllRoles();
 	List<WSUserRole> convRoles = new ArrayList<WSUserRole>();
@@ -44,10 +51,5 @@ public class GetRoleListOP extends WebserviceOperation {
 
     public List<WSUserRole> getRoleList() {
 	return this.roles;
-    }
-
-    @Override
-    protected void checkInput(Session session) throws ExceptionBase {
-	// no input
     }
 }

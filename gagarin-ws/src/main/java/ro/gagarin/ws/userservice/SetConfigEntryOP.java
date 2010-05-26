@@ -13,7 +13,7 @@ import ro.gagarin.ws.objects.WSConfig;
 public class SetConfigEntryOP extends WebserviceOperation {
 
     private final WSConfig wsConfig;
-    private AuthorizationManager authManager;
+    private ConfigurationManager cfgMgr;
 
     public SetConfigEntryOP(String sessionId, WSConfig wsConfig) {
 	super(sessionId);
@@ -21,16 +21,24 @@ public class SetConfigEntryOP extends WebserviceOperation {
     }
 
     @Override
+    protected void checkInput(Session session) throws ExceptionBase {
+	FieldValidator.requireStringField("configName", wsConfig, true);
+	FieldValidator.requireStringField("configValue", wsConfig, true);
+    }
+
+    @Override
+    protected void checkPermissions(Session session, AuthorizationManager authMgr) throws ExceptionBase {
+	authMgr.requiresPermission(session, BaseControlEntity.getAdminEntity(), PermissionEnum.ADMIN);
+    }
+
+    @Override
     protected void prepareManagers(Session session) throws ExceptionBase {
-	authManager = FACTORY.getAuthorizationManager();
+	cfgMgr = FACTORY.getConfigurationManager();
     }
 
     @Override
     protected void execute(Session session) throws ExceptionBase {
 
-	authManager.requiresPermission(session, BaseControlEntity.getAdminEntity(), PermissionEnum.ADMIN);
-
-	ConfigurationManager cfgMgr = FACTORY.getConfigurationManager();
 	cfgMgr.setConfigValue(getSession(), wsConfig);
 	getApplog().info("Config update:" + wsConfig);
 
@@ -39,11 +47,5 @@ public class SetConfigEntryOP extends WebserviceOperation {
     @Override
     public String toString() {
 	return "SetConfigEntryOP [wsConfig=" + wsConfig + "]";
-    }
-
-    @Override
-    protected void checkInput(Session session) throws ExceptionBase {
-	FieldValidator.requireStringField("configName", wsConfig, true);
-	FieldValidator.requireStringField("configValue", wsConfig, true);
     }
 }

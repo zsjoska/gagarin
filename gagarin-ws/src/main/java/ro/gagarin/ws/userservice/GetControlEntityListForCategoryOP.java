@@ -8,7 +8,9 @@ import ro.gagarin.ControlEntity;
 import ro.gagarin.ControlEntityCategory;
 import ro.gagarin.dao.RoleDAO;
 import ro.gagarin.exceptions.ExceptionBase;
+import ro.gagarin.manager.AuthorizationManager;
 import ro.gagarin.session.Session;
+import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.utils.FieldValidator;
 import ro.gagarin.ws.executor.WebserviceOperation;
 import ro.gagarin.ws.objects.WSControlEntity;
@@ -33,6 +35,16 @@ public class GetControlEntityListForCategoryOP extends WebserviceOperation {
     }
 
     @Override
+    protected void checkPermissions(Session session, AuthorizationManager authMgr) throws ExceptionBase {
+	authMgr.requiresPermission(session, BaseControlEntity.getAdminEntity(), PermissionEnum.LIST);
+    }
+
+    @Override
+    protected void prepareManagers(Session session) throws ExceptionBase {
+	roleDAO = session.getManagerFactory().getDAOManager().getRoleDAO(session);
+    }
+
+    @Override
     protected void execute(Session session) throws ExceptionBase {
 	if (categoryEnum == ControlEntityCategory.ADMIN) {
 	    this.controlEntities = new ArrayList<WSControlEntity>(1);
@@ -44,13 +56,7 @@ public class GetControlEntityListForCategoryOP extends WebserviceOperation {
 	this.controlEntities = WSConversionUtils.convertEntityList(ceList);
     }
 
-    @Override
-    protected void prepareManagers(Session session) throws ExceptionBase {
-	roleDAO = session.getManagerFactory().getDAOManager().getRoleDAO(session);
-    }
-
     public List<WSControlEntity> getControlEntities() {
 	return this.controlEntities;
     }
-
 }

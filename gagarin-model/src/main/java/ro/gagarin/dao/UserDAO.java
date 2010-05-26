@@ -73,9 +73,6 @@ public interface UserDAO extends BaseDAO {
      */
     List<User> getAllUsers() throws OperationException;
 
-    // TODO:(1) this shouldn't be here
-    void markRollback();
-
     /**
      * Creates a new group
      * 

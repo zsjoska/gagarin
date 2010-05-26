@@ -2,10 +2,11 @@ package ro.gagarin.ws.userservice;
 
 import java.util.List;
 
-import ro.gagarin.AuthorizationManager;
+import ro.gagarin.BaseControlEntity;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.log.AppLog;
 import ro.gagarin.log.LogEntry;
+import ro.gagarin.manager.AuthorizationManager;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.utils.FieldValidator;
@@ -38,7 +39,7 @@ public class GetLogEntriesOP extends WebserviceOperation {
     @Override
     public void execute() throws ExceptionBase {
 
-	authManager.requiresPermission(getSession(), PermissionEnum.ADMIN_OPERATION);
+	authManager.requiresPermission(getSession(), BaseControlEntity.getAdminEntity(), PermissionEnum.AUDIT);
 
 	List<LogEntry> logValues = logMgr.getLogEntries(username);
 	List<WSLogEntry> wsConfigList = WSConversionUtils.toWSLogList(logValues);

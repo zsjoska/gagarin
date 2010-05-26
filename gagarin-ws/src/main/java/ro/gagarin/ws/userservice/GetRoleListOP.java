@@ -3,9 +3,10 @@ package ro.gagarin.ws.userservice;
 import java.util.ArrayList;
 import java.util.List;
 
-import ro.gagarin.AuthorizationManager;
-import ro.gagarin.RoleDAO;
+import ro.gagarin.BaseControlEntity;
+import ro.gagarin.dao.RoleDAO;
 import ro.gagarin.exceptions.ExceptionBase;
+import ro.gagarin.manager.AuthorizationManager;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.UserRole;
@@ -31,7 +32,7 @@ public class GetRoleListOP extends WebserviceOperation {
     @Override
     public void execute() throws ExceptionBase {
 	// the session user must have LIST_ROLES permission
-	authorizationManager.requiresPermission(getSession(), PermissionEnum.LIST_ROLES);
+	authorizationManager.requiresPermission(getSession(), BaseControlEntity.getAdminEntity(), PermissionEnum.LIST);
 
 	List<UserRole> allRoles = roleManager.getAllRoles();
 	List<WSUserRole> convRoles = new ArrayList<WSUserRole>();

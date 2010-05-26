@@ -4,8 +4,9 @@ import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 
-import ro.gagarin.SessionManager;
+import ro.gagarin.manager.SessionManager;
 
+// TODO:(1) move this to the application module
 public class SessionCheckerThread extends Thread {
 
     private static final transient Logger LOG = Logger.getLogger(SessionCheckerThread.class);

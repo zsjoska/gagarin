@@ -1,9 +1,9 @@
 package ro.gagarin.jdbc.objects;
 
 import ro.gagarin.BaseEntity;
+import ro.gagarin.PersonTypesEnum;
 import ro.gagarin.user.AuthenticationType;
 import ro.gagarin.user.User;
-import ro.gagarin.user.UserRole;
 import ro.gagarin.user.UserStatus;
 import ro.gagarin.utils.ConversionUtils;
 
@@ -16,7 +16,6 @@ public class DBUser extends BaseEntity implements User {
     private String name;
     private String email;
     private String phone;
-    private UserRole role;
     private AuthenticationType authentication;
     private UserStatus status;
     private Long created;
@@ -28,7 +27,6 @@ public class DBUser extends BaseEntity implements User {
 	this.name = user.getName();
 	this.email = user.getEmail();
 	this.phone = user.getPhone();
-	this.role = user.getRole();
 	this.authentication = user.getAuthentication();
 	this.status = user.getStatus();
 	this.created = user.getCreated();
@@ -63,14 +61,6 @@ public class DBUser extends BaseEntity implements User {
 
     public Long getId() {
 	return super.getId();
-    }
-
-    public void setRole(UserRole role) {
-	this.role = role;
-    }
-
-    public UserRole getRole() {
-	return role;
     }
 
     public String getEmail() {
@@ -119,5 +109,15 @@ public class DBUser extends BaseEntity implements User {
 
     public void setCreated(Long created) {
 	this.created = created;
+    }
+
+    @Override
+    public PersonTypesEnum getType() {
+	return PersonTypesEnum.USER;
+    }
+
+    @Override
+    public String getTitle() {
+	return this.getUsername();
     }
 }

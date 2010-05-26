@@ -10,13 +10,13 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import ro.gagarin.BaseDAO;
-import ro.gagarin.ConfigurationManager;
-import ro.gagarin.DAOManager;
 import ro.gagarin.config.Config;
+import ro.gagarin.dao.BaseDAO;
+import ro.gagarin.dao.DAOManager;
 import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.log.AppLog;
+import ro.gagarin.manager.ConfigurationManager;
 import ro.gagarin.session.Session;
 import ro.gagarin.utils.Triple;
 
@@ -84,7 +84,7 @@ public class BaseJdbcDAO implements BaseDAO {
 	String user = cfgManager.getString(Config.JDBC_DB_USER);
 	String password = cfgManager.getString(Config.JDBC_DB_PASSWORD);
 	try {
-	    // TODO: use a connection pool for the DB
+	    // TODO:(3) use a connection pool for the DB
 	    Connection connection = DriverManager.getConnection(url, user, password);
 	    connection.setAutoCommit(false);
 	    return connection;
@@ -136,7 +136,7 @@ public class BaseJdbcDAO implements BaseDAO {
 
 	    if (!this.changePending) {
 		try {
-		    // TODO: dig more here why this commit is required:
+		    // TODO:(3) dig more here why this commit is required:
 		    // AppInit + gerAdminUser + sessionClose = exception
 		    tmpConn.commit();
 		    tmpConn.close();

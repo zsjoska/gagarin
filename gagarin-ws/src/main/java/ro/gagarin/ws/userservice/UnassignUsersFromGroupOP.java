@@ -1,9 +1,9 @@
 package ro.gagarin.ws.userservice;
 
-import ro.gagarin.AuthorizationManager;
-import ro.gagarin.UserDAO;
+import ro.gagarin.dao.UserDAO;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.exceptions.FieldRequiredException;
+import ro.gagarin.manager.AuthorizationManager;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.Group;
 import ro.gagarin.user.PermissionEnum;
@@ -30,12 +30,12 @@ public class UnassignUsersFromGroupOP extends WebserviceOperation {
 	    throw new FieldRequiredException("group", Group.class);
 	if (group.getId() == null && group.getName() == null)
 	    throw new FieldRequiredException("id or name", Group.class);
-	// TODO: check users
+	// TODO:(2) check users
     }
 
     @Override
     public void execute() throws ExceptionBase {
-	authManager.requiresPermission(getSession(), PermissionEnum.UPDATE_GROUP);
+	authManager.requiresPermission(getSession(), group, PermissionEnum.UPDATE);
 
 	for (WSUser user : this.users) {
 	    userManager.unassignUserFromGroup(user, group);

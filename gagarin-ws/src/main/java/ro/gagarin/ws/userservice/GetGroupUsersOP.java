@@ -3,10 +3,11 @@ package ro.gagarin.ws.userservice;
 import java.security.acl.Group;
 import java.util.List;
 
-import ro.gagarin.AuthorizationManager;
-import ro.gagarin.UserDAO;
+import ro.gagarin.BaseControlEntity;
+import ro.gagarin.dao.UserDAO;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.exceptions.FieldRequiredException;
+import ro.gagarin.manager.AuthorizationManager;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.User;
@@ -48,7 +49,7 @@ public class GetGroupUsersOP extends WebserviceOperation {
     @Override
     public void execute() throws ExceptionBase {
 	// the session user must have LIST_USERS permission
-	authManager.requiresPermission(getSession(), PermissionEnum.LIST_USERS);
+	authManager.requiresPermission(getSession(), BaseControlEntity.getAdminEntity(), PermissionEnum.LIST);
 	List<User> users = userManager.getGroupUsers(group);
 	this.groupUsers = WSConversionUtils.convertToWSUserList(users);
     }

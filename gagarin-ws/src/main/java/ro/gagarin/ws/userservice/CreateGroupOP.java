@@ -1,10 +1,9 @@
 package ro.gagarin.ws.userservice;
 
-import ro.gagarin.AuthorizationManager;
-import ro.gagarin.UserDAO;
+import ro.gagarin.dao.UserDAO;
 import ro.gagarin.exceptions.ExceptionBase;
+import ro.gagarin.manager.AuthorizationManager;
 import ro.gagarin.session.Session;
-import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.utils.FieldValidator;
 import ro.gagarin.ws.executor.WebserviceOperation;
 import ro.gagarin.ws.objects.WSGroup;
@@ -12,7 +11,7 @@ import ro.gagarin.ws.objects.WSGroup;
 public class CreateGroupOP extends WebserviceOperation {
 
     private AuthorizationManager authManager;
-    private UserDAO userManager;
+    private UserDAO userDAO;
 
     private final WSGroup group;
 
@@ -25,17 +24,22 @@ public class CreateGroupOP extends WebserviceOperation {
 
     @Override
     public void execute() throws ExceptionBase {
-	// the session user must have CREATE_GROUP permission
-	authManager.requiresPermission(getSession(), PermissionEnum.CREATE_GROUP);
+	// TODO:(3) review but no danger if one could create a group
+	// authManager.requiresPermission(getSession(), PermissionEnum.CREATE,
+	// BaseControlEntity.getAdminEntity());
 
-	this.groupId = userManager.createGroup(group);
-	getApplog().info("Created User " + group.getId() + ":" + group.getName());
+	this.groupId = userDAO.createGroup(group);
+	group.setId(groupId);
+
+	authManager.addCreatorPermission(group, getSession());
+
+	getApplog().info("Created Group " + group.getId() + ":" + group.getName());
     }
 
     @Override
     public void prepareManagers(Session session) throws ExceptionBase {
 	authManager = FACTORY.getAuthorizationManager();
-	userManager = FACTORY.getDAOManager().getUserDAO(getSession());
+	userDAO = FACTORY.getDAOManager().getUserDAO(session);
     }
 
     public Long getGroupId() {

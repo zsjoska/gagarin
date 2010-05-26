@@ -1,4 +1,4 @@
-package ro.gagarin;
+package ro.gagarin.manager;
 
 import java.io.InputStream;
 import java.util.List;

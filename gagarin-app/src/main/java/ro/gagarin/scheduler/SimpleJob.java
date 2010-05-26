@@ -33,7 +33,7 @@ class SimpleJob implements JobController {
 	long start = System.currentTimeMillis();
 	long delay = start - this.getNextRun();
 
-	// TODO: move to a base method
+	// TODO:(2) move to a base method
 
 	if (delay > 10) {
 	    String msg = "Job #" + this.getId() + " execution delay:" + delay;

@@ -3,9 +3,10 @@ package ro.gagarin.ws.userservice;
 import java.util.List;
 import java.util.Set;
 
-import ro.gagarin.AuthorizationManager;
-import ro.gagarin.RoleDAO;
+import ro.gagarin.BaseControlEntity;
+import ro.gagarin.dao.RoleDAO;
 import ro.gagarin.exceptions.ExceptionBase;
+import ro.gagarin.manager.AuthorizationManager;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.UserPermission;
@@ -14,6 +15,7 @@ import ro.gagarin.ws.objects.WSUserPermission;
 import ro.gagarin.ws.objects.WSUserRole;
 import ro.gagarin.ws.util.WSConversionUtils;
 
+// TODO:(1) rename: 't'
 public class GetRolePermissionstOP extends WebserviceOperation {
 
     private final WSUserRole wsUserRole;
@@ -39,7 +41,7 @@ public class GetRolePermissionstOP extends WebserviceOperation {
     public void execute() throws ExceptionBase {
 
 	// the session user must have LIST_PERMISSIONS permission
-	authManager.requiresPermission(getSession(), PermissionEnum.LIST_PERMISSIONS);
+	authManager.requiresPermission(getSession(), BaseControlEntity.getAdminEntity(), PermissionEnum.LIST);
 
 	Set<UserPermission> permissions = roleManager.getRolePermissions(wsUserRole);
 	this.permList = WSConversionUtils.convertToWSPermissionList(permissions);
@@ -56,7 +58,7 @@ public class GetRolePermissionstOP extends WebserviceOperation {
 
     @Override
     public void checkInput(Session session) throws ExceptionBase {
-	// TODO: implement combined verification for id and roleName
+	// TODO:(2) implement combined verification for id and roleName
     }
 
 }

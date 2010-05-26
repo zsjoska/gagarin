@@ -3,9 +3,10 @@ package ro.gagarin.ws.userservice;
 import java.util.Arrays;
 import java.util.List;
 
-import ro.gagarin.AuthorizationManager;
-import ro.gagarin.RoleDAO;
+import ro.gagarin.BaseControlEntity;
+import ro.gagarin.dao.RoleDAO;
 import ro.gagarin.exceptions.ExceptionBase;
+import ro.gagarin.manager.AuthorizationManager;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.UserPermission;
@@ -38,12 +39,11 @@ public class CreateRoleWithPermissionsOP extends WebserviceOperation {
     @Override
     public void execute() throws ExceptionBase {
 
-	// the session user must have LIST_PERMISSIONS permission
-	authManager.requiresPermission(getSession(), PermissionEnum.LIST_PERMISSIONS);
+	authManager.requiresPermission(getSession(), BaseControlEntity.getAdminEntity(), PermissionEnum.CREATE);
+
 	List<UserPermission> allPermissions = roleManager.getAllPermissions();
 	List<UserPermission> matched;
 	matched = ConversionUtils.matchPermissions(allPermissions, permissions);
-	authManager.checkUserHasThePermissions(getSession(), matched);
 
 	WSUserRole role = new WSUserRole();
 	role.setRoleName(roleName);
@@ -71,7 +71,7 @@ public class CreateRoleWithPermissionsOP extends WebserviceOperation {
     @Override
     public void checkInput(Session session) throws ExceptionBase {
 	FieldValidator.checkStringValue(roleName, "roleName", 50);
-	// TODO: check permissions
+	// TODO:(2) check permissions
     }
 
 }

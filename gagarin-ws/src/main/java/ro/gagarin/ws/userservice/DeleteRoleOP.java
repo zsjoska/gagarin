@@ -1,8 +1,9 @@
 package ro.gagarin.ws.userservice;
 
-import ro.gagarin.AuthorizationManager;
-import ro.gagarin.RoleDAO;
+import ro.gagarin.BaseControlEntity;
+import ro.gagarin.dao.RoleDAO;
 import ro.gagarin.exceptions.ExceptionBase;
+import ro.gagarin.manager.AuthorizationManager;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.utils.FieldValidator;
@@ -17,7 +18,7 @@ public class DeleteRoleOP extends WebserviceOperation {
 
     private RoleDAO roleManager;
 
-    // TODO: delete also by role name
+    // TODO:(2) delete also by role name
     public DeleteRoleOP(String sessionId, WSUserRole role) {
 	super(sessionId);
 	this.role = role;
@@ -32,8 +33,7 @@ public class DeleteRoleOP extends WebserviceOperation {
     @Override
     public void execute() throws ExceptionBase {
 
-	// the session user must have LIST_PERMISSIONS permission
-	authManager.requiresPermission(getSession(), PermissionEnum.DELETE_ROLE);
+	authManager.requiresPermission(getSession(), BaseControlEntity.getAdminEntity(), PermissionEnum.DELETE);
 
 	roleManager.deleteRole(role);
 	getApplog().info("Role " + role.getRoleName() + " deleted");

@@ -1,17 +1,21 @@
 package ro.gagarin.session;
 
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
-import ro.gagarin.BaseDAO;
 import ro.gagarin.BaseEntity;
-import ro.gagarin.ManagerFactory;
+import ro.gagarin.ControlEntity;
+import ro.gagarin.dao.BaseDAO;
+import ro.gagarin.manager.ManagerFactory;
+import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.User;
 
 public class Session extends BaseEntity {
 
     /**
-	 * 
-	 */
+     *
+     */
     private static final long serialVersionUID = -3676125918206947624L;
     private long sessionTimeout = 0;
     private long expires;
@@ -22,12 +26,15 @@ public class Session extends BaseEntity {
     private String sessionString;
     private boolean busy;
 
+    private boolean adminSession = false;
+
     HashMap<String, Object> properties = new HashMap<String, Object>();
     private ManagerFactory managerFactory;
     private Throwable t;
+    private Map<ControlEntity, Set<PermissionEnum>> effectivePermissions;
 
     public Session() {
-	// TODO: make the reason mandatory
+	// TODO:(3) make the reason mandatory
     }
 
     public Session(ManagerFactory managerFactory) {
@@ -78,6 +85,7 @@ public class Session extends BaseEntity {
 	return sessionTimeout;
     }
 
+    // TODO:(1) rename
     public BaseDAO getManager() {
 	return this.manager;
     }
@@ -130,5 +138,22 @@ public class Session extends BaseEntity {
     public Throwable getCreationStacktrace() {
 
 	return this.t;
+    }
+
+    public void assignUser(User user, Map<ControlEntity, Set<PermissionEnum>> permMap) {
+	this.effectivePermissions = permMap;
+	setUser(user);
+    }
+
+    public Map<ControlEntity, Set<PermissionEnum>> getEffectivePermissions() {
+	return this.effectivePermissions;
+    }
+
+    public void setAdminSession(boolean adminSession) {
+	this.adminSession = adminSession;
+    }
+
+    public boolean isAdminSession() {
+	return adminSession;
     }
 }

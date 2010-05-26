@@ -25,7 +25,7 @@ public class SelectUsersSQL extends SelectQuery {
     protected void useResult(ResultSet rs) throws SQLException {
 	this.users = new ArrayList<User>();
 	while (rs.next()) {
-	    DBUser user = JDBCRSConvert.convertRSToUserWithRole(rs);
+	    DBUser user = JDBCRSConvert.convertRSToUser(rs);
 	    users.add(user);
 	}
     }
@@ -36,8 +36,8 @@ public class SelectUsersSQL extends SelectQuery {
 
     @Override
     protected String getSQL() {
-	return "SELECT Users.id, username, name, email, phone, password, roleid, roleName, authentication, status, created "
-		+ "FROM Users INNER JOIN UserRoles ON Users.roleid = UserRoles.id";
+	return "SELECT Users.id, username, name, email, phone, password, authentication, status, created "
+		+ "FROM Users";
     }
 
     public static ArrayList<User> execute(BaseJdbcDAO dao) throws OperationException {

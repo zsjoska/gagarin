@@ -1,6 +1,7 @@
-package ro.gagarin;
+package ro.gagarin.dao;
 
 import ro.gagarin.exceptions.OperationException;
+import ro.gagarin.manager.ConfigurationManager;
 
 public interface BaseDAO {
 

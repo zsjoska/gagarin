@@ -6,8 +6,7 @@ import static ro.gagarin.utils.ConversionUtils.user2String;
 import java.util.ArrayList;
 import java.util.List;
 
-import ro.gagarin.RoleDAO;
-import ro.gagarin.UserDAO;
+import ro.gagarin.dao.UserDAO;
 import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.ItemNotFoundException;
@@ -24,8 +23,9 @@ import ro.gagarin.jdbc.group.UpdateGroupSQL;
 import ro.gagarin.jdbc.objects.DBGroup;
 import ro.gagarin.jdbc.objects.DBUser;
 import ro.gagarin.jdbc.user.CreateUserSQL;
+import ro.gagarin.jdbc.user.DeleteGroupAssignmentsSQL;
+import ro.gagarin.jdbc.user.DeleteUserGroupAssignments;
 import ro.gagarin.jdbc.user.DeleteUserSQL;
-import ro.gagarin.jdbc.user.GetUsersWithRoleSQL;
 import ro.gagarin.jdbc.user.SelectUserByUsernamePasswordSQL;
 import ro.gagarin.jdbc.user.SelectUserByUsernameSQL;
 import ro.gagarin.jdbc.user.SelectUsersSQL;
@@ -36,7 +36,6 @@ import ro.gagarin.session.Session;
 import ro.gagarin.user.AuthenticationType;
 import ro.gagarin.user.Group;
 import ro.gagarin.user.User;
-import ro.gagarin.user.UserRole;
 
 public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 
@@ -122,28 +121,12 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
     }
 
     @Override
-    public List<User> getUsersWithRole(UserRole role) throws OperationException, ItemNotFoundException {
-
-	// foreign DAO call
-	RoleDAO roleDAO = getDaoManager().getRoleDAO(getSession());
-	UserRole roleWithId = roleDAO.completeRoleId(role);
-
-	try {
-	    ArrayList<User> users = GetUsersWithRoleSQL.execute(this, roleWithId);
-	    return users;
-	} catch (OperationException e) {
-	    throw e;
-	} catch (DataConstraintException e) {
-	    throw new OperationException(ErrorCodes.DB_OP_ERROR, e);
-	}
-    }
-
-    @Override
     public void deleteUser(User user) throws OperationException, DataConstraintException, ItemNotFoundException {
 
 	User usr = completeUserId(user);
 	try {
 	    new DeleteUserSQL(this, usr).execute();
+	    new DeleteUserGroupAssignments(this, usr).execute();
 	    APPLOG.action(AppLogAction.DELETE, User.class, usr.getUsername(), AppLog.SUCCESS);
 	    APPLOG.info("User " + usr.getUsername() + " was deleted");
 	} catch (OperationException e) {
@@ -226,7 +209,7 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 	Group gr = completeGroupId(group);
 	User usr = completeUserId(user);
 
-	// TODO: add check for group id and user id existence
+	// TODO:(2) add check for group id and user id existence
 
 	new AssignUserToGroupSQL(this, usr, gr).execute();
     }
@@ -251,8 +234,13 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 	Group gr = completeGroupId(group);
 	User usr = completeUserId(user);
 
-	// TODO: add check for group id and user id existence
+	// TODO:(2) add check for group id and user id existence
 
 	new UnassignUserFromGroupSQL(this, usr, gr).execute();
+    }
+
+    @Override
+    public void deleteGroupAssignments(Group group) throws OperationException, DataConstraintException {
+	new DeleteGroupAssignmentsSQL(this, group).execute();
     }
 }

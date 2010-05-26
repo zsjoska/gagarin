@@ -4,13 +4,13 @@ import org.apache.log4j.Logger;
 
 import ro.gagarin.ApplicationInitializer;
 import ro.gagarin.BasicManagerFactory;
-import ro.gagarin.ManagerFactory;
-import ro.gagarin.SessionManager;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.LoginRequiredException;
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.log.AppLog;
+import ro.gagarin.manager.ManagerFactory;
+import ro.gagarin.manager.SessionManager;
 import ro.gagarin.session.Session;
 import ro.gagarin.utils.FieldValidator;
 
@@ -50,7 +50,8 @@ public abstract class WebserviceOperation {
 	finish();
     }
 
-    // TODO: make protected
+    // TODO:(3) make protected
+    // TODO:(2) Give the session as parameter
     public abstract void execute() throws ExceptionBase;
 
     public abstract void prepareManagers(Session session) throws ExceptionBase;

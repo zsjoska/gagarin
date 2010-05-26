@@ -1,9 +1,9 @@
 package ro.gagarin.application.objects;
 
 import ro.gagarin.BaseEntity;
+import ro.gagarin.PersonTypesEnum;
 import ro.gagarin.user.AuthenticationType;
 import ro.gagarin.user.User;
-import ro.gagarin.user.UserRole;
 import ro.gagarin.user.UserStatus;
 import ro.gagarin.utils.ConversionUtils;
 
@@ -16,7 +16,6 @@ public class AppUser extends BaseEntity implements User {
     private String phone;
     private String password;
     private String username;
-    private UserRole role;
     private AuthenticationType authentication;
     private UserStatus status;
     private Long created;
@@ -50,11 +49,6 @@ public class AppUser extends BaseEntity implements User {
     }
 
     @Override
-    public UserRole getRole() {
-	return this.role;
-    }
-
-    @Override
     public String getUsername() {
 	return this.username;
     }
@@ -69,10 +63,6 @@ public class AppUser extends BaseEntity implements User {
 
     public void setUsername(String userName) {
 	this.username = userName;
-    }
-
-    public void setRole(UserRole role) {
-	this.role = role;
     }
 
     public String getPhone() {
@@ -105,5 +95,15 @@ public class AppUser extends BaseEntity implements User {
 
     public void setCreated(Long created) {
 	this.created = created;
+    }
+
+    @Override
+    public PersonTypesEnum getType() {
+	return PersonTypesEnum.USER;
+    }
+
+    @Override
+    public String getTitle() {
+	return this.getUsername();
     }
 }

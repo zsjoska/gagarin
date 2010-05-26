@@ -3,19 +3,34 @@ package ro.gagarin.session;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
 
-import ro.gagarin.BaseDAO;
 import ro.gagarin.BasicManagerFactory;
-import ro.gagarin.ConfigurationManager;
-import ro.gagarin.ManagerFactory;
-import ro.gagarin.SessionManager;
+import ro.gagarin.ControlEntity;
+import ro.gagarin.Person;
 import ro.gagarin.config.Config;
 import ro.gagarin.config.SettingsChangeObserver;
+import ro.gagarin.dao.BaseDAO;
+import ro.gagarin.dao.DAOManager;
+import ro.gagarin.dao.RoleDAO;
+import ro.gagarin.dao.UserDAO;
+import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.exceptions.SessionNotFoundException;
+import ro.gagarin.log.AppLog;
+import ro.gagarin.manager.ConfigurationManager;
+import ro.gagarin.manager.LogManager;
+import ro.gagarin.manager.ManagerFactory;
+import ro.gagarin.manager.SessionManager;
+import ro.gagarin.user.Group;
+import ro.gagarin.user.PermissionEnum;
+import ro.gagarin.user.User;
+import ro.gagarin.user.UserPermission;
+import ro.gagarin.util.Utils;
 
 public class BasicSessionManager implements SessionManager, SettingsChangeObserver {
 
@@ -66,7 +81,7 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
     public void logout(String id) {
 	Session session = this.sessions.get(id);
 	if (session != null) {
-	    // TODO: do something useful here
+	    // TODO:(4) do something useful here
 	}
 	this.sessions.remove(id);
     }
@@ -165,5 +180,46 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
     @Override
     public void initializeManager() {
 	// nothing to initialize
+    }
+
+    @Override
+    public void assignUserToSession(User user, Session session) throws OperationException, ItemNotFoundException {
+
+	// TODO:(2) check that the session has no user assignment
+	// may interfere with the register user implementation
+
+	// get the required managers
+	ManagerFactory managerFactory = session.getManagerFactory();
+	DAOManager daoManager = managerFactory.getDAOManager();
+	RoleDAO roleDAO = daoManager.getRoleDAO(session);
+	UserDAO userDAO = daoManager.getUserDAO(session);
+	LogManager logManager = managerFactory.getLogManager();
+	AppLog appLog = logManager.getLoggingSession(session, getClass());
+	ConfigurationManager cfgManager = managerFactory.getConfigurationManager();
+	String adminGroupName = cfgManager.getString(Config.ADMIN_GROUP_NAME);
+
+	session.setAdminSession(false);
+	// get the user groups
+	List<Group> userGroups = userDAO.getUserGroups(user);
+	Person[] persons = new Person[userGroups.size() + 1];
+	int index = 0;
+	for (Group group : userGroups) {
+	    persons[index++] = group;
+	    if (adminGroupName.equals(group.getName())) {
+		session.setAdminSession(true);
+	    }
+	}
+	persons[index] = user;
+
+	// get the user effective permissions
+	Map<ControlEntity, Set<UserPermission>> effectivePermissions = roleDAO.getEffectivePermissions(persons);
+
+	// transform the effective permissions to a more friendly format
+	Map<ControlEntity, Set<PermissionEnum>> permMap = Utils
+		.convertUserPermissionSetToPermissionEnumSet(effectivePermissions);
+
+	session.assignUser(user, permMap);
+	appLog.info("User " + user.getId() + ":" + user.getUsername() + " was bound to session "
+		+ session.getSessionString());
     }
 }

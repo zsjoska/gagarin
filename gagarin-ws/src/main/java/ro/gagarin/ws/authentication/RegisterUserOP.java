@@ -1,13 +1,13 @@
 package ro.gagarin.ws.authentication;
 
-import ro.gagarin.ConfigurationManager;
-import ro.gagarin.SessionManager;
-import ro.gagarin.UserDAO;
 import ro.gagarin.config.Config;
+import ro.gagarin.dao.UserDAO;
 import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.exceptions.ItemExistsException;
 import ro.gagarin.exceptions.OperationException;
+import ro.gagarin.manager.ConfigurationManager;
+import ro.gagarin.manager.SessionManager;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.Group;
 import ro.gagarin.user.User;
@@ -43,7 +43,6 @@ public class RegisterUserOP extends WebserviceOperation {
 	FieldValidator.requireStringField("password", user, true);
 	FieldValidator.requireStringField("email", user, true);
 	user.setStatus(UserStatus.INIT);
-	// TODO: verify that admin is not permitted to register
     }
 
     @Override
@@ -79,7 +78,7 @@ public class RegisterUserOP extends WebserviceOperation {
 	session.setUser(sessionUser);
 	session.setExpires(System.currentTimeMillis() + valid);
 
-	// TODO: Add notification call
+	// TODO:(3) Add notification call
 
 	this.confirmationKey = session.getSessionString();
 	getApplog().info("Registration key " + this.confirmationKey + " assigned for user " + user);

@@ -2,33 +2,33 @@ package ro.gagarin;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import ro.gagarin.application.objects.AppUser;
 import ro.gagarin.config.Config;
+import ro.gagarin.dao.RoleDAO;
+import ro.gagarin.dao.UserDAO;
 import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.jdbc.objects.DBUser;
+import ro.gagarin.manager.ConfigurationManager;
+import ro.gagarin.manager.ManagerFactory;
+import ro.gagarin.manager.SessionManager;
 import ro.gagarin.session.Session;
 import ro.gagarin.testutil.TUtil;
-import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.UserRole;
 import ro.gagarin.user.UserStatus;
-import ro.gagarin.utils.ConversionUtils;
 import ro.gagarin.ws.Authentication;
 import ro.gagarin.ws.executor.WSException;
-import ro.gagarin.ws.objects.WSUserPermission;
+import ro.gagarin.ws.objects.WSEffectivePermission;
 
 /**
  * Unit test for simple App.
@@ -43,9 +43,9 @@ public class SessionTest {
 
     private Session session = new Session();
 
-    // TODO: add test with null session for all WS methods
+    // TODO:(5) add test with null session for all WS methods
 
-    // TODO: add test without login for all WS methods
+    // TODO:(5) add test without login for all WS methods
 
     @Test
     public void testSuccessLogin() throws OperationException, DataConstraintException, ItemNotFoundException,
@@ -55,7 +55,6 @@ public class SessionTest {
 
 	UserDAO userManager = FACTORY.getDAOManager().getUserDAO(session);
 	RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
-	ConfigurationManager cfgManager = FACTORY.getConfigurationManager();
 
 	List<UserRole> allRoles = roleManager.getAllRoles();
 	LOG.debug("Roles in system:");
@@ -67,7 +66,6 @@ public class SessionTest {
 	AppUser user = new AppUser();
 	user.setUsername("1" + username);
 	user.setPassword("password1");
-	user.setRole(roleManager.getRoleByName(cfgManager.getString(Config.ADMIN_ROLE_NAME)));
 	user.setStatus(UserStatus.ACTIVE);
 	userManager.createUser(user);
 	FACTORY.releaseSession(session);
@@ -87,13 +85,10 @@ public class SessionTest {
 	session = TUtil.createTestSession();
 
 	UserDAO userManager = FACTORY.getDAOManager().getUserDAO(session);
-	ConfigurationManager cfgManager = FACTORY.getConfigurationManager();
-	RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
 
 	DBUser user = new DBUser();
 	user.setUsername("2" + username);
 	user.setPassword("password2");
-	user.setRole(roleManager.getRoleByName(cfgManager.getString(Config.ADMIN_ROLE_NAME)));
 	user.setStatus(UserStatus.ACTIVE);
 	userManager.createUser(user);
 
@@ -124,13 +119,10 @@ public class SessionTest {
 	session = TUtil.createTestSession();
 
 	UserDAO userManager = FACTORY.getDAOManager().getUserDAO(session);
-	ConfigurationManager cfgManager = FACTORY.getConfigurationManager();
-	RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
 
 	DBUser user = new DBUser();
 	user.setUsername("3" + username);
 	user.setPassword("password3");
-	user.setRole(roleManager.getRoleByName(cfgManager.getString(Config.ADMIN_ROLE_NAME)));
 	user.setStatus(UserStatus.ACTIVE);
 	userManager.createUser(user);
 
@@ -197,19 +189,19 @@ public class SessionTest {
     }
 
     @Test
-    public void testGetCurrentUserPermissions() throws Exception {
-	ConfigurationManager cfgMgr = FACTORY.getConfigurationManager();
-	String session = authentication.createSession(null, "TEST");
-	authentication.login(session, cfgMgr.getString(Config.ADMIN_USER_NAME),
-		cfgMgr.getString(Config.ADMIN_PASSWORD), null);
+    public void testEffectivePermissions() throws Exception {
 
-	Set<WSUserPermission> perm = authentication.getCurrentUserPermissions(session);
-	assertEquals("The admin permission list size does not match with all permission size.",
-		PermissionEnum.values().length, perm.size());
-	HashSet<String> permStrSet = ConversionUtils.convertPermissionsToStringSet(perm);
-	for (PermissionEnum pe : PermissionEnum.values()) {
-	    assertTrue("The admin permission list must contain all code-defined permissions; " + pe.name()
-		    + " was not found.", permStrSet.contains(pe.name()));
+	Session adminSession = TUtil.createAdminSession();
+
+	List<WSEffectivePermission> currentUserPermissions = authentication.getCurrentUserPermissions(adminSession
+		.getSessionString());
+	for (WSEffectivePermission wsEffectivePermission : currentUserPermissions) {
+	    System.err.println(wsEffectivePermission.getName());
+	    System.err.println(wsEffectivePermission.getCategory());
+	    System.err.println(wsEffectivePermission.getId());
+	    System.err.println(wsEffectivePermission.getPermissions());
 	}
+	authentication.logout(adminSession.getSessionString());
     }
+
 }

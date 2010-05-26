@@ -1,10 +1,9 @@
 package ro.gagarin.jdbc;
 
-import ro.gagarin.ConfigDAO;
-import ro.gagarin.DAOManager;
-import ro.gagarin.JdbcConfigDAO;
-import ro.gagarin.RoleDAO;
-import ro.gagarin.UserDAO;
+import ro.gagarin.dao.ConfigDAO;
+import ro.gagarin.dao.DAOManager;
+import ro.gagarin.dao.RoleDAO;
+import ro.gagarin.dao.UserDAO;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.session.Session;
 
@@ -15,7 +14,7 @@ public class JdbcDAOManager implements DAOManager {
     private JdbcDAOManager() {
     }
 
-    // TODO: get rid of this singleton
+    // TODO :(1) get rid of this singleton
     public static synchronized JdbcDAOManager getInstance() {
 	if (INSTANCE == null)
 	    INSTANCE = new JdbcDAOManager();

@@ -1,4 +1,4 @@
-package ro.gagarin;
+package ro.gagarin.dao;
 
 import java.util.ArrayList;
 

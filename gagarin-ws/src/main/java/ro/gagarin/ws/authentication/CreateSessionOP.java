@@ -3,10 +3,10 @@
  */
 package ro.gagarin.ws.authentication;
 
-import ro.gagarin.SessionManager;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.log.AppLog;
+import ro.gagarin.manager.SessionManager;
 import ro.gagarin.session.Session;
 import ro.gagarin.utils.FieldValidator;
 import ro.gagarin.ws.executor.WebserviceOperation;
@@ -34,7 +34,7 @@ public class CreateSessionOP extends WebserviceOperation {
     public void execute() {
 	String language = this.language;
 	if (language == null) {
-	    // TODO move this to the configuration
+	    // TODO:(3) move this to the configuration
 	    language = "en_us";
 	}
 
@@ -66,7 +66,7 @@ public class CreateSessionOP extends WebserviceOperation {
 
     @Override
     public void checkInput(Session session) throws ExceptionBase {
-	// TODO: custom check for language
+	// TODO:(2) custom check for language
 	this.reason = FieldValidator.checkStringValue(reason, "reason", 20);
     }
 }

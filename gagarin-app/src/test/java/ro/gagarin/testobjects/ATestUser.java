@@ -1,9 +1,9 @@
 package ro.gagarin.testobjects;
 
 import ro.gagarin.BaseEntity;
+import ro.gagarin.PersonTypesEnum;
 import ro.gagarin.user.AuthenticationType;
 import ro.gagarin.user.User;
-import ro.gagarin.user.UserRole;
 import ro.gagarin.user.UserStatus;
 import ro.gagarin.utils.ConversionUtils;
 
@@ -16,7 +16,6 @@ public class ATestUser extends BaseEntity implements User {
     private String name;
     private String email;
     private String phone;
-    private UserRole role;
     private AuthenticationType authentication;
     private UserStatus status;
     private Long created;
@@ -26,7 +25,6 @@ public class ATestUser extends BaseEntity implements User {
 	this.username = user.getUsername();
 	this.password = user.getPassword();
 	this.name = user.getName();
-	this.role = user.getRole();
 	this.email = user.getEmail();
 	this.phone = user.getPhone();
 	this.authentication = user.getAuthentication();
@@ -59,14 +57,6 @@ public class ATestUser extends BaseEntity implements User {
 
     public String getName() {
 	return name;
-    }
-
-    public void setRole(UserRole role) {
-	this.role = role;
-    }
-
-    public UserRole getRole() {
-	return role;
     }
 
     public void setEmail(String email) {
@@ -115,5 +105,15 @@ public class ATestUser extends BaseEntity implements User {
 
     public void setCreated(Long created) {
 	this.created = created;
+    }
+
+    @Override
+    public PersonTypesEnum getType() {
+	return PersonTypesEnum.USER;
+    }
+
+    @Override
+    public String getTitle() {
+	return this.getUsername();
     }
 }

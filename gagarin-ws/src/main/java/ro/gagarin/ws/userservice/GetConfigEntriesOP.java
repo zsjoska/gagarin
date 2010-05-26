@@ -2,10 +2,11 @@ package ro.gagarin.ws.userservice;
 
 import java.util.List;
 
-import ro.gagarin.AuthorizationManager;
-import ro.gagarin.ConfigurationManager;
+import ro.gagarin.BaseControlEntity;
 import ro.gagarin.config.ConfigEntry;
 import ro.gagarin.exceptions.ExceptionBase;
+import ro.gagarin.manager.AuthorizationManager;
+import ro.gagarin.manager.ConfigurationManager;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.ws.executor.WebserviceOperation;
@@ -31,7 +32,7 @@ public class GetConfigEntriesOP extends WebserviceOperation {
     @Override
     public void execute() throws ExceptionBase {
 
-	authManager.requiresPermission(getSession(), PermissionEnum.ADMIN_OPERATION);
+	authManager.requiresPermission(getSession(), BaseControlEntity.getAdminEntity(), PermissionEnum.LIST);
 
 	List<ConfigEntry> configValues = cfgMgr.getConfigValues();
 	List<WSConfig> wsConfigList = WSConversionUtils.toWSConfigList(configValues);

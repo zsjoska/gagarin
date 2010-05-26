@@ -1,10 +1,13 @@
-package ro.gagarin;
+package ro.gagarin.manager;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import ro.gagarin.exceptions.ItemNotFoundException;
+import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.session.Session;
+import ro.gagarin.user.User;
 
 /**
  * Base interface for session management. Provides methods for session creation,
@@ -26,8 +29,6 @@ public interface SessionManager extends BaseManager {
      * @return a new initialized session
      */
     Session createSession(String language, String reason, ManagerFactory factory);
-
-    // TODO: create associateUser
 
     /**
      * Returns the session identified by the given session ID.
@@ -76,4 +77,16 @@ public interface SessionManager extends BaseManager {
     void releaseSession(Session session);
 
     List<Session> getSessionList();
+
+    /**
+     * Assigns a user to the given session.<br>
+     * The implementation also should take care of initializing the permission
+     * map for the current login
+     * 
+     * @param user
+     * @param session
+     * @throws OperationException
+     * @throws ItemNotFoundException
+     */
+    void assignUserToSession(User user, Session session) throws OperationException, ItemNotFoundException;
 }

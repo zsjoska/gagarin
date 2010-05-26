@@ -1,27 +1,30 @@
-package ro.gagarin;
+package ro.gagarin.manager;
 
+import ro.gagarin.ApplicationState;
+import ro.gagarin.dao.DAOManager;
 import ro.gagarin.session.Session;
 
+// TODO:(2) rename to application
 public interface ManagerFactory {
     ConfigurationManager getConfigurationManager();
 
     DAOManager getDAOManager();
 
-    void releaseSession(Session session);
-
     SessionManager getSessionManager();
 
     AuthorizationManager getAuthorizationManager();
-
-    ApplicationState getApplicationState();
-
-    void setApplicationState(ApplicationState state);
 
     AuthenticationManager getAuthenticationManager(Session session);
 
     LogManager getLogManager();
 
     ScheduleManager getScheduleManager();
+
+    ApplicationState getApplicationState();
+
+    void setApplicationState(ApplicationState state);
+
+    void releaseSession(Session session);
 
     void setConfigurationManager(ConfigurationManager configurationManager);
 

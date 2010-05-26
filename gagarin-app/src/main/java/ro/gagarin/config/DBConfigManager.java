@@ -7,15 +7,15 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import ro.gagarin.BasicManagerFactory;
-import ro.gagarin.ConfigDAO;
-import ro.gagarin.ConfigurationManager;
-import ro.gagarin.ManagerFactory;
 import ro.gagarin.application.objects.AppConfig;
+import ro.gagarin.dao.ConfigDAO;
 import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.objects.DBConfig;
 import ro.gagarin.log.AppLog;
+import ro.gagarin.manager.ConfigurationManager;
+import ro.gagarin.manager.ManagerFactory;
 import ro.gagarin.scheduler.JobController;
 import ro.gagarin.scheduler.ScheduledJob;
 import ro.gagarin.session.Session;
@@ -50,7 +50,7 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
 	    log.debug("DBLUT = " + lastUpdateTime + " CacheLUT=" + INSTANCE.getLastUpdateTime());
 	    if (lastUpdateTime > INSTANCE.getLastUpdateTime()) {
 
-		// TODO: use TB generated timestamp
+		// TODO:(3) use TB generated timestamp
 		synchronized (INSTANCE) {
 		    long lastQuery = System.currentTimeMillis();
 		    ArrayList<ConfigEntry> cfgValues = configDAO.listConfigurations();

@@ -3,8 +3,8 @@
  */
 package ro.gagarin.ws.authentication;
 
-import ro.gagarin.SessionManager;
 import ro.gagarin.exceptions.ExceptionBase;
+import ro.gagarin.manager.SessionManager;
 import ro.gagarin.session.Session;
 import ro.gagarin.ws.executor.WebserviceOperation;
 

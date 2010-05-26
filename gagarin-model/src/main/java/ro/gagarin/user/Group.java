@@ -1,6 +1,9 @@
 package ro.gagarin.user;
 
-public interface Group {
+import ro.gagarin.ControlEntity;
+import ro.gagarin.Person;
+
+public interface Group extends Person, ControlEntity {
 
     public abstract String getName();
 

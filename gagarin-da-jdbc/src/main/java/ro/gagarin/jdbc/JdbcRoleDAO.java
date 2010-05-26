@@ -3,10 +3,16 @@ package ro.gagarin.jdbc;
 import static ro.gagarin.utils.ConversionUtils.perm2String;
 import static ro.gagarin.utils.ConversionUtils.role2String;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
-import ro.gagarin.RoleDAO;
+import ro.gagarin.BaseControlEntity;
+import ro.gagarin.ControlEntity;
+import ro.gagarin.ControlEntityCategory;
+import ro.gagarin.Person;
+import ro.gagarin.dao.RoleDAO;
 import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.ItemNotFoundException;
@@ -14,17 +20,25 @@ import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.objects.DBUserPermission;
 import ro.gagarin.jdbc.objects.DBUserRole;
 import ro.gagarin.jdbc.role.AssignPermissionToRoleSQL;
+import ro.gagarin.jdbc.role.AssignRoleToPersonSQL;
 import ro.gagarin.jdbc.role.CreatePermissionSQL;
 import ro.gagarin.jdbc.role.CreateRoleSQL;
 import ro.gagarin.jdbc.role.DeletePermissionSQL;
 import ro.gagarin.jdbc.role.DeleteRoleSQL;
+import ro.gagarin.jdbc.role.GetControlEntityByIdAndCategorySQL;
+import ro.gagarin.jdbc.role.GetControlEntityListForCategorySQL;
+import ro.gagarin.jdbc.role.GetEffectivePermissionsOnEntitySQL;
+import ro.gagarin.jdbc.role.GetEffectivePermissionsSQL;
 import ro.gagarin.jdbc.role.GetPermissionRolesSQL;
 import ro.gagarin.jdbc.role.GetRolePermissionsSQL;
+import ro.gagarin.jdbc.role.RemoveControlEntityFromAssignmentSQL;
+import ro.gagarin.jdbc.role.RemovePersonFromAssignmentSQL;
 import ro.gagarin.jdbc.role.SelectPermissionByNameSQL;
 import ro.gagarin.jdbc.role.SelectPermissionsSQL;
 import ro.gagarin.jdbc.role.SelectRoleByNameSQL;
 import ro.gagarin.jdbc.role.SelectRolesSQL;
 import ro.gagarin.jdbc.role.SubstractRolesPermissions;
+import ro.gagarin.jdbc.role.UnAssignRoleFromPersonSQL;
 import ro.gagarin.log.AppLog;
 import ro.gagarin.log.AppLogAction;
 import ro.gagarin.session.Session;
@@ -144,6 +158,9 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 	return SelectPermissionByNameSQL.execute(this, permissionName);
     }
 
+    // TODO:(3) Think again: why we would delete a permission;
+    // it is recreated at application startup
+    // What should happen on application upgrade when a permission is removed
     @Override
     public void deletePermission(UserPermission perm) throws OperationException, ItemNotFoundException {
 	UserPermission permission = completePermissionId(perm);
@@ -170,6 +187,7 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 	return SelectRolesSQL.execute(this);
     }
 
+    // TODO:(4) This is not used since the new permission framework
     @Override
     public List<UserPermission> substractUsersRolePermissions(UserRole main, UserRole substract)
 	    throws OperationException, ItemNotFoundException {
@@ -182,7 +200,7 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
     public void assignPermissionToRole(UserRole role, UserPermission perm) throws ItemNotFoundException,
 	    OperationException {
 
-	// TODO: move the checks to a method inside of execute
+	// TODO:(1) move the checks to a method inside of execute
 	// the markRollback could be forgotten this way
 	if (role == null) {
 	    markRollback();
@@ -218,4 +236,76 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 	return GetPermissionRolesSQL.execute(this, permission);
     }
 
+    @Override
+    public void assignRoleToPerson(UserRole role, Person person, ControlEntity object) throws OperationException,
+	    DataConstraintException, ItemNotFoundException {
+
+	UserRole completeRole = completeRoleId(role);
+
+	new AssignRoleToPersonSQL(this, completeRole, person, object).execute();
+    }
+
+    @Override
+    public void unAssignRoleFromPerson(UserRole role, Person person, ControlEntity ce) throws OperationException,
+	    DataConstraintException, ItemNotFoundException {
+	UserRole completeRole = completeRoleId(role);
+
+	new UnAssignRoleFromPersonSQL(this, completeRole, person, ce).execute();
+    }
+
+    @Override
+    public Set<UserPermission> getEffectivePermissionsOnEntity(ControlEntity entity, Person... persons)
+	    throws OperationException {
+	GetEffectivePermissionsOnEntitySQL cmd = new GetEffectivePermissionsOnEntitySQL(this, entity, persons);
+	cmd.execute();
+	return cmd.getPermissions();
+    }
+
+    @Override
+    public Map<ControlEntity, Set<UserPermission>> getEffectivePermissions(Person... persons) throws OperationException {
+	Map<ControlEntity, Set<UserPermission>> effectivePermissions = GetEffectivePermissionsSQL
+		.execute(this, persons);
+
+	// at this point, all control entities are missing the name field
+	// the only way to figure it out is to do additional queries
+	// this would be nice to have cached
+
+	Map<ControlEntity, Set<UserPermission>> newMap = new HashMap<ControlEntity, Set<UserPermission>>();
+	for (ControlEntity ce : effectivePermissions.keySet()) {
+	    if (ce.getCategory().table() != null) {
+		ControlEntity completeCe = GetControlEntityByIdAndCategorySQL.execute(this, ce.getId(), ce
+			.getCategory());
+		if (completeCe == null) {
+		    APPLOG.error("Inconsistent control entity found. Cleanup was not done properly. Id=" + ce.getId()
+			    + " Category = " + ce.getCategory());
+		} else {
+		    newMap.put(completeCe, effectivePermissions.get(ce));
+		}
+	    } else {
+		if (ce.getId() == BaseControlEntity.getAdminEntity().getId()) {
+		    newMap.put(BaseControlEntity.getAdminEntity(), effectivePermissions.get(ce));
+		} else {
+		    APPLOG.error("Unknown control entity");
+		}
+	    }
+	}
+	return newMap;
+    }
+
+    @Override
+    public void removeControlEntityFromAssignment(ControlEntity ce) throws OperationException, DataConstraintException {
+	new RemoveControlEntityFromAssignmentSQL(this, ce).execute();
+
+    }
+
+    @Override
+    public void removePersonFromAssignment(Person person) throws OperationException, DataConstraintException {
+	new RemovePersonFromAssignmentSQL(this, person).execute();
+    }
+
+    @Override
+    public List<ControlEntity> getControlEntityListForCategory(ControlEntityCategory categoryEnum)
+	    throws OperationException {
+	return GetControlEntityListForCategorySQL.execute(this, categoryEnum);
+    }
 }

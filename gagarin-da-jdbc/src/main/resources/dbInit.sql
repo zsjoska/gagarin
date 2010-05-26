@@ -28,7 +28,6 @@ CREATE TABLE Users
 	email varchar(50), 
 	phone varchar(50), 
 	password varchar(50), 
-	roleid bigint,
 	status int NOT NULL,
 	authentication varchar(20),
 	created bigint NOT NULL,	
@@ -112,3 +111,17 @@ CREATE TABLE Config
 	CONSTRAINT UK_CONFIG_configName UNIQUE (configName)
 )
 --END
+
+--CHECK: RolePersonAssignment
+SELECT * FROM RolePersonAssignment
+--CREATE:
+CREATE TABLE RolePersonAssignment 
+(
+	role_id bigint  NOT NULL, 
+	person_id bigint  NOT NULL,
+	person_type varchar(50) NOT NULL,
+	object_id bigint  NOT NULL,
+	object_type varchar(50) NOT NULL
+)
+--END
+

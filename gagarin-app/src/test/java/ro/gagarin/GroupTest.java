@@ -11,16 +11,17 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import ro.gagarin.dao.UserDAO;
 import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.OperationException;
+import ro.gagarin.manager.ManagerFactory;
 import ro.gagarin.session.Session;
 import ro.gagarin.testobjects.ATestGroup;
 import ro.gagarin.testobjects.ATestUser;
 import ro.gagarin.testutil.TUtil;
 import ro.gagarin.user.Group;
 import ro.gagarin.user.User;
-import ro.gagarin.user.UserRole;
 import ro.gagarin.user.UserStatus;
 
 /**
@@ -118,11 +119,8 @@ public class GroupTest {
     @Test
     public void userGroupAssingnment() throws Exception {
 
-	UserRole adminRole = TUtil.getAdminRole();
-
 	ATestUser user = new ATestUser();
 	user.setUsername(groupname);
-	user.setRole(adminRole);
 	user.setStatus(UserStatus.ACTIVE);
 	user.setId(usrManager.createUser(user));
 
@@ -154,11 +152,8 @@ public class GroupTest {
     @Test
     public void userGroupAssingnmentInexistentGroup() throws Exception {
 
-	UserRole adminRole = TUtil.getAdminRole();
-
 	ATestUser user = new ATestUser();
 	user.setUsername(groupname + "_1");
-	user.setRole(adminRole);
 	user.setStatus(UserStatus.ACTIVE);
 	user.setId(usrManager.createUser(user));
 
@@ -173,17 +168,14 @@ public class GroupTest {
 	    assertEquals("Invalid error code", ErrorCodes.ITEM_NOT_FOUND, e.getErrorCode());
 	}
 
-	// TODO: check that no assignment was made
+	// TODO:(4) check that no assignment was made
     }
 
     @Test
     public void userGroupAssingnmentInexistentUser() throws Exception {
 
-	UserRole adminRole = TUtil.getAdminRole();
-
 	ATestUser user = new ATestUser();
 	user.setUsername(groupname + "_NOT");
-	user.setRole(adminRole);
 	// don't set Id since then will not look up in GB for existence
 
 	ATestGroup group = new ATestGroup();
@@ -197,6 +189,6 @@ public class GroupTest {
 	    assertEquals("Invalid error code", ErrorCodes.ITEM_NOT_FOUND, e.getErrorCode());
 	}
 
-	// TODO: check that no assignment was made
+	// TODO:(4) check that no assignment was made
     }
 }

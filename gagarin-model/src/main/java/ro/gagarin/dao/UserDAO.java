@@ -1,4 +1,4 @@
-package ro.gagarin;
+package ro.gagarin.dao;
 
 import java.util.List;
 
@@ -7,7 +7,6 @@ import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.user.Group;
 import ro.gagarin.user.User;
-import ro.gagarin.user.UserRole;
 
 /**
  * Base interface to handle the operations related to the users of the system.
@@ -56,17 +55,6 @@ public interface UserDAO extends BaseDAO {
     User getUserByUsername(String username) throws OperationException;
 
     /**
-     * Returns a list of users with a specific role
-     * 
-     * @param role
-     *            the role
-     * @return a list of users
-     * @throws OperationException
-     * @throws ItemNotFoundException
-     */
-    List<User> getUsersWithRole(UserRole role) throws OperationException, ItemNotFoundException;
-
-    /**
      * Deletes a user
      * 
      * @param user
@@ -85,7 +73,7 @@ public interface UserDAO extends BaseDAO {
      */
     List<User> getAllUsers() throws OperationException;
 
-    // TODO: this shouldn't be here
+    // TODO:(1) this shouldn't be here
     void markRollback();
 
     /**
@@ -169,4 +157,7 @@ public interface UserDAO extends BaseDAO {
 
     void unassignUserFromGroup(User user, Group group) throws OperationException, ItemNotFoundException,
 	    DataConstraintException;
+
+    void deleteGroupAssignments(Group group) throws OperationException, DataConstraintException;
+
 }

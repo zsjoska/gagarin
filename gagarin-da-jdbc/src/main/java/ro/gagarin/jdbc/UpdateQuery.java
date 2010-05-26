@@ -45,7 +45,6 @@ public abstract class UpdateQuery {
 	    stmnt.close();
 	    success = true;
 	} catch (OperationException e) {
-	    LOG.error("Error executing the query", e);
 	    throw e;
 	} catch (DataConstraintException e) {
 	    // catching just to not be caught by the generic exception clause
@@ -54,14 +53,11 @@ public abstract class UpdateQuery {
 
 	    // this exception could occur for syntax error in SQL, or other
 	    // error in fillParameters
-
-	    LOG.error("Error prepairing the query", e);
 	    throw new OperationException(ErrorCodes.SQL_ERROR, e);
 	} catch (Exception e) {
 
 	    // for other error, e.g. null pointer access, etc
 	    // during the data processing
-	    LOG.error("Fatal error executing the query:", e);
 	    throw new OperationException(ErrorCodes.DB_OP_ERROR, e);
 	} finally {
 	    if (!success) {

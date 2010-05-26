@@ -23,7 +23,7 @@ public class SessionNotFoundException extends ExceptionBase {
     public SessionNotFoundException(Session session) {
 	super(ErrorCodes.SESSION_NOT_FOUND, session.getSessionString());
 	this.sessionID = session.getSessionString();
-	// TODO: construct with more details
+	// TODO:(3) construct with more details
     }
 
     public String getSessionID() {

@@ -1,24 +1,20 @@
 package ro.gagarin;
 
-public abstract class ControlEntity extends BaseEntity {
+/**
+ * Interface declaring an object for which the access can be controlled by the
+ * permission framework.<br>
+ * Every Control entity should have a category which is registered and can be
+ * queried.
+ * 
+ * @author ZsJoska
+ * 
+ */
+public interface ControlEntity {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -4483417459434469304L;
+    Long getId();
 
-    public Class<?> getControlEntityClass() {
-	return ControlEntity.class;
-    }
+    public String getName();
 
-    public void setDisplayName(String displayName) {
-	this.displayName = displayName;
-    }
-
-    public String getDisplayName() {
-	return displayName;
-    }
-
-    private String displayName;
+    ControlEntityCategory getCategory();
 
 }

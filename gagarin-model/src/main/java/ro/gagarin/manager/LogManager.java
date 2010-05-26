@@ -1,4 +1,4 @@
-package ro.gagarin;
+package ro.gagarin.manager;
 
 import ro.gagarin.log.AppLog;
 import ro.gagarin.session.Session;

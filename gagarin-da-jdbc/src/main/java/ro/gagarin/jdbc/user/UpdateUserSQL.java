@@ -23,8 +23,8 @@ public class UpdateUserSQL extends UpdateQuery {
 	// id is required for identification
 	FieldValidator.requireLongField("id", user);
 
-	// TODO: check that at least one field is not null
-	// TODO: check some key fields if they are empty
+	// TODO:(2) check that at least one field is not null
+	// TODO:(2) check some key fields if they are empty
 
     }
 
@@ -45,9 +45,6 @@ public class UpdateUserSQL extends UpdateQuery {
 	}
 	if (user.getPhone() != null) {
 	    stmnt.setString(index++, user.getPhone());
-	}
-	if (user.getRole() != null) {
-	    stmnt.setLong(index++, user.getRole().getId());
 	}
 	if (user.getAuthentication() != null) {
 	    stmnt.setString(index++, user.getAuthentication().name());
@@ -77,9 +74,6 @@ public class UpdateUserSQL extends UpdateQuery {
 	}
 	if (user.getPhone() != null) {
 	    sb.append(" phone = ?,");
-	}
-	if (user.getRole() != null) {
-	    sb.append(" roleid = ?,");
 	}
 	if (user.getAuthentication() != null) {
 	    sb.append(" authentication = ?,");

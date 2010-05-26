@@ -204,17 +204,6 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
     public void assignPermissionToRole(UserRole role, UserPermission perm) throws ItemNotFoundException,
 	    OperationException {
 
-	// TODO:(1) move the checks to a method inside of execute
-	// the markRollback could be forgotten this way
-	if (role == null) {
-	    markRollback();
-	    throw new ItemNotFoundException(UserRole.class, "null");
-	}
-	if (perm == null) {
-	    markRollback();
-	    throw new ItemNotFoundException(UserPermission.class, "null");
-	}
-
 	UserRole r = completeRoleId(role);
 	UserPermission p = completePermissionId(perm);
 

@@ -9,11 +9,11 @@ import ro.gagarin.jdbc.UpdateQuery;
 import ro.gagarin.user.User;
 import ro.gagarin.utils.FieldValidator;
 
-public class DeleteUserGroupAssignments extends UpdateQuery {
+public class CleanupUserGroupAssignments extends UpdateQuery {
 
     private final User user;
 
-    public DeleteUserGroupAssignments(BaseJdbcDAO dao, User user) {
+    public CleanupUserGroupAssignments(BaseJdbcDAO dao, User user) {
 	super(dao, user.getClass());
 	this.user = user;
     }

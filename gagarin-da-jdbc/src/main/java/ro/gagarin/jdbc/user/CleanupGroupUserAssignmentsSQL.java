@@ -15,11 +15,11 @@ import ro.gagarin.utils.FieldValidator;
  * @author ZsJoska
  * 
  */
-public class CleanupGroupAssignmentsSQL extends UpdateQuery {
+public class CleanupGroupUserAssignmentsSQL extends UpdateQuery {
 
     private final Group group;
 
-    public CleanupGroupAssignmentsSQL(BaseJdbcDAO dao, Group group) {
+    public CleanupGroupUserAssignmentsSQL(BaseJdbcDAO dao, Group group) {
 	super(dao, group.getClass());
 	this.group = group;
     }

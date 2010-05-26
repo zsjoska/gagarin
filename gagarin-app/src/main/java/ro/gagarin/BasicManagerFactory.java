@@ -35,6 +35,8 @@ public class BasicManagerFactory implements ManagerFactory {
     private LogManager logManager;
     private DAOManager daoManager;
     private SessionManager sessionManager;
+    private AuthenticationManager authenticationManager;
+    private AuthorizationManager authorizationManager;
 
     static {
 	try {
@@ -84,13 +86,12 @@ public class BasicManagerFactory implements ManagerFactory {
     }
 
     public AuthorizationManager getAuthorizationManager() {
-	return new BasicAuthorizationManager();
+	return this.authorizationManager;
     }
 
     @Override
-    public AuthenticationManager getAuthenticationManager(Session session) {
-	// TODO:(1) remove session parameter
-	return new BasicAuthenticationManager(session);
+    public AuthenticationManager getAuthenticationManager() {
+	return this.authenticationManager;
     }
 
     @Override
@@ -109,6 +110,8 @@ public class BasicManagerFactory implements ManagerFactory {
 	this.scheduleManager = new DefaultScheduleManager();
 	this.logManager = new BasicLogManager();
 	this.sessionManager = new BasicSessionManager();
+	this.authenticationManager = new BasicAuthenticationManager();
+	this.authorizationManager = new BasicAuthorizationManager();
     }
 
     public void setConfigurationManager(ConfigurationManager configurationManager) {

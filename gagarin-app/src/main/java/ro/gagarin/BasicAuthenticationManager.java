@@ -10,19 +10,15 @@ import ro.gagarin.user.User;
 
 public class BasicAuthenticationManager implements AuthenticationManager {
 
-    private final Session session;
-
-    private ManagerFactory factory;
-
-    public BasicAuthenticationManager(Session session) {
-	this.session = session;
-	this.factory = session.getManagerFactory();
+    public BasicAuthenticationManager() {
     }
 
     @Override
-    public User userLogin(String username, String password, String[] extra) throws ItemNotFoundException,
-	    OperationException {
-	UserDAO userDAO = factory.getDAOManager().getUserDAO(this.session);
+    public User userLogin(Session session, String username, String password, String[] extra)
+	    throws ItemNotFoundException, OperationException {
+	ManagerFactory factory = session.getManagerFactory();
+	UserDAO userDAO = factory.getDAOManager().getUserDAO(session);
+
 	// TODO:(2) rewrite to get the user first, then authenticate in a
 	// pluggable way
 	User user = userDAO.userLogin(username, password);

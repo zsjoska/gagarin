@@ -2,6 +2,7 @@ package ro.gagarin.manager;
 
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.OperationException;
+import ro.gagarin.session.Session;
 import ro.gagarin.user.User;
 
 public interface AuthenticationManager extends BaseManager {
@@ -13,6 +14,7 @@ public interface AuthenticationManager extends BaseManager {
      * should call the
      * {@link SessionManager#assignUserToSession(User, ro.gagarin.session.Session)}
      * 
+     * @param session
      * @param username
      * @param password
      * @param extra
@@ -20,6 +22,7 @@ public interface AuthenticationManager extends BaseManager {
      * @throws ItemNotFoundException
      * @throws OperationException
      */
-    User userLogin(String username, String password, String[] extra) throws ItemNotFoundException, OperationException;
+    User userLogin(Session session, String username, String password, String[] extra) throws ItemNotFoundException,
+	    OperationException;
 
 }

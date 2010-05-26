@@ -14,7 +14,7 @@ public interface ManagerFactory {
 
     AuthorizationManager getAuthorizationManager();
 
-    AuthenticationManager getAuthenticationManager(Session session);
+    AuthenticationManager getAuthenticationManager();
 
     LogManager getLogManager();
 

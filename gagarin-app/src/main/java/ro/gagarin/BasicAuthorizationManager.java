@@ -38,9 +38,7 @@ public class BasicAuthorizationManager implements AuthorizationManager {
 
 	Set<PermissionEnum> permSet = session.getEffectivePermissions().get(ce);
 	if (permSet == null) {
-	    // TODO:(1) reqPermission[0].name() is not the right way... and we
-	    // have to track the object ID and name too
-	    throw new PermissionDeniedException(user.getUsername(), reqPermission[0].name());
+	    throw new PermissionDeniedException(user.getUsername(), reqPermission, ce);
 	}
 
 	for (PermissionEnum reqPerm : reqPermission) {
@@ -59,9 +57,7 @@ public class BasicAuthorizationManager implements AuthorizationManager {
 	    }
 	}
 
-	// TODO:(1) reqPermission[0].name() is not the right way... and we have
-	// to track the object ID and name too
-	throw new PermissionDeniedException(user.getUsername(), reqPermission[0].name());
+	throw new PermissionDeniedException(user.getUsername(), reqPermission, ce);
     }
 
     @Override

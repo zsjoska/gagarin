@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import ro.gagarin.BaseControlEntity;
 import ro.gagarin.ControlEntity;
 import ro.gagarin.ControlEntityCategory;
 import ro.gagarin.Person;
@@ -281,7 +282,11 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 		    newMap.put(completeCe, effectivePermissions.get(ce));
 		}
 	    } else {
-
+		if (ce.getId() == BaseControlEntity.getAdminEntity().getId()) {
+		    newMap.put(BaseControlEntity.getAdminEntity(), effectivePermissions.get(ce));
+		} else {
+		    APPLOG.error("Unknown control entity");
+		}
 	    }
 	}
 	return newMap;

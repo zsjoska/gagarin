@@ -13,7 +13,7 @@ import ro.gagarin.ws.util.WSConversionUtils;
 public class GetAllPermissionListOP extends WebserviceOperation {
 
     private List<WSUserPermission> permissionlist;
-    private RoleDAO roleManager;
+    private RoleDAO roleDAO;
 
     public GetAllPermissionListOP(String sessionId) {
 	super(sessionId);
@@ -21,13 +21,13 @@ public class GetAllPermissionListOP extends WebserviceOperation {
 
     @Override
     public void prepareManagers(Session session) throws ExceptionBase {
-	roleManager = FACTORY.getDAOManager().getRoleDAO(getSession());
+	roleDAO = FACTORY.getDAOManager().getRoleDAO(getSession());
     }
 
     @Override
     public void execute() throws ExceptionBase {
 
-	List<UserPermission> allPermissions = roleManager.getAllPermissions();
+	List<UserPermission> allPermissions = roleDAO.getAllPermissions();
 	this.permissionlist = WSConversionUtils.convertToWSPermissionList(allPermissions);
     }
 

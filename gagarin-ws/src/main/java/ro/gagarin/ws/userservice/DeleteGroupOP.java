@@ -18,7 +18,7 @@ public class DeleteGroupOP extends WebserviceOperation {
 
     private AuthorizationManager authManager;
 
-    private UserDAO userManager;
+    private UserDAO userDAO;
 
     public DeleteGroupOP(String sessionId, WSGroup group) {
 	super(sessionId);
@@ -41,8 +41,8 @@ public class DeleteGroupOP extends WebserviceOperation {
 	// TODO:(1) the group may not have Id
 
 	authManager.requiresPermission(getSession(), group, PermissionEnum.DELETE);
-	userManager.deleteGroup(this.group);
-	userManager.deleteGroupAssignments(this.group);
+	userDAO.deleteGroup(this.group);
+	userDAO.deleteGroupAssignments(this.group);
 	authManager.removeControlEntityFromAssignment(getSession(), group);
 	authManager.removePersonFromAssignment(getSession(), group);
     }
@@ -50,6 +50,6 @@ public class DeleteGroupOP extends WebserviceOperation {
     @Override
     public void prepareManagers(Session session) throws ExceptionBase {
 	authManager = FACTORY.getAuthorizationManager();
-	userManager = FACTORY.getDAOManager().getUserDAO(getSession());
+	userDAO = FACTORY.getDAOManager().getUserDAO(getSession());
     }
 }

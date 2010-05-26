@@ -18,7 +18,7 @@ public class AssignUsersToGroupOP extends WebserviceOperation {
 
     private AuthorizationManager authManager;
 
-    private UserDAO userManager;
+    private UserDAO userDAO;
 
     public AssignUsersToGroupOP(String sessionId, WSGroup group, WSUser[] users) {
 	super(sessionId);
@@ -40,7 +40,7 @@ public class AssignUsersToGroupOP extends WebserviceOperation {
 	authManager.requiresPermission(getSession(), group, PermissionEnum.UPDATE);
 
 	for (WSUser user : this.users) {
-	    userManager.assignUserToGroup(user, group);
+	    userDAO.assignUserToGroup(user, group);
 	}
 
     }
@@ -48,7 +48,7 @@ public class AssignUsersToGroupOP extends WebserviceOperation {
     @Override
     public void prepareManagers(Session session) throws ExceptionBase {
 	authManager = FACTORY.getAuthorizationManager();
-	userManager = FACTORY.getDAOManager().getUserDAO(getSession());
+	userDAO = FACTORY.getDAOManager().getUserDAO(getSession());
     }
 
 }

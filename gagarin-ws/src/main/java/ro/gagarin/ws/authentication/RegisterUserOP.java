@@ -20,7 +20,7 @@ import ro.gagarin.ws.objects.WSUser;
 public class RegisterUserOP extends WebserviceOperation {
 
     private final WSUser user;
-    private UserDAO userManager;
+    private UserDAO userDAO;
     private SessionManager sessionManager;
     private String confirmationKey;
     private ConfigurationManager cfgManager;
@@ -50,7 +50,7 @@ public class RegisterUserOP extends WebserviceOperation {
 	User sessionUser = this.user;
 	long valid = cfgManager.getLong(Config.REGISTRATION_VALIDITY);
 
-	User userByUsername = userManager.getUserByUsername(user.getUsername());
+	User userByUsername = userDAO.getUserByUsername(user.getUsername());
 	if (userByUsername != null && userByUsername.getStatus() != UserStatus.INIT) {
 	    throw new ItemExistsException(User.class, "username", null);
 	}
@@ -58,20 +58,20 @@ public class RegisterUserOP extends WebserviceOperation {
 	    sessionUser = userByUsername;
 	} else {
 	    // inexistent user, we will create it
-	    user.setId(userManager.createUser(user));
+	    user.setId(userDAO.createUser(user));
 	}
 
 	// assign to the default group
 	if (this.defGroupname != null) {
-	    Group group = this.userManager.getGroupByName(defGroupname);
+	    Group group = this.userDAO.getGroupByName(defGroupname);
 	    if (group == null) {
 		WSGroup newGroup = new WSGroup();
 		newGroup.setName(defGroupname);
 		newGroup.setDescription("automatically created");
-		newGroup.setId(userManager.createGroup(newGroup));
+		newGroup.setId(userDAO.createGroup(newGroup));
 		group = newGroup;
 	    }
-	    userManager.assignUserToGroup(sessionUser, group);
+	    userDAO.assignUserToGroup(sessionUser, group);
 	}
 
 	Session session = sessionManager.createSession(getSession().getLanguage(), "REGISTER", FACTORY);
@@ -87,7 +87,7 @@ public class RegisterUserOP extends WebserviceOperation {
     @Override
     public void prepareManagers(Session session) throws ExceptionBase {
 	sessionManager = FACTORY.getSessionManager();
-	userManager = FACTORY.getDAOManager().getUserDAO(getSession());
+	userDAO = FACTORY.getDAOManager().getUserDAO(getSession());
     }
 
     public String getConfirmationKey() {

@@ -77,8 +77,8 @@ public class GroupTest {
 
 	// no getGroupByName in WS and no need for it, so going to lower level
 	Session sameSession = BasicManagerFactory.getInstance().getSessionManager().acquireSession(session);
-	UserDAO usrManager = BasicManagerFactory.getInstance().getDAOManager().getUserDAO(sameSession);
-	Group groupByName = usrManager.getGroupByName(name);
+	UserDAO usrDAO = BasicManagerFactory.getInstance().getDAOManager().getUserDAO(sameSession);
+	Group groupByName = usrDAO.getGroupByName(name);
 	BasicManagerFactory.getInstance().releaseSession(sameSession);
 
 	assertEquals("TEST", groupByName.getDescription());
@@ -91,8 +91,8 @@ public class GroupTest {
 	userService.updateGroup(session, gr2);
 
 	sameSession = BasicManagerFactory.getInstance().getSessionManager().acquireSession(session);
-	usrManager = BasicManagerFactory.getInstance().getDAOManager().getUserDAO(sameSession);
-	groupByName = usrManager.getGroupByName(name + "update");
+	usrDAO = BasicManagerFactory.getInstance().getDAOManager().getUserDAO(sameSession);
+	groupByName = usrDAO.getGroupByName(name + "update");
 	BasicManagerFactory.getInstance().releaseSession(sameSession);
 
 	assertEquals("TEST", groupByName.getDescription());
@@ -106,8 +106,8 @@ public class GroupTest {
 	userService.updateGroup(session, gr2);
 
 	sameSession = BasicManagerFactory.getInstance().getSessionManager().acquireSession(session);
-	usrManager = BasicManagerFactory.getInstance().getDAOManager().getUserDAO(sameSession);
-	groupByName = usrManager.getGroupByName(name + "update2");
+	usrDAO = BasicManagerFactory.getInstance().getDAOManager().getUserDAO(sameSession);
+	groupByName = usrDAO.getGroupByName(name + "update2");
 	BasicManagerFactory.getInstance().releaseSession(sameSession);
 
 	assertEquals("TEST2", groupByName.getDescription());

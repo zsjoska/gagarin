@@ -22,7 +22,7 @@ public class CreateRoleWithPermissionsOP extends WebserviceOperation {
     private final WSUserPermission[] permissions;
     private WSUserRole role;
     private AuthorizationManager authManager;
-    private RoleDAO roleManager;
+    private RoleDAO roleDAO;
 
     public CreateRoleWithPermissionsOP(String sessionId, String roleName, WSUserPermission[] permissions) {
 	super(sessionId);
@@ -33,7 +33,7 @@ public class CreateRoleWithPermissionsOP extends WebserviceOperation {
     @Override
     public void prepareManagers(Session session) throws ExceptionBase {
 	authManager = FACTORY.getAuthorizationManager();
-	roleManager = FACTORY.getDAOManager().getRoleDAO(session);
+	roleDAO = FACTORY.getDAOManager().getRoleDAO(session);
     }
 
     @Override
@@ -41,16 +41,16 @@ public class CreateRoleWithPermissionsOP extends WebserviceOperation {
 
 	authManager.requiresPermission(getSession(), BaseControlEntity.getAdminEntity(), PermissionEnum.CREATE);
 
-	List<UserPermission> allPermissions = roleManager.getAllPermissions();
+	List<UserPermission> allPermissions = roleDAO.getAllPermissions();
 	List<UserPermission> matched;
 	matched = ConversionUtils.matchPermissions(allPermissions, permissions);
 
 	WSUserRole role = new WSUserRole();
 	role.setRoleName(roleName);
-	role.setId(roleManager.createRole(role));
+	role.setId(roleDAO.createRole(role));
 
 	for (UserPermission userPermission : matched) {
-	    roleManager.assignPermissionToRole(role, userPermission);
+	    roleDAO.assignPermissionToRole(role, userPermission);
 	}
 
 	this.role = role;

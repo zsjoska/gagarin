@@ -59,8 +59,8 @@ public class TUtil {
 
     public static UserRole getAdminRole() throws ExceptionBase {
 	Session session = createTestSession();
-	RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
-	UserRole role = roleManager.getRoleByName(CFG_MANAGER.getString(Config.ADMIN_ROLE_NAME));
+	RoleDAO roleDAO = FACTORY.getDAOManager().getRoleDAO(session);
+	UserRole role = roleDAO.getRoleByName(CFG_MANAGER.getString(Config.ADMIN_ROLE_NAME));
 	FACTORY.releaseSession(session);
 	return role;
     }

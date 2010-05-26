@@ -22,7 +22,7 @@ public class GetRolePermissionstOP extends WebserviceOperation {
 
     private List<WSUserPermission> permList;
 
-    private RoleDAO roleManager;
+    private RoleDAO roleDAO;
 
     private AuthorizationManager authManager;
 
@@ -34,7 +34,7 @@ public class GetRolePermissionstOP extends WebserviceOperation {
     @Override
     public void prepareManagers(Session session) throws ExceptionBase {
 	authManager = FACTORY.getAuthorizationManager();
-	roleManager = FACTORY.getDAOManager().getRoleDAO(getSession());
+	roleDAO = FACTORY.getDAOManager().getRoleDAO(getSession());
     }
 
     @Override
@@ -43,7 +43,7 @@ public class GetRolePermissionstOP extends WebserviceOperation {
 	// the session user must have LIST_PERMISSIONS permission
 	authManager.requiresPermission(getSession(), BaseControlEntity.getAdminEntity(), PermissionEnum.LIST);
 
-	Set<UserPermission> permissions = roleManager.getRolePermissions(wsUserRole);
+	Set<UserPermission> permissions = roleDAO.getRolePermissions(wsUserRole);
 	this.permList = WSConversionUtils.convertToWSPermissionList(permissions);
     }
 

@@ -22,7 +22,7 @@ public class Session extends BaseEntity {
     private String language;
     private String reason;
     private User user;
-    private BaseDAO manager;
+    private BaseDAO dao;
     private String sessionString;
     private boolean busy;
 
@@ -85,13 +85,12 @@ public class Session extends BaseEntity {
 	return sessionTimeout;
     }
 
-    // TODO:(1) rename
-    public BaseDAO getManager() {
-	return this.manager;
+    public BaseDAO getDAO() {
+	return this.dao;
     }
 
-    public void setManager(BaseDAO manager) {
-	this.manager = manager;
+    public void setManager(BaseDAO dao) {
+	this.dao = dao;
     }
 
     @Override

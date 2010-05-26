@@ -15,7 +15,7 @@ public class CreateUserOP extends WebserviceOperation {
     private final WSUser user;
     private long userId = -1;
     private AuthorizationManager authManager;
-    private UserDAO userManager;
+    private UserDAO userDAO;
 
     public CreateUserOP(String sessionId, WSUser user) {
 	super(sessionId);
@@ -25,7 +25,7 @@ public class CreateUserOP extends WebserviceOperation {
     @Override
     public void prepareManagers(Session session) throws ExceptionBase {
 	authManager = FACTORY.getAuthorizationManager();
-	userManager = FACTORY.getDAOManager().getUserDAO(getSession());
+	userDAO = FACTORY.getDAOManager().getUserDAO(getSession());
 
     }
 
@@ -35,7 +35,7 @@ public class CreateUserOP extends WebserviceOperation {
 	// the session user must have CREATE_USER permission
 	authManager.requiresPermission(getSession(), BaseControlEntity.getAdminEntity(), PermissionEnum.CREATE);
 
-	this.setUserId(userManager.createUser(user));
+	this.setUserId(userDAO.createUser(user));
 	getApplog().info("Created User " + user.getId() + ":" + user.getUsername() + "; session:" + getSessionString());
     }
 

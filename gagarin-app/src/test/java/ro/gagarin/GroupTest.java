@@ -31,14 +31,14 @@ public class GroupTest {
     private String groupname = "Group_" + System.nanoTime();
 
     private static final ManagerFactory FACTORY = BasicManagerFactory.getInstance();
-    private UserDAO usrManager = null;
+    private UserDAO usrDAO = null;
 
     private Session session = null;
 
     @Before
     public void init() throws OperationException {
 	this.session = TUtil.createTestSession();
-	this.usrManager = FACTORY.getDAOManager().getUserDAO(session);
+	this.usrDAO = FACTORY.getDAOManager().getUserDAO(session);
     }
 
     @After
@@ -49,28 +49,28 @@ public class GroupTest {
     @Test
     public void createDeleteGroup() throws Exception {
 
-	UserDAO usrManager = FACTORY.getDAOManager().getUserDAO(session);
+	UserDAO usrDAO = FACTORY.getDAOManager().getUserDAO(session);
 
 	ATestGroup group = new ATestGroup();
 	group.setName(groupname);
 	group.setDescription("test");
-	group.setId(usrManager.createGroup(group));
+	group.setId(usrDAO.createGroup(group));
 
-	Group gr = usrManager.getGroupByName(groupname);
+	Group gr = usrDAO.getGroupByName(groupname);
 	assertNotNull("The group should exists", gr);
 	assertEquals("Invalid ID", group.getId(), gr.getId());
 	assertEquals("Invalid name", group.getName(), gr.getName());
 	assertEquals("Invalid description", group.getDescription(), gr.getDescription());
 
-	List<Group> groups = usrManager.getGroups();
+	List<Group> groups = usrDAO.getGroups();
 	gr = groups.get(groups.size() - 1);
 
 	assertEquals("Invalid ID", group.getId(), gr.getId());
 	assertEquals("Invalid name", group.getName(), gr.getName());
 	assertEquals("Invalid description", group.getDescription(), gr.getDescription());
 
-	usrManager.deleteGroup(gr);
-	gr = usrManager.getGroupByName(groupname);
+	usrDAO.deleteGroup(gr);
+	gr = usrDAO.getGroupByName(groupname);
 	assertNull("The group should not exists", gr);
 
     }
@@ -82,14 +82,14 @@ public class GroupTest {
 	ATestGroup group = new ATestGroup();
 	group.setName(name);
 	group.setDescription("test");
-	group.setId(usrManager.createGroup(group));
+	group.setId(usrDAO.createGroup(group));
 
 	ATestGroup gr2 = new ATestGroup();
 	gr2.setId(group.getId());
 	gr2.setDescription("TEST");
-	usrManager.updateGroup(gr2);
+	usrDAO.updateGroup(gr2);
 
-	Group groupByName = usrManager.getGroupByName(name);
+	Group groupByName = usrDAO.getGroupByName(name);
 	assertEquals("TEST", groupByName.getDescription());
 	assertEquals(name, groupByName.getName());
 	assertEquals(group.getId(), groupByName.getId());
@@ -97,9 +97,9 @@ public class GroupTest {
 	gr2 = new ATestGroup();
 	gr2.setId(group.getId());
 	gr2.setName(name + "update");
-	usrManager.updateGroup(gr2);
+	usrDAO.updateGroup(gr2);
 
-	groupByName = usrManager.getGroupByName(name + "update");
+	groupByName = usrDAO.getGroupByName(name + "update");
 	assertEquals("TEST", groupByName.getDescription());
 	assertEquals(name + "update", groupByName.getName());
 	assertEquals(group.getId(), groupByName.getId());
@@ -108,9 +108,9 @@ public class GroupTest {
 	gr2.setId(group.getId());
 	gr2.setDescription("TEST2");
 	gr2.setName(name + "update2");
-	usrManager.updateGroup(gr2);
+	usrDAO.updateGroup(gr2);
 
-	groupByName = usrManager.getGroupByName(name + "update2");
+	groupByName = usrDAO.getGroupByName(name + "update2");
 	assertEquals("TEST2", groupByName.getDescription());
 	assertEquals(name + "update2", groupByName.getName());
 	assertEquals(group.getId(), groupByName.getId());
@@ -122,30 +122,30 @@ public class GroupTest {
 	ATestUser user = new ATestUser();
 	user.setUsername(groupname);
 	user.setStatus(UserStatus.ACTIVE);
-	user.setId(usrManager.createUser(user));
+	user.setId(usrDAO.createUser(user));
 
 	ATestGroup group = new ATestGroup();
 	group.setName(groupname);
-	group.setId(usrManager.createGroup(group));
+	group.setId(usrDAO.createGroup(group));
 
-	usrManager.assignUserToGroup(user, group);
+	usrDAO.assignUserToGroup(user, group);
 
-	List<User> users = usrManager.getGroupUsers(group);
+	List<User> users = usrDAO.getGroupUsers(group);
 	assertNotNull(users);
 	assertEquals(1, users.size());
 	User aUser = users.get(0);
 	assertEquals(user.getId(), aUser.getId());
 	assertEquals(user.getUsername(), aUser.getUsername());
 
-	List<Group> userGroups = usrManager.getUserGroups(user);
+	List<Group> userGroups = usrDAO.getUserGroups(user);
 	assertNotNull(userGroups);
 	assertEquals(1, userGroups.size());
 	Group aGroup = userGroups.get(0);
 	assertEquals(aGroup.getId(), aGroup.getId());
 	assertEquals(aGroup.getName(), aGroup.getName());
 
-	usrManager.unassignUserFromGroup(user, aGroup);
-	userGroups = usrManager.getUserGroups(user);
+	usrDAO.unassignUserFromGroup(user, aGroup);
+	userGroups = usrDAO.getUserGroups(user);
 	assertEquals(0, userGroups.size());
     }
 
@@ -155,14 +155,14 @@ public class GroupTest {
 	ATestUser user = new ATestUser();
 	user.setUsername(groupname + "_1");
 	user.setStatus(UserStatus.ACTIVE);
-	user.setId(usrManager.createUser(user));
+	user.setId(usrDAO.createUser(user));
 
 	ATestGroup group = new ATestGroup();
 	group.setName(groupname + "_NOT");
 	// don't set Id since then will not look up in GB for existence
 
 	try {
-	    usrManager.assignUserToGroup(user, group);
+	    usrDAO.assignUserToGroup(user, group);
 	    fail("Inexistent group shouldn't be assigned");
 	} catch (ItemNotFoundException e) {
 	    assertEquals("Invalid error code", ErrorCodes.ITEM_NOT_FOUND, e.getErrorCode());
@@ -180,10 +180,10 @@ public class GroupTest {
 
 	ATestGroup group = new ATestGroup();
 	group.setName(groupname + "_2");
-	group.setId(usrManager.createGroup(group));
+	group.setId(usrDAO.createGroup(group));
 
 	try {
-	    usrManager.assignUserToGroup(user, group);
+	    usrDAO.assignUserToGroup(user, group);
 	    fail("Inexistent user shouldn't be assigned");
 	} catch (ItemNotFoundException e) {
 	    assertEquals("Invalid error code", ErrorCodes.ITEM_NOT_FOUND, e.getErrorCode());

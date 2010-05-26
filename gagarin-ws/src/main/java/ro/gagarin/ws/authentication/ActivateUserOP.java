@@ -9,7 +9,7 @@ import ro.gagarin.ws.objects.WSUser;
 
 public class ActivateUserOP extends WebserviceOperation {
 
-    private UserDAO userManager;
+    private UserDAO userDAO;
     private WSUser user;
 
     public ActivateUserOP(String sessionId) {
@@ -27,7 +27,7 @@ public class ActivateUserOP extends WebserviceOperation {
 	WSUser wsUser = new WSUser();
 	wsUser.setId(user.getId());
 	wsUser.setStatus(UserStatus.ACTIVE);
-	userManager.updateUser(wsUser);
+	userDAO.updateUser(wsUser);
 
 	// TODO:(3) Add notification call
 
@@ -38,7 +38,7 @@ public class ActivateUserOP extends WebserviceOperation {
 
     @Override
     public void prepareManagers(Session session) throws ExceptionBase {
-	userManager = FACTORY.getDAOManager().getUserDAO(getSession());
+	userDAO = FACTORY.getDAOManager().getUserDAO(getSession());
     }
 
     public WSUser getUser() {

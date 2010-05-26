@@ -17,7 +17,7 @@ public class GetRoleListOP extends WebserviceOperation {
 
     private List<WSUserRole> roles = null;
     private AuthorizationManager authorizationManager;
-    private RoleDAO roleManager;
+    private RoleDAO roleDAO;
 
     public GetRoleListOP(String sessionId) {
 	super(sessionId);
@@ -26,7 +26,7 @@ public class GetRoleListOP extends WebserviceOperation {
     @Override
     public void prepareManagers(Session session) throws ExceptionBase {
 	authorizationManager = FACTORY.getAuthorizationManager();
-	roleManager = FACTORY.getDAOManager().getRoleDAO(getSession());
+	roleDAO = FACTORY.getDAOManager().getRoleDAO(getSession());
     }
 
     @Override
@@ -34,7 +34,7 @@ public class GetRoleListOP extends WebserviceOperation {
 	// the session user must have LIST_ROLES permission
 	authorizationManager.requiresPermission(getSession(), BaseControlEntity.getAdminEntity(), PermissionEnum.LIST);
 
-	List<UserRole> allRoles = roleManager.getAllRoles();
+	List<UserRole> allRoles = roleDAO.getAllRoles();
 	List<WSUserRole> convRoles = new ArrayList<WSUserRole>();
 	for (UserRole userRole : allRoles) {
 	    convRoles.add(new WSUserRole(userRole));

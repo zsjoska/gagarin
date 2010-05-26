@@ -53,10 +53,10 @@ public class SessionTest {
 
 	session = TUtil.createTestSession();
 
-	UserDAO userManager = FACTORY.getDAOManager().getUserDAO(session);
-	RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(session);
+	UserDAO userDAO = FACTORY.getDAOManager().getUserDAO(session);
+	RoleDAO roleDAO = FACTORY.getDAOManager().getRoleDAO(session);
 
-	List<UserRole> allRoles = roleManager.getAllRoles();
+	List<UserRole> allRoles = roleDAO.getAllRoles();
 	LOG.debug("Roles in system:");
 	for (UserRole userRole : allRoles) {
 	    LOG.debug(userRole.getRoleName());
@@ -67,7 +67,7 @@ public class SessionTest {
 	user.setUsername("1" + username);
 	user.setPassword("password1");
 	user.setStatus(UserStatus.ACTIVE);
-	userManager.createUser(user);
+	userDAO.createUser(user);
 	FACTORY.releaseSession(session);
 
 	String session = authentication.createSession(null, "TEST");
@@ -84,13 +84,13 @@ public class SessionTest {
 
 	session = TUtil.createTestSession();
 
-	UserDAO userManager = FACTORY.getDAOManager().getUserDAO(session);
+	UserDAO userDAO = FACTORY.getDAOManager().getUserDAO(session);
 
 	DBUser user = new DBUser();
 	user.setUsername("2" + username);
 	user.setPassword("password2");
 	user.setStatus(UserStatus.ACTIVE);
-	userManager.createUser(user);
+	userDAO.createUser(user);
 
 	FACTORY.releaseSession(session);
 
@@ -118,13 +118,13 @@ public class SessionTest {
 	    WSException {
 	session = TUtil.createTestSession();
 
-	UserDAO userManager = FACTORY.getDAOManager().getUserDAO(session);
+	UserDAO userDAO = FACTORY.getDAOManager().getUserDAO(session);
 
 	DBUser user = new DBUser();
 	user.setUsername("3" + username);
 	user.setPassword("password3");
 	user.setStatus(UserStatus.ACTIVE);
-	userManager.createUser(user);
+	userDAO.createUser(user);
 
 	FACTORY.releaseSession(session);
 

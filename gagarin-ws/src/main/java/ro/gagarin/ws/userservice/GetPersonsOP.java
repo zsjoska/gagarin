@@ -40,7 +40,6 @@ public class GetPersonsOP extends WebserviceOperation {
     @Override
     public void prepareManagers(Session session) throws ExceptionBase {
 	userDAO = session.getManagerFactory().getDAOManager().getUserDAO(session);
-
     }
 
     public List<WSPerson> getPersons() {

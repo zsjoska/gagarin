@@ -21,7 +21,7 @@ public class GetGroupUsersOP extends WebserviceOperation {
 
     private final WSGroup group;
     private AuthorizationManager authManager;
-    private UserDAO userManager;
+    private UserDAO userDAO;
     private List<WSUser> groupUsers;
 
     public GetGroupUsersOP(String sessionId, WSGroup group) {
@@ -50,14 +50,14 @@ public class GetGroupUsersOP extends WebserviceOperation {
     public void execute() throws ExceptionBase {
 	// the session user must have LIST_USERS permission
 	authManager.requiresPermission(getSession(), BaseControlEntity.getAdminEntity(), PermissionEnum.LIST);
-	List<User> users = userManager.getGroupUsers(group);
+	List<User> users = userDAO.getGroupUsers(group);
 	this.groupUsers = WSConversionUtils.convertToWSUserList(users);
     }
 
     @Override
     public void prepareManagers(Session session) throws ExceptionBase {
 	authManager = FACTORY.getAuthorizationManager();
-	userManager = FACTORY.getDAOManager().getUserDAO(getSession());
+	userDAO = FACTORY.getDAOManager().getUserDAO(getSession());
     }
 
     public List<WSUser> getGroupUsers() {

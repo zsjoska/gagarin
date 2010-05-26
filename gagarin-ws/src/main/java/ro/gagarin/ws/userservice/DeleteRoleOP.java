@@ -16,7 +16,7 @@ public class DeleteRoleOP extends WebserviceOperation {
 
     private AuthorizationManager authManager;
 
-    private RoleDAO roleManager;
+    private RoleDAO roleDAO;
 
     // TODO:(2) delete also by role name
     public DeleteRoleOP(String sessionId, WSUserRole role) {
@@ -27,7 +27,7 @@ public class DeleteRoleOP extends WebserviceOperation {
     @Override
     public void prepareManagers(Session session) throws ExceptionBase {
 	authManager = FACTORY.getAuthorizationManager();
-	roleManager = FACTORY.getDAOManager().getRoleDAO(getSession());
+	roleDAO = FACTORY.getDAOManager().getRoleDAO(getSession());
     }
 
     @Override
@@ -35,7 +35,7 @@ public class DeleteRoleOP extends WebserviceOperation {
 
 	authManager.requiresPermission(getSession(), BaseControlEntity.getAdminEntity(), PermissionEnum.DELETE);
 
-	roleManager.deleteRole(role);
+	roleDAO.deleteRole(role);
 	getApplog().info("Role " + role.getRoleName() + " deleted");
     }
 

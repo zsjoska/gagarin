@@ -38,14 +38,14 @@ public class UserTest {
     private static final ManagerFactory FACTORY = BasicManagerFactory.getInstance();
 
     private Session session = null;
-    private RoleDAO roleManager;
-    private UserDAO usrManager;
+    private RoleDAO roleDAO;
+    private UserDAO usrDAO;
 
     @Before
     public void init() throws Exception {
 	this.session = TUtil.createTestSession();
-	usrManager = FACTORY.getDAOManager().getUserDAO(session);
-	roleManager = FACTORY.getDAOManager().getRoleDAO(session);
+	usrDAO = FACTORY.getDAOManager().getUserDAO(session);
+	roleDAO = FACTORY.getDAOManager().getRoleDAO(session);
 
 	username = "User_" + System.nanoTime();
     }
@@ -59,7 +59,7 @@ public class UserTest {
 
     @Test
     public void getUserByNameInexistent() throws OperationException {
-	User user = usrManager.getUserByUsername(username);
+	User user = usrDAO.getUserByUsername(username);
 	assertNull("The user could not exists", user);
     }
 
@@ -73,9 +73,9 @@ public class UserTest {
 	user.setEmail(username + "@gagarin.ro");
 	user.setPhone("any kind of phone");
 	user.setStatus(UserStatus.ACTIVE);
-	user.setId(usrManager.createUser(user));
+	user.setId(usrDAO.createUser(user));
 
-	User user2 = usrManager.getUserByUsername(username);
+	User user2 = usrDAO.getUserByUsername(username);
 
 	assertNotNull("User was not found", user2);
 	assertEquals("id does not match", user.getId(), user2.getId());
@@ -87,14 +87,14 @@ public class UserTest {
 	assertEquals("status does not match", user.getStatus(), user2.getStatus());
 	assertNotNull("created should be filled", user2.getCreated());
 
-	usrManager.deleteUser(user);
-	assertNull("We just deleted the user; must not exists", usrManager.getUserByUsername(username));
+	usrDAO.deleteUser(user);
+	assertNull("We just deleted the user; must not exists", usrDAO.getUserByUsername(username));
     }
 
     @Test
     public void createUserNegative() throws Exception {
 
-	UserRole adminRole = roleManager.getRoleByName(configManager.getString(Config.ADMIN_ROLE_NAME));
+	UserRole adminRole = roleDAO.getRoleByName(configManager.getString(Config.ADMIN_ROLE_NAME));
 	assertNotNull("this test requires application setup", adminRole);
 
 	try {
@@ -104,9 +104,9 @@ public class UserTest {
 	    user.setPassword("");
 	    user.setEmail("");
 	    user.setPhone("");
-	    long userid = usrManager.createUser(user);
+	    long userid = usrDAO.createUser(user);
 	    user.setId(userid);
-	    usrManager.deleteUser(user);
+	    usrDAO.deleteUser(user);
 	    fail("The user shouldn't be created");
 	} catch (DataConstraintException e) {
 	    assertEquals("Invalid error code was thrown", ErrorCodes.FIELD_REQUIRED, e.getErrorCode());
@@ -171,12 +171,12 @@ public class UserTest {
 	user2.setPassword("password");
 	user2.setStatus(UserStatus.ACTIVE);
 
-	usrManager.createUser(user1);
+	usrDAO.createUser(user1);
 
-	assertNotNull(usrManager.getUserByUsername("UserName2"));
+	assertNotNull(usrDAO.getUserByUsername("UserName2"));
 
 	try {
-	    usrManager.createUser(user2);
+	    usrDAO.createUser(user2);
 	    fail("the username is the same; thus this item must not be created");
 	} catch (ItemExistsException e) {
 	    assertEquals("Wrong field info", "USERNAME", e.getFieldName());
@@ -186,8 +186,8 @@ public class UserTest {
 	}
 
 	session = TUtil.createTestSession();
-	usrManager = FACTORY.getDAOManager().getUserDAO(session);
-	assertNull("Transaction rolback test", usrManager.getUserByUsername("UserName2"));
+	usrDAO = FACTORY.getDAOManager().getUserDAO(session);
+	assertNull("Transaction rolback test", usrDAO.getUserByUsername("UserName2"));
 
     }
 
@@ -196,13 +196,13 @@ public class UserTest {
 
 	Session brokenSession = TUtil.createTestSession();
 
-	UserDAO usrManager = FACTORY.getDAOManager().getUserDAO(brokenSession);
+	UserDAO usrDAO = FACTORY.getDAOManager().getUserDAO(brokenSession);
 
 	ATestUser user1 = new ATestUser();
 	user1.setPassword("password");
 
 	try {
-	    usrManager.createUser(user1);
+	    usrDAO.createUser(user1);
 	    fail("the username was empty; thus this item must not be created");
 	} catch (FieldRequiredException e) {
 	    assertEquals("Wrong field info", "username", e.getFieldName());
@@ -221,7 +221,7 @@ public class UserTest {
 	user.setEmail(username + "_1@gagarin.ro");
 	user.setPhone("any kind of phone");
 	user.setStatus(UserStatus.ACTIVE);
-	long userId = usrManager.createUser(user);
+	long userId = usrDAO.createUser(user);
 
 	AppUser user2 = new AppUser();
 	user2.setId(userId);
@@ -234,12 +234,12 @@ public class UserTest {
 	user2.setStatus(UserStatus.SUSPENDED);
 	user2.setUsername(username + "_2");
 
-	usrManager.updateUser(user2);
+	usrDAO.updateUser(user2);
 
-	User user3 = usrManager.getUserByUsername(username + "_1");
+	User user3 = usrDAO.getUserByUsername(username + "_1");
 	assertNull("the user had to be renamed", user3);
 
-	user3 = usrManager.getUserByUsername(username + "_2");
+	user3 = usrDAO.getUserByUsername(username + "_2");
 	assertNotNull("the user had to be renamed", user3);
 
 	assertEquals("id does not match", userId, user3.getId());

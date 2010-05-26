@@ -1,10 +1,7 @@
 package ro.gagarin.ws.userservice;
 
-import java.security.acl.Group;
-
 import ro.gagarin.dao.UserDAO;
 import ro.gagarin.exceptions.ExceptionBase;
-import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.manager.AuthorizationManager;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
@@ -25,18 +22,14 @@ public class DeleteGroupOP extends WebserviceOperation {
 
     @Override
     protected void checkInput(Session session) throws ExceptionBase {
-	if (group.getId() == null && group.getName() == null) {
-	    throw new FieldRequiredException("id or name", Group.class);
-	}
-	if (group.getId() != null)
-	    FieldValidator.requireLongField("id", group);
-	if (group.getName() != null)
-	    FieldValidator.requireStringField("name", group, true);
+
+	// TODO:(3) find a way to let to delete by name
+	// this would mean to initialize managers before checkInput
+	FieldValidator.requireLongField("id", group);
     }
 
     @Override
     protected void checkPermissions(Session session, AuthorizationManager authMgr) throws ExceptionBase {
-	// TODO:(1) the group may not have Id
 	authMgr.requiresPermission(session, group, PermissionEnum.DELETE);
     }
 

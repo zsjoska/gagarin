@@ -42,7 +42,6 @@ public class UpdateGroupOP extends WebserviceOperation {
 
     @Override
     protected void checkPermissions(Session session, AuthorizationManager authMgr) throws ExceptionBase {
-	// TODO:(1) The group Id here could be null
 	authMgr.requiresPermission(session, group, PermissionEnum.UPDATE);
     }
 

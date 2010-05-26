@@ -20,12 +20,12 @@ public class GetAllPermissionListOP extends WebserviceOperation {
     }
 
     @Override
-    public void prepareManagers(Session session) throws ExceptionBase {
+    protected void prepareManagers(Session session) throws ExceptionBase {
 	roleDAO = FACTORY.getDAOManager().getRoleDAO(getSession());
     }
 
     @Override
-    public void execute() throws ExceptionBase {
+    protected void execute(Session session) throws ExceptionBase {
 
 	List<UserPermission> allPermissions = roleDAO.getAllPermissions();
 	this.permissionlist = WSConversionUtils.convertToWSPermissionList(allPermissions);
@@ -36,7 +36,7 @@ public class GetAllPermissionListOP extends WebserviceOperation {
     }
 
     @Override
-    public void checkInput(Session session) throws ExceptionBase {
+    protected void checkInput(Session session) throws ExceptionBase {
 	// no input
     }
 }

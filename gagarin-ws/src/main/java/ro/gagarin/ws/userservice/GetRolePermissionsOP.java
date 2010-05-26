@@ -31,16 +31,16 @@ public class GetRolePermissionsOP extends WebserviceOperation {
     }
 
     @Override
-    public void prepareManagers(Session session) throws ExceptionBase {
+    protected void prepareManagers(Session session) throws ExceptionBase {
 	authManager = FACTORY.getAuthorizationManager();
 	roleDAO = FACTORY.getDAOManager().getRoleDAO(getSession());
     }
 
     @Override
-    public void execute() throws ExceptionBase {
+    protected void execute(Session session) throws ExceptionBase {
 
 	// the session user must have LIST_PERMISSIONS permission
-	authManager.requiresPermission(getSession(), BaseControlEntity.getAdminEntity(), PermissionEnum.LIST);
+	authManager.requiresPermission(session, BaseControlEntity.getAdminEntity(), PermissionEnum.LIST);
 
 	Set<UserPermission> permissions = roleDAO.getRolePermissions(wsUserRole);
 	this.permList = WSConversionUtils.convertToWSPermissionList(permissions);
@@ -56,7 +56,7 @@ public class GetRolePermissionsOP extends WebserviceOperation {
     }
 
     @Override
-    public void checkInput(Session session) throws ExceptionBase {
+    protected void checkInput(Session session) throws ExceptionBase {
 	// TODO:(2) implement combined verification for id and roleName
     }
 

@@ -37,8 +37,11 @@ public abstract class WebserviceOperation {
     }
 
     public void performOperation() throws ExceptionBase {
+
 	prepareSession();
+
 	checkInput(getSession());
+
 	if (applog != null) {
 	    applog.debug(this.getClass().getSimpleName() + " " + this);
 	} else {
@@ -46,27 +49,27 @@ public abstract class WebserviceOperation {
 	}
 	prepareManagers(getSession());
 	prepare();
-	execute();
+	execute(getSession());
 	finish();
     }
 
     // TODO:(3) make protected
     // TODO:(2) Give the session as parameter
-    public abstract void execute() throws ExceptionBase;
+    protected abstract void execute(Session session2) throws ExceptionBase;
 
-    public abstract void prepareManagers(Session session) throws ExceptionBase;
+    protected abstract void prepareManagers(Session session) throws ExceptionBase;
 
-    public abstract void checkInput(Session session) throws ExceptionBase;
+    protected abstract void checkInput(Session session) throws ExceptionBase;
 
     public Session getSession() {
 	return session;
     }
 
-    public AppLog getApplog() {
+    protected AppLog getApplog() {
 	return applog;
     }
 
-    public void prepareSession() throws SessionNotFoundException, LoginRequiredException {
+    protected void prepareSession() throws SessionNotFoundException, LoginRequiredException {
 	try {
 	    this.sessionString = FieldValidator.requireStringValue(sessionString, "sessionId", 100);
 	} catch (FieldRequiredException e) {
@@ -80,17 +83,17 @@ public abstract class WebserviceOperation {
 	}
     }
 
-    public void prepare() {
+    protected void prepare() {
     }
 
-    public void finish() {
+    protected void finish() {
     }
 
-    public void releaseSession() {
+    protected void releaseSession() {
 	FACTORY.releaseSession(this.session);
     }
 
-    public String getSessionString() {
+    protected String getSessionString() {
 	return sessionString;
     }
 

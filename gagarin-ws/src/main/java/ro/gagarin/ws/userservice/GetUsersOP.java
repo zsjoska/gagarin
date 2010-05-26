@@ -26,16 +26,16 @@ public class GetUsersOP extends WebserviceOperation {
     }
 
     @Override
-    public void prepareManagers(Session session) throws ExceptionBase {
+    protected void prepareManagers(Session session) throws ExceptionBase {
 	authManager = FACTORY.getAuthorizationManager();
 	userDAO = FACTORY.getDAOManager().getUserDAO(getSession());
     }
 
     @Override
-    public void execute() throws ExceptionBase {
+    protected void execute(Session session) throws ExceptionBase {
 
 	// the session user must have LIST_USERS permission
-	authManager.requiresPermission(getSession(), BaseControlEntity.getAdminEntity(), PermissionEnum.LIST);
+	authManager.requiresPermission(session, BaseControlEntity.getAdminEntity(), PermissionEnum.LIST);
 
 	List<User> allUsers = userDAO.getAllUsers();
 	this.users = WSConversionUtils.convertToWSUserList(allUsers);
@@ -47,7 +47,7 @@ public class GetUsersOP extends WebserviceOperation {
     }
 
     @Override
-    public void checkInput(Session session) throws ExceptionBase {
+    protected void checkInput(Session session) throws ExceptionBase {
 	// no input
     }
 

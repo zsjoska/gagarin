@@ -17,12 +17,12 @@ public class ActivateUserOP extends WebserviceOperation {
     }
 
     @Override
-    public void checkInput(Session session) throws ExceptionBase {
+    protected void checkInput(Session session) throws ExceptionBase {
 	user = new WSUser(getSession().getUser());
     }
 
     @Override
-    public void execute() throws ExceptionBase {
+    protected void execute(Session session) throws ExceptionBase {
 
 	WSUser wsUser = new WSUser();
 	wsUser.setId(user.getId());
@@ -37,8 +37,8 @@ public class ActivateUserOP extends WebserviceOperation {
     }
 
     @Override
-    public void prepareManagers(Session session) throws ExceptionBase {
-	userDAO = FACTORY.getDAOManager().getUserDAO(getSession());
+    protected void prepareManagers(Session session) throws ExceptionBase {
+	userDAO = FACTORY.getDAOManager().getUserDAO(session);
     }
 
     public WSUser getUser() {

@@ -29,12 +29,12 @@ public class LoginOP extends WebserviceOperation {
     }
 
     @Override
-    public void prepareManagers(Session session) throws ExceptionBase {
+    protected void prepareManagers(Session session) throws ExceptionBase {
 	authenticationManager = FACTORY.getAuthenticationManager(getSession());
     }
 
     @Override
-    public void execute() throws ExceptionBase {
+    protected void execute(Session session) throws ExceptionBase {
 	User user = authenticationManager.userLogin(username, password, extra);
 	// TODO:(2) check if user is active
 	this.loginUser = new WSUser(user);
@@ -51,7 +51,7 @@ public class LoginOP extends WebserviceOperation {
     }
 
     @Override
-    public void checkInput(Session session) throws ExceptionBase {
+    protected void checkInput(Session session) throws ExceptionBase {
 	this.username = FieldValidator.requireStringValue(username, "username", 50);
 	this.password = FieldValidator.requireStringValue(password, "password", 50);
     }

@@ -21,14 +21,14 @@ public class SetConfigEntryOP extends WebserviceOperation {
     }
 
     @Override
-    public void prepareManagers(Session session) throws ExceptionBase {
+    protected void prepareManagers(Session session) throws ExceptionBase {
 	authManager = FACTORY.getAuthorizationManager();
     }
 
     @Override
-    public void execute() throws ExceptionBase {
+    protected void execute(Session session) throws ExceptionBase {
 
-	authManager.requiresPermission(getSession(), BaseControlEntity.getAdminEntity(), PermissionEnum.ADMIN);
+	authManager.requiresPermission(session, BaseControlEntity.getAdminEntity(), PermissionEnum.ADMIN);
 
 	ConfigurationManager cfgMgr = FACTORY.getConfigurationManager();
 	cfgMgr.setConfigValue(getSession(), wsConfig);
@@ -42,7 +42,7 @@ public class SetConfigEntryOP extends WebserviceOperation {
     }
 
     @Override
-    public void checkInput(Session session) throws ExceptionBase {
+    protected void checkInput(Session session) throws ExceptionBase {
 	FieldValidator.requireStringField("configName", wsConfig, true);
 	FieldValidator.requireStringField("configValue", wsConfig, true);
     }

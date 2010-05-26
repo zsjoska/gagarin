@@ -27,13 +27,13 @@ public class GetControlEntityListForCategoryOP extends WebserviceOperation {
     }
 
     @Override
-    public void checkInput(Session session) throws ExceptionBase {
+    protected void checkInput(Session session) throws ExceptionBase {
 	FieldValidator.requireStringValue(category, "category", 50);
 	this.categoryEnum = ControlEntityCategory.valueOf(this.category);
     }
 
     @Override
-    public void execute() throws ExceptionBase {
+    protected void execute(Session session) throws ExceptionBase {
 	if (categoryEnum == ControlEntityCategory.ADMIN) {
 	    this.controlEntities = new ArrayList<WSControlEntity>(1);
 	    this.controlEntities.add(new WSControlEntity(BaseControlEntity.getAdminEntity()));
@@ -45,7 +45,7 @@ public class GetControlEntityListForCategoryOP extends WebserviceOperation {
     }
 
     @Override
-    public void prepareManagers(Session session) throws ExceptionBase {
+    protected void prepareManagers(Session session) throws ExceptionBase {
 	roleDAO = session.getManagerFactory().getDAOManager().getRoleDAO(session);
     }
 

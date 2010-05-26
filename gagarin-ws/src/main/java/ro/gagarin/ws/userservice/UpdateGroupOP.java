@@ -26,7 +26,7 @@ public class UpdateGroupOP extends WebserviceOperation {
     }
 
     @Override
-    public void checkInput(Session session) throws ExceptionBase {
+    protected void checkInput(Session session) throws ExceptionBase {
 	// id is required for identification
 	FieldValidator.requireLongField("id", group);
 
@@ -43,15 +43,15 @@ public class UpdateGroupOP extends WebserviceOperation {
     }
 
     @Override
-    public void execute() throws ExceptionBase {
+    protected void execute(Session session) throws ExceptionBase {
 
 	// TODO:(1) The group Id here could be null
-	authManager.requiresPermission(getSession(), group, PermissionEnum.UPDATE);
+	authManager.requiresPermission(session, group, PermissionEnum.UPDATE);
 	userDAO.updateGroup(this.group);
     }
 
     @Override
-    public void prepareManagers(Session session) throws ExceptionBase {
+    protected void prepareManagers(Session session) throws ExceptionBase {
 	authManager = FACTORY.getAuthorizationManager();
 	userDAO = FACTORY.getDAOManager().getUserDAO(getSession());
     }

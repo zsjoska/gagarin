@@ -22,15 +22,15 @@ public class LogoutSessionOP extends WebserviceOperation {
     }
 
     @Override
-    public void prepareManagers(Session session) throws ExceptionBase {
+    protected void prepareManagers(Session session) throws ExceptionBase {
 	authManager = FACTORY.getAuthorizationManager();
 	sessionManager = FACTORY.getSessionManager();
     }
 
     @Override
-    public void execute() throws ExceptionBase {
+    protected void execute(Session session) throws ExceptionBase {
 
-	authManager.requiresPermission(getSession(), BaseControlEntity.getAdminEntity(), PermissionEnum.ADMIN);
+	authManager.requiresPermission(session, BaseControlEntity.getAdminEntity(), PermissionEnum.ADMIN);
 
 	sessionManager.logout(otherSessionId);
 	getApplog().info("LogoutSession " + otherSessionId);
@@ -43,7 +43,7 @@ public class LogoutSessionOP extends WebserviceOperation {
     }
 
     @Override
-    public void checkInput(Session session) throws ExceptionBase {
+    protected void checkInput(Session session) throws ExceptionBase {
 	FieldValidator.requireStringValue(otherSessionId, "otherSessionId", 50);
     }
 

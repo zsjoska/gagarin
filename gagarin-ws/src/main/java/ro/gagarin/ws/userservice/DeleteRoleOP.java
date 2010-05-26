@@ -25,13 +25,13 @@ public class DeleteRoleOP extends WebserviceOperation {
     }
 
     @Override
-    public void prepareManagers(Session session) throws ExceptionBase {
+    protected void prepareManagers(Session session) throws ExceptionBase {
 	authManager = FACTORY.getAuthorizationManager();
 	roleDAO = FACTORY.getDAOManager().getRoleDAO(getSession());
     }
 
     @Override
-    public void execute() throws ExceptionBase {
+    protected void execute(Session session) throws ExceptionBase {
 
 	authManager.requiresPermission(getSession(), BaseControlEntity.getAdminEntity(), PermissionEnum.DELETE);
 
@@ -45,7 +45,7 @@ public class DeleteRoleOP extends WebserviceOperation {
     }
 
     @Override
-    public void checkInput(Session session) throws ExceptionBase {
+    protected void checkInput(Session session) throws ExceptionBase {
 	FieldValidator.requireLongField("id", role);
     }
 }

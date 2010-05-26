@@ -26,7 +26,7 @@ public class DeleteGroupOP extends WebserviceOperation {
     }
 
     @Override
-    public void checkInput(Session session) throws ExceptionBase {
+    protected void checkInput(Session session) throws ExceptionBase {
 	if (group.getId() == null && group.getName() == null) {
 	    throw new FieldRequiredException("id or name", Group.class);
 	}
@@ -37,18 +37,18 @@ public class DeleteGroupOP extends WebserviceOperation {
     }
 
     @Override
-    public void execute() throws ExceptionBase {
+    protected void execute(Session session) throws ExceptionBase {
 	// TODO:(1) the group may not have Id
 
-	authManager.requiresPermission(getSession(), group, PermissionEnum.DELETE);
+	authManager.requiresPermission(session, group, PermissionEnum.DELETE);
 	userDAO.deleteGroup(this.group);
 	userDAO.deleteGroupAssignments(this.group);
 	authManager.removeControlEntityFromAssignment(getSession(), group);
-	authManager.removePersonFromAssignment(getSession(), group);
+	authManager.removePersonFromAssignment(session, group);
     }
 
     @Override
-    public void prepareManagers(Session session) throws ExceptionBase {
+    protected void prepareManagers(Session session) throws ExceptionBase {
 	authManager = FACTORY.getAuthorizationManager();
 	userDAO = FACTORY.getDAOManager().getUserDAO(getSession());
     }

@@ -24,15 +24,15 @@ public class GetRoleListOP extends WebserviceOperation {
     }
 
     @Override
-    public void prepareManagers(Session session) throws ExceptionBase {
+    protected void prepareManagers(Session session) throws ExceptionBase {
 	authorizationManager = FACTORY.getAuthorizationManager();
 	roleDAO = FACTORY.getDAOManager().getRoleDAO(getSession());
     }
 
     @Override
-    public void execute() throws ExceptionBase {
+    protected void execute(Session session) throws ExceptionBase {
 	// the session user must have LIST_ROLES permission
-	authorizationManager.requiresPermission(getSession(), BaseControlEntity.getAdminEntity(), PermissionEnum.LIST);
+	authorizationManager.requiresPermission(session, BaseControlEntity.getAdminEntity(), PermissionEnum.LIST);
 
 	List<UserRole> allRoles = roleDAO.getAllRoles();
 	List<WSUserRole> convRoles = new ArrayList<WSUserRole>();
@@ -47,7 +47,7 @@ public class GetRoleListOP extends WebserviceOperation {
     }
 
     @Override
-    public void checkInput(Session session) throws ExceptionBase {
+    protected void checkInput(Session session) throws ExceptionBase {
 	// no input
     }
 }

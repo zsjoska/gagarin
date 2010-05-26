@@ -30,7 +30,7 @@ public class GetUserGroupsOP extends WebserviceOperation {
     }
 
     @Override
-    public void checkInput(Session session) throws ExceptionBase {
+    protected void checkInput(Session session) throws ExceptionBase {
 	if (this.user == null) {
 	    throw new FieldRequiredException("user", User.class);
 	}
@@ -46,15 +46,15 @@ public class GetUserGroupsOP extends WebserviceOperation {
     }
 
     @Override
-    public void execute() throws ExceptionBase {
+    protected void execute(Session session) throws ExceptionBase {
 	// the session user must have LIST_GROUPS permission
-	authManager.requiresPermission(getSession(), BaseControlEntity.getAdminEntity(), PermissionEnum.LIST);
+	authManager.requiresPermission(session, BaseControlEntity.getAdminEntity(), PermissionEnum.LIST);
 	List<Group> groups = userDAO.getUserGroups(this.user);
 	this.userGoups = WSConversionUtils.convertToGroupList(groups);
     }
 
     @Override
-    public void prepareManagers(Session session) throws ExceptionBase {
+    protected void prepareManagers(Session session) throws ExceptionBase {
 	authManager = FACTORY.getAuthorizationManager();
 	userDAO = FACTORY.getDAOManager().getUserDAO(getSession());
     }

@@ -26,12 +26,12 @@ public class CreateSessionOP extends WebserviceOperation {
     }
 
     @Override
-    public void prepareManagers(Session session) {
+    protected void prepareManagers(Session session) {
 	sessionManager = FACTORY.getSessionManager();
     }
 
     @Override
-    public void execute() {
+    protected void execute(Session _) {
 	String language = this.language;
 	if (language == null) {
 	    // TODO:(3) move this to the configuration
@@ -50,12 +50,12 @@ public class CreateSessionOP extends WebserviceOperation {
     }
 
     @Override
-    public void prepareSession() throws SessionNotFoundException {
+    protected void prepareSession() throws SessionNotFoundException {
 	// just to override the default: do nothing
     }
 
     @Override
-    public void releaseSession() {
+    protected void releaseSession() {
 	// just to override the default: do nothing
     }
 
@@ -65,7 +65,7 @@ public class CreateSessionOP extends WebserviceOperation {
     }
 
     @Override
-    public void checkInput(Session session) throws ExceptionBase {
+    protected void checkInput(Session session) throws ExceptionBase {
 	// TODO:(2) custom check for language
 	this.reason = FieldValidator.requireStringValue(reason, "reason", 20);
     }

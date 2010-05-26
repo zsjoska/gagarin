@@ -17,11 +17,11 @@ public class GetControlEntityCategoriesOP extends WebserviceOperation {
     }
 
     @Override
-    public void checkInput(Session session) throws ExceptionBase {
+    protected void checkInput(Session session) throws ExceptionBase {
     }
 
     @Override
-    public void execute() throws ExceptionBase {
+    protected void execute(Session session) throws ExceptionBase {
 	this.controlEntities = new ArrayList<ControlEntityCategory>();
 	for (ControlEntityCategory ceCat : ControlEntityCategory.values()) {
 	    controlEntities.add(ceCat);
@@ -30,7 +30,7 @@ public class GetControlEntityCategoriesOP extends WebserviceOperation {
     }
 
     @Override
-    public void prepareManagers(Session session) throws ExceptionBase {
+    protected void prepareManagers(Session session) throws ExceptionBase {
     }
 
     public List<ControlEntityCategory> getControlEntities() {

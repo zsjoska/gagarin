@@ -31,15 +31,15 @@ public class CreateRoleWithPermissionsOP extends WebserviceOperation {
     }
 
     @Override
-    public void prepareManagers(Session session) throws ExceptionBase {
+    protected void prepareManagers(Session session) throws ExceptionBase {
 	authManager = FACTORY.getAuthorizationManager();
 	roleDAO = FACTORY.getDAOManager().getRoleDAO(session);
     }
 
     @Override
-    public void execute() throws ExceptionBase {
+    protected void execute(Session session) throws ExceptionBase {
 
-	authManager.requiresPermission(getSession(), BaseControlEntity.getAdminEntity(), PermissionEnum.CREATE);
+	authManager.requiresPermission(session, BaseControlEntity.getAdminEntity(), PermissionEnum.CREATE);
 
 	List<UserPermission> allPermissions = roleDAO.getAllPermissions();
 	List<UserPermission> matched;
@@ -69,7 +69,7 @@ public class CreateRoleWithPermissionsOP extends WebserviceOperation {
     }
 
     @Override
-    public void checkInput(Session session) throws ExceptionBase {
+    protected void checkInput(Session session) throws ExceptionBase {
 	FieldValidator.requireStringValue(roleName, "roleName", 50);
 	// TODO:(2) check permissions
     }

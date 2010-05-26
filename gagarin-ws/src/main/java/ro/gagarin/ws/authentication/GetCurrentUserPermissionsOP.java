@@ -17,16 +17,16 @@ public class GetCurrentUserPermissionsOP extends WebserviceOperation {
     }
 
     @Override
-    public void prepareManagers(Session session) throws ExceptionBase {
+    protected void prepareManagers(Session session) throws ExceptionBase {
     }
 
     @Override
-    public void execute() throws ExceptionBase {
-	this.permissions = WSConversionUtils.convertEffectivePermissions(getSession().getEffectivePermissions());
+    protected void execute(Session session) throws ExceptionBase {
+	this.permissions = WSConversionUtils.convertEffectivePermissions(session.getEffectivePermissions());
     }
 
     @Override
-    public void checkInput(Session session) throws ExceptionBase {
+    protected void checkInput(Session session) throws ExceptionBase {
 	// no input
     }
 

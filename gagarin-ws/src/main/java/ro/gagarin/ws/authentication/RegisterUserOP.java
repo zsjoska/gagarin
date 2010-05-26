@@ -33,7 +33,7 @@ public class RegisterUserOP extends WebserviceOperation {
     }
 
     @Override
-    public void checkInput(Session session) throws ExceptionBase {
+    protected void checkInput(Session session) throws ExceptionBase {
 	cfgManager = FACTORY.getConfigurationManager();
 	boolean registration = cfgManager.getBoolean(Config.ALLOW_USER_REGISTRATION);
 	if (!registration) {
@@ -46,7 +46,7 @@ public class RegisterUserOP extends WebserviceOperation {
     }
 
     @Override
-    public void execute() throws ExceptionBase {
+    protected void execute(Session session) throws ExceptionBase {
 	User sessionUser = this.user;
 	long valid = cfgManager.getLong(Config.REGISTRATION_VALIDITY);
 
@@ -74,18 +74,18 @@ public class RegisterUserOP extends WebserviceOperation {
 	    userDAO.assignUserToGroup(sessionUser, group);
 	}
 
-	Session session = sessionManager.createSession(getSession().getLanguage(), "REGISTER", FACTORY);
-	session.setUser(sessionUser);
-	session.setExpires(System.currentTimeMillis() + valid);
+	Session newSession = sessionManager.createSession(session.getLanguage(), "REGISTER", FACTORY);
+	newSession.setUser(sessionUser);
+	newSession.setExpires(System.currentTimeMillis() + valid);
 
 	// TODO:(3) Add notification call
 
-	this.confirmationKey = session.getSessionString();
+	this.confirmationKey = newSession.getSessionString();
 	getApplog().info("Registration key " + this.confirmationKey + " assigned for user " + user);
     }
 
     @Override
-    public void prepareManagers(Session session) throws ExceptionBase {
+    protected void prepareManagers(Session session) throws ExceptionBase {
 	sessionManager = FACTORY.getSessionManager();
 	userDAO = FACTORY.getDAOManager().getUserDAO(getSession());
     }

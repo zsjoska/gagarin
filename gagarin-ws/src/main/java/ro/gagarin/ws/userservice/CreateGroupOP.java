@@ -23,7 +23,7 @@ public class CreateGroupOP extends WebserviceOperation {
     }
 
     @Override
-    public void execute() throws ExceptionBase {
+    public void execute(Session session) throws ExceptionBase {
 	// TODO:(3) review but no danger if one could create a group
 	// authManager.requiresPermission(getSession(), PermissionEnum.CREATE,
 	// BaseControlEntity.getAdminEntity());

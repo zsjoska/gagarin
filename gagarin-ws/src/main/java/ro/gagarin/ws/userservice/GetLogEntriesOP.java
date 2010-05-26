@@ -30,14 +30,14 @@ public class GetLogEntriesOP extends WebserviceOperation {
     }
 
     @Override
-    public void prepareManagers(Session session) throws ExceptionBase {
+    protected void prepareManagers(Session session) throws ExceptionBase {
 	authManager = FACTORY.getAuthorizationManager();
 	logMgr = FACTORY.getLogManager().getLoggingSession(getSession(), Admin.class);
 
     }
 
     @Override
-    public void execute() throws ExceptionBase {
+    protected void execute(Session session) throws ExceptionBase {
 
 	authManager.requiresPermission(getSession(), BaseControlEntity.getAdminEntity(), PermissionEnum.AUDIT);
 
@@ -56,7 +56,7 @@ public class GetLogEntriesOP extends WebserviceOperation {
     }
 
     @Override
-    public void checkInput(Session session) throws ExceptionBase {
+    protected void checkInput(Session session) throws ExceptionBase {
 	// if the username is null, all logs are retrieved
 	if (username != null) {
 	    FieldValidator.requireStringValue(username, "username", 50);

@@ -25,14 +25,14 @@ public class GetStatisticsOP extends WebserviceOperation {
     }
 
     @Override
-    public void prepareManagers(Session session) throws ExceptionBase {
+    protected void prepareManagers(Session session) throws ExceptionBase {
 	authManager = FACTORY.getAuthorizationManager();
     }
 
     @Override
-    public void execute() throws ExceptionBase {
+    protected void execute(Session session) throws ExceptionBase {
 
-	authManager.requiresPermission(getSession(), BaseControlEntity.getAdminEntity(), PermissionEnum.AUDIT);
+	authManager.requiresPermission(session, BaseControlEntity.getAdminEntity(), PermissionEnum.AUDIT);
 
 	List<Statistic> statistics = StatisticsContainer.exportStatistics(filter);
 
@@ -49,7 +49,7 @@ public class GetStatisticsOP extends WebserviceOperation {
     }
 
     @Override
-    public void checkInput(Session session) throws ExceptionBase {
+    protected void checkInput(Session session) throws ExceptionBase {
 	// TODO:(2) add custom check for filter
     }
 

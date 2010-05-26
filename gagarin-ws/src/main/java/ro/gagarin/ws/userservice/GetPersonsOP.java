@@ -21,11 +21,11 @@ public class GetPersonsOP extends WebserviceOperation {
     }
 
     @Override
-    public void checkInput(Session session) throws ExceptionBase {
+    protected void checkInput(Session session) throws ExceptionBase {
     }
 
     @Override
-    public void execute() throws ExceptionBase {
+    protected void execute(Session session) throws ExceptionBase {
 	List<Group> groups = userDAO.getGroups();
 	List<User> users = userDAO.getAllUsers();
 	persons = new ArrayList<WSPerson>();
@@ -38,7 +38,7 @@ public class GetPersonsOP extends WebserviceOperation {
     }
 
     @Override
-    public void prepareManagers(Session session) throws ExceptionBase {
+    protected void prepareManagers(Session session) throws ExceptionBase {
 	userDAO = session.getManagerFactory().getDAOManager().getUserDAO(session);
     }
 

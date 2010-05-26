@@ -27,24 +27,24 @@ public class UnAssignRoleFromControlEntityOP extends WebserviceOperation {
     }
 
     @Override
-    public void checkInput(Session session) throws ExceptionBase {
+    protected void checkInput(Session session) throws ExceptionBase {
 	FieldValidator.requireLongField("id", ce);
 	FieldValidator.requireLongField("id", role);
 	FieldValidator.requireLongField("id", person);
     }
 
     @Override
-    public void execute() throws ExceptionBase {
+    protected void execute(Session session) throws ExceptionBase {
 
 	// TODO:(2) review if this is OK: Admin can un-assign any role
-	authorizationManager.requiresPermission(getSession(), ce, PermissionEnum.ADMIN);
+	authorizationManager.requiresPermission(session, ce, PermissionEnum.ADMIN);
 
 	roleDAO.unAssignRoleFromPerson(role, person, ce);
 
     }
 
     @Override
-    public void prepareManagers(Session session) throws ExceptionBase {
+    protected void prepareManagers(Session session) throws ExceptionBase {
 	roleDAO = session.getManagerFactory().getDAOManager().getRoleDAO(session);
 	authorizationManager = session.getManagerFactory().getAuthorizationManager();
     }

@@ -36,10 +36,10 @@ public class AssignRoleToControlEntityOP extends WebserviceOperation {
     }
 
     @Override
-    public void execute() throws ExceptionBase {
+    protected void execute(Session session) throws ExceptionBase {
 
 	// TODO:(2) review if this is OK: Admin can assign any role
-	authorizationManager.requiresPermission(getSession(), ce, PermissionEnum.ADMIN);
+	authorizationManager.requiresPermission(session, ce, PermissionEnum.ADMIN);
 
 	roleDAO.assignRoleToPerson(role, person, ce);
 

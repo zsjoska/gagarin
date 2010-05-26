@@ -31,9 +31,8 @@ public class AssignRoleToControlEntityOP extends WebserviceOperation {
 	FieldValidator.requireLongField("id", ce);
 	FieldValidator.requireLongField("id", role);
 	FieldValidator.requireLongField("id", person);
-
-	// TODO:(1) additional check that additional fields that we save to have
-	// correct values
+	FieldValidator.requireField("type", this.person);
+	FieldValidator.requireField("category", this.ce);
     }
 
     @Override

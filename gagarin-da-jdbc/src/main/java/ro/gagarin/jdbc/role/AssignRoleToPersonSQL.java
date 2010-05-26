@@ -29,7 +29,8 @@ public class AssignRoleToPersonSQL extends UpdateQuery {
 	FieldValidator.requireLongField("id", this.role);
 	FieldValidator.requireLongField("id", this.person);
 	FieldValidator.requireLongField("id", this.object);
-	// TODO:(1) check the other saved values
+	FieldValidator.requireField("type", this.person);
+	FieldValidator.requireField("category", this.object);
     }
 
     @Override

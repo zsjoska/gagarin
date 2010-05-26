@@ -3,6 +3,7 @@ package ro.gagarin;
 import org.junit.Test;
 
 import ro.gagarin.application.objects.AppConfig;
+import ro.gagarin.application.objects.AppGroup;
 import ro.gagarin.application.objects.AppLogEntry;
 import ro.gagarin.application.objects.AppUser;
 import ro.gagarin.application.objects.AppUserPermission;
@@ -53,5 +54,13 @@ public class ObjectFieldCompatibilityTest {
 	AppUserRole ur = new AppUserRole();
 	ur.setRoleName("a");
 	FieldValidator.checkAllFields(ur);
+    }
+
+    @Test
+    public void appGroup() throws FieldRequiredException {
+	AppGroup ug = new AppGroup();
+	ug.setDescription("a");
+	ug.setName("a");
+	FieldValidator.checkAllFields(ug);
     }
 }

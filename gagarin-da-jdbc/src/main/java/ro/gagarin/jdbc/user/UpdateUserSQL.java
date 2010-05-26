@@ -24,7 +24,6 @@ public class UpdateUserSQL extends UpdateQuery {
 	FieldValidator.requireLongField("id", user);
 
 	// TODO:(2) check that at least one field is not null
-	// TODO:(2) check some key fields if they are empty
 
     }
 

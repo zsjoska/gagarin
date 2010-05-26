@@ -52,7 +52,7 @@ public class SelectGroupByNameSQL extends SelectQuery {
 
     @Override
     protected void checkInput() throws FieldRequiredException {
-	FieldValidator.checkStringValue(this.groupname, "groupname", 50);
+	FieldValidator.requireStringValue(this.groupname, "groupname", 50);
     }
 
 }

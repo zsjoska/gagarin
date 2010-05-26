@@ -68,7 +68,7 @@ public abstract class WebserviceOperation {
 
     public void prepareSession() throws SessionNotFoundException, LoginRequiredException {
 	try {
-	    this.sessionString = FieldValidator.checkStringValue(sessionString, "sessionId", 100);
+	    this.sessionString = FieldValidator.requireStringValue(sessionString, "sessionId", 100);
 	} catch (FieldRequiredException e) {
 	    throw new SessionNotFoundException(getSessionString());
 	}

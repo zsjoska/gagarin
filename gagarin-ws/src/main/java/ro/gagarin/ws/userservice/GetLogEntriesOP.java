@@ -59,7 +59,7 @@ public class GetLogEntriesOP extends WebserviceOperation {
     public void checkInput(Session session) throws ExceptionBase {
 	// if the username is null, all logs are retrieved
 	if (username != null) {
-	    FieldValidator.checkStringValue(username, "username", 50);
+	    FieldValidator.requireStringValue(username, "username", 50);
 	}
     }
 }

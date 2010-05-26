@@ -65,8 +65,8 @@ public class SelectUserByUsernamePasswordSQL extends SelectQuery {
 
     @Override
     protected void checkInput() throws FieldRequiredException {
-	this.username = FieldValidator.checkStringValue(username, "username", 50);
-	FieldValidator.checkStringValue(password, "password", 50, false);
+	this.username = FieldValidator.requireStringValue(username, "username", 50);
+	FieldValidator.requireStringValue(password, "password", 50, false);
     }
 
 }

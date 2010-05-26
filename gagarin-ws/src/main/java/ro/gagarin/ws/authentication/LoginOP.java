@@ -52,7 +52,7 @@ public class LoginOP extends WebserviceOperation {
 
     @Override
     public void checkInput(Session session) throws ExceptionBase {
-	this.username = FieldValidator.checkStringValue(username, "username", 50);
-	this.password = FieldValidator.checkStringValue(password, "password", 50);
+	this.username = FieldValidator.requireStringValue(username, "username", 50);
+	this.password = FieldValidator.requireStringValue(password, "password", 50);
     }
 }

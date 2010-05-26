@@ -44,7 +44,7 @@ public class LogoutSessionOP extends WebserviceOperation {
 
     @Override
     public void checkInput(Session session) throws ExceptionBase {
-	FieldValidator.checkStringValue(otherSessionId, "otherSessionId", 50);
+	FieldValidator.requireStringValue(otherSessionId, "otherSessionId", 50);
     }
 
 }

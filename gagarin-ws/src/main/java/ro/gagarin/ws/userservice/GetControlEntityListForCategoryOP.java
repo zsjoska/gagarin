@@ -28,7 +28,7 @@ public class GetControlEntityListForCategoryOP extends WebserviceOperation {
 
     @Override
     public void checkInput(Session session) throws ExceptionBase {
-	FieldValidator.checkStringValue(category, "category", 50);
+	FieldValidator.requireStringValue(category, "category", 50);
 	this.categoryEnum = ControlEntityCategory.valueOf(this.category);
     }
 

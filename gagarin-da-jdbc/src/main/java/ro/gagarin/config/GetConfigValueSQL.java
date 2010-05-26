@@ -46,6 +46,6 @@ public class GetConfigValueSQL extends SelectQuery {
 
     @Override
     protected void checkInput() throws FieldRequiredException {
-	FieldValidator.checkStringValue(this.config, "config", 100);
+	FieldValidator.requireStringValue(this.config, "config", 100);
     }
 }

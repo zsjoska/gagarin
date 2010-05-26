@@ -111,13 +111,11 @@ public class FieldValidator {
 	}.check();
     }
 
-    // TODO:(1) Rename to requireStringValue
-    public static String checkStringValue(String str, String name, int maxLength) throws FieldRequiredException {
-	return checkStringValue(str, name, maxLength, true);
+    public static String requireStringValue(String str, String name, int maxLength) throws FieldRequiredException {
+	return requireStringValue(str, name, maxLength, true);
     }
 
-    // TODO:(1) Rename to requireStringValue
-    public static String checkStringValue(String str, String name, int maxLength, boolean trim)
+    public static String requireStringValue(String str, String name, int maxLength, boolean trim)
 	    throws FieldRequiredException {
 
 	// TODO:(1) fix this Object.class, maybe with a permisible constructor

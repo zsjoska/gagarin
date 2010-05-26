@@ -49,6 +49,6 @@ public class SelectPermissionByNameSQL extends SelectQuery {
 
     @Override
     protected void checkInput() throws FieldRequiredException {
-	FieldValidator.checkStringValue(this.permissionName, "permissionName", 50);
+	FieldValidator.requireStringValue(this.permissionName, "permissionName", 50);
     }
 }

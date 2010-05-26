@@ -70,7 +70,7 @@ public class CreateRoleWithPermissionsOP extends WebserviceOperation {
 
     @Override
     public void checkInput(Session session) throws ExceptionBase {
-	FieldValidator.checkStringValue(roleName, "roleName", 50);
+	FieldValidator.requireStringValue(roleName, "roleName", 50);
 	// TODO:(2) check permissions
     }
 

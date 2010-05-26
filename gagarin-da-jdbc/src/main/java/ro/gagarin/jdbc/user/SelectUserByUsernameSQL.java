@@ -60,6 +60,6 @@ public class SelectUserByUsernameSQL extends SelectQuery {
 
     @Override
     protected void checkInput() throws FieldRequiredException {
-	FieldValidator.checkStringValue(this.username, "username", 50);
+	FieldValidator.requireStringValue(this.username, "username", 50);
     }
 }

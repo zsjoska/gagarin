@@ -49,7 +49,7 @@ public class SelectRoleByNameSQL extends SelectQuery {
 
     @Override
     protected void checkInput() throws FieldRequiredException {
-	FieldValidator.checkStringValue(this.roleName, "roleName", 50);
+	FieldValidator.requireStringValue(this.roleName, "roleName", 50);
     }
 
 }

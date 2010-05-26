@@ -67,6 +67,6 @@ public class CreateSessionOP extends WebserviceOperation {
     @Override
     public void checkInput(Session session) throws ExceptionBase {
 	// TODO:(2) custom check for language
-	this.reason = FieldValidator.checkStringValue(reason, "reason", 20);
+	this.reason = FieldValidator.requireStringValue(reason, "reason", 20);
     }
 }

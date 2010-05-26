@@ -15,8 +15,7 @@ import ro.gagarin.ws.objects.WSUserPermission;
 import ro.gagarin.ws.objects.WSUserRole;
 import ro.gagarin.ws.util.WSConversionUtils;
 
-// TODO:(1) rename: 't'
-public class GetRolePermissionstOP extends WebserviceOperation {
+public class GetRolePermissionsOP extends WebserviceOperation {
 
     private final WSUserRole wsUserRole;
 
@@ -26,7 +25,7 @@ public class GetRolePermissionstOP extends WebserviceOperation {
 
     private AuthorizationManager authManager;
 
-    public GetRolePermissionstOP(String sessionId, WSUserRole wsUserRole) {
+    public GetRolePermissionsOP(String sessionId, WSUserRole wsUserRole) {
 	super(sessionId);
 	this.wsUserRole = wsUserRole;
     }

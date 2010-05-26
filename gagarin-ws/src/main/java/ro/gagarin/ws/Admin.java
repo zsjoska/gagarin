@@ -34,7 +34,7 @@ import ro.gagarin.ws.userservice.GetGroupsOP;
 import ro.gagarin.ws.userservice.GetLogEntriesOP;
 import ro.gagarin.ws.userservice.GetPersonsOP;
 import ro.gagarin.ws.userservice.GetRoleListOP;
-import ro.gagarin.ws.userservice.GetRolePermissionstOP;
+import ro.gagarin.ws.userservice.GetRolePermissionsOP;
 import ro.gagarin.ws.userservice.GetSessionListOP;
 import ro.gagarin.ws.userservice.GetStatisticsOP;
 import ro.gagarin.ws.userservice.GetUserGroupsOP;
@@ -88,7 +88,7 @@ public class Admin {
     @WebMethod
     public List<WSUserPermission> getRolePermissions(String sessionId, WSUserRole wsUserRole) throws WSException {
 
-	GetRolePermissionstOP getRolePermissions = new GetRolePermissionstOP(sessionId, wsUserRole);
+	GetRolePermissionsOP getRolePermissions = new GetRolePermissionsOP(sessionId, wsUserRole);
 	WebserviceExecutor.execute(getRolePermissions);
 	return getRolePermissions.getRolePermissions();
 

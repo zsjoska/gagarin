@@ -21,6 +21,7 @@ import ro.gagarin.jdbc.objects.DBUserPermission;
 import ro.gagarin.jdbc.objects.DBUserRole;
 import ro.gagarin.jdbc.role.AssignPermissionToRoleSQL;
 import ro.gagarin.jdbc.role.AssignRoleToPersonSQL;
+import ro.gagarin.jdbc.role.CleanupPermissionRoleAssignments;
 import ro.gagarin.jdbc.role.CleanupRolePermissionAssignments;
 import ro.gagarin.jdbc.role.CleanupRolePersonAssignments;
 import ro.gagarin.jdbc.role.CreatePermissionSQL;
@@ -169,6 +170,7 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 	try {
 
 	    new DeletePermissionSQL(this, permission).execute();
+	    new CleanupPermissionRoleAssignments(this, perm);
 
 	    APPLOG.action(AppLogAction.DELETE, UserPermission.class, permission.getPermissionName(), AppLog.SUCCESS);
 	    APPLOG.info("Permission " + permission.getPermissionName() + " was deleted");

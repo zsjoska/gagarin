@@ -9,7 +9,6 @@ import ro.gagarin.jdbc.UpdateQuery;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.utils.FieldValidator;
 
-// TODO:(1) delete Role assignments
 public class DeletePermissionSQL extends UpdateQuery {
 
     private final UserPermission perm;

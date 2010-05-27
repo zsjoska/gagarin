@@ -42,12 +42,12 @@ public class LoginOP extends WebserviceOperation {
 
     @Override
     protected void prepareManagers(Session session) throws ExceptionBase {
-	authenticationManager = FACTORY.getAuthenticationManager(getSession());
+	authenticationManager = FACTORY.getAuthenticationManager();
     }
 
     @Override
     protected void execute(Session session) throws ExceptionBase {
-	User user = authenticationManager.userLogin(username, password, extra);
+	User user = authenticationManager.userLogin(session, username, password, extra);
 	// TODO:(2) check if user is active
 	this.loginUser = new WSUser(user);
 	getApplog().info("Login completed for user " + this.username);

@@ -41,8 +41,8 @@ public class GetSessionListOP extends WebserviceOperation {
     protected void execute(Session session) throws ExceptionBase {
 
 	List<Session> sessions = sessionManager.getSessionList();
-
 	this.sessionList = WSConversionUtils.convertToSessionList(sessions);
+	getApplog().debug("Returning " + sessionList.size() + " sessions");
     }
 
     public List<WSExportedSession> getSessionList() {

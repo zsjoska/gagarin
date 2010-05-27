@@ -48,6 +48,7 @@ public class GetPersonsOP extends WebserviceOperation {
 	for (User user : users) {
 	    persons.add(new WSPerson(user));
 	}
+	getApplog().debug("Returning " + persons.size() + " persons");
     }
 
     public List<WSPerson> getPersons() {

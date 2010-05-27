@@ -43,8 +43,8 @@ public class WSClient {
 	if (this.userService == null) {
 	    AdminService service;
 	    try {
-		service = new AdminService(new URL(this.rootURL + "UserService" + "?wsdl"), new QName(
-			"http://ws.gagarin.ro/", "UserServiceService"));
+		service = new AdminService(new URL(this.rootURL + "Admin" + "?wsdl"), new QName(
+			"http://ws.gagarin.ro/", "AdminService"));
 		this.userService = service.getAdminPort();
 	    } catch (MalformedURLException e) {
 		e.printStackTrace();

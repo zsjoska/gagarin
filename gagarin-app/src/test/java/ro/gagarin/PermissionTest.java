@@ -15,6 +15,8 @@ import ro.gagarin.manager.ManagerFactory;
 import ro.gagarin.session.Session;
 import ro.gagarin.testobjects.ATestGroup;
 import ro.gagarin.testutil.TUtil;
+import ro.gagarin.user.Group;
+import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
 
@@ -64,5 +66,13 @@ public class PermissionTest {
 	ATestGroup group = new ATestGroup();
 	group.setId(10L);
 	roleDAO.assignRoleToPerson(role, group, group);
+    }
+
+    @Test
+    public void testAdminGroupCEInitialization() throws Exception {
+	Group adminGroup = TUtil.getAdminGroup(session);
+	Set<UserPermission> perms = roleDAO.getEffectivePermissionsOnEntity(BaseControlEntity.getAdminEntity(),
+		adminGroup);
+	assertEquals(PermissionEnum.values().length, perms.size());
     }
 }

@@ -14,6 +14,7 @@ import ro.gagarin.manager.ConfigurationManager;
 import ro.gagarin.manager.ManagerFactory;
 import ro.gagarin.manager.SessionManager;
 import ro.gagarin.session.Session;
+import ro.gagarin.user.Group;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserRole;
 
@@ -87,5 +88,11 @@ public class TUtil {
 	sessionManager.assignUserToSession(adminUser, session);
 	sessionManager.releaseSession(session);
 	return session;
+    }
+
+    public static Group getAdminGroup(Session session) throws ExceptionBase {
+	String adminGroupName = FACTORY.getConfigurationManager().getString(Config.ADMIN_GROUP_NAME);
+	return FACTORY.getDAOManager().getUserDAO(session).getGroupByName(adminGroupName);
+
     }
 }

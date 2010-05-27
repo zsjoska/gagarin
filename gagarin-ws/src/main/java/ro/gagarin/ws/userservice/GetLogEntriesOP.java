@@ -18,7 +18,7 @@ import ro.gagarin.ws.util.WSConversionUtils;
 public class GetLogEntriesOP extends WebserviceOperation {
 
     private final String username;
-    private List<WSLogEntry> configList;
+    private List<WSLogEntry> logList;
 
     private AppLog logMgr;
 
@@ -50,11 +50,12 @@ public class GetLogEntriesOP extends WebserviceOperation {
 
 	List<LogEntry> logValues = logMgr.getLogEntries(username);
 	List<WSLogEntry> wsConfigList = WSConversionUtils.toWSLogList(logValues);
-	this.configList = wsConfigList;
+	this.logList = wsConfigList;
+	getApplog().debug("Returning " + logList.size() + " log entries");
     }
 
     public List<WSLogEntry> getLogEntries() {
-	return configList;
+	return logList;
     }
 
     @Override

@@ -54,6 +54,7 @@ public class GetControlEntityListForCategoryOP extends WebserviceOperation {
 
 	List<ControlEntity> ceList = roleDAO.getControlEntityListForCategory(categoryEnum);
 	this.controlEntities = WSConversionUtils.convertEntityList(ceList);
+	getApplog().debug("Returning " + controlEntities.size() + " control entities");
     }
 
     public List<WSControlEntity> getControlEntities() {

@@ -34,6 +34,7 @@ public class GetCurrentUserPermissionsOP extends WebserviceOperation {
     @Override
     protected void execute(Session session) throws ExceptionBase {
 	this.permissions = WSConversionUtils.convertEffectivePermissions(session.getEffectivePermissions());
+	getApplog().debug("Returning " + permissions.size() + " effective permissions");
     }
 
     public List<WSEffectivePermission> getCurrentUserPermissions() {

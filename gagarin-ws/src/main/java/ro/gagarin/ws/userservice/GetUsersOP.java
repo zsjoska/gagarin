@@ -44,7 +44,7 @@ public class GetUsersOP extends WebserviceOperation {
 
 	List<User> allUsers = userDAO.getAllUsers();
 	this.users = WSConversionUtils.convertToWSUserList(allUsers);
-
+	getApplog().debug("Returning " + users.size() + " users");
     }
 
     public List<WSUser> getUsers() {

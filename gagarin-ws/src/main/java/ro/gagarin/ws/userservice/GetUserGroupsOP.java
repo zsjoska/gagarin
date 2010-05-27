@@ -59,6 +59,7 @@ public class GetUserGroupsOP extends WebserviceOperation {
     protected void execute(Session session) throws ExceptionBase {
 	List<Group> groups = userDAO.getUserGroups(this.user);
 	this.userGoups = WSConversionUtils.convertToGroupList(groups);
+	getApplog().debug("Returning " + userGoups.size() + " groups");
     }
 
     public List<WSGroup> getUserGroups() {

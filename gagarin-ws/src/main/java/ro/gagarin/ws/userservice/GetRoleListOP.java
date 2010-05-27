@@ -47,6 +47,7 @@ public class GetRoleListOP extends WebserviceOperation {
 	    convRoles.add(new WSUserRole(userRole));
 	}
 	this.roles = convRoles;
+	getApplog().debug("Returning " + roles.size() + " roles");
     }
 
     public List<WSUserRole> getRoleList() {

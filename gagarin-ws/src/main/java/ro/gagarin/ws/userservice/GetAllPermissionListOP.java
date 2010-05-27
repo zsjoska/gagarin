@@ -40,6 +40,7 @@ public class GetAllPermissionListOP extends WebserviceOperation {
 
 	List<UserPermission> allPermissions = roleDAO.getAllPermissions();
 	this.permissionlist = WSConversionUtils.convertToWSPermissionList(allPermissions);
+	getApplog().debug("Returning " + permissionlist.size() + " permissions");
     }
 
     public List<WSUserPermission> getPermissionList() {

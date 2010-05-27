@@ -43,6 +43,7 @@ public class GetConfigEntriesOP extends WebserviceOperation {
 	List<ConfigEntry> configValues = cfgMgr.getConfigValues();
 	List<WSConfig> wsConfigList = WSConversionUtils.toWSConfigList(configValues);
 	this.configList = wsConfigList;
+	getApplog().debug("Returning " + configList.size() + " configs");
     }
 
     public List<WSConfig> getConfigEntries() {

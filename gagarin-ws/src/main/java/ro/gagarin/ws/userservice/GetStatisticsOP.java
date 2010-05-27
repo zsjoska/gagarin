@@ -40,8 +40,8 @@ public class GetStatisticsOP extends WebserviceOperation {
     protected void execute(Session session) throws ExceptionBase {
 
 	List<Statistic> statistics = StatisticsContainer.exportStatistics(filter);
-
 	this.statisticsList = WSConversionUtils.convertToWSStatisticList(statistics);
+	getApplog().debug("Returning " + statisticsList.size() + " statistics");
     }
 
     public List<WSStatistic> getStatisticList() {

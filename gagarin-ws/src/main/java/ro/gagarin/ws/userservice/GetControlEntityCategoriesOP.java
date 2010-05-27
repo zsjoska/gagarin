@@ -36,6 +36,7 @@ public class GetControlEntityCategoriesOP extends WebserviceOperation {
 	for (ControlEntityCategory ceCat : ControlEntityCategory.values()) {
 	    controlEntities.add(ceCat);
 	}
+	getApplog().debug("Returning " + controlEntities.size() + " control entities");
     }
 
     public List<ControlEntityCategory> getControlEntities() {

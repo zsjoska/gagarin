@@ -49,6 +49,7 @@ public class GetRolePermissionsOP extends WebserviceOperation {
 
 	Set<UserPermission> permissions = roleDAO.getRolePermissions(wsUserRole);
 	this.permList = WSConversionUtils.convertToWSPermissionList(permissions);
+	getApplog().debug("Returning " + permList.size() + " permissions");
     }
 
     public List<WSUserPermission> getRolePermissions() {

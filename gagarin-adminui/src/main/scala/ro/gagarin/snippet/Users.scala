@@ -31,7 +31,6 @@ class Users {
     
   def newUser (in: NodeSeq): NodeSeq  = {
 	val user = new WsUser();
-    val roles = userService.getRoleList.map(x => (x.getId().toString,x.getRoleName()))
     bind("user", in, 
          "username" -> text("", (x)=> user.setUsername(x)),
          "password" -> password("", (x) => user.setPassword(x)),

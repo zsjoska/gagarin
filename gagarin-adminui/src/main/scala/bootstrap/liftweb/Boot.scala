@@ -34,24 +34,29 @@ class Boot {
      }, () => RedirectResponse("/"))
     
     // Build SiteMap
-    val entries = SiteMap( Menu(Loc("Home", List("index"), "Home", requiresLogin)),
-    					   Menu(Loc("login", List("login"), "Login", loggedIn)),
-    					   Menu(Loc("users", List("users"), "Users", requiresLogin, rqPerm(LIST)),
-	    					   Menu(Loc("newUser", List("newUser"), "New User", requiresLogin, rqPerm(CREATE))),
-	    					   Menu(Loc("editUser", List("editUser"), "Edit User", Hidden, requiresLogin, rqPerm(UPDATE)))
-    					   ),
-    					   Menu(Loc("roles", List("roles"), "Roles", requiresLogin, rqPerm(LIST)),
-	    					   Menu(Loc("newRole", List("newRole"), "New Role", requiresLogin, rqPerm(CREATE))),
-	    					   Menu(Loc("editRole", List("editRole"), "Edit Role", Hidden, requiresLogin, rqPerm(UPDATE)))
-    					   ),
-    					   Menu(Loc("monitor", List("monitor"), "Monitor", requiresLogin, rqPerm(ADMIN)),
-	    					   Menu(Loc("sessions", List("sessions"), "Sessions", requiresLogin, rqPerm(ADMIN))),
-	    					   Menu(Loc("statistics", List("statistics"), "Statistics", requiresLogin, rqPerm(ADMIN))),
-	    					   Menu(Loc("logs", List("logs"), "Logs", requiresLogin, rqPerm(ADMIN)))
-    					   ),
-    					   Menu(Loc("config", List("config"), "Config", requiresLogin, rqPerm(ADMIN)))
-    					   
-    					)
+    val entries = SiteMap( 
+      Menu(Loc("Home", List("index"), "Home", requiresLogin)),
+      Menu(Loc("login", List("login"), "Login", loggedIn)),
+      Menu(Loc("users", List("users"), "Users", requiresLogin, rqPerm(LIST)),
+	      Menu(Loc("newUser", List("newUser"), "New User", requiresLogin, rqPerm(CREATE))),
+	      Menu(Loc("editUser", List("editUser"), "Edit User", Hidden, requiresLogin, rqPerm(UPDATE)))
+      ),
+      Menu(Loc("roles", List("roles"), "Roles", requiresLogin, rqPerm(LIST)),
+	      Menu(Loc("newRole", List("newRole"), "New Role", requiresLogin, rqPerm(CREATE))),
+	      Menu(Loc("editRole", List("editRole"), "Edit Role", Hidden, requiresLogin, rqPerm(UPDATE)))
+      ),
+      Menu(Loc("groups", List("groups"), "Groups", requiresLogin),
+	      Menu(Loc("newGroup", List("newGroup"), "New Group", requiresLogin)),
+	      Menu(Loc("editGroup", List("editGroup"), "Edit Group", Hidden, requiresLogin, rqPerm(UPDATE)))
+      ),
+      Menu(Loc("monitor", List("monitor"), "Monitor", requiresLogin, rqPerm(ADMIN)),
+	      Menu(Loc("sessions", List("sessions"), "Sessions", requiresLogin, rqPerm(ADMIN))),
+	      Menu(Loc("statistics", List("statistics"), "Statistics", requiresLogin, rqPerm(ADMIN))),
+	      Menu(Loc("logs", List("logs"), "Logs", requiresLogin, rqPerm(ADMIN)))
+      ),
+      Menu(Loc("config", List("config"), "Config", requiresLogin, rqPerm(ADMIN)))
+    )
+    
     LiftRules.setSiteMap(entries)
   }
 }

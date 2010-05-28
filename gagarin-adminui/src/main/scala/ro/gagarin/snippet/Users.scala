@@ -10,23 +10,27 @@ import _root_.net.liftweb.util.Helpers._
 import _root_.net.liftweb.util._
 import _root_.ro.gagarin.model.{wsSession, SessionInfo}
 import _root_.ro.gagarin.model.userService
+import _root_.ro.gagarin.UserStatus
+import _root_.ro.gagarin.AuthenticationType
 
 class Users {
   
   private object selectedUser extends RequestVar[WsUser](null)
+
+  lazy val statusMap = (Map[String,String]()/: UserStatus.values)( (x,y) =>  x + {y.name->y.name}).toSeq;
+  lazy val authMap = (Map[String,String]()/: AuthenticationType.values)( (x,y) =>  x + {y.name->y.name}).toSeq;
   
     def list(in: NodeSeq): NodeSeq  = {
    	  val users = userService.getUsers
       <span>
       <table border="1" cellspacing="0">
-      {users.flatMap( u => <tr>
-                      		<td>{link("editUser", () => {selectedUser.set(u)}, Text(u.getUsername()))}</td>
-                      		<td>{Text(u.getName())}</td>
-                      	   </tr>)}
+      {users.flatMap( u => 
+        <tr>
+        <td>{link("editUser", () => {selectedUser.set(u)}, Text(u.getUsername()))}</td>
+        <td>{Text(u.getName())}</td>
+        </tr>)}
       </table>
       </span>
-   	  
-      
     }
     
   def newUser (in: NodeSeq): NodeSeq  = {
@@ -37,27 +41,31 @@ class Users {
          "name" -> text("", (x) => user.setName(x)),
          "email" -> text("", (x) => user.setEmail(x)),
          "phone" -> text("", (x) => user.setPhone(x)),
+         "status" -> select( statusMap, Empty, x => user.setStatus(UserStatus.valueOf(x))),
+         "authentication" -> select(authMap, Empty, x => user.setAuthentication(AuthenticationType.valueOf(x))),
          "submit" -> submit("Create", () => {
-        	 	userService.createUser(user)
-                redirectTo("/users") 
-              })
+             userService.createUser(user)
+             redirectTo("/users") 
+         })
     )
   } 
     
 
   def editUser (in: NodeSeq): NodeSeq  = {
-	val user = selectedUser
+	val user = selectedUser.is
     bind("user", in, 
          "username" -> text(user.getUsername(), (x)=> user.setUsername(x)),
          "password" -> password("", (x) => user.setPassword(x)),
          "name" -> text( if(user.getName() != null) user.getName() else "", (x) => user.setName(x)),
          "email" -> text( if(user.getEmail()!=null) user.getEmail else "", (x) => user.setEmail(x)),
          "phone" -> text( if(user.getPhone() != null) user.getPhone() else "", (x) => user.setPhone(x)),
+         "status" -> select( statusMap, Full(user.getStatus.name), x => user.setStatus(UserStatus.valueOf(x))),
+         "authentication" -> select(authMap, Full(user.getAuthentication.name), x => user.setAuthentication(AuthenticationType.valueOf(x))),
          "submit" -> submit("Update", () => {
-        	 	// getUserService.createUser(wsSessionId.session, user)
-                redirectTo("/users") 
-              })
-    )
+             userService.updateUser(user);
+             redirectTo("/users") 
+         })
+    	)
   } 
 }
 

@@ -117,6 +117,16 @@ object userService {
 	  }}
   }
 
+  def updateUser(user : WsUser) = {
+	  try{
+	    // TODO: implement WS Update User
+	      // getUserService.updateUser(wsSession.session, user)
+	  } catch {
+	  case e: WSException_Exception => {
+	    handleException(e)
+	  }}
+  }
+
   def createGroup(group : WsGroup) = {
 	  try{
 	      getUserService.createGroup(wsSession.session, group)

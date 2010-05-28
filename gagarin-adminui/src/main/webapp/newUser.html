@@ -1,17 +1,53 @@
 <lift:surround with="default" at="content">
-	<p><lift:users.newUser form="POST">
-	Username: <user:username />
-		<br />
-	Password: <user:password />
-		<br />
-	Name: <user:name />
-		<br />
-	Email: <user:email />
-		<br />
-	Phone: <user:phone />
-		<br />
-		<user:submit />
-		<br />
-		</lift:users.newUser></p>
+  <p>
+    <lift:users.newUser form="POST">
+      <table>
+        <tr>
+          <td>Username:</td>
+          <td>
+            <user:username />
+          </td>
+        </tr>
+        <tr>
+          <td>Password:</td>
+          <td>
+            <user:password />
+          </td>
+        </tr>
+        <tr>
+          <td>Name:</td>
+          <td>
+            <user:name />
+          </td>
+        </tr>
+        <tr>
+          <td>Email:</td>
+          <td>
+            <user:email />
+          </td>
+        </tr>
+        <tr>
+          <td>Phone:</td>
+          <td>
+            <user:phone />
+          </td>
+        </tr>
+        <tr>
+          <td>Status:</td>
+          <td>
+            <user:status />
+          </td>
+        </tr>
+        <tr>
+          <td>Authentication:</td>
+          <td>
+            <user:authentication />
+          </td>
+        </tr>
+      </table>
+      <br />
+      <user:submit />
+      <br />
+    </lift:users.newUser>
+  </p>
 </lift:surround>
-

@@ -28,18 +28,14 @@ class Groups {
       </span>
     }
     
-  def newUser (in: NodeSeq): NodeSeq  = {
-      val user = new WsUser();
-      val roles = userService.getRoleList.map(x => (x.getId().toString,x.getRoleName()))
-      bind("user", in, 
-	      "username" -> text("", (x)=> user.setUsername(x)),
-	      "password" -> password("", (x) => user.setPassword(x)),
-	      "name" -> text("", (x) => user.setName(x)),
-	      "email" -> text("", (x) => user.setEmail(x)),
-	      "phone" -> text("", (x) => user.setPhone(x)),
+  def newGroup (in: NodeSeq): NodeSeq  = {
+      val group = new WsGroup();
+      bind("group", in, 
+	      "groupname" -> text("", (x)=> group.setName(x)),
+	      "description" -> text("", (x) => group.setDescription(x)),
 	      "submit" -> submit("Create", () => {
-		  userService.createUser(user)
-		  redirectTo("/users") 
+		  userService.createGroup(group)
+		  redirectTo("/groups") 
 	      })
       )
   } 

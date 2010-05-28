@@ -117,6 +117,15 @@ object userService {
 	  }}
   }
 
+  def createGroup(group : WsGroup) = {
+	  try{
+	      getUserService.createGroup(wsSession.session, group)
+	  } catch {
+	  case e: WSException_Exception => {
+	    handleException(e)
+	  }}
+  }
+  
   implicit def convertScalaListToJavaList(aList:ListBuffer[WsUserPermission]) = java.util.Arrays.asList(aList.toArray: _*)
   
   def createRoleWithPermissions(role:String, perm: ListBuffer[WsUserPermission]) = {

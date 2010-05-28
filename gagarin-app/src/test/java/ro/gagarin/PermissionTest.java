@@ -1,6 +1,7 @@
 package ro.gagarin;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Map;
 import java.util.Set;
@@ -73,6 +74,6 @@ public class PermissionTest {
 	Group adminGroup = TUtil.getAdminGroup(session);
 	Set<UserPermission> perms = roleDAO.getEffectivePermissionsOnEntity(BaseControlEntity.getAdminEntity(),
 		adminGroup);
-	assertEquals(PermissionEnum.values().length, perms.size());
+	assertTrue("We need all permissions to be assigned", PermissionEnum.values().length <= perms.size());
     }
 }

@@ -155,7 +155,7 @@ public class ApplicationInitializer {
 	if (perms.size() < PermissionEnum.values().length) {
 	    LOG.info("There are missing permissions for admin group on Admin Control entity;"
 		    + " assigning again admin ROLE");
-	    roleDAO.assignRoleToPerson(adminRole, adminUser, BaseControlEntity.getAdminEntity());
+	    roleDAO.assignRoleToPerson(adminRole, adminGroup, BaseControlEntity.getAdminEntity());
 	}
 
     }

@@ -8,6 +8,7 @@ import Helpers._
 import _root_.ro.gagarin.model.{wsSession, SessionInfo}
 import _root_.ro.gagarin.PermissionEnum
 import _root_.ro.gagarin.PermissionEnum._
+import _root_.net.liftweb.http.S._
 
 
 /**
@@ -23,7 +24,12 @@ class Boot {
     def requiresLogin = If(()=>wsSession.is!=null, () => RedirectResponse("/login"))
     def loggedIn = If(()=>wsSession.is==null, () => RedirectResponse("/"))
     def rqPerm(p:PermissionEnum) = If(()=>{
-    	println("permMap="+wsSession.permMap.get(1))
+    	
+    	if(wsSession.permMap.get(1) == None){
+    	    wsSession.set(null)
+    	    error("Could not get the user permissions");
+    	    redirectTo("/login")
+    	}
     	wsSession.permMap.get(1).get.contains(p)
      }, () => RedirectResponse("/"))
     

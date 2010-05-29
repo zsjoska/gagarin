@@ -25,6 +25,7 @@ class Boot {
     def loggedIn = If(()=>wsSession.is==null, () => RedirectResponse("/"))
     def rqPerm(p:PermissionEnum) = If(()=>{
     	
+        // TODO: wrote in hurry; this needs a more complex implementation
     	if(wsSession.permMap.get(1) == None){
     	    wsSession.set(null)
     	    error("Could not get the user permissions");

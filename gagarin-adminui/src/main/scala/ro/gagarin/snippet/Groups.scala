@@ -39,21 +39,17 @@ class Groups {
 	      })
       )
   } 
-    
 
-//  def editUser (in: NodeSeq): NodeSeq  = {
-//	val user = selectedUser
-//    bind("user", in, 
-//         "username" -> text(user.getUsername(), (x)=> user.setUsername(x)),
-//         "password" -> password("", (x) => user.setPassword(x)),
-//         "name" -> text( if(user.getName() != null) user.getName() else "", (x) => user.setName(x)),
-//         "email" -> text( if(user.getEmail()!=null) user.getEmail else "", (x) => user.setEmail(x)),
-//         "phone" -> text( if(user.getPhone() != null) user.getPhone() else "", (x) => user.setPhone(x)),
-//         "submit" -> submit("Update", () => {
-//        	 	// getUserService.createUser(wsSessionId.session, user)
-//                redirectTo("/users") 
-//              })
-//    )
-//  } 
+  def editGroup (in: NodeSeq): NodeSeq  = {
+      val group = selectedGroup.is
+      bind("group", in, 
+	      "groupname" -> text(group.getName, (x)=> group.setName(x)),
+	      "description" -> text(group.getDescription, (x) => group.setDescription(x)),
+	      "submit" -> submit("Update", () => {
+		  userService.updateGroup(group)
+		  redirectTo("/groups") 
+	      })
+      )
+  } 
 }
 

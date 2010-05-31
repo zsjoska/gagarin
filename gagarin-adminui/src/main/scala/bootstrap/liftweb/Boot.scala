@@ -8,6 +8,7 @@ import Helpers._
 import _root_.ro.gagarin.model.{wsSession, SessionInfo}
 import _root_.ro.gagarin.PermissionEnum
 import _root_.ro.gagarin.PermissionEnum._
+import _root_.net.liftweb.http.ResourceServer
 
 
 /**
@@ -16,6 +17,10 @@ import _root_.ro.gagarin.PermissionEnum._
   */
 class Boot {
   def boot {
+    ResourceServer.allow({
+      case "3rd-party-js" :: _ => true
+    })     
+    
     // where to search snippet
     LiftRules.addToPackages("ro.gagarin")
 

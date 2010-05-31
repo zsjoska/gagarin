@@ -2,6 +2,7 @@
 <classpath>
 	<classpathentry including="**/*.java" kind="src" output="target/test-classes" path="src/test/scala"/>
 	<classpathentry including="**/*.java" kind="src" path="src/main/scala"/>
+	<classpathentry kind="src" path="src/main/resources"/>
 	<classpathentry kind="var" path="M2_REPO/javax/activation/activation/1.1/activation-1.1.jar" sourcepath="M2_REPO/javax/activation/activation/1.1/activation-1.1-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/javax/xml/bind/jaxb-api/2.1/jaxb-api-2.1.jar" sourcepath="M2_REPO/javax/xml/bind/jaxb-api/2.1/jaxb-api-2.1-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/javax/xml/ws/jaxws-api/2.1/jaxws-api-2.1.jar"/>
@@ -28,12 +29,11 @@
 	<classpathentry kind="var" path="M2_REPO/com/sun/org/apache/xml/internal/resolver/20050927/resolver-20050927.jar" sourcepath="M2_REPO/com/sun/org/apache/xml/internal/resolver/20050927/resolver-20050927-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/sun/xml/messaging/saaj/saaj-impl/1.3/saaj-impl-1.3.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/scala-lang/scala-compiler/2.7.3/scala-compiler-2.7.3.jar" sourcepath="M2_REPO/org/scala-lang/scala-compiler/2.7.3/scala-compiler-2.7.3-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/org/mortbay/jetty/servlet-api/2.5-20081211/servlet-api-2.5-20081211.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/mortbay/jetty/servlet-api/2.5-20081211/servlet-api-2.5-20081211.jar" sourcepath="M2_REPO/org/mortbay/jetty/servlet-api/2.5-20081211/servlet-api-2.5-20081211-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/sun/xml/stream/sjsxp/1.0/sjsxp-1.0.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/jvnet/staxex/stax-ex/1.2/stax-ex-1.2.jar" sourcepath="M2_REPO/org/jvnet/staxex/stax-ex/1.2/stax-ex-1.2-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/sun/xml/stream/buffer/streambuffer/0.7/streambuffer-0.7.jar" sourcepath="M2_REPO/com/sun/xml/stream/buffer/streambuffer/0.7/streambuffer-0.7-sources.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="ch.epfl.lamp.sdt.launching.SCALA_CONTAINER"/>
-	<classpathentry kind="var" path="M2_REPO"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

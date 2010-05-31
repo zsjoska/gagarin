@@ -37,8 +37,9 @@ class Roles {
          "roleName" -> text("", (x)=> roleName=x),
          "permissions" -> multiSelect(permissions, Seq.empty,(x) => {
            val perm = new WsUserPermission()
-           perm.setId(x.toLong)
-           permList += perm
+           error("Fix the implementation")
+//           perm.setId(x.toLong)
+//           permList += perm
          }) % ("size" -> "10"),
          "submit" -> submit("Create", () => {
            userService.createRoleWithPermissions(roleName, permList)

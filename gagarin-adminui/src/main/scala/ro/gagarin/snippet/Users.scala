@@ -7,7 +7,7 @@ import _root_.net.liftweb.mapper._
 import _root_.net.liftweb.http.S._
 import _root_.net.liftweb.http.SHtml._
 import _root_.net.liftweb.util.Helpers._
-import _root_.net.liftweb.util._
+import _root_.net.liftweb.common.{Full, Empty}
 import _root_.ro.gagarin.model.{wsSession, SessionInfo}
 import _root_.ro.gagarin.model.userService
 import _root_.ro.gagarin.UserStatus

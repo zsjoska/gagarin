@@ -37,9 +37,10 @@ class Roles {
          "roleName" -> text("", (x)=> roleName=x),
          "permissions" -> multiSelect(permissions, Seq.empty,(x) => {
            val perm = new WsUserPermission()
-           perm.setId(x.toLong)
-           permList += perm
-         }) % ("size" -> "20"),
+           error("Fix the implementation")
+//           perm.setId(x.toLong)
+//           permList += perm
+         }) % ("size" -> "10"),
          "submit" -> submit("Create", () => {
            userService.createRoleWithPermissions(roleName, permList)
            redirectTo("/roles") 
@@ -55,7 +56,7 @@ class Roles {
     bind("role", in, 
          "roleName" -> text(role.getRoleName, (x)=> role.setRoleName(x) ),
          "permissions" -> multiSelect(permissions, permList,(x) => {
-         }) % ("size" -> "20"),
+         }) % ("size" -> "10"),
          "submit" -> submit("Update", () => {
            // getUserService.createRoleWithPermissions(wsSessionId.session, roleName, permList)
            redirectTo("/roles") 

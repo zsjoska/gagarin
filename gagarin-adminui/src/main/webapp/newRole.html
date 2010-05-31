@@ -1,10 +1,15 @@
 <lift:surround with="default" at="content">
 	<p><lift:roles.newRole form="POST">
-	Role Name: <role:roleName />
-		<br />
-	Permissions:<br />
-		<role:permissions />
-		<br />
+      <table>
+        <tr>
+          <td>Role Name:</td>
+          <td><role:roleName /></td>
+        </tr>
+        <tr>
+          <td>Permissions:</td>
+          <td><role:permissions /></td>
+        </tr>
+      </table>
 		<role:submit />
 		<br />
 	</lift:roles.newRole></p>

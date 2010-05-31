@@ -11,7 +11,7 @@ object userService {
   
     def getStatistics(filter: String) = { 
 	  try{
-		  	Buffer(getUserService.getStatistics(wsSession.session, filter))
+	      Buffer(getUserService.getStatistics(wsSession.session, filter))
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)
@@ -20,7 +20,7 @@ object userService {
 
     def getSessionList = { 
 	  try{
-		  	Buffer(getUserService.getSessionList(wsSession.session))
+	      Buffer(getUserService.getSessionList(wsSession.session))
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)
@@ -29,7 +29,7 @@ object userService {
 
   def logoutSession(session: String) = { 
 	  try{
-		getUserService.logoutSession(wsSession.session, session)
+	      getUserService.logoutSession(wsSession.session, session)
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)
@@ -38,7 +38,7 @@ object userService {
 
   def getLogEntries(user: String) = {
 	  try{
-		  	Buffer(getUserService.getLogEntries(wsSession.session, null))
+	      Buffer(getUserService.getLogEntries(wsSession.session, null))
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)
@@ -47,7 +47,7 @@ object userService {
 
   def getRolePermissions(role: WsUserRole) = {
 	  try{
-		  	Buffer(getUserService.getRolePermissions(wsSession.session, role))
+	      Buffer(getUserService.getRolePermissions(wsSession.session, role))
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)
@@ -56,7 +56,7 @@ object userService {
 
   def getConfigEntries = {
 	  try{
-		  	Buffer(getUserService.getConfigEntries(wsSession.session))
+	      Buffer(getUserService.getConfigEntries(wsSession.session))
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)
@@ -65,7 +65,7 @@ object userService {
 
   def setConfigEntry(cfg : WsConfig) = {
 	  try{
-		  	getUserService.setConfigEntry(wsSession.session, cfg)
+	      getUserService.setConfigEntry(wsSession.session, cfg)
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)
@@ -74,16 +74,25 @@ object userService {
 
   def getUsers = {
 	  try{
-		  	Buffer(getUserService.getUsers(wsSession.session))
+	      Buffer(getUserService.getUsers(wsSession.session))
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)
 	  }}
   }
 
+  def getGroups = {
+	  try{
+	      Buffer(getUserService.getGroups(wsSession.session))
+	  } catch {
+	  case e: WSException_Exception => {
+	    handleException(e)
+	  }}
+  }
+  
   def getRoleList = {
 	  try{
-		  	Buffer(getUserService.getRoleList(wsSession.session))
+	      Buffer(getUserService.getRoleList(wsSession.session))
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)
@@ -92,7 +101,7 @@ object userService {
 
   def getAllPermissionList = {
 	  try{
-		  	Buffer(getUserService.getAllPermissionList(wsSession.session))
+	      Buffer(getUserService.getAllPermissionList(wsSession.session))
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)
@@ -101,18 +110,46 @@ object userService {
   
   def createUser(user : WsUser) = {
 	  try{
-		  	getUserService.createUser(wsSession.session, user)
+	      getUserService.createUser(wsSession.session, user)
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)
 	  }}
   }
 
+  def updateUser(user : WsUser) = {
+	  try{
+	    // TODO: implement WS Update User
+	      // getUserService.updateUser(wsSession.session, user)
+	  } catch {
+	  case e: WSException_Exception => {
+	    handleException(e)
+	  }}
+  }
+
+  def createGroup(group : WsGroup) = {
+	  try{
+	      getUserService.createGroup(wsSession.session, group)
+	  } catch {
+	  case e: WSException_Exception => {
+	    handleException(e)
+	  }}
+  }
+
+  def updateGroup(group : WsGroup) = {
+	try{
+	    getUserService.updateGroup(wsSession.session, group)
+	} catch {
+	case e: WSException_Exception => {
+	    handleException(e)
+	}}
+  }
+
   implicit def convertScalaListToJavaList(aList:ListBuffer[WsUserPermission]) = java.util.Arrays.asList(aList.toArray: _*)
   
   def createRoleWithPermissions(role:String, perm: ListBuffer[WsUserPermission]) = {
 	  try{
-		  	getUserService.createRoleWithPermissions(wsSession.session, role, perm)
+	      getUserService.createRoleWithPermissions(wsSession.session, role, perm)
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)

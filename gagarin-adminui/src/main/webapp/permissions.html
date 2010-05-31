@@ -1,9 +1,12 @@
 <lift:surround with="default" at="content">
 
 	<script type="text/javascript">
-	$(function() {
+	<![CDATA[	$(function() {
+		alert("msg");
+		$('#date').datepicker();
 		$("#tabs").tabs();
 	});
+	]]>
 	</script>
 	Permissions
 
@@ -31,7 +34,7 @@
 		</tr>
 	</table>
 
-
+	<input type="text" name="date" id="date" />
 
 </lift:surround>
 

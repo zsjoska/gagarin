@@ -2,39 +2,14 @@
 
 	<script type="text/javascript">
 	<![CDATA[	$(function() {
-		alert("msg");
-		$('#date').datepicker();
 		$("#tabs").tabs();
 	});
 	]]>
 	</script>
-	Permissions
-
 	<div class="demo">
-
 	<div id="tabs">
-	<ul>
-		<li><a href="#tabs-base">Base</a></li>
-		<li><a href="#tabs-group">Groups</a></li>
-	</ul>
-	<div id="tabs-base">
-	<p>Base</p>
+		<lift:permissions.listCategories />
+	</div>	
 	</div>
-	<div id="tabs-group">
-	<p>Group</p>
-	</div>
-	</div>
-
-	</div>
-
-	<table border="1" cellspacing="0" width="100%">
-		<tr>
-			<td>Base</td>
-			<td>Groups</td>
-		</tr>
-	</table>
-
-	<input type="text" name="date" id="date" />
-
 </lift:surround>
 

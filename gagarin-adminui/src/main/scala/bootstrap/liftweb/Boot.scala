@@ -55,7 +55,8 @@ class Boot {
 	      Menu(Loc("newGroup", List("newGroup"), "New Group", requiresLogin)),
 	      Menu(Loc("editGroup", List("editGroup"), "Edit Group", Hidden, requiresLogin, rqPerm(UPDATE)))
       ),
-      Menu(Loc("permissions", List("permissions"), "Permissions", requiresLogin)
+      Menu(Loc("permissions", List("permissions"), "Permissions", requiresLogin),
+	      Menu(Loc("permissionPage", List("permissionPage"), "permissionPage", Hidden, requiresLogin)),
       ),
       Menu(Loc("monitor", List("monitor"), "Monitor", requiresLogin, rqPerm(ADMIN)),
 	      Menu(Loc("sessions", List("sessions"), "Sessions", requiresLogin, rqPerm(ADMIN))),

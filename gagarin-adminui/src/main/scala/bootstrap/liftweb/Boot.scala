@@ -5,6 +5,7 @@ import _root_.net.liftweb.http._
 import _root_.net.liftweb.sitemap._
 import _root_.net.liftweb.sitemap.Loc._
 import Helpers._
+import _root_.net.liftweb.http.LiftServlet
 import _root_.ro.gagarin.model.{wsSession, SessionInfo}
 import _root_.ro.gagarin.PermissionEnum
 import _root_.ro.gagarin.PermissionEnum._
@@ -18,6 +19,10 @@ import _root_.net.liftweb.http.S._
   */
 class Boot {
   def boot {
+    
+    // sending XML prologue doesn't likes the jQuery-ui tabs widget
+    LiftRules.useXhtmlMimeType = false    
+    
     ResourceServer.allow({
       case "3rd-party-js" :: _ => true
     })     

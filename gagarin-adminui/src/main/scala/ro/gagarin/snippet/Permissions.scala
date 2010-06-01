@@ -12,14 +12,23 @@ import _root_.ro.gagarin.model.{wsSession, SessionInfo}
 import _root_.ro.gagarin.model.userService
 
 class Permissions {
+  
+    private object selectedCategory extends RequestVar[ControlEntityCategory](null)
+
+  
       def listCategories(in: NodeSeq): NodeSeq  = {
         val categories = userService.getControlEntityCategories
         <ul>
         {
           categories.flatMap( u =>
-            <li>{link("permissionPage", () => {println(u.name)}, <span>{u.name}</span>)}</li>
+            <li>{link("permissionPage", () => {selectedCategory.set(u)}, <span>{u.name}</span>)}</li>
         )}
         </ul>
+      }
+      
+      def pageTitle(in: NodeSeq): NodeSeq  = {
+        val cat = selectedCategory.is
+        Text(cat name)
       }
 }
 

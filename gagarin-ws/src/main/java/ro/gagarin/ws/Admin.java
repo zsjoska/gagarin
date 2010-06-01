@@ -44,6 +44,7 @@ import ro.gagarin.ws.userservice.SetConfigEntryOP;
 import ro.gagarin.ws.userservice.UnAssignRoleFromControlEntityOP;
 import ro.gagarin.ws.userservice.UnassignUsersFromGroupOP;
 import ro.gagarin.ws.userservice.UpdateGroupOP;
+import ro.gagarin.ws.userservice.UpdateUserOP;
 
 @WebService
 public class Admin {
@@ -188,6 +189,12 @@ public class Admin {
     }
 
     @WebMethod
+    public void updateUser(String sessionId, WSUser user) throws WSException {
+	UpdateUserOP updateUser = new UpdateUserOP(sessionId, user);
+	WebserviceExecutor.execute(updateUser);
+    }
+
+    @WebMethod
     public List<WSGroup> getUserGroups(String sessionId, WSUser user) throws WSException {
 	GetUserGroupsOP getUserGroups = new GetUserGroupsOP(sessionId, user);
 	WebserviceExecutor.execute(getUserGroups);
@@ -250,5 +257,4 @@ public class Admin {
 	UnAssignRoleFromControlEntityOP op = new UnAssignRoleFromControlEntityOP(sessionId, ce, role, person);
 	WebserviceExecutor.execute(op);
     }
-
 }

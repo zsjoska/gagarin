@@ -11,10 +11,12 @@ import _root_.net.liftweb.util._
 import _root_.ro.gagarin.model.{wsSession, SessionInfo}
 import _root_.ro.gagarin.model.userService
 import _root_.net.liftweb.common.{Full, Empty}
+import _root_.net.liftweb.http.js.JsCmds.{Alert, Noop}
 
 class Permissions {
   
     private object selectedCategory extends RequestVar[ControlEntityCategory](null)
+    private object selCId extends RequestVar[String](null)
 
   
     def listCategories(in: NodeSeq): NodeSeq  = {
@@ -37,19 +39,24 @@ class Permissions {
         val cat = selectedCategory.is
         val objects = userService.getControlEntityListForCategory(cat.name)
         val ceMap = (Map[String,String]()/: objects)( (x,y) =>  x + {y.getId().toString -> y.getName() }).toSeq;
-        select( ceMap, Empty, x => println(x)) % ("size" -> "10")
+        ajaxSelect( ceMap, Empty, x => {
+          selCId.set(x)
+          Noop
+        }) % ("size" -> "10")
     }
 
     def listPersons(in: NodeSeq): NodeSeq  = {
         val persons = userService.getPersons
         val personMap = (Map[String,String]()/: persons)( (x,y) =>  x + {y.getId().toString -> y.getTitle() }).toSeq;
-        select( personMap, Empty, x => println(x)) % ("size" -> "10")
+        ajaxSelect( personMap, Empty, x => {
+          Alert(selCId.is +":" +x)
+        }) % ("size" -> "10")
     }
 
     def listRoles(in: NodeSeq): NodeSeq  = {
         val roles = userService.getRoleList
         val roleMap = (Map[String,String]()/: roles)( (x,y) =>  x + {y.getId().toString -> y.getRoleName() }).toSeq;
-        select( roleMap, Empty, x => println(x)) % ("size" -> "10")
+        ajaxSelect( roleMap, Empty, x => Noop) % ("size" -> "10")
     }
 }
 

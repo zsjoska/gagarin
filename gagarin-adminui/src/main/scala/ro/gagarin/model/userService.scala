@@ -116,7 +116,25 @@ object userService {
 	    handleException(e)
 	  }}
   }
-  
+
+    def getControlEntityListForCategory(ceCategory: String) = {
+	  try{
+	      Buffer(getUserService.getControlEntityListForCategory(wsSession.session,ceCategory))
+	  } catch {
+	  case e: WSException_Exception => {
+	    handleException(e)
+	  }}
+  }
+
+    def getPersons = {
+	  try{
+	      Buffer(getUserService.getPersons(wsSession.session))
+	  } catch {
+	  case e: WSException_Exception => {
+	    handleException(e)
+	  }}
+  }
+    
   def createUser(user : WsUser) = {
 	  try{
 	      getUserService.createUser(wsSession.session, user)

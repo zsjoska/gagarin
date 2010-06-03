@@ -146,8 +146,7 @@ object userService {
 
   def updateUser(user : WsUser) = {
 	  try{
-	    // TODO: implement WS Update User
-	      // getUserService.updateUser(wsSession.session, user)
+	      getUserService.updateUser(wsSession.session, user)
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)

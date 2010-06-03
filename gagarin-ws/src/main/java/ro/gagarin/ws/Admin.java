@@ -13,6 +13,7 @@ import ro.gagarin.ws.objects.WSControlEntity;
 import ro.gagarin.ws.objects.WSExportedSession;
 import ro.gagarin.ws.objects.WSGroup;
 import ro.gagarin.ws.objects.WSLogEntry;
+import ro.gagarin.ws.objects.WSPermPersonCEAssignment;
 import ro.gagarin.ws.objects.WSPerson;
 import ro.gagarin.ws.objects.WSStatistic;
 import ro.gagarin.ws.objects.WSUser;
@@ -32,6 +33,7 @@ import ro.gagarin.ws.userservice.GetControlEntityListForCategoryOP;
 import ro.gagarin.ws.userservice.GetGroupUsersOP;
 import ro.gagarin.ws.userservice.GetGroupsOP;
 import ro.gagarin.ws.userservice.GetLogEntriesOP;
+import ro.gagarin.ws.userservice.GetPermissionAssignmentsForControlEntityOP;
 import ro.gagarin.ws.userservice.GetPersonsOP;
 import ro.gagarin.ws.userservice.GetRoleListOP;
 import ro.gagarin.ws.userservice.GetRolePermissionsOP;
@@ -233,6 +235,14 @@ public class Admin {
 		sessionId, category);
 	WebserviceExecutor.execute(getControlEntityListForCategory);
 	return getControlEntityListForCategory.getControlEntities();
+    }
+
+    @WebMethod
+    public List<WSPermPersonCEAssignment> getPermissionAssignmentsForControlEntity(String sessionId, WSControlEntity ce)
+	    throws WSException {
+	GetPermissionAssignmentsForControlEntityOP op = new GetPermissionAssignmentsForControlEntityOP(sessionId, ce);
+	WebserviceExecutor.execute(op);
+	return op.getPermissionAssignments();
     }
 
     @WebMethod

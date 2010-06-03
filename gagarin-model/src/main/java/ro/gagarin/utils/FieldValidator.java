@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 
 import org.apache.log4j.Logger;
 
+import ro.gagarin.Entity;
 import ro.gagarin.exceptions.FieldRequiredException;
 
 public class FieldValidator {
@@ -151,5 +152,10 @@ public class FieldValidator {
 	if (id == null || id <= 0) {
 	    throw new FieldRequiredException(field, place);
 	}
+    }
+
+    public static void requireIdField(Entity entity) throws FieldRequiredException {
+	if (entity.getId() == null || entity.getId() <= 0)
+	    throw new FieldRequiredException("id", entity.getClass());
     }
 }

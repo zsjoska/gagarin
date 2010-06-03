@@ -9,9 +9,7 @@ package ro.gagarin;
  * @author ZsJoska
  * 
  */
-public interface ControlEntity {
-
-    Long getId();
+public interface ControlEntity extends Entity {
 
     public String getName();
 

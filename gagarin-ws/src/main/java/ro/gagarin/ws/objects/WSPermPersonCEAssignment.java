@@ -21,17 +21,17 @@ public class WSPermPersonCEAssignment implements PermPersonCEAssignment {
     }
 
     @Override
-    public ControlEntity getControlEntity() {
+    public WSControlEntity getControlEntity() {
 	return this.controlEntity;
     }
 
     @Override
-    public Person getPerson() {
+    public WSPerson getPerson() {
 	return this.person;
     }
 
     @Override
-    public UserRole getRole() {
+    public WSUserRole getRole() {
 	return this.role;
     }
 
@@ -47,7 +47,15 @@ public class WSPermPersonCEAssignment implements PermPersonCEAssignment {
 	this.person = new WSPerson(person);
     }
 
+    public void setPerson(WSPerson person) {
+	this.person = person;
+    }
+
     public void setRole(UserRole role) {
 	this.role = new WSUserRole(role);
+    }
+
+    public void setRole(WSUserRole role) {
+	this.role = role;
     }
 }

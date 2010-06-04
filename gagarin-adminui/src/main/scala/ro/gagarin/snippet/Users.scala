@@ -28,6 +28,7 @@ class Users {
         <tr>
         <td>{link("editUser", () => {selectedUser.set(u)}, Text(u.getUsername()))}</td>
         <td>{Text(u.getName())}</td>
+        <td>{Text(u.getEmail())}</td>        
         </tr>)}
       </table>
       </span>

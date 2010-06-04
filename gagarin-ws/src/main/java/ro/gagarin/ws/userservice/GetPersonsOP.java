@@ -8,11 +8,10 @@ import ro.gagarin.dao.UserDAO;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.manager.AuthorizationManager;
 import ro.gagarin.session.Session;
-import ro.gagarin.user.Group;
 import ro.gagarin.user.PermissionEnum;
-import ro.gagarin.user.User;
 import ro.gagarin.ws.executor.WebserviceOperation;
 import ro.gagarin.ws.objects.WSPerson;
+import ro.gagarin.ws.util.WSUtil;
 
 public class GetPersonsOP extends WebserviceOperation {
 
@@ -39,15 +38,7 @@ public class GetPersonsOP extends WebserviceOperation {
 
     @Override
     protected void execute(Session session) throws ExceptionBase {
-	List<Group> groups = userDAO.getGroups();
-	List<User> users = userDAO.getAllUsers();
-	persons = new ArrayList<WSPerson>();
-	for (Group group : groups) {
-	    persons.add(new WSPerson(group));
-	}
-	for (User user : users) {
-	    persons.add(new WSPerson(user));
-	}
+	this.persons = WSUtil.getPersonList(userDAO);
 	getApplog().debug("Returning " + persons.size() + " persons");
     }
 

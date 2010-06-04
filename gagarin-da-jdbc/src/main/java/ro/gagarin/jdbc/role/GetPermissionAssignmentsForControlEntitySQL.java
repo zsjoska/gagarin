@@ -34,7 +34,7 @@ public class GetPermissionAssignmentsForControlEntitySQL extends SelectQuery {
 
 	    Long person_id = rs.getLong("person_id");
 	    Long role_id = rs.getLong("id");
-	    String role_name = rs.getString("name");
+	    String role_name = rs.getString("roleName");
 	    DBPermPersonCEAssignment assignment = new DBPermPersonCEAssignment();
 	    DBUserRole role = new DBUserRole();
 	    role.setRoleName(role_name);
@@ -60,7 +60,7 @@ public class GetPermissionAssignmentsForControlEntitySQL extends SelectQuery {
 
     @Override
     protected String getSQL() {
-	return "SELECT UserRoles.id, UserRoles.name, person_id "
+	return "SELECT UserRoles.id, UserRoles.roleName, person_id "
 		+ "FROM RolePersonAssignment INNER JOIN UserRoles on role_id = UserRoles.id WHERE object_id = ?";
     }
 

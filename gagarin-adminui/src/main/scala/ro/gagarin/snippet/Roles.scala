@@ -19,6 +19,9 @@ class Roles {
    	  val roles = userService.getRoleList
       <span>
       <table border="1" cellspacing="0">
+      <tr>
+      <th>Role name</th>
+      </tr>
       {roles.flatMap( u => 
         <tr>
           <td>{link("editRole", () => {selectedRole.set(u)}, Text(u.getRoleName()))}</td>

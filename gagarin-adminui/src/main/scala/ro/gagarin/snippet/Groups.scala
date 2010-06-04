@@ -19,6 +19,10 @@ class Groups {
       val groups = userService.getGroups
       <span>
       <table border="1" cellspacing="0" cellpadding="4">
+      <tr>
+      <th>Group Name</th>
+      <th>Description</th>
+      </tr>
       {groups.flatMap( u => 
         <tr>
           <td>{link("editGroup", () => {selectedGroup.set(u)}, Text(u.getName()))}</td>

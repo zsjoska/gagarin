@@ -20,15 +20,22 @@ class Users {
   lazy val statusMap = (Map[String,String]()/: UserStatus.values)( (x,y) =>  x + {y.name->y.name}).toSeq;
   lazy val authMap = (Map[String,String]()/: AuthenticationType.values)( (x,y) =>  x + {y.name->y.name}).toSeq;
   
+    def __(text: String) = if(text == null) "" else text
+  
     def list(in: NodeSeq): NodeSeq  = {
    	  val users = userService.getUsers
       <span>
       <table border="1" cellspacing="0">
+      <tr>
+      <th>Username</th>
+      <th>Name</th>
+      <th>Email</th>
+      </tr>
       {users.flatMap( u => 
         <tr>
         <td>{link("editUser", () => {selectedUser.set(u)}, Text(u.getUsername()))}</td>
-        <td>{Text(u.getName())}</td>
-        <td>{Text(u.getEmail())}</td>        
+        <td>{Text(__(u.getName()))}</td>
+        <td>{Text(__(u.getEmail()))}</td>        
         </tr>)}
       </table>
       </span>

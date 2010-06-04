@@ -52,7 +52,7 @@ class Permissions {
         ce.setId(catId.toLong);
         val list = userService.getPermissionAssignmentsForControlEntity(ce)
         <div id={"exAssignmentsTable" + cat.name}>
-          {if(list.size==0)Text("No assignments")}
+          {if(list.size==0) "No assignments"}
           <table border="1" cellspacing="0" cellpadding="4">
           {list.flatMap( u => 
             <tr>

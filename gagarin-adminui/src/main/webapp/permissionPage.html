@@ -1,14 +1,22 @@
 <lift:surround with="permtab" at="content">
-	<div style="padding-left: 30px"><lift:permissions.pageTitle />
+	<div style="width: 100%;">
+	<div style="padding-left: 30px;"><lift:permissions.pageTitle />
 	<hr />
 	<lift:permissions.listControlObjects /></div>
-	<div style="padding-left: 30px">
-	Persons
+	<div style="padding-left: 30px;">Persons
 	<hr />
 	<lift:permissions.listPersons /></div>
-	<div style="padding-left: 30px">
-	Role
+	<div style="padding-left: 30px;">Role
 	<hr />
 	<lift:permissions.listRoles /></div>
+	<div style="padding-left: 180px; border: thin solid">Effective
+	Permissions<br />
+	<hr />
+	LIST<br />
+	UPDATE<br />
+	READ</div>
+	<br />
+	</div>
+	<lift:permissions.existingAssignments />
 </lift:surround>
 

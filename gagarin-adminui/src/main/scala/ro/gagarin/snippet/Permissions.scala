@@ -11,7 +11,8 @@ import _root_.net.liftweb.util._
 import _root_.ro.gagarin.model.{wsSession, SessionInfo}
 import _root_.ro.gagarin.model.userService
 import _root_.net.liftweb.common.{Full, Empty}
-import _root_.net.liftweb.http.js.JsCmds.{Alert, Noop}
+import _root_.net.liftweb.http.js.JsCmds.{Alert, Noop, Replace, SetElemById}
+import _root_.net.liftweb.http.js.JE.{JsRaw}
 
 class Permissions {
   
@@ -33,7 +34,22 @@ class Permissions {
         val cat = selectedCategory.is
         Text(cat name)
     }
+    
+    def existingAssignments(in: NodeSeq): NodeSeq  = {
+        val cat = selectedCategory.is
+        val div = "exAssignmentsDiv" + cat.name;
+        val table = "exAssignmentsTable" + cat.name;
+    	<div id={div} style="width: 100%; display:none">Existing assignments<br/>
+	<div id={table}></div>
+	</div>
+    }
+    
 
+
+    def listObjectAssignments(catId: String): NodeSeq  = {
+        val cat = selectedCategory.is
+        <div id={"exAssignmentsTable" + cat.name}>{Text(catId)}</div>
+    }
 
     def listControlObjects(in: NodeSeq): NodeSeq  = {
         val cat = selectedCategory.is
@@ -41,7 +57,8 @@ class Permissions {
         val ceMap = (Map[String,String]()/: objects)( (x,y) =>  x + {y.getId().toString -> y.getName() }).toSeq;
         ajaxSelect( ceMap, Empty, x => {
           selCId.set(x)
-          Noop
+          Replace("exAssignmentsTable" + cat.name, listObjectAssignments(x))&
+          SetElemById("exAssignmentsDiv" + cat.name, JsRaw("'block'"),"style", "display")
         }) % ("size" -> "10")
     }
 

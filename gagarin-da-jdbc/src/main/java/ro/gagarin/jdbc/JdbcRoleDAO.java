@@ -32,6 +32,7 @@ import ro.gagarin.jdbc.role.GetControlEntityByIdAndCategorySQL;
 import ro.gagarin.jdbc.role.GetControlEntityListForCategorySQL;
 import ro.gagarin.jdbc.role.GetEffectivePermissionsOnEntitySQL;
 import ro.gagarin.jdbc.role.GetEffectivePermissionsSQL;
+import ro.gagarin.jdbc.role.GetPermissionAssignmentsForControlEntitySQL;
 import ro.gagarin.jdbc.role.GetPermissionRolesSQL;
 import ro.gagarin.jdbc.role.GetRolePermissionsSQL;
 import ro.gagarin.jdbc.role.SelectPermissionByNameSQL;
@@ -43,6 +44,7 @@ import ro.gagarin.jdbc.role.UnAssignRoleFromPersonSQL;
 import ro.gagarin.log.AppLog;
 import ro.gagarin.log.AppLogAction;
 import ro.gagarin.session.Session;
+import ro.gagarin.user.PermPersonCEAssignment;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
 
@@ -289,5 +291,11 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
     public List<ControlEntity> getControlEntityListForCategory(ControlEntityCategory categoryEnum)
 	    throws OperationException {
 	return GetControlEntityListForCategorySQL.execute(this, categoryEnum);
+    }
+
+    @Override
+    public List<PermPersonCEAssignment> getPermissionAssignmentsForControlEntity(ControlEntity ce)
+	    throws OperationException {
+	return GetPermissionAssignmentsForControlEntitySQL.execute(this, ce);
     }
 }

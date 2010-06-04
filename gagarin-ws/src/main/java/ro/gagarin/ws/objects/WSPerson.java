@@ -3,7 +3,6 @@ package ro.gagarin.ws.objects;
 import ro.gagarin.BaseEntity;
 import ro.gagarin.Person;
 import ro.gagarin.PersonTypesEnum;
-import ro.gagarin.user.Group;
 import ro.gagarin.user.User;
 import ro.gagarin.utils.ConversionUtils;
 
@@ -16,10 +15,10 @@ public class WSPerson extends BaseEntity implements Person {
 
     }
 
-    public WSPerson(Group group) {
-	this.setId(group.getId());
-	this.setTitle(group.getTitle());
-	this.type = group.getType();
+    public WSPerson(Person person) {
+	this.setId(person.getId());
+	this.setTitle(person.getTitle());
+	this.type = person.getType();
     }
 
     public WSPerson(User user) {

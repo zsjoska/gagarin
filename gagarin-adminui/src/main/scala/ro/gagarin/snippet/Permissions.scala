@@ -39,8 +39,8 @@ class Permissions {
         val cat = selectedCategory.is
         val div = "exAssignmentsDiv" + cat.name;
         val table = "exAssignmentsTable" + cat.name;
-    	<div id={div} style="width: 100%; display:none">Existing assignments<br/>
-	<div id={table}></div>
+    	<div id={div} style="width: 100%; display:none">Existing assignments for { cat.name }<br/>
+	<div id={table}>Placeholder</div>
 	</div>
     }
     
@@ -48,7 +48,23 @@ class Permissions {
 
     def listObjectAssignments(catId: String): NodeSeq  = {
         val cat = selectedCategory.is
-        <div id={"exAssignmentsTable" + cat.name}>{Text(catId)}</div>
+        val ce = new WsControlEntity();
+        ce.setId(catId.toLong);
+        val list = userService.getPermissionAssignmentsForControlEntity(ce)
+        <div id={"exAssignmentsTable" + cat.name}>
+          {if(list.size==0)Text("No assignments")}
+          <table border="1" cellspacing="0" cellpadding="4">
+          {list.flatMap( u => 
+            <tr>
+            <th>Person</th>
+            <th>Role</th>
+            </tr>
+            <tr>
+            <td>{ Text(u.getPerson().getTitle())}</td>
+            <td>{Text(u.getRole().getRoleName())}</td>
+            </tr>)}
+          </table>
+        </div>
     }
 
     def listControlObjects(in: NodeSeq): NodeSeq  = {

@@ -133,7 +133,17 @@ object userService {
 	  case e: WSException_Exception => {
 	    handleException(e)
 	  }}
-  }
+    }
+
+    def getPermissionAssignmentsForControlEntity(ce : WsControlEntity ) = {
+	  try{
+	      Buffer(getUserService.getPermissionAssignmentsForControlEntity(wsSession.session, ce))
+	  } catch {
+	  case e: WSException_Exception => {
+	    handleException(e)
+	  }}
+    }
+
     
   def createUser(user : WsUser) = {
 	  try{

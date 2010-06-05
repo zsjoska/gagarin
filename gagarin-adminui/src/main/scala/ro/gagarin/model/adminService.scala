@@ -7,7 +7,7 @@ import _root_.net.liftweb.http.S._
 import _root_.ro.gagarin.model.webServiceUtils._
 import _root_.scala.collection.mutable.ListBuffer
 
-object userService {
+object adminService {
   
     def getStatistics(filter: String) = { 
 	  try{

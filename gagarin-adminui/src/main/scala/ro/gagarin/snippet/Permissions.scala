@@ -9,7 +9,7 @@ import _root_.net.liftweb.http.SHtml._
 import _root_.net.liftweb.util.Helpers._
 import _root_.net.liftweb.util._
 import _root_.ro.gagarin.model.{wsSession, SessionInfo}
-import _root_.ro.gagarin.model.userService
+import _root_.ro.gagarin.model.adminService
 import _root_.net.liftweb.common.{Full, Empty}
 import _root_.net.liftweb.http.js.JsCmds.{Alert, Noop, Replace, SetElemById}
 import _root_.net.liftweb.http.js.JE.{JsRaw}
@@ -21,7 +21,7 @@ class Permissions {
 
   
     def listCategories(in: NodeSeq): NodeSeq  = {
-	val categories = userService.getControlEntityCategories
+	val categories = adminService.getControlEntityCategories
         <ul>
         {
           categories.flatMap( u =>
@@ -50,7 +50,7 @@ class Permissions {
         val cat = selectedCategory.is
         val ce = new WsControlEntity();
         ce.setId(catId.toLong);
-        val list = userService.getPermissionAssignmentsForControlEntity(ce)
+        val list = adminService.getPermissionAssignmentsForControlEntity(ce)
         <div id={"exAssignmentsTable" + cat.name}>
           {if(list.size==0) "No assignments"}
           <table border="1" cellspacing="0" cellpadding="4">
@@ -69,7 +69,7 @@ class Permissions {
 
     def listControlObjects(in: NodeSeq): NodeSeq  = {
         val cat = selectedCategory.is
-        val objects = userService.getControlEntityListForCategory(cat.name)
+        val objects = adminService.getControlEntityListForCategory(cat.name)
         val ceMap = (Map[String,String]()/: objects)( (x,y) =>  x + {y.getId().toString -> y.getName() }).toSeq;
         ajaxSelect( ceMap, Empty, x => {
           selCId.set(x)
@@ -79,7 +79,7 @@ class Permissions {
     }
 
     def listPersons(in: NodeSeq): NodeSeq  = {
-        val persons = userService.getPersons
+        val persons = adminService.getPersons
         val personMap = (Map[String,String]()/: persons)( (x,y) =>  x + {y.getId().toString -> y.getTitle() }).toSeq;
         ajaxSelect( personMap, Empty, x => {
           Alert(selCId.is +":" +x)
@@ -87,7 +87,7 @@ class Permissions {
     }
 
     def listRoles(in: NodeSeq): NodeSeq  = {
-        val roles = userService.getRoleList
+        val roles = adminService.getRoleList
         val roleMap = (Map[String,String]()/: roles)( (x,y) =>  x + {y.getId().toString -> y.getRoleName() }).toSeq;
         ajaxSelect( roleMap, Empty, x => Noop) % ("size" -> "10")
     }

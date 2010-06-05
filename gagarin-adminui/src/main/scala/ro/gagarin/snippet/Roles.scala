@@ -9,14 +9,14 @@ import _root_.net.liftweb.http.S._
 import _root_.net.liftweb.http.SHtml._
 import _root_.net.liftweb.util.Helpers._
 import _root_.net.liftweb.util._
-import _root_.ro.gagarin.model.userService
+import _root_.ro.gagarin.model.adminService
 
 class Roles {
   
   private object selectedRole extends RequestVar[WsUserRole](null)
   
     def list(in: NodeSeq): NodeSeq  = {
-   	  val roles = userService.getRoleList
+   	  val roles = adminService.getRoleList
       <span>
       <table border="1" cellspacing="0">
       <tr>
@@ -34,7 +34,7 @@ class Roles {
     
   def newRole (in: NodeSeq): NodeSeq  = {
 	var roleName = "";
-    val permissions = userService.getAllPermissionList.map(x => (x.getId().toString,x.getPermissionName()))
+    val permissions = adminService.getAllPermissionList.map(x => (x.getId().toString,x.getPermissionName()))
     val permList = new ListBuffer[WsUserPermission]();
     bind("role", in, 
          "roleName" -> text("", (x)=> roleName=x),
@@ -45,7 +45,7 @@ class Roles {
 //           permList += perm
          }) % ("size" -> "10"),
          "submit" -> submit("Create", () => {
-           userService.createRoleWithPermissions(roleName, permList)
+           adminService.createRoleWithPermissions(roleName, permList)
            redirectTo("/roles") 
          })
     )
@@ -54,8 +54,8 @@ class Roles {
 
   def editRole (in: NodeSeq): NodeSeq  = {
     val role = selectedRole
-    val permissions = userService.getAllPermissionList.map(x => (x.getId().toString,x.getPermissionName()))
-    val permList = userService.getRolePermissions(role).map( x => x.getId().toString);
+    val permissions = adminService.getAllPermissionList.map(x => (x.getId().toString,x.getPermissionName()))
+    val permList = adminService.getRolePermissions(role).map( x => x.getId().toString);
     bind("role", in, 
          "roleName" -> text(role.getRoleName, (x)=> role.setRoleName(x) ),
          "permissions" -> multiSelect(permissions, permList,(x) => {

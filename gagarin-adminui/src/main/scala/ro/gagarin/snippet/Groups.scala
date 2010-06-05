@@ -9,14 +9,14 @@ import _root_.net.liftweb.http.SHtml._
 import _root_.net.liftweb.util.Helpers._
 import _root_.net.liftweb.util._
 import _root_.ro.gagarin.model.{wsSession, SessionInfo}
-import _root_.ro.gagarin.model.userService
+import _root_.ro.gagarin.model.adminService
 
 class Groups {
   
   private object selectedGroup extends RequestVar[WsGroup](null)
   
     def list(in: NodeSeq): NodeSeq  = {
-      val groups = userService.getGroups
+      val groups = adminService.getGroups
       <span>
       <table border="1" cellspacing="0" cellpadding="4">
       <tr>
@@ -38,7 +38,7 @@ class Groups {
 	      "groupname" -> text("", (x)=> group.setName(x)),
 	      "description" -> text("", (x) => group.setDescription(x)),
 	      "submit" -> submit("Create", () => {
-		  userService.createGroup(group)
+		  adminService.createGroup(group)
 		  redirectTo("/groups") 
 	      })
       )
@@ -50,7 +50,7 @@ class Groups {
 	      "groupname" -> text(group.getName, (x)=> group.setName(x)),
 	      "description" -> text(group.getDescription, (x) => group.setDescription(x)),
 	      "submit" -> submit("Update", () => {
-		  userService.updateGroup(group)
+		  adminService.updateGroup(group)
 		  redirectTo("/groups") 
 	      })
       )

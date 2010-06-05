@@ -9,7 +9,7 @@ import _root_.net.liftweb.http.SHtml._
 import _root_.net.liftweb.util.Helpers._
 import _root_.net.liftweb.common.{Full, Empty}
 import _root_.ro.gagarin.model.{wsSession, SessionInfo}
-import _root_.ro.gagarin.model.userService
+import _root_.ro.gagarin.model.adminService
 import _root_.ro.gagarin.UserStatus
 import _root_.ro.gagarin.AuthenticationType
 
@@ -23,7 +23,7 @@ class Users {
     def __(text: String) = if(text == null) "" else text
   
     def list(in: NodeSeq): NodeSeq  = {
-   	  val users = userService.getUsers
+   	  val users = adminService.getUsers
       <span>
       <table border="1" cellspacing="0">
       <tr>
@@ -52,7 +52,7 @@ class Users {
          "status" -> select( statusMap, Empty, x => user.setStatus(UserStatus.valueOf(x))),
          "authentication" -> select(authMap, Empty, x => user.setAuthentication(AuthenticationType.valueOf(x))),
          "submit" -> submit("Create", () => {
-             userService.createUser(user)
+             adminService.createUser(user)
              redirectTo("/users") 
          })
     )
@@ -70,7 +70,7 @@ class Users {
          "status" -> select( statusMap, Full(user.getStatus.name), x => user.setStatus(UserStatus.valueOf(x))),
          "authentication" -> select(authMap, Full(user.getAuthentication.name), x => user.setAuthentication(AuthenticationType.valueOf(x))),
          "submit" -> submit("Update", () => {
-             userService.updateUser(user);
+             adminService.updateUser(user);
              redirectTo("/users") 
          })
     	)

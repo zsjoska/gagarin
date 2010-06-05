@@ -30,7 +30,7 @@ public class MethodAccessTest {
     private static final transient ManagerFactory FACTORY = BasicManagerFactory.getInstance();
 
     private static Authentication authentication = new Authentication();
-    private static Admin userService = new Admin();
+    private static Admin adminService = new Admin();
 
     private String session = null;
 

@@ -14,7 +14,7 @@ public class WSClient {
 
     private final String rootURL;
     private Authentication authentication;
-    private Admin userService;
+    private Admin adminService;
 
     private WSClient(String rootURL) throws MalformedURLException {
 	new URL(rootURL);
@@ -40,16 +40,16 @@ public class WSClient {
     }
 
     public synchronized Admin getUserService() {
-	if (this.userService == null) {
+	if (this.adminService == null) {
 	    AdminService service;
 	    try {
 		service = new AdminService(new URL(this.rootURL + "Admin" + "?wsdl"), new QName(
 			"http://ws.gagarin.ro/", "AdminService"));
-		this.userService = service.getAdminPort();
+		this.adminService = service.getAdminPort();
 	    } catch (MalformedURLException e) {
 		e.printStackTrace();
 	    }
 	}
-	return this.userService;
+	return this.adminService;
     }
 }

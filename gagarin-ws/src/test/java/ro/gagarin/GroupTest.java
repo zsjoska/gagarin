@@ -14,8 +14,8 @@ import ro.gagarin.exceptions.PermissionDeniedException;
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.Group;
-import ro.gagarin.ws.Authentication;
 import ro.gagarin.ws.Admin;
+import ro.gagarin.ws.Authentication;
 import ro.gagarin.ws.executor.WSException;
 import ro.gagarin.ws.objects.WSGroup;
 
@@ -24,7 +24,7 @@ public class GroupTest {
     private static String username = "_User_" + System.currentTimeMillis();
     private static String groupname = "_Group_" + System.currentTimeMillis();
     private static String session;
-    private static Admin userService = new Admin();
+    private static Admin adminService = new Admin();
 
     @BeforeClass
     public static void startup() throws WSException {
@@ -39,12 +39,12 @@ public class GroupTest {
 	WSGroup group = new WSGroup();
 	group.setName(groupname);
 	group.setDescription(groupname + username);
-	Long groupId = userService.createGroup(session, group);
+	Long groupId = adminService.createGroup(session, group);
 	assertNotNull(groupId);
 	assertTrue(groupId > 0L);
 
 	group.setId(groupId);
-	userService.deleteGroup(session, group);
+	adminService.deleteGroup(session, group);
     }
 
     @Test
@@ -54,11 +54,11 @@ public class GroupTest {
 	WSGroup group = new WSGroup();
 	group.setName(groupname);
 	group.setDescription(groupname + username);
-	Long groupId = userService.createGroup(session, group);
+	Long groupId = adminService.createGroup(session, group);
 	assertNotNull(groupId);
 	assertTrue(groupId > 0L);
 
-	userService.deleteGroup(session, group);
+	adminService.deleteGroup(session, group);
     }
 
     @Test
@@ -68,12 +68,12 @@ public class GroupTest {
 	WSGroup group = new WSGroup();
 	group.setName(name);
 	group.setDescription("test");
-	group.setId(userService.createGroup(session, group));
+	group.setId(adminService.createGroup(session, group));
 
 	WSGroup gr2 = new WSGroup();
 	gr2.setId(group.getId());
 	gr2.setDescription("TEST");
-	userService.updateGroup(session, gr2);
+	adminService.updateGroup(session, gr2);
 
 	// no getGroupByName in WS and no need for it, so going to lower level
 	Session sameSession = BasicManagerFactory.getInstance().getSessionManager().acquireSession(session);
@@ -88,7 +88,7 @@ public class GroupTest {
 	gr2 = new WSGroup();
 	gr2.setId(group.getId());
 	gr2.setName(name + "update");
-	userService.updateGroup(session, gr2);
+	adminService.updateGroup(session, gr2);
 
 	sameSession = BasicManagerFactory.getInstance().getSessionManager().acquireSession(session);
 	usrDAO = BasicManagerFactory.getInstance().getDAOManager().getUserDAO(sameSession);
@@ -103,7 +103,7 @@ public class GroupTest {
 	gr2.setId(group.getId());
 	gr2.setDescription("TEST2");
 	gr2.setName(name + "update2");
-	userService.updateGroup(session, gr2);
+	adminService.updateGroup(session, gr2);
 
 	sameSession = BasicManagerFactory.getInstance().getSessionManager().acquireSession(session);
 	usrDAO = BasicManagerFactory.getInstance().getDAOManager().getUserDAO(sameSession);

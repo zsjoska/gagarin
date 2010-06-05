@@ -1,4 +1,39 @@
 <lift:surround with="default" at="content">
-		<p><lift:groups.list /></p>
+	<script type="text/javascript">
+	// <![CDATA[
+	$(function() {
+		$("#dialog-form").dialog({
+			autoOpen: false,
+			modal: true,
+			buttons: {
+			},
+			close: function() {
+			}
+		});
+	});
+	// ]]>
+	</script>
+	<div id="dialog-form" title="Assign users to groups">
+	<form><lift:groups.usersEdit>
+		<groups:assignedUsers />
+		<groups:allUsers />
+	</lift:groups.usersEdit></form>
+	</div>
+	<span>
+	<table border="1" cellspacing="0" cellpadding="4">
+		<tr>
+			<th>Edit Users</th>
+			<th>Group Name</th>
+			<th>Description</th>
+		</tr>
+		<lift:groups.list>
+			<tr>
+				<td><groups:edit /></td>
+				<td><groups:name /></td>
+				<td><groups:description /></td>
+			</tr>
+		</lift:groups.list>
+	</table>
+	</span>
 </lift:surround>
 

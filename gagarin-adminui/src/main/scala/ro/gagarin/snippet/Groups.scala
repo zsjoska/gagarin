@@ -10,26 +10,20 @@ import _root_.net.liftweb.util.Helpers._
 import _root_.net.liftweb.util._
 import _root_.ro.gagarin.model.{wsSession, SessionInfo}
 import _root_.ro.gagarin.model.adminService
+import _root_.net.liftweb.http.js.JsCmds.{Alert, Noop, Replace, SetElemById, Run}
 
 class Groups {
   
   private object selectedGroup extends RequestVar[WsGroup](null)
-  
+
     def list(in: NodeSeq): NodeSeq  = {
       val groups = adminService.getGroups
-      <span>
-      <table border="1" cellspacing="0" cellpadding="4">
-      <tr>
-      <th>Group Name</th>
-      <th>Description</th>
-      </tr>
-      {groups.flatMap( u => 
-        <tr>
-          <td>{link("editGroup", () => {selectedGroup.set(u)}, Text(u.getName()))}</td>
-          <td>{Text(u.getDescription())}</td>
-        </tr>)}
-      </table>
-      </span>
+      groups.flatMap( u => 
+      bind("groups", in, 
+	   "edit" -> a(() => Run("$('#dialog-form').dialog('open');"),Text("Edit")),
+	   "name" -> link("editGroup", () => {selectedGroup.set(u)}, Text(u.getName())),
+	   "description" -> Text(u.getDescription())
+      ))
     }
     
   def newGroup (in: NodeSeq): NodeSeq  = {
@@ -55,5 +49,12 @@ class Groups {
 	      })
       )
   } 
+
+    def usersEdit(in: NodeSeq): NodeSeq  = {
+      bind("groups", in, 
+	   "assignedUsers" -> text("assignedUsers", (x)=> {}),
+	   "allUsers" -> text("allUsers", (x) => {})
+      )
+    }
 }
 

@@ -50,13 +50,11 @@ class Groups {
     val usersMap = (Map[String,String]()/: users)( (x,y) =>  x + {y.getId().toString -> y.getName() }).toSeq;
     val groupUsersMap = (Map[String,String]()/: groupUsers)( (x,y) =>  x + {y.getId().toString -> y.getName() }).toSeq;
     
-    
-    
     bind("groups", dialogMarkup.is, 
-	 "assignedUsers" -> select(usersMap, Empty,(x) => {
+	 "assignedUsers" -> select(groupUsersMap, Empty,(x) => {
 	   println(x)
          }) % ("size" -> "10"),
-	 "allUsers" -> select(groupUsersMap, Empty,(x) => {
+	 "allUsers" -> select(usersMap, Empty,(x) => {
 	   println(x)
          }) % ("size" -> "10"),
          "assignUser" -> Text("Assign"), 

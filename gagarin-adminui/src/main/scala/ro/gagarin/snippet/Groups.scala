@@ -12,6 +12,7 @@ import _root_.ro.gagarin.model.{wsSession, SessionInfo}
 import _root_.ro.gagarin.model.adminService
 import _root_.net.liftweb.http.js.JsCmds.{Alert, Noop, Replace, SetElemById, Run}
 import _root_.net.liftweb.http.js.JsCmd
+import _root_.net.liftweb.common.{Full, Empty}
 
 class Groups {
   
@@ -37,12 +38,27 @@ class Groups {
     Replace("dialog-form", createEditAssignmentsDialog(g))&
     Run("$('#dialog-form').dialog({modal: true});")
   }
-
+  
+  /**
+   * Create the assignments dialog by re-using the saved template
+   */
   def createEditAssignmentsDialog (g: WsGroup): NodeSeq  = {
-      bind("groups", dialogMarkup.is, 
-	   "assignedUsers" -> Text(g.getName),
-	   "allUsers" -> Text(g.getDescription)
-      )
+    val users = adminService.getUsers
+    val groupUsers = adminService.getGroupUsers(g)
+
+    val usersMap = (Map[String,String]()/: users)( (x,y) =>  x + {y.getId().toString -> y.getName() }).toSeq;
+    val groupUsersMap = (Map[String,String]()/: groupUsers)( (x,y) =>  x + {y.getId().toString -> y.getName() }).toSeq;
+    
+    
+    
+    bind("groups", dialogMarkup.is, 
+	 "assignedUsers" -> select(usersMap, Empty,(x) => {
+	   println(x)
+         }) % ("size" -> "10"),
+	 "allUsers" -> select(groupUsersMap, Empty,(x) => {
+	   println(x)
+         }) % ("size" -> "10")
+    )
   }
   
   def newGroup (in: NodeSeq): NodeSeq  = {

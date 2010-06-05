@@ -89,7 +89,16 @@ object adminService {
 	    handleException(e)
 	  }}
   }
-  
+
+  def getGroupUsers(group: WsGroup) = {
+	  try{
+	      Buffer(getUserService.getGroupUsers(wsSession.session, group))
+	  } catch {
+	  case e: WSException_Exception => {
+	    handleException(e)
+	  }}
+  }
+
   def getRoleList = {
 	  try{
 	      Buffer(getUserService.getRoleList(wsSession.session))

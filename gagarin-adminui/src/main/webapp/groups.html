@@ -1,14 +1,19 @@
 <lift:surround with="default" at="content">
 	<lift:groups.usersEdit>
-	<div id="dialog-form" title="Assign users to groups">
-	<form>
-		<groups:assignedUsers />
-		<groups:allUsers />
-	</form>
+	<div id="dialog-form" title="Assign users to groups" style="min-width: 700px; width: 700px; ">
+	<div style="width: 30%; float: left">
+	Assigned Users <hr />
+	<groups:assignedUsers /><br />
+	<groups:assignUser />
+	</div>
+	<div style="width: 30%; float: left">
+	Existing users <hr />
+	<groups:allUsers /><br />
+	<groups:unassignUser />
+	</div>
 	</div>
 	</lift:groups.usersEdit>
-	
-	<span>
+	<h1>Existing groups</h1> 
 	<table border="1" cellspacing="0" cellpadding="4">
 		<tr>
 			<th>Edit Users</th>
@@ -23,6 +28,5 @@
 			</tr>
 		</lift:groups.list>
 	</table>
-	</span>
 </lift:surround>
 

@@ -33,10 +33,11 @@ class Groups {
   /**
    * Creates a javascript command which prepares the dialog box for edit user-group assignments.
    * We have to generate the dialog box content and then invoke the dialog command on it.
+   * NOTE: bad thing: we had to hard-code here the width of the dialog
    */
   def initDisplayDialog(g: WsGroup): JsCmd = {
     Replace("dialog-form", createEditAssignmentsDialog(g))&
-    Run("$('#dialog-form').dialog({modal: true});")
+    Run("$('#dialog-form').dialog({modal: true, width: 700});")
   }
   
   /**
@@ -57,7 +58,9 @@ class Groups {
          }) % ("size" -> "10"),
 	 "allUsers" -> select(groupUsersMap, Empty,(x) => {
 	   println(x)
-         }) % ("size" -> "10")
+         }) % ("size" -> "10"),
+         "assignUser" -> Text("Assign"), 
+         "unassignUser" -> Text("Un-Assign") 
     )
   }
   

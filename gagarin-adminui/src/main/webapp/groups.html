@@ -1,16 +1,7 @@
 <lift:surround with="default" at="content">
 	<script type="text/javascript">
 	// <![CDATA[
-	$(function() {
-		$("#dialog-form").dialog({
-			autoOpen: false,
-			modal: true,
-			buttons: {
-			},
-			close: function() {
-			}
-		});
-	});
+	$(function() { $("#dialog-form").dialog({autoOpen: false, modal: true});});
 	// ]]>
 	</script>
 	<div id="dialog-form" title="Assign users to groups">

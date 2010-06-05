@@ -11,21 +11,40 @@ import _root_.net.liftweb.util._
 import _root_.ro.gagarin.model.{wsSession, SessionInfo}
 import _root_.ro.gagarin.model.adminService
 import _root_.net.liftweb.http.js.JsCmds.{Alert, Noop, Replace, SetElemById, Run}
+import _root_.net.liftweb.http.js.JsCmd
 
 class Groups {
   
   private object selectedGroup extends RequestVar[WsGroup](null)
+  private object dialogMarkup extends SessionVar[NodeSeq](null)
+  
 
-    def list(in: NodeSeq): NodeSeq  = {
+  def list(in: NodeSeq): NodeSeq  = {
       val groups = adminService.getGroups
       groups.flatMap( u => 
       bind("groups", in, 
-	   "edit" -> a(() => Run("$('#dialog-form').dialog('open');"),Text("Edit")),
+	   "edit" -> a(() => initDisplayDialog(u),Text("Edit")),
 	   "name" -> link("editGroup", () => {selectedGroup.set(u)}, Text(u.getName())),
 	   "description" -> Text(u.getDescription())
       ))
-    }
-    
+  }
+  
+  /**
+   * Creates a javascript command which prepares the dialog box for edit user-group assignments.
+   * We have to generate the dialog box content and then invoke the dialog command on it.
+   */
+  def initDisplayDialog(g: WsGroup): JsCmd = {
+    Replace("dialog-form", createEditAssignmentsDialog(g))&
+    Run("$('#dialog-form').dialog({modal: true});")
+  }
+
+  def createEditAssignmentsDialog (g: WsGroup): NodeSeq  = {
+      bind("groups", dialogMarkup.is, 
+	   "assignedUsers" -> Text(g.getName),
+	   "allUsers" -> Text(g.getDescription)
+      )
+  }
+  
   def newGroup (in: NodeSeq): NodeSeq  = {
       val group = new WsGroup();
       bind("group", in, 
@@ -50,11 +69,15 @@ class Groups {
       )
   } 
 
-    def usersEdit(in: NodeSeq): NodeSeq  = {
-      bind("groups", in, 
-	   "assignedUsers" -> text("assignedUsers", (x)=> {}),
-	   "allUsers" -> text("allUsers", (x) => {})
-      )
-    }
+  /**
+   * We have to create multiple dialog boxes with this template, but we have the template only at the page load.
+   * We save here and will reuse every time when we need to open it.
+   */
+  def usersEdit(in: NodeSeq): NodeSeq  = {
+      dialogMarkup.set(in)
+      <div id="dialog-form" style="display:none">
+        Placeholder
+      </div>  
+  }
 }
 

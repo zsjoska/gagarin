@@ -1,15 +1,13 @@
 <lift:surround with="default" at="content">
-	<script type="text/javascript">
-	// <![CDATA[
-	$(function() { $("#dialog-form").dialog({autoOpen: false, modal: true});});
-	// ]]>
-	</script>
+	<lift:groups.usersEdit>
 	<div id="dialog-form" title="Assign users to groups">
-	<form><lift:groups.usersEdit>
+	<form>
 		<groups:assignedUsers />
 		<groups:allUsers />
-	</lift:groups.usersEdit></form>
+	</form>
 	</div>
+	</lift:groups.usersEdit>
+	
 	<span>
 	<table border="1" cellspacing="0" cellpadding="4">
 		<tr>

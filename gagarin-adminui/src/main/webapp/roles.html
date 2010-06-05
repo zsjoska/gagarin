@@ -1,4 +1,15 @@
 <lift:surround with="default" at="content">
-		<p><lift:roles.list /></p>
+	<h1>Existing roles</h1>
+	TODO: display role permissions too
+	<table border="1" cellspacing="0">
+		<tr>
+			<th>Role name</th>
+		</tr>
+		<lift:roles.list>
+        <tr>
+          <td><role:name /></td>
+        </tr>
+		</lift:roles.list>
+	</table>
 </lift:surround>
 

@@ -1,4 +1,22 @@
 <lift:surround with="default" at="content">
-	<p><lift:sessions.show /></p>
+	<h1>Current sessions</h1>
+	<table border="1" cellspacing="0">
+		<tr>
+			<th>Session identifier</th>
+			<th>Username</th>
+			<th>Session reason</th>
+			<th>Expiration date</th>
+			<th>Terminate</th>
+		</tr>
+		<lift:sessions.show>
+			<tr>
+				<td><session:sessionid /></td>
+				<td><session:username /></td>
+				<td><session:reason /></td>
+				<td><session:date /></td>
+				<td><session:logout /></td>
+			</tr>
+		</lift:sessions.show>
+	</table>
 </lift:surround>
 

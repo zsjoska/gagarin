@@ -1,4 +1,20 @@
 <lift:surround with="default" at="content">
-		<p><lift:users.list /></p>
+	<h1>Existing users</h1>
+	<span>
+	<table border="1" cellspacing="0">
+		<tr>
+			<th>Username</th>
+			<th>Name</th>
+			<th>Email</th>
+		</tr>
+		<lift:users.list>
+			<tr>
+				<td><user:edit /></td>
+				<td><user:name /></td>
+				<td><user:email /></td>
+			</tr>
+		</lift:users.list>
+	</table>
+	</span>
 </lift:surround>
 

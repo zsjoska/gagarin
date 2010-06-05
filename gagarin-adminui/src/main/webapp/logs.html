@@ -1,4 +1,20 @@
 <lift:surround with="default" at="content">
-	<p><lift:logs.show /></p>
+	<h1>Logs</h1>
+	<table border="1" cellspacing="0">
+		<tr>
+			<th>Date</th>
+			<th>Level</th>
+			<th>User</th>
+			<th>Message</th>
+		</tr>
+		<lift:logs.show>
+			<tr>
+				<td><log:date /></td>
+				<td><log:level /></td>
+				<td><log:user /></td>
+				<td><log:message /></td>
+			</tr>
+		</lift:logs.show>
+		</table>
 </lift:surround>
 

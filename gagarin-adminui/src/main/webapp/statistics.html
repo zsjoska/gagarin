@@ -1,4 +1,24 @@
 <lift:surround with="default" at="content">
-	<p><lift:statistics.show /></p>
+	<h1>Statistics</h1>
+	<table border="1" cellspacing="0">
+		<tr>
+			<th>Name</th>
+			<th>Count</th>
+			<th>Total duration</th>
+			<th>Average</th>
+			<th>Minimum</th>
+			<th>Maximum</th>
+		</tr>
+		<lift:statistics.show>
+			<tr>
+				<td><statistic:name/></td>
+				<td><statistic:count/></td>
+				<td><statistic:totDuration/></td>
+				<td><statistic:avg/></td>
+				<td><statistic:min/></td>
+				<td><statistic:max/></td>
+			</tr>
+		</lift:statistics.show>
+	</table>
 </lift:surround>
 

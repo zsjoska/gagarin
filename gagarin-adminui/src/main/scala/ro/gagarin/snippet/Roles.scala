@@ -16,20 +16,11 @@ class Roles {
   private object selectedRole extends RequestVar[WsUserRole](null)
   
     def list(in: NodeSeq): NodeSeq  = {
-   	  val roles = adminService.getRoleList
-      <span>
-      <table border="1" cellspacing="0">
-      <tr>
-      <th>Role name</th>
-      </tr>
-      {roles.flatMap( u => 
-        <tr>
-          <td>{link("editRole", () => {selectedRole.set(u)}, Text(u.getRoleName()))}</td>
-        </tr>)}
-      </table>
-      </span>
-   	  
-      
+      val roles = adminService.getRoleList
+      roles.flatMap( u => 
+      bind("role", in, 
+	      "name" -> link("editRole", () => {selectedRole.set(u)}, Text(u.getRoleName()))
+      ))
     }
     
   def newRole (in: NodeSeq): NodeSeq  = {

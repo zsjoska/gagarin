@@ -6,28 +6,20 @@ import _root_.scala.collection.jcl.Buffer
 import _root_.ro.gagarin.model.adminService
 import _root_.net.liftweb.http.SHtml._
 import _root_.scala.xml.{NodeSeq, Text, Group, Node}
+import _root_.net.liftweb.util.Helpers._
 
 class Sessions {
 	
-  def show = {
-	val logs = adminService.getSessionList
-    <table border="1" cellspacing="0">
-    <tr>
-    <th>Session identifier</th>
-    <th>Username</th>
-    <th>Expiration date</th>
-    <th>Session reason</th>
-    <th>Terminate</th>
-    </tr>
-      {logs.flatMap( s => <tr>
-                      		<td>{Text(s.getSessionid())}</td>
-                      		<td>{Text(s.getUsername())}</td>
-                      		<td>{Text(s.getReason())}</td>
-                      		<td>{Text(new Date(s.getExpires().longValue()).toString)}</td>
-                      		<td>{link("/sessions", () => { adminService.logoutSession(s.getSessionid()) }, Text("Terminate"))}</td>
-                      	   </tr>)}
-    </table>
+  def show(in: NodeSeq): NodeSeq  = {
+    val logs = adminService.getSessionList
+    logs.flatMap( s =>
+    	bind("session", in,
+          "sessionid" -> Text(s.getSessionid()),
+          "username" -> Text(s.getUsername()),
+          "reason" -> Text(s.getReason()),
+          "date" -> Text(new Date(s.getExpires().longValue()).toString),
+          "logout" -> link("/sessions", () => { adminService.logoutSession(s.getSessionid()) }, Text("Terminate"))
+    	))
     }
-  
 }
 

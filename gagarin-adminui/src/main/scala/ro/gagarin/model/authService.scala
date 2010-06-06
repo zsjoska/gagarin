@@ -54,5 +54,5 @@ object authService {
 	  }}
   
   }
-  }
+}
 

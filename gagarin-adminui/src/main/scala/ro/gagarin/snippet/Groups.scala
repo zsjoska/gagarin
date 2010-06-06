@@ -46,13 +46,12 @@ class Groups {
   
   /**
    * Create the assignments dialog by re-using the saved template
+   * TODO: similar code for button handling, could be unified
    */
   def createEditAssignmentsDialog (g: WsGroup): NodeSeq  = {
     val users = adminService.getUsers
     val groupUsers = adminService.getGroupUsers(g)
 
-//    val groupUsersMap = groupUsers.map(x => (x.getId().toString,x.getName()))
-//    val usersMap = users.map(x => (x.getId().toString,x.getName()))
     val groupUsersMap = (Map[String,String]()/: groupUsers)( (x,y) =>  x + {y.getId().toString -> y.getName() });
     val usersMap = (Map[String,String]()/: users)( (x,y) =>  x + {y.getId().toString -> y.getName() });
 
@@ -77,6 +76,10 @@ class Groups {
          "assignUser" -> ajaxButton("Assign", () => {
            val toAssignId:String = allUsersSelection.is
            val toAssign:String = usersMap.get(toAssignId).get
+
+           val user = new WsUser();
+           user.setId(toAssignId.toLong);
+           adminService.assignUserToGroup(user, g);
            
            groupUsersMap += toAssignId -> toAssign
            usersMap -= toAssignId
@@ -90,8 +93,13 @@ class Groups {
            val toUnassignId: String = assignedSelection.is
            val toUnassign: String = groupUsersMap.get(toUnassignId).get
            
+           val user = new WsUser();
+           user.setId(toUnassignId.toLong);
+           adminService.unassignUserFromGroup(user, g);
+
            usersMap += toUnassignId -> toUnassign
            groupUsersMap -= toUnassignId
+           
            
 	   SetElemById(idUnassign, JsRaw("true"),"disabled")&
 	   SetElemById(idAssign, JsRaw("true"),"disabled")&

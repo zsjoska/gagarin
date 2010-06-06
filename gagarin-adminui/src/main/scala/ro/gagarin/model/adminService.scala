@@ -8,7 +8,12 @@ import _root_.ro.gagarin.model.webServiceUtils._
 import _root_.scala.collection.mutable.ListBuffer
 
 object adminService {
+
   
+  implicit def convertScalaListToJavaListWsUser(aList:ListBuffer[WsUser]) = java.util.Arrays.asList(aList.toArray: _*)
+  implicit def convertScalaListToJavaListWsGroup(aList:ListBuffer[WsGroup]) = java.util.Arrays.asList(aList.toArray: _*)
+  implicit def convertScalaListToJavaList(aList:ListBuffer[WsUserPermission]) = java.util.Arrays.asList(aList.toArray: _*)
+
     def getStatistics(filter: String) = { 
 	  try{
 	      Buffer(getUserService.getStatistics(wsSession.session, filter))
@@ -190,8 +195,6 @@ object adminService {
 	}}
   }
 
-  implicit def convertScalaListToJavaList(aList:ListBuffer[WsUserPermission]) = java.util.Arrays.asList(aList.toArray: _*)
-  
   def createRoleWithPermissions(role:String, perm: ListBuffer[WsUserPermission]) = {
 	  try{
 	      getUserService.createRoleWithPermissions(wsSession.session, role, perm)
@@ -199,6 +202,28 @@ object adminService {
 	  case e: WSException_Exception => {
 	    handleException(e)
 	  }}
+  }
+
+  def assignUserToGroup(user: WsUser, group: WsGroup) = {
+    val list = new ListBuffer[WsUser]()
+    list += user
+    try{
+	getUserService.assignUsersToGroup(wsSession.session, group, list)
+    } catch {
+    case e: WSException_Exception => {
+	handleException(e)
+    }}
+  }
+
+  def unassignUserFromGroup(user: WsUser, group: WsGroup) = {
+    val list = new ListBuffer[WsUser]()
+    list += user
+    try{
+	getUserService.unassignUsersFromGroup(wsSession.session, group, list)
+    } catch {
+    case e: WSException_Exception => {
+	handleException(e)
+    }}
   }
 }
 

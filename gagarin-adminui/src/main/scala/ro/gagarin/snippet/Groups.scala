@@ -1,5 +1,6 @@
 package ro.gagarin.snippet
 
+import _root_.scala.collection.mutable.Map
 import _root_.scala.xml.{NodeSeq, Text, Group, Node}
 import _root_.net.liftweb.http._
 import _root_.net.liftweb.http.S
@@ -10,7 +11,8 @@ import _root_.net.liftweb.util.Helpers._
 import _root_.net.liftweb.util._
 import _root_.ro.gagarin.model.{wsSession, SessionInfo}
 import _root_.ro.gagarin.model.adminService
-import _root_.net.liftweb.http.js.JsCmds.{Alert, Noop, Replace, SetElemById, Run}
+import _root_.net.liftweb.http.js.JsCmds.{Alert, Noop, Replace, SetElemById, Run,ReplaceOptions}
+import _root_.net.liftweb.http.js.JE.{JsRaw}
 import _root_.net.liftweb.http.js.JsCmd
 import _root_.net.liftweb.common.{Full, Empty}
 
@@ -18,6 +20,8 @@ class Groups {
   
   private object selectedGroup extends RequestVar[WsGroup](null)
   private object dialogMarkup extends SessionVar[NodeSeq](null)
+  private object assignedSelection extends RequestVar[String](null)
+  private object allUsersSelection extends RequestVar[String](null)
   
 
   def list(in: NodeSeq): NodeSeq  = {
@@ -47,21 +51,56 @@ class Groups {
     val users = adminService.getUsers
     val groupUsers = adminService.getGroupUsers(g)
 
-    val usersMap = (Map[String,String]()/: users)( (x,y) =>  x + {y.getId().toString -> y.getName() }).toSeq;
-    val groupUsersMap = (Map[String,String]()/: groupUsers)( (x,y) =>  x + {y.getId().toString -> y.getName() }).toSeq;
+//    val groupUsersMap = groupUsers.map(x => (x.getId().toString,x.getName()))
+//    val usersMap = users.map(x => (x.getId().toString,x.getName()))
+    val groupUsersMap = (Map[String,String]()/: groupUsers)( (x,y) =>  x + {y.getId().toString -> y.getName() });
+    val usersMap = (Map[String,String]()/: users)( (x,y) =>  x + {y.getId().toString -> y.getName() });
+
+    // remove from all users the already assigned ones
+    groupUsersMap.foreach( x => usersMap -= x.key )
     
+    val idAssign = nextFuncName
+    val idUnassign = nextFuncName
+    
+    val idAssignedSelect = nextFuncName
+    val idAllUsersSelect = nextFuncName
+
     bind("groups", dialogMarkup.is, 
-	 "assignedUsers" -> select(groupUsersMap, Empty,(x) => {
-	   println(x)
-         }) % ("size" -> "10"),
-	 "allUsers" -> select(usersMap, Empty,(x) => {
-	   println(x)
-         }) % ("size" -> "10"),
-         "assignUser" -> Text("Assign"), 
-         "unassignUser" -> Text("Un-Assign") 
+	 "assignedUsers" -> ajaxSelect(groupUsersMap.toSeq, Empty,(x) => {
+	   assignedSelection.set(x)
+	   SetElemById(idUnassign, JsRaw("false"),"disabled")
+         }) % ("size" -> "10") % ("id" -> idAssignedSelect),
+	 "allUsers" -> ajaxSelect(usersMap.toSeq, Empty,(x) => {
+	   allUsersSelection.set(x)
+	   SetElemById(idAssign, JsRaw("false"),"disabled")
+         }) % ("size" -> "10")  % ("id" -> idAllUsersSelect),
+         "assignUser" -> ajaxButton("Assign", () => {
+           val toAssignId:String = allUsersSelection.is
+           val toAssign:String = usersMap.get(toAssignId).get
+           
+           groupUsersMap += toAssignId -> toAssign
+           usersMap -= toAssignId
+           
+	   SetElemById(idUnassign, JsRaw("true"),"disabled")&
+	   SetElemById(idAssign, JsRaw("true"),"disabled")&
+           ReplaceOptions(idAssignedSelect, groupUsersMap.toList,Empty)&
+           ReplaceOptions(idAllUsersSelect, usersMap.toList,Empty)
+         }) % ("disabled" -> "disabled") % ("id" -> idAssign), 
+         "unassignUser" -> ajaxButton("Un-Assign", () => {
+           val toUnassignId: String = assignedSelection.is
+           val toUnassign: String = groupUsersMap.get(toUnassignId).get
+           
+           usersMap += toUnassignId -> toUnassign
+           groupUsersMap -= toUnassignId
+           
+	   SetElemById(idUnassign, JsRaw("true"),"disabled")&
+	   SetElemById(idAssign, JsRaw("true"),"disabled")&
+           ReplaceOptions(idAssignedSelect, groupUsersMap.toList,Empty)&
+           ReplaceOptions(idAllUsersSelect, usersMap.toList,Empty)
+         }) % ("disabled" -> "disabled") % ("id" -> idUnassign)
     )
   }
-  
+
   def newGroup (in: NodeSeq): NodeSeq  = {
       val group = new WsGroup();
       bind("group", in, 

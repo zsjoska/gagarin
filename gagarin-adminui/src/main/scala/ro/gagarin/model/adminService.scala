@@ -16,7 +16,7 @@ object adminService {
 
     def getStatistics(filter: String) = { 
 	  try{
-	      Buffer(getUserService.getStatistics(wsSession.session, filter))
+	      Buffer(adminWSService.getStatistics(wsSession.session, filter))
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)
@@ -25,7 +25,7 @@ object adminService {
 
     def getSessionList = { 
 	  try{
-	      Buffer(getUserService.getSessionList(wsSession.session))
+	      Buffer(adminWSService.getSessionList(wsSession.session))
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)
@@ -34,7 +34,7 @@ object adminService {
 
   def logoutSession(session: String) = { 
 	  try{
-	      getUserService.logoutSession(wsSession.session, session)
+	      adminWSService.logoutSession(wsSession.session, session)
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)
@@ -43,7 +43,7 @@ object adminService {
 
   def getLogEntries(user: String) = {
 	  try{
-	      Buffer(getUserService.getLogEntries(wsSession.session, null))
+	      Buffer(adminWSService.getLogEntries(wsSession.session, null))
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)
@@ -52,7 +52,7 @@ object adminService {
 
   def getRolePermissions(role: WsUserRole) = {
 	  try{
-	      Buffer(getUserService.getRolePermissions(wsSession.session, role))
+	      Buffer(adminWSService.getRolePermissions(wsSession.session, role))
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)
@@ -61,7 +61,7 @@ object adminService {
 
   def getConfigEntries = {
 	  try{
-	      Buffer(getUserService.getConfigEntries(wsSession.session))
+	      Buffer(adminWSService.getConfigEntries(wsSession.session))
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)
@@ -70,7 +70,7 @@ object adminService {
 
   def setConfigEntry(cfg : WsConfig) = {
 	  try{
-	      getUserService.setConfigEntry(wsSession.session, cfg)
+	      adminWSService.setConfigEntry(wsSession.session, cfg)
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)
@@ -79,7 +79,7 @@ object adminService {
 
   def getUsers = {
 	  try{
-	      Buffer(getUserService.getUsers(wsSession.session))
+	      Buffer(adminWSService.getUsers(wsSession.session))
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)
@@ -88,7 +88,7 @@ object adminService {
 
   def getGroups = {
 	  try{
-	      Buffer(getUserService.getGroups(wsSession.session))
+	      Buffer(adminWSService.getGroups(wsSession.session))
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)
@@ -97,7 +97,7 @@ object adminService {
 
   def getGroupUsers(group: WsGroup) = {
 	  try{
-	      Buffer(getUserService.getGroupUsers(wsSession.session, group))
+	      Buffer(adminWSService.getGroupUsers(wsSession.session, group))
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)
@@ -106,7 +106,7 @@ object adminService {
 
   def getRoleList = {
 	  try{
-	      Buffer(getUserService.getRoleList(wsSession.session))
+	      Buffer(adminWSService.getRoleList(wsSession.session))
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)
@@ -115,7 +115,7 @@ object adminService {
 
   def getAllPermissionList = {
 	  try{
-	      Buffer(getUserService.getAllPermissionList(wsSession.session))
+	      Buffer(adminWSService.getAllPermissionList(wsSession.session))
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)
@@ -124,7 +124,7 @@ object adminService {
 
   def getControlEntityCategories = {
 	  try{
-	      Buffer(getUserService.getControlEntityCategories(wsSession.session))
+	      Buffer(adminWSService.getControlEntityCategories(wsSession.session))
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)
@@ -133,7 +133,7 @@ object adminService {
 
     def getControlEntityListForCategory(ceCategory: String) = {
 	  try{
-	      Buffer(getUserService.getControlEntityListForCategory(wsSession.session,ceCategory))
+	      Buffer(adminWSService.getControlEntityListForCategory(wsSession.session,ceCategory))
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)
@@ -142,7 +142,7 @@ object adminService {
 
     def getPersons = {
 	  try{
-	      Buffer(getUserService.getPersons(wsSession.session))
+	      Buffer(adminWSService.getPersons(wsSession.session))
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)
@@ -151,7 +151,7 @@ object adminService {
 
     def getPermissionAssignmentsForControlEntity(ce : WsControlEntity ) = {
 	  try{
-	      Buffer(getUserService.getPermissionAssignmentsForControlEntity(wsSession.session, ce))
+	      Buffer(adminWSService.getPermissionAssignmentsForControlEntity(wsSession.session, ce))
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)
@@ -161,7 +161,7 @@ object adminService {
     
   def createUser(user : WsUser) = {
 	  try{
-	      getUserService.createUser(wsSession.session, user)
+	      adminWSService.createUser(wsSession.session, user)
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)
@@ -170,7 +170,7 @@ object adminService {
 
   def updateUser(user : WsUser) = {
 	  try{
-	      getUserService.updateUser(wsSession.session, user)
+	      adminWSService.updateUser(wsSession.session, user)
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)
@@ -179,7 +179,7 @@ object adminService {
 
   def createGroup(group : WsGroup) = {
 	  try{
-	      getUserService.createGroup(wsSession.session, group)
+	      adminWSService.createGroup(wsSession.session, group)
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)
@@ -188,7 +188,7 @@ object adminService {
 
   def updateGroup(group : WsGroup) = {
 	try{
-	    getUserService.updateGroup(wsSession.session, group)
+	    adminWSService.updateGroup(wsSession.session, group)
 	} catch {
 	case e: WSException_Exception => {
 	    handleException(e)
@@ -197,7 +197,7 @@ object adminService {
 
   def createRoleWithPermissions(role:String, perm: ListBuffer[WsUserPermission]) = {
 	  try{
-	      getUserService.createRoleWithPermissions(wsSession.session, role, perm)
+	      adminWSService.createRoleWithPermissions(wsSession.session, role, perm)
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)
@@ -208,7 +208,7 @@ object adminService {
     val list = new ListBuffer[WsUser]()
     list += user
     try{
-	getUserService.assignUsersToGroup(wsSession.session, group, list)
+	adminWSService.assignUsersToGroup(wsSession.session, group, list)
     } catch {
     case e: WSException_Exception => {
 	handleException(e)
@@ -219,7 +219,7 @@ object adminService {
     val list = new ListBuffer[WsUser]()
     list += user
     try{
-	getUserService.unassignUsersFromGroup(wsSession.session, group, list)
+	adminWSService.unassignUsersFromGroup(wsSession.session, group, list)
     } catch {
     case e: WSException_Exception => {
 	handleException(e)
@@ -228,7 +228,7 @@ object adminService {
 
   def deleteGroup( group: WsGroup) = {
     try{
-	getUserService.deleteGroup(wsSession.session, group)
+	adminWSService.deleteGroup(wsSession.session, group)
     } catch {
     case e: WSException_Exception => {
 	handleException(e)

@@ -25,7 +25,7 @@ public class WSClient {
 	return new WSClient(rootURL);
     }
 
-    public synchronized Authentication getAuthentication() {
+    public synchronized Authentication getAuthService() {
 	if (this.authentication == null) {
 	    AuthenticationService service;
 	    try {
@@ -39,7 +39,7 @@ public class WSClient {
 	return this.authentication;
     }
 
-    public synchronized Admin getUserService() {
+    public synchronized Admin getAdminService() {
 	if (this.adminService == null) {
 	    AdminService service;
 	    try {

@@ -10,8 +10,8 @@ object webServiceUtils {
   
   val wsclient = WSClient.getWSClient("http://localhost:8080/gagarin-ws/ws/")
   
-  def getAuthService = wsclient.getAuthentication()
-  def getUserService = wsclient.getUserService()
+  def authWSService = wsclient.getAuthService()
+  def adminWSService = wsclient.getAdminService()
   
       def handleException(e : WSException_Exception) = {
 	    val wsException = e.getFaultInfo()

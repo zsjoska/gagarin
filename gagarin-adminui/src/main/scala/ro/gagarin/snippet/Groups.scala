@@ -30,6 +30,9 @@ class Groups {
       bind("groups", in, 
 	   "edit" -> a(() => initDisplayDialog(u),Text("Edit")),
 	   "name" -> link("editGroup", () => {selectedGroup.set(u)}, Text(u.getName())),
+	   "delete" -> link("groups", () => {
+	     adminService.deleteGroup(u)
+	   }, Text("Delete")),
 	   "description" -> Text(u.getDescription())
       ))
   }

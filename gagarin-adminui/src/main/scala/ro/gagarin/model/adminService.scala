@@ -225,5 +225,14 @@ object adminService {
 	handleException(e)
     }}
   }
+
+  def deleteGroup( group: WsGroup) = {
+    try{
+	getUserService.deleteGroup(wsSession.session, group)
+    } catch {
+    case e: WSException_Exception => {
+	handleException(e)
+    }}
+  }
 }
 

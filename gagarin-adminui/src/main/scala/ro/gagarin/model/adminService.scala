@@ -234,5 +234,14 @@ object adminService {
 	handleException(e)
     }}
   }
+
+  def deleteUser( user: WsUser) = {
+    try{
+	adminWSService.deleteUser(wsSession.session, user)
+    } catch {
+    case e: WSException_Exception => {
+	handleException(e)
+    }}
+  }
 }
 

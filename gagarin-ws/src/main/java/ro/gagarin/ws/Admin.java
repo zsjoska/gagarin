@@ -26,6 +26,7 @@ import ro.gagarin.ws.userservice.CreateRoleWithPermissionsOP;
 import ro.gagarin.ws.userservice.CreateUserOP;
 import ro.gagarin.ws.userservice.DeleteGroupOP;
 import ro.gagarin.ws.userservice.DeleteRoleOP;
+import ro.gagarin.ws.userservice.DeleteUserOP;
 import ro.gagarin.ws.userservice.GetAllPermissionListOP;
 import ro.gagarin.ws.userservice.GetConfigEntriesOP;
 import ro.gagarin.ws.userservice.GetControlEntityCategoriesOP;
@@ -58,6 +59,12 @@ public class Admin {
 	WebserviceExecutor.execute(createUser);
 	return createUser.getUserId();
 
+    }
+
+    @WebMethod
+    public void deleteUser(String sessionId, WSUser user) throws WSException {
+	DeleteUserOP deleteUser = new DeleteUserOP(sessionId, user);
+	WebserviceExecutor.execute(deleteUser);
     }
 
     @WebMethod

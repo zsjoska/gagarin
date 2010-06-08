@@ -28,6 +28,9 @@ class Users {
       users.flatMap( u => 
       	bind("user", in, 
       		"edit" ->link("editUser", () => {selectedUser.set(u)}, Text(u.getUsername())),
+      		"delete" ->link("users", () => {
+      		    adminService.deleteUser(u)
+                        }, Text("Delete")),
       		"name" -> Text(__(u.getName())),
       		"email" -> Text(__(u.getEmail()))
       	))

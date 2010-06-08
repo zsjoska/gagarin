@@ -1,6 +1,6 @@
 package ro.gagarin;
 
-public class BaseEntity {
+public class BaseEntity implements Entity {
 
     private static long nextId = System.currentTimeMillis();
 

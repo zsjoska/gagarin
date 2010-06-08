@@ -3,12 +3,14 @@
 	<span>
 	<table border="1" cellspacing="0">
 		<tr>
+			<th>Delete</th>
 			<th>Username</th>
 			<th>Name</th>
 			<th>Email</th>
 		</tr>
 		<lift:users.list>
 			<tr>
+				<td><user:delete /></td>
 				<td><user:edit /></td>
 				<td><user:name /></td>
 				<td><user:email /></td>

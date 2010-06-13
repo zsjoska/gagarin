@@ -15,25 +15,26 @@ class Roles {
   
   private object selectedRole extends RequestVar[WsUserRole](null)
   
-    def list(in: NodeSeq): NodeSeq  = {
+  def list(in: NodeSeq): NodeSeq  = {
       val roles = adminService.getRoleList
       roles.flatMap( u => 
       bind("role", in, 
 	      "name" -> link("editRole", () => {selectedRole.set(u)}, Text(u.getRoleName()))
       ))
-    }
+  }
     
   def newRole (in: NodeSeq): NodeSeq  = {
 	var roleName = "";
     val permissions = adminService.getAllPermissionList.map(x => (x.getId().toString,x.getPermissionName()))
-    val permList = new ListBuffer[WsUserPermission]();
+    var permList:List[WsUserPermission] = List[WsUserPermission]();
     bind("role", in, 
          "roleName" -> text("", (x)=> roleName=x),
          "permissions" -> multiSelect(permissions, Seq.empty,(x) => {
-           val perm = new WsUserPermission()
-           error("Fix the implementation")
-//           perm.setId(x.toLong)
-//           permList += perm
+           permList = x.map( p => { 
+             val perm = new WsUserPermission()
+             perm.setId(p.toLong)
+             perm
+           })
          }) % ("size" -> "10"),
          "submit" -> submit("Create", () => {
            adminService.createRoleWithPermissions(roleName, permList)
@@ -44,15 +45,21 @@ class Roles {
     
 
   def editRole (in: NodeSeq): NodeSeq  = {
-    val role = selectedRole
+    val role = selectedRole.is
     val permissions = adminService.getAllPermissionList.map(x => (x.getId().toString,x.getPermissionName()))
     val permList = adminService.getRolePermissions(role).map( x => x.getId().toString);
+    var newPermList:List[WsUserPermission] = List[WsUserPermission]();
     bind("role", in, 
          "roleName" -> text(role.getRoleName, (x)=> role.setRoleName(x) ),
          "permissions" -> multiSelect(permissions, permList,(x) => {
+           newPermList = x.map( p => { 
+             val perm = new WsUserPermission()
+             perm.setId(p.toLong)
+             perm
+           })
          }) % ("size" -> "10"),
          "submit" -> submit("Update", () => {
-           // getUserService.createRoleWithPermissions(wsSessionId.session, roleName, permList)
+           adminService.updateRole(role, newPermList)
            redirectTo("/roles") 
          })
     )

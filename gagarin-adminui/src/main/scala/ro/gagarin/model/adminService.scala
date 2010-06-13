@@ -13,6 +13,7 @@ object adminService {
   implicit def convertScalaListToJavaListWsUser(aList:ListBuffer[WsUser]) = java.util.Arrays.asList(aList.toArray: _*)
   implicit def convertScalaListToJavaListWsGroup(aList:ListBuffer[WsGroup]) = java.util.Arrays.asList(aList.toArray: _*)
   implicit def convertScalaListToJavaList(aList:ListBuffer[WsUserPermission]) = java.util.Arrays.asList(aList.toArray: _*)
+  implicit def convertScalaListToJavaList(aList:List[WsUserPermission]) = java.util.Arrays.asList(aList.toArray: _*)
 
     def getStatistics(filter: String) = { 
 	  try{
@@ -195,7 +196,7 @@ object adminService {
 	}}
   }
 
-  def createRoleWithPermissions(role:String, perm: ListBuffer[WsUserPermission]) = {
+  def createRoleWithPermissions(role:String, perm: List[WsUserPermission]) = {
 	  try{
 	      adminWSService.createRoleWithPermissions(wsSession.session, role, perm)
 	  } catch {
@@ -204,6 +205,15 @@ object adminService {
 	  }}
   }
 
+  def updateRole(role:WsUserRole, perm: List[WsUserPermission]) = {
+	  try{
+	      adminWSService.updateRole(wsSession.session, role, perm)
+	  } catch {
+	  case e: WSException_Exception => {
+	    handleException(e)
+	  }}
+  }
+  
   def assignUserToGroup(user: WsUser, group: WsGroup) = {
     val list = new ListBuffer[WsUser]()
     list += user

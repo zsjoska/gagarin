@@ -313,5 +313,4 @@ public class RoleTest {
     }
 
     // TODO:(4) create test for assign null and to null
-
 }

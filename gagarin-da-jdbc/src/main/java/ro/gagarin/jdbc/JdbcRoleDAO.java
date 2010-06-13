@@ -40,7 +40,9 @@ import ro.gagarin.jdbc.role.SelectPermissionsSQL;
 import ro.gagarin.jdbc.role.SelectRoleByNameSQL;
 import ro.gagarin.jdbc.role.SelectRolesSQL;
 import ro.gagarin.jdbc.role.SubstractRolesPermissions;
+import ro.gagarin.jdbc.role.UnAssignPermissionFromRoleSQL;
 import ro.gagarin.jdbc.role.UnAssignRoleFromPersonSQL;
+import ro.gagarin.jdbc.role.UpdateRoleSQL;
 import ro.gagarin.log.AppLog;
 import ro.gagarin.log.AppLogAction;
 import ro.gagarin.session.Session;
@@ -220,6 +222,23 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
     }
 
     @Override
+    public void unAssignPermissionFromRole(UserRole role, UserPermission perm) throws ItemNotFoundException,
+	    OperationException {
+
+	UserRole r = completeRoleId(role);
+	UserPermission p = completePermissionId(perm);
+
+	try {
+	    new UnAssignPermissionFromRoleSQL(this, r, p).execute();
+	} catch (OperationException e) {
+	    throw e;
+	} catch (DataConstraintException e) {
+	    throw new OperationException(ErrorCodes.DB_OP_ERROR, e);
+	}
+
+    }
+
+    @Override
     public Set<UserPermission> getRolePermissions(UserRole role) throws OperationException, ItemNotFoundException {
 	UserRole foundRole = completeRoleId(role);
 	return GetRolePermissionsSQL.execute(this, foundRole);
@@ -297,5 +316,10 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
     public List<PermPersonCEAssignment> getPermissionAssignmentsForControlEntity(ControlEntity ce)
 	    throws OperationException {
 	return GetPermissionAssignmentsForControlEntitySQL.execute(this, ce);
+    }
+
+    @Override
+    public void updateRole(UserRole role) throws OperationException, DataConstraintException {
+	new UpdateRoleSQL(this, role).execute();
     }
 }

@@ -1,6 +1,10 @@
 package ro.gagarin.user;
 
-public interface UserRole {
+import ro.gagarin.Entity;
+
+//TODO: (3) Add description field
+
+public interface UserRole extends Entity {
 
     Long getId();
 

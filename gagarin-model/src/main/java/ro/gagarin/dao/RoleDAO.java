@@ -39,6 +39,9 @@ public interface RoleDAO extends BaseDAO {
 
     void assignPermissionToRole(UserRole role, UserPermission perm) throws ItemNotFoundException, OperationException;
 
+    void unAssignPermissionFromRole(UserRole role, UserPermission perm) throws ItemNotFoundException,
+	    OperationException;
+
     Set<UserPermission> getRolePermissions(UserRole role) throws OperationException, ItemNotFoundException;
 
     Set<UserRole> getPermissionRoles(UserPermission perm) throws OperationException, ItemNotFoundException;
@@ -121,5 +124,7 @@ public interface RoleDAO extends BaseDAO {
      * @throws OperationException
      */
     List<PermPersonCEAssignment> getPermissionAssignmentsForControlEntity(ControlEntity ce) throws OperationException;
+
+    void updateRole(UserRole role) throws OperationException, DataConstraintException;
 
 }

@@ -8,6 +8,7 @@ import static org.junit.Assert.fail;
 import java.util.HashMap;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -50,6 +51,13 @@ public class UserServiceTest {
     public static void startup() throws WSException {
 	session = authentication.createSession(null, "TEST");
 	authentication.login(session, "admin", "password", null);
+    }
+
+    private String uniqueId;
+
+    @Before
+    public void init() {
+	this.uniqueId = TUtil.generateID("_test");
     }
 
     @Test
@@ -223,5 +231,51 @@ public class UserServiceTest {
 	    assertEquals(person.getType(), wsPerson.getType());
 	    assertEquals(person.getTitle(), wsPerson.getTitle());
 	}
+    }
+
+    @Test
+    public void testUpdateRole() throws Exception {
+	WSUserPermission[] perms = new WSUserPermission[] { new WSUserPermission(PermissionEnum.CREATE),
+		new WSUserPermission(PermissionEnum.LIST), new WSUserPermission(PermissionEnum.SELECT) };
+	WSUserRole role = adminService.createRoleWithPermissions(session, uniqueId, perms);
+
+	perms = new WSUserPermission[] { new WSUserPermission(PermissionEnum.CREATE),
+		new WSUserPermission(PermissionEnum.UPDATE), new WSUserPermission(PermissionEnum.DELETE) };
+
+	role.setRoleName(uniqueId + "_");
+	adminService.updateRole(session, role, perms);
+
+	List<WSUserPermission> rolePermissions = adminService.getRolePermissions(session, role);
+	assertEquals(3, rolePermissions.size());
+	assertEquals(PermissionEnum.UPDATE.name(), rolePermissions.get(0).getPermissionName());
+	assertEquals(PermissionEnum.CREATE.name(), rolePermissions.get(1).getPermissionName());
+	assertEquals(PermissionEnum.DELETE.name(), rolePermissions.get(2).getPermissionName());
+    }
+
+    @Test
+    public void testUpdateRoleId() throws Exception {
+	List<WSUserPermission> allPerms = adminService.getAllPermissionList(session);
+
+	WSUserPermission perm1 = new WSUserPermission();
+	perm1.setId(allPerms.get(1).getId());
+	WSUserPermission perm2 = new WSUserPermission();
+	perm2.setId(allPerms.get(2).getId());
+
+	WSUserPermission[] perms = new WSUserPermission[] { perm1, perm2 };
+
+	WSUserRole role = adminService.createRoleWithPermissions(session, uniqueId, perms);
+
+	WSUserPermission perm3 = new WSUserPermission();
+	perm3.setId(allPerms.get(3).getId());
+
+	perms = new WSUserPermission[] { perm2, perm3 };
+
+	role.setRoleName(uniqueId + "_");
+	adminService.updateRole(session, role, perms);
+
+	List<WSUserPermission> rolePermissions = adminService.getRolePermissions(session, role);
+	assertEquals(2, rolePermissions.size());
+	assertEquals(PermissionEnum.LIST.name(), rolePermissions.get(0).getPermissionName());
+	assertEquals(PermissionEnum.UPDATE.name(), rolePermissions.get(1).getPermissionName());
     }
 }

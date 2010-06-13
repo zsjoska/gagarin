@@ -90,4 +90,20 @@ public class ConversionUtils {
 		+ ", type=" + person.getType() + "]";
 
     }
+
+    public static UserPermission findPermission(UserPermission perm, Collection<UserPermission> permissions) {
+	for (UserPermission userPermission : permissions) {
+	    if (userPermission.getId() != null && perm.getId() != null) {
+		if (userPermission.getId().equals(perm.getId())) {
+		    return userPermission;
+		}
+	    }
+	    if (userPermission.getPermissionName() != null && perm.getPermissionName() != null) {
+		if (userPermission.getPermissionName().equals(perm.getPermissionName())) {
+		    return userPermission;
+		}
+	    }
+	}
+	return null;
+    }
 }

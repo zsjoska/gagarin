@@ -1,6 +1,8 @@
 package ro.gagarin.user;
 
-public interface UserPermission {
+import ro.gagarin.Entity;
+
+public interface UserPermission extends Entity {
 
     Long getId();
 

@@ -1,6 +1,7 @@
 package ro.gagarin.ws.objects;
 
 import ro.gagarin.BaseEntity;
+import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.utils.ConversionUtils;
 
@@ -9,6 +10,10 @@ public class WSUserPermission extends BaseEntity implements UserPermission {
     private String permissionName;
 
     public WSUserPermission() {
+    }
+
+    public WSUserPermission(PermissionEnum p) {
+	this.setPermissionName(p.name());
     }
 
     public WSUserPermission(UserPermission perm) {

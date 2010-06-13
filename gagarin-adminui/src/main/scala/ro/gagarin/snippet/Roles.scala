@@ -19,7 +19,11 @@ class Roles {
       val roles = adminService.getRoleList
       roles.flatMap( u => 
       bind("role", in, 
-	      "name" -> link("editRole", () => {selectedRole.set(u)}, Text(u.getRoleName()))
+	      "name" -> link("editRole", () => {selectedRole.set(u)}, Text(u.getRoleName())),
+	      "permissions" -> {
+         val permissions = adminService.getRolePermissions(u)
+         Text(("" /: permissions)( (string, perm) => string + " " + perm.getPermissionName()))
+       }
       ))
   }
     

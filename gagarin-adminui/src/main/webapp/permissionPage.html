@@ -9,13 +9,10 @@
 	<div class="right" style="padding: 15px;">Role
 	<hr />
 	<lift:permissions.listRoles /></div>
-	<div class="right" style="padding: 15px; padding-left: 150px ">Effective
+	<div class="right" style="padding: 15px; padding-left: 150px">Effective
 	Permissions<br />
 	<hr />
-	LIST<br />
-	UPDATE<br />
-	READ</div>
-	<br />
+	<lift:permissions.blankEffectivePermissions /></div>
 	</div>
 	<lift:permissions.existingAssignments />
 </lift:surround>

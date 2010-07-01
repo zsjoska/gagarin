@@ -1,11 +1,13 @@
 package ro.gagarin.ws;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 
 import ro.gagarin.ControlEntityCategory;
+import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.ws.executor.WSException;
 import ro.gagarin.ws.executor.WebserviceExecutor;
 import ro.gagarin.ws.objects.WSConfig;
@@ -31,6 +33,7 @@ import ro.gagarin.ws.userservice.GetAllPermissionListOP;
 import ro.gagarin.ws.userservice.GetConfigEntriesOP;
 import ro.gagarin.ws.userservice.GetControlEntityCategoriesOP;
 import ro.gagarin.ws.userservice.GetControlEntityListForCategoryOP;
+import ro.gagarin.ws.userservice.GetEffectivePermissionsObjectPersonOP;
 import ro.gagarin.ws.userservice.GetGroupUsersOP;
 import ro.gagarin.ws.userservice.GetGroupsOP;
 import ro.gagarin.ws.userservice.GetLogEntriesOP;
@@ -280,5 +283,14 @@ public class Admin {
 
 	UnAssignRoleFromControlEntityOP op = new UnAssignRoleFromControlEntityOP(sessionId, ce, role, person);
 	WebserviceExecutor.execute(op);
+    }
+
+    @WebMethod
+    public Set<PermissionEnum> getEffectivePermissionsObjectPerson(String sessionId, WSControlEntity ce, WSPerson person)
+	    throws WSException {
+
+	GetEffectivePermissionsObjectPersonOP op = new GetEffectivePermissionsObjectPersonOP(sessionId, ce, person);
+	WebserviceExecutor.execute(op);
+	return op.getPermissions();
     }
 }

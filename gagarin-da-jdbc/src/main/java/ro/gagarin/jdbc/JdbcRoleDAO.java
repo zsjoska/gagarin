@@ -30,6 +30,7 @@ import ro.gagarin.jdbc.role.DeletePermissionSQL;
 import ro.gagarin.jdbc.role.DeleteRoleSQL;
 import ro.gagarin.jdbc.role.GetControlEntityByIdAndCategorySQL;
 import ro.gagarin.jdbc.role.GetControlEntityListForCategorySQL;
+import ro.gagarin.jdbc.role.GetEffectivePermissionsObjectPersonSQL;
 import ro.gagarin.jdbc.role.GetEffectivePermissionsOnEntitySQL;
 import ro.gagarin.jdbc.role.GetEffectivePermissionsSQL;
 import ro.gagarin.jdbc.role.GetPermissionAssignmentsForControlEntitySQL;
@@ -47,6 +48,7 @@ import ro.gagarin.log.AppLog;
 import ro.gagarin.log.AppLogAction;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermPersonCEAssignment;
+import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
 
@@ -287,8 +289,8 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 	Map<ControlEntity, Set<UserPermission>> newMap = new HashMap<ControlEntity, Set<UserPermission>>();
 	for (ControlEntity ce : effectivePermissions.keySet()) {
 	    if (ce.getCategory().table() != null) {
-		ControlEntity completeCe = GetControlEntityByIdAndCategorySQL.execute(this, ce.getId(), ce
-			.getCategory());
+		ControlEntity completeCe = GetControlEntityByIdAndCategorySQL.execute(this, ce.getId(),
+			ce.getCategory());
 		if (completeCe == null) {
 		    APPLOG.error("Inconsistent control entity found. Cleanup was not done properly. Id=" + ce.getId()
 			    + " Category = " + ce.getCategory());
@@ -321,5 +323,11 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
     @Override
     public void updateRole(UserRole role) throws OperationException, DataConstraintException {
 	new UpdateRoleSQL(this, role).execute();
+    }
+
+    @Override
+    public Set<PermissionEnum> getEffectivePermissionsObjectPerson(ControlEntity ce, Person person)
+	    throws OperationException {
+	return GetEffectivePermissionsObjectPersonSQL.execute(this, ce, person);
     }
 }

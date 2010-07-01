@@ -12,6 +12,7 @@ import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.user.Group;
 import ro.gagarin.user.PermPersonCEAssignment;
+import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
@@ -126,5 +127,16 @@ public interface RoleDAO extends BaseDAO {
     List<PermPersonCEAssignment> getPermissionAssignmentsForControlEntity(ControlEntity ce) throws OperationException;
 
     void updateRole(UserRole role) throws OperationException, DataConstraintException;
+
+    /**
+     * Returns an unified set of permissions that a person has on a control
+     * entity.
+     * 
+     * @param ce
+     * @param person
+     * @return
+     * @throws OperationException
+     */
+    Set<PermissionEnum> getEffectivePermissionsObjectPerson(ControlEntity ce, Person person) throws OperationException;
 
 }

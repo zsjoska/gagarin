@@ -10,7 +10,7 @@ import ro.gagarin.user.User;
  * @author zsjoska
  * 
  */
-public interface Person {
+public interface Person extends Entity {
 
     Long getId();
 

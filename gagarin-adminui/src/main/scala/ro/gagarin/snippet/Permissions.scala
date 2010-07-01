@@ -1,6 +1,7 @@
 package ro.gagarin.snippet
 
-import _root_.scala.xml.{NodeSeq, Text, Group, Node}
+import _root_.scala.xml.{NodeSeq, Text,Unparsed, Group, Node}
+import _root_.scala.xml.NodeSeq._
 import _root_.net.liftweb.http._
 import _root_.net.liftweb.http.S
 import _root_.net.liftweb.mapper._
@@ -55,7 +56,7 @@ class Permissions {
 	</div>
     }
 
-
+    // TODO: move this markup to html
     def listObjectAssignments(catId: String): NodeSeq  = {
         val cat = selectedCategory.is
         val ce = new WsControlEntity();
@@ -93,29 +94,38 @@ class Permissions {
         ajaxSelect( personMap, Empty, x => {
           selPId.set(x)
           updatePage
-          // Alert(selCId.is +":" +x)
         }) % ("size" -> "10")
     }
 
-    def updatePage: JsCmd = {
-      updateAssignmentTable & updateEffectivePerms
-    }
+    def updatePage: JsCmd =  updateAssignmentTable & updateEffectivePerms
     
     def updateEffectivePerms : JsCmd = {
       val cat = selectedCategory.is
       val selCategory = selCId.is
       val selPerson = selPId.is
-      
-      Noop
+      if(selCId.is != null && selPId.is != null){
+        
+        val ce = new WsControlEntity();
+        ce.setId(selCategory.toLong)
+        
+      	val pe = new WsPerson();
+        pe.setId(selPerson.toLong)
+        
+        val permissions = adminService.getEffectivePermissionsObjectPerson(ce, pe)
+        val display = ("" /: permissions )( (x,y) => x + "<p>"+ y.name +"</p>")
+        Replace("effectivePermDivOuter" + cat.name, Unparsed(display))&
+        SetElemById("effectivePermDivOuter" + cat.name, JsRaw("'block'"),"style", "display")
+      } else 
+          Noop
     }
     
     def updateAssignmentTable : JsCmd = {
-        val cat = selectedCategory.is
-        if(selCId.is != null)
-            Replace("exAssignmentsTable" + cat.name, listObjectAssignments(selCId.is))&
-            SetElemById("exAssignmentsDiv" + cat.name, JsRaw("'block'"),"style", "display")
-        else 
-            Noop
+      val cat = selectedCategory.is
+      if(selCId.is != null)
+          Replace("exAssignmentsTable" + cat.name, listObjectAssignments(selCId.is))&
+          SetElemById("exAssignmentsDiv" + cat.name, JsRaw("'block'"),"style", "display")
+      else 
+          Noop
     }
     
     def listRoles(in: NodeSeq): NodeSeq  = {

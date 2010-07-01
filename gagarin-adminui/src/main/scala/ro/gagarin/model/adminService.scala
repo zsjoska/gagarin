@@ -159,6 +159,15 @@ object adminService {
 	  }}
     }
 
+    def getEffectivePermissionsObjectPerson(ce : WsControlEntity, person: WsPerson ) = {
+	  try{
+	      Buffer(adminWSService.getEffectivePermissionsObjectPerson(wsSession.session, ce, person))
+	  } catch {
+	  case e: WSException_Exception => {
+	    handleException(e)
+	  }}
+    }
+    
     
   def createUser(user : WsUser) = {
 	  try{

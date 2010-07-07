@@ -113,7 +113,10 @@ class Permissions {
         
         val permissions = adminService.getEffectivePermissionsObjectPerson(ce, pe)
         val display = ("" /: permissions )( (x,y) => x + "<p>"+ y.name +"</p>")
-        Replace("effectivePermDivOuter" + cat.name, Unparsed(display))&
+        Replace("effectivePermDivInner" + cat.name, 
+                <div id={"effectivePermDivInner" + cat.name}>
+                  {Unparsed(display)}
+                </div>)&
         SetElemById("effectivePermDivOuter" + cat.name, JsRaw("'block'"),"style", "display")
       } else 
           Noop

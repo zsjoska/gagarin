@@ -8,7 +8,11 @@
 	// ]]>
 	</script>
 	<div id="tabs" class="right">
-		<lift:permissions.listCategories />
-	</div>	
+	<ul>
+		<lift:permissions.listCategories>
+			<li><category:name /></li>
+		</lift:permissions.listCategories>
+	</ul>
+	</div>
 </lift:surround>
 

@@ -22,15 +22,12 @@ class Permissions {
     private object selCId extends RequestVar[String](null)
     private object selPId extends RequestVar[String](null)
 
-  
     def listCategories(in: NodeSeq): NodeSeq  = {
 	val categories = adminService.getControlEntityCategories
-        <ul>
-        {
-          categories.flatMap( u =>
-            <li>{link("permissionPage", () => {selectedCategory.set(u)}, <span>{u.name}</span>)}</li>
-        )}
-        </ul>
+	categories.flatMap( u =>
+           bind("category", in,
+                 "name" -> link("permissionPage", () => {selectedCategory.set(u)}, <span>{u.name}</span>)
+            ))
     }
       
     def pageTitle(in: NodeSeq): NodeSeq  = {

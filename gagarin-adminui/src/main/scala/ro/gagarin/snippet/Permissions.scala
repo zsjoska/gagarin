@@ -67,11 +67,11 @@ class Permissions {
           <table border="1" cellspacing="0" cellpadding="4">
           {list.flatMap( u => 
             <tr>
-            <th>Person</th>
+            <th>Owner</th>
             <th>Role</th>
             </tr>
             <tr>
-            <td>{ Text(u.getPerson().getTitle())}</td>
+            <td>{ Text(u.getOwner().getTitle())}</td>
             <td>{Text(u.getRole().getRoleName())}</td>
             </tr>)}
           </table>
@@ -88,10 +88,10 @@ class Permissions {
         }) % ("size" -> "10")
     }
     
-    def listPersons(in: NodeSeq): NodeSeq  = {
-        val persons = adminService.getPersons
-        val personMap = (Map[String,String]()/: persons)( (x,y) =>  x + {y.getId().toString -> y.getTitle() }).toSeq;
-        ajaxSelect( personMap, Empty, x => {
+    def listOwners(in: NodeSeq): NodeSeq  = {
+        val owners = adminService.getOwners
+        val ownerMap = (Map[String,String]()/: owners)( (x,y) =>  x + {y.getId().toString -> y.getTitle() }).toSeq;
+        ajaxSelect( ownerMap, Empty, x => {
           selPId.set(x)
           updatePage
         }) % ("size" -> "10")
@@ -102,16 +102,16 @@ class Permissions {
     def updateEffectivePerms : JsCmd = {
       val cat = selectedCategory.is
       val selCategory = selCId.is
-      val selPerson = selPId.is
+      val selOwner = selPId.is
       if(selCId.is != null && selPId.is != null){
         
         val ce = new WsControlEntity();
         ce.setId(selCategory.toLong)
         
-      	val pe = new WsPerson();
-        pe.setId(selPerson.toLong)
+      	val pe = new WsOwner();
+        pe.setId(selOwner.toLong)
         
-        val permissions = adminService.getEffectivePermissionsObjectPerson(ce, pe)
+        val permissions = adminService.getEffectivePermissionsObjectOwner(ce, pe)
         val display = ("" /: permissions )( (x,y) => x + "<p>"+ y.name +"</p>")
         Replace("effectivePermDivInner" + cat.name, 
                 <div id={"effectivePermDivInner" + cat.name}>

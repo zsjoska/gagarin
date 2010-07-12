@@ -141,9 +141,9 @@ object adminService {
 	  }}
   }
 
-    def getPersons = {
+    def getOwners = {
 	  try{
-	      Buffer(adminWSService.getPersons(wsSession.session))
+	      Buffer(adminWSService.getOwners(wsSession.session))
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)
@@ -159,9 +159,9 @@ object adminService {
 	  }}
     }
 
-    def getEffectivePermissionsObjectPerson(ce : WsControlEntity, person: WsPerson ) = {
+    def getEffectivePermissionsObjectOwner(ce : WsControlEntity, owner: WsOwner ) = {
 	  try{
-	      Buffer(adminWSService.getEffectivePermissionsObjectPerson(wsSession.session, ce, person))
+	      Buffer(adminWSService.getEffectivePermissionsObjectOwner(wsSession.session, ce, owner))
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)

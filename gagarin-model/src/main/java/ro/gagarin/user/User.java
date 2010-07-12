@@ -1,8 +1,8 @@
 package ro.gagarin.user;
 
-import ro.gagarin.Person;
+import ro.gagarin.Owner;
 
-public interface User extends Person {
+public interface User extends Owner {
 
     public abstract String getUsername();
 

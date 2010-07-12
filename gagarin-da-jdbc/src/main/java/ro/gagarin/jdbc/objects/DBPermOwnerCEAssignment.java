@@ -1,14 +1,14 @@
 package ro.gagarin.jdbc.objects;
 
 import ro.gagarin.ControlEntity;
-import ro.gagarin.Person;
-import ro.gagarin.user.PermPersonCEAssignment;
+import ro.gagarin.Owner;
+import ro.gagarin.user.PermOwnerCEAssignment;
 import ro.gagarin.user.UserRole;
 
-public class DBPermPersonCEAssignment implements PermPersonCEAssignment {
+public class DBPermOwnerCEAssignment implements PermOwnerCEAssignment {
 
     private ControlEntity controlEntity;
-    private Person person;
+    private Owner owner;
     private UserRole role;
 
     @Override
@@ -17,8 +17,8 @@ public class DBPermPersonCEAssignment implements PermPersonCEAssignment {
     }
 
     @Override
-    public Person getPerson() {
-	return this.person;
+    public Owner getOwner() {
+	return this.owner;
     }
 
     @Override
@@ -30,8 +30,8 @@ public class DBPermPersonCEAssignment implements PermPersonCEAssignment {
 	this.controlEntity = controlEntity;
     }
 
-    public void setPerson(Person person) {
-	this.person = person;
+    public void setOwner(Owner owner) {
+	this.owner = owner;
     }
 
     public void setRole(UserRole role) {

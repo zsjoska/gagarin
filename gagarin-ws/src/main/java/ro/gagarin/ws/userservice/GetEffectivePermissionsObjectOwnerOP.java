@@ -15,23 +15,23 @@ import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.utils.FieldValidator;
 import ro.gagarin.ws.executor.WebserviceOperation;
 import ro.gagarin.ws.objects.WSControlEntity;
-import ro.gagarin.ws.objects.WSPerson;
+import ro.gagarin.ws.objects.WSOwner;
 import ro.gagarin.ws.objects.WSUser;
 import ro.gagarin.ws.util.WSUtil;
 
-public class GetEffectivePermissionsObjectPersonOP extends WebserviceOperation {
+public class GetEffectivePermissionsObjectOwnerOP extends WebserviceOperation {
 
     private final WSControlEntity ce;
-    private final WSPerson person;
+    private final WSOwner owner;
     private RoleDAO roleDAO;
     private Set<PermissionEnum> permissions;
     private ConfigurationManager cfgMgr;
     private UserDAO userDAO;
 
-    public GetEffectivePermissionsObjectPersonOP(String sessionId, WSControlEntity ce, WSPerson person) {
+    public GetEffectivePermissionsObjectOwnerOP(String sessionId, WSControlEntity ce, WSOwner owner) {
 	super(sessionId);
 	this.ce = ce;
-	this.person = person;
+	this.owner = owner;
     }
 
     @Override
@@ -40,13 +40,13 @@ public class GetEffectivePermissionsObjectPersonOP extends WebserviceOperation {
 	// TODO:(4) Enable use without ID
 
 	FieldValidator.requireIdField(ce);
-	FieldValidator.requireIdField(person);
+	FieldValidator.requireIdField(owner);
     }
 
     @Override
     protected void checkPermissions(Session session, AuthorizationManager authMgr) throws ExceptionBase {
 	// The intent of this operation is to show an unified list of all
-	// permission that a person has on an object
+	// permission that a owner has on an object
 	// The requesting user must have LIST permission on the object
 	authMgr.requiresPermission(session, ce, PermissionEnum.LIST);
     }
@@ -62,17 +62,17 @@ public class GetEffectivePermissionsObjectPersonOP extends WebserviceOperation {
     protected void execute(Session session) throws ExceptionBase {
 
 	permissions = null;
-	// if the person is admin or admin group
+	// if the owner is admin or admin group
 	// or is a member of the admin group, we have to return all permissions
 
 	String adminGroupName = cfgMgr.getString(Config.ADMIN_GROUP_NAME);
 	// TODO:(5) Subject for cache
 	Group adminGroup = userDAO.getGroupByName(adminGroupName);
-	if (adminGroup.getId().equals(person.getId())) {
+	if (adminGroup.getId().equals(owner.getId())) {
 	    this.permissions = WSUtil.createAllPermissionSet();
 	} else {
 	    WSUser maybeAuser = new WSUser();
-	    maybeAuser.setId(person.getId());
+	    maybeAuser.setId(owner.getId());
 	    List<Group> userGroups = userDAO.getUserGroups(maybeAuser);
 	    for (Group group : userGroups) {
 		if (group.getId().equals(adminGroup.getId())) {
@@ -82,7 +82,7 @@ public class GetEffectivePermissionsObjectPersonOP extends WebserviceOperation {
 	    }
 	}
 	if (permissions == null) {
-	    this.permissions = roleDAO.getEffectivePermissionsObjectPerson(ce, person);
+	    this.permissions = roleDAO.getEffectivePermissionsObjectOwner(ce, owner);
 	}
     }
 

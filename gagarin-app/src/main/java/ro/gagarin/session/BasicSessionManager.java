@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
 
 import ro.gagarin.BasicManagerFactory;
 import ro.gagarin.ControlEntity;
-import ro.gagarin.Person;
+import ro.gagarin.Owner;
 import ro.gagarin.config.Config;
 import ro.gagarin.config.SettingsChangeObserver;
 import ro.gagarin.dao.BaseDAO;
@@ -201,18 +201,18 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
 	session.setAdminSession(false);
 	// get the user groups
 	List<Group> userGroups = userDAO.getUserGroups(user);
-	Person[] persons = new Person[userGroups.size() + 1];
+	Owner[] owners = new Owner[userGroups.size() + 1];
 	int index = 0;
 	for (Group group : userGroups) {
-	    persons[index++] = group;
+	    owners[index++] = group;
 	    if (adminGroupName.equals(group.getName())) {
 		session.setAdminSession(true);
 	    }
 	}
-	persons[index] = user;
+	owners[index] = user;
 
 	// get the user effective permissions
-	Map<ControlEntity, Set<UserPermission>> effectivePermissions = roleDAO.getEffectivePermissions(persons);
+	Map<ControlEntity, Set<UserPermission>> effectivePermissions = roleDAO.getEffectivePermissions(owners);
 
 	// transform the effective permissions to a more friendly format
 	Map<ControlEntity, Set<PermissionEnum>> permMap = Utils

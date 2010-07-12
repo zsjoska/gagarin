@@ -2,7 +2,7 @@ package ro.gagarin.testobjects;
 
 import ro.gagarin.BaseControlEntity;
 import ro.gagarin.ControlEntityCategory;
-import ro.gagarin.PersonTypesEnum;
+import ro.gagarin.OwnerTypesEnum;
 import ro.gagarin.user.Group;
 import ro.gagarin.utils.ConversionUtils;
 
@@ -36,8 +36,8 @@ public class ATestGroup extends BaseControlEntity implements Group {
     }
 
     @Override
-    public PersonTypesEnum getType() {
-	return PersonTypesEnum.GROUP;
+    public OwnerTypesEnum getType() {
+	return OwnerTypesEnum.GROUP;
     }
 
     @Override

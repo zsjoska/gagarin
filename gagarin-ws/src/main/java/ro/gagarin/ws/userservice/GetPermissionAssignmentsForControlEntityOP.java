@@ -10,13 +10,13 @@ import ro.gagarin.dao.UserDAO;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.manager.AuthorizationManager;
 import ro.gagarin.session.Session;
-import ro.gagarin.user.PermPersonCEAssignment;
+import ro.gagarin.user.PermOwnerCEAssignment;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.utils.FieldValidator;
 import ro.gagarin.ws.executor.WebserviceOperation;
 import ro.gagarin.ws.objects.WSControlEntity;
-import ro.gagarin.ws.objects.WSPermPersonCEAssignment;
-import ro.gagarin.ws.objects.WSPerson;
+import ro.gagarin.ws.objects.WSOwner;
+import ro.gagarin.ws.objects.WSPermOwnerCEAssignment;
 import ro.gagarin.ws.util.WSUtil;
 
 public class GetPermissionAssignmentsForControlEntityOP extends WebserviceOperation {
@@ -24,7 +24,7 @@ public class GetPermissionAssignmentsForControlEntityOP extends WebserviceOperat
     private final WSControlEntity ce;
     private RoleDAO roleDAO;
     private UserDAO userDAO;
-    private List<WSPermPersonCEAssignment> objAssignments;
+    private List<WSPermOwnerCEAssignment> objAssignments;
 
     public GetPermissionAssignmentsForControlEntityOP(String sessionId, WSControlEntity ce) {
 	super(sessionId);
@@ -49,22 +49,22 @@ public class GetPermissionAssignmentsForControlEntityOP extends WebserviceOperat
 
     @Override
     protected void execute(Session session) throws ExceptionBase {
-	List<PermPersonCEAssignment> assignments = roleDAO.getPermissionAssignmentsForControlEntity(this.ce);
-	this.objAssignments = new ArrayList<WSPermPersonCEAssignment>();
+	List<PermOwnerCEAssignment> assignments = roleDAO.getPermissionAssignmentsForControlEntity(this.ce);
+	this.objAssignments = new ArrayList<WSPermOwnerCEAssignment>();
 
 	// This could be a bit optimized...
-	// create a map with all persons
-	Map<Long, WSPerson> personMap = WSUtil.getPersonMap(this.userDAO);
+	// create a map with all owners
+	Map<Long, WSOwner> ownerMap = WSUtil.getOwnerMap(this.userDAO);
 
-	// match all persons
-	for (PermPersonCEAssignment a : assignments) {
-	    WSPermPersonCEAssignment wsa = new WSPermPersonCEAssignment(a);
-	    wsa.setPerson(personMap.get(a.getPerson().getId()));
+	// match all owners
+	for (PermOwnerCEAssignment a : assignments) {
+	    WSPermOwnerCEAssignment wsa = new WSPermOwnerCEAssignment(a);
+	    wsa.setOwner(ownerMap.get(a.getOwner().getId()));
 	    objAssignments.add(wsa);
 	}
     }
 
-    public List<WSPermPersonCEAssignment> getPermissionAssignments() {
+    public List<WSPermOwnerCEAssignment> getPermissionAssignments() {
 	return objAssignments;
     }
 }

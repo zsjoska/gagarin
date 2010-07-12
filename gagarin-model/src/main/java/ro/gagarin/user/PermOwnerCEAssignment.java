@@ -1,13 +1,13 @@
 package ro.gagarin.user;
 
 import ro.gagarin.ControlEntity;
-import ro.gagarin.Person;
+import ro.gagarin.Owner;
 
-public interface PermPersonCEAssignment {
+public interface PermOwnerCEAssignment {
 
     UserRole getRole();
 
-    Person getPerson();
+    Owner getOwner();
 
     ControlEntity getControlEntity();
 }

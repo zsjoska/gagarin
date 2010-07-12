@@ -5,16 +5,16 @@ import ro.gagarin.user.User;
 
 /**
  * Interface defining a structure which can have a role on a control object.<br>
- * A person could be a {@link Group} or a {@link User} object.
+ * An owner could be a {@link Group} or a {@link User} object.
  * 
  * @author zsjoska
  * 
  */
-public interface Person extends Entity {
+public interface Owner extends Entity {
 
     Long getId();
 
-    PersonTypesEnum getType();
+    OwnerTypesEnum getType();
 
     String getTitle();
 }

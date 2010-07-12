@@ -3,33 +3,41 @@ package ro.gagarin.jdbc.role;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import ro.gagarin.Owner;
 import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.jdbc.BaseJdbcDAO;
 import ro.gagarin.jdbc.UpdateQuery;
-import ro.gagarin.user.UserRole;
 import ro.gagarin.utils.FieldValidator;
 
-public class CleanupRolePersonAssignments extends UpdateQuery {
+/**
+ * Removes all references to this owner from the assignment table
+ * 
+ * @author ZsJoska
+ * 
+ */
+public class CleanupOwnerFromAssignmentSQL extends UpdateQuery {
 
-    private final UserRole role;
+    private final Owner owner;
 
-    public CleanupRolePersonAssignments(BaseJdbcDAO dao, UserRole role) {
+    public CleanupOwnerFromAssignmentSQL(BaseJdbcDAO dao, Owner owner) {
 	super(dao);
-	this.role = role;
+	this.owner = owner;
     }
 
     @Override
     protected void checkInput() throws FieldRequiredException {
-	FieldValidator.requireLongField("id", role);
+	FieldValidator.requireLongField("id", owner);
+
     }
 
     @Override
     protected void fillParameters(PreparedStatement stmnt) throws SQLException {
-	stmnt.setLong(1, role.getId());
+	stmnt.setLong(1, owner.getId());
     }
 
     @Override
     protected String getSQL() {
-	return "DELETE FROM RolePersonAssignment WHERE role_id = ?";
+	return "DELETE FROM RoleOwnerAssignment WHERE owner_id = ?";
     }
+
 }

@@ -10,7 +10,7 @@ import ro.gagarin.ws.objects.WSEffectivePermission;
 import ro.gagarin.ws.objects.WSExportedSession;
 import ro.gagarin.ws.objects.WSGroup;
 import ro.gagarin.ws.objects.WSLogEntry;
-import ro.gagarin.ws.objects.WSPerson;
+import ro.gagarin.ws.objects.WSOwner;
 import ro.gagarin.ws.objects.WSStatistic;
 import ro.gagarin.ws.objects.WSUser;
 import ro.gagarin.ws.objects.WSUserPermission;
@@ -95,8 +95,8 @@ public class ObjectFieldCompatibilityTest {
     }
 
     @Test
-    public void wsPerson() throws FieldRequiredException {
-	WSPerson p = new WSPerson();
+    public void wsOwner() throws FieldRequiredException {
+	WSOwner p = new WSOwner();
 	p.setTitle("a");
 	FieldValidator.checkAllFields(p);
     }

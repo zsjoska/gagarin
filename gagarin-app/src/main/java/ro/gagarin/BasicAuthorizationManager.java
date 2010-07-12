@@ -86,7 +86,7 @@ public class BasicAuthorizationManager implements AuthorizationManager {
 	RoleDAO roleDAO = session.getManagerFactory().getDAOManager().getRoleDAO(session);
 	String adminRoleName = cfgMgr.getString(Config.ADMIN_ROLE_NAME);
 	UserRole adminRole = roleDAO.getRoleByName(adminRoleName);
-	roleDAO.assignRoleToPerson(adminRole, session.getUser(), ce);
+	roleDAO.assignRoleToOwner(adminRole, session.getUser(), ce);
 	Set<UserPermission> permissions = roleDAO.getRolePermissions(adminRole);
 	Set<PermissionEnum> permSet = Utils.convertPermissionSet(permissions);
 	session.getEffectivePermissions().put(ce, permSet);

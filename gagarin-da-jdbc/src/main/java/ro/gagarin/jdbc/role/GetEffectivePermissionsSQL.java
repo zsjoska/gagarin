@@ -11,7 +11,7 @@ import java.util.Set;
 import ro.gagarin.BaseControlEntity;
 import ro.gagarin.ControlEntity;
 import ro.gagarin.ControlEntityCategory;
-import ro.gagarin.Person;
+import ro.gagarin.Owner;
 import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.BaseJdbcDAO;
@@ -22,12 +22,12 @@ import ro.gagarin.utils.FieldValidator;
 
 public class GetEffectivePermissionsSQL extends SelectQuery {
 
-    private final Person[] persons;
+    private final Owner[] owners;
     private Map<ControlEntity, Set<UserPermission>> permissions;
 
-    public GetEffectivePermissionsSQL(BaseJdbcDAO dao, Person[] persons) {
+    public GetEffectivePermissionsSQL(BaseJdbcDAO dao, Owner[] owners) {
 	super(dao);
-	this.persons = persons;
+	this.owners = owners;
     }
 
     @Override
@@ -54,28 +54,28 @@ public class GetEffectivePermissionsSQL extends SelectQuery {
 
     @Override
     protected void checkInput() throws FieldRequiredException {
-	for (Person person : persons) {
-	    FieldValidator.requireLongField("id", person);
+	for (Owner owner : owners) {
+	    FieldValidator.requireLongField("id", owner);
 	}
     }
 
     @Override
     protected void fillParameters(PreparedStatement stmnt) throws SQLException {
 	int index = 1;
-	for (Person person : persons) {
-	    stmnt.setLong(index++, person.getId());
+	for (Owner owner : owners) {
+	    stmnt.setLong(index++, owner.getId());
 	}
     }
 
     @Override
     protected String getSQL() {
 	StringBuilder sb = new StringBuilder();
-	sb.append("SELECT DISTINCT object_id, object_type, id, permissionName FROM RolePersonAssignment ");
-	sb.append("INNER JOIN PermissionAssignment ON RolePersonAssignment.role_id = PermissionAssignment.role_id ");
+	sb.append("SELECT DISTINCT object_id, object_type, id, permissionName FROM RoleOwnerAssignment ");
+	sb.append("INNER JOIN PermissionAssignment ON RoleOwnerAssignment.role_id = PermissionAssignment.role_id ");
 	sb.append("INNER JOIN UserPermissions ON PermissionAssignment.perm_id = UserPermissions.id ");
 	sb.append("WHERE ");
-	for (int i = 0; i < persons.length; i++) {
-	    sb.append(" RolePersonAssignment.person_id = ? OR");
+	for (int i = 0; i < owners.length; i++) {
+	    sb.append(" RoleOwnerAssignment.owner_id = ? OR");
 	}
 	sb.delete(sb.length() - 2, sb.length());
 	return sb.toString();
@@ -85,9 +85,9 @@ public class GetEffectivePermissionsSQL extends SelectQuery {
 	return this.permissions;
     }
 
-    public static Map<ControlEntity, Set<UserPermission>> execute(BaseJdbcDAO dao, Person[] persons)
+    public static Map<ControlEntity, Set<UserPermission>> execute(BaseJdbcDAO dao, Owner[] owners)
 	    throws OperationException {
-	GetEffectivePermissionsSQL cmd = new GetEffectivePermissionsSQL(dao, persons);
+	GetEffectivePermissionsSQL cmd = new GetEffectivePermissionsSQL(dao, owners);
 	cmd.execute();
 	return cmd.getPermissions();
     }

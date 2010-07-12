@@ -1,22 +1,22 @@
 package ro.gagarin.ws.objects;
 
 import ro.gagarin.ControlEntity;
-import ro.gagarin.Person;
-import ro.gagarin.user.PermPersonCEAssignment;
+import ro.gagarin.Owner;
+import ro.gagarin.user.PermOwnerCEAssignment;
 import ro.gagarin.user.UserRole;
 
-public class WSPermPersonCEAssignment implements PermPersonCEAssignment {
+public class WSPermOwnerCEAssignment implements PermOwnerCEAssignment {
 
     private WSControlEntity controlEntity;
-    private WSPerson person;
+    private WSOwner owner;
     private WSUserRole role;
 
-    public WSPermPersonCEAssignment() {
+    public WSPermOwnerCEAssignment() {
     }
 
-    public WSPermPersonCEAssignment(PermPersonCEAssignment assignment) {
+    public WSPermOwnerCEAssignment(PermOwnerCEAssignment assignment) {
 	this.setControlEntity(assignment.getControlEntity());
-	this.setPerson(assignment.getPerson());
+	this.setOwner(assignment.getOwner());
 	this.setRole(assignment.getRole());
     }
 
@@ -26,8 +26,8 @@ public class WSPermPersonCEAssignment implements PermPersonCEAssignment {
     }
 
     @Override
-    public WSPerson getPerson() {
-	return this.person;
+    public WSOwner getOwner() {
+	return this.owner;
     }
 
     @Override
@@ -43,12 +43,12 @@ public class WSPermPersonCEAssignment implements PermPersonCEAssignment {
 	this.controlEntity = controlEntity;
     }
 
-    public void setPerson(Person person) {
-	this.person = new WSPerson(person);
+    public void setOwner(Owner owner) {
+	this.owner = new WSOwner(owner);
     }
 
-    public void setPerson(WSPerson person) {
-	this.person = person;
+    public void setOwner(WSOwner owner) {
+	this.owner = owner;
     }
 
     public void setRole(UserRole role) {

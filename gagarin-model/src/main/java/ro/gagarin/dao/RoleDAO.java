@@ -6,12 +6,12 @@ import java.util.Set;
 
 import ro.gagarin.ControlEntity;
 import ro.gagarin.ControlEntityCategory;
-import ro.gagarin.Person;
+import ro.gagarin.Owner;
 import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.user.Group;
-import ro.gagarin.user.PermPersonCEAssignment;
+import ro.gagarin.user.PermOwnerCEAssignment;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserPermission;
@@ -52,8 +52,8 @@ public interface RoleDAO extends BaseDAO {
     UserPermission completePermissionId(UserPermission perm) throws OperationException, ItemNotFoundException;
 
     /**
-     * Assigns a role to a person on a specific object.<br>
-     * The person could be a {@link User} or {@link Group}. The object must be
+     * Assigns a role to a owner on a specific object.<br>
+     * The owner could be a {@link User} or {@link Group}. The object must be
      * something that extends {@link ControlEntity}.
      * 
      * @param role
@@ -63,49 +63,49 @@ public interface RoleDAO extends BaseDAO {
      * @throws DataConstraintException
      * @throws ItemNotFoundException
      */
-    void assignRoleToPerson(UserRole role, Person person, ControlEntity object) throws OperationException,
+    void assignRoleToOwner(UserRole role, Owner owner, ControlEntity object) throws OperationException,
 	    DataConstraintException, ItemNotFoundException;
 
     /**
-     * Removes the {@link UserRole} assignment from the {@link Person} on the
+     * Removes the {@link UserRole} assignment from the {@link Owner} on the
      * given {@link ControlEntity} object.
      * 
      * @param role
-     * @param person
+     * @param owner
      * @param ce
      * @throws DataConstraintException
      * @throws OperationException
      * @throws ItemNotFoundException
      */
-    void unAssignRoleFromPerson(UserRole role, Person person, ControlEntity ce) throws OperationException,
+    void unAssignRoleFromOwner(UserRole role, Owner owner, ControlEntity ce) throws OperationException,
 	    DataConstraintException, ItemNotFoundException;
 
     /**
-     * Returns a set of permission that the enumerated persons have on the given
+     * Returns a set of permission that the enumerated owners have on the given
      * {@link ControlEntity}.<br>
      * 
      * @param entity
      *            the entity for query the permissions
-     * @param persons
-     *            a list of persons (user or group)
+     * @param owners
+     *            a list of owners (user or group)
      * @return the distinct set of user permissions
      * @throws OperationException
      */
-    Set<UserPermission> getEffectivePermissionsOnEntity(ControlEntity entity, Person... persons)
+    Set<UserPermission> getEffectivePermissionsOnEntity(ControlEntity entity, Owner... owners)
 	    throws OperationException;
 
     /**
      * Returns all {@link ControlEntity} objects and their permissions that the
-     * given persons have.<br>
+     * given owners have.<br>
      * The result is a map where the key is the control entity and the value is
      * a set of {@link UserPermission}
      * 
-     * @param persons
-     * @return the effective permissions for all objects where the given persons
+     * @param owners
+     * @return the effective permissions for all objects where the given owners
      *         have assignments
      * @throws OperationException
      */
-    Map<ControlEntity, Set<UserPermission>> getEffectivePermissions(Person... persons) throws OperationException;
+    Map<ControlEntity, Set<UserPermission>> getEffectivePermissions(Owner... owners) throws OperationException;
 
     /**
      * Returns all control entities for the given entity category.<br>
@@ -124,19 +124,19 @@ public interface RoleDAO extends BaseDAO {
      * @return
      * @throws OperationException
      */
-    List<PermPersonCEAssignment> getPermissionAssignmentsForControlEntity(ControlEntity ce) throws OperationException;
+    List<PermOwnerCEAssignment> getPermissionAssignmentsForControlEntity(ControlEntity ce) throws OperationException;
 
     void updateRole(UserRole role) throws OperationException, DataConstraintException;
 
     /**
-     * Returns an unified set of permissions that a person has on a control
+     * Returns an unified set of permissions that a owner has on a control
      * entity.
      * 
      * @param ce
-     * @param person
+     * @param owner
      * @return
      * @throws OperationException
      */
-    Set<PermissionEnum> getEffectivePermissionsObjectPerson(ControlEntity ce, Person person) throws OperationException;
+    Set<PermissionEnum> getEffectivePermissionsObjectOwner(ControlEntity ce, Owner owner) throws OperationException;
 
 }

@@ -15,8 +15,8 @@ import ro.gagarin.ws.objects.WSControlEntity;
 import ro.gagarin.ws.objects.WSExportedSession;
 import ro.gagarin.ws.objects.WSGroup;
 import ro.gagarin.ws.objects.WSLogEntry;
-import ro.gagarin.ws.objects.WSPermPersonCEAssignment;
-import ro.gagarin.ws.objects.WSPerson;
+import ro.gagarin.ws.objects.WSPermOwnerCEAssignment;
+import ro.gagarin.ws.objects.WSOwner;
 import ro.gagarin.ws.objects.WSStatistic;
 import ro.gagarin.ws.objects.WSUser;
 import ro.gagarin.ws.objects.WSUserPermission;
@@ -33,12 +33,12 @@ import ro.gagarin.ws.userservice.GetAllPermissionListOP;
 import ro.gagarin.ws.userservice.GetConfigEntriesOP;
 import ro.gagarin.ws.userservice.GetControlEntityCategoriesOP;
 import ro.gagarin.ws.userservice.GetControlEntityListForCategoryOP;
-import ro.gagarin.ws.userservice.GetEffectivePermissionsObjectPersonOP;
+import ro.gagarin.ws.userservice.GetEffectivePermissionsObjectOwnerOP;
 import ro.gagarin.ws.userservice.GetGroupUsersOP;
 import ro.gagarin.ws.userservice.GetGroupsOP;
 import ro.gagarin.ws.userservice.GetLogEntriesOP;
 import ro.gagarin.ws.userservice.GetPermissionAssignmentsForControlEntityOP;
-import ro.gagarin.ws.userservice.GetPersonsOP;
+import ro.gagarin.ws.userservice.GetOwnersOP;
 import ro.gagarin.ws.userservice.GetRoleListOP;
 import ro.gagarin.ws.userservice.GetRolePermissionsOP;
 import ro.gagarin.ws.userservice.GetSessionListOP;
@@ -255,7 +255,7 @@ public class Admin {
     }
 
     @WebMethod
-    public List<WSPermPersonCEAssignment> getPermissionAssignmentsForControlEntity(String sessionId, WSControlEntity ce)
+    public List<WSPermOwnerCEAssignment> getPermissionAssignmentsForControlEntity(String sessionId, WSControlEntity ce)
 	    throws WSException {
 	GetPermissionAssignmentsForControlEntityOP op = new GetPermissionAssignmentsForControlEntityOP(sessionId, ce);
 	WebserviceExecutor.execute(op);
@@ -263,33 +263,33 @@ public class Admin {
     }
 
     @WebMethod
-    public List<WSPerson> getPersons(String sessionId) throws WSException {
-	GetPersonsOP getPersons = new GetPersonsOP(sessionId);
-	WebserviceExecutor.execute(getPersons);
-	return getPersons.getPersons();
+    public List<WSOwner> getOwners(String sessionId) throws WSException {
+	GetOwnersOP getOwners = new GetOwnersOP(sessionId);
+	WebserviceExecutor.execute(getOwners);
+	return getOwners.getOwners();
     }
 
     @WebMethod
-    public void assignRoleToControlEntity(String sessionId, WSControlEntity ce, WSUserRole role, WSPerson person)
+    public void assignRoleToControlEntity(String sessionId, WSControlEntity ce, WSUserRole role, WSOwner owner)
 	    throws WSException {
 
-	AssignRoleToControlEntityOP op = new AssignRoleToControlEntityOP(sessionId, ce, role, person);
+	AssignRoleToControlEntityOP op = new AssignRoleToControlEntityOP(sessionId, ce, role, owner);
 	WebserviceExecutor.execute(op);
     }
 
     @WebMethod
-    public void unAssignRoleFromControlEntity(String sessionId, WSControlEntity ce, WSUserRole role, WSPerson person)
+    public void unAssignRoleFromControlEntity(String sessionId, WSControlEntity ce, WSUserRole role, WSOwner owner)
 	    throws WSException {
 
-	UnAssignRoleFromControlEntityOP op = new UnAssignRoleFromControlEntityOP(sessionId, ce, role, person);
+	UnAssignRoleFromControlEntityOP op = new UnAssignRoleFromControlEntityOP(sessionId, ce, role, owner);
 	WebserviceExecutor.execute(op);
     }
 
     @WebMethod
-    public Set<PermissionEnum> getEffectivePermissionsObjectPerson(String sessionId, WSControlEntity ce, WSPerson person)
+    public Set<PermissionEnum> getEffectivePermissionsObjectOwner(String sessionId, WSControlEntity ce, WSOwner owner)
 	    throws WSException {
 
-	GetEffectivePermissionsObjectPersonOP op = new GetEffectivePermissionsObjectPersonOP(sessionId, ce, person);
+	GetEffectivePermissionsObjectOwnerOP op = new GetEffectivePermissionsObjectOwnerOP(sessionId, ce, owner);
 	WebserviceExecutor.execute(op);
 	return op.getPermissions();
     }

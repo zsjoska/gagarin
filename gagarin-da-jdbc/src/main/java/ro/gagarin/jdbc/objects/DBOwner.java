@@ -1,15 +1,15 @@
 package ro.gagarin.jdbc.objects;
 
-import ro.gagarin.Person;
-import ro.gagarin.PersonTypesEnum;
+import ro.gagarin.Owner;
+import ro.gagarin.OwnerTypesEnum;
 
-public class DBPerson implements Person {
+public class DBOwner implements Owner {
 
-    private PersonTypesEnum type;
+    private OwnerTypesEnum type;
     private String title;
     private Long id;
 
-    public DBPerson(Long id) {
+    public DBOwner(Long id) {
 	this.id = id;
     }
 
@@ -24,7 +24,7 @@ public class DBPerson implements Person {
     }
 
     @Override
-    public PersonTypesEnum getType() {
+    public OwnerTypesEnum getType() {
 	return this.type;
     }
 

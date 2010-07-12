@@ -1,5 +1,5 @@
 package ro.gagarin;
 
-public enum PersonTypesEnum {
+public enum OwnerTypesEnum {
     USER, GROUP
 }

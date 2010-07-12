@@ -12,30 +12,30 @@ import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.user.Group;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.User;
-import ro.gagarin.ws.objects.WSPerson;
+import ro.gagarin.ws.objects.WSOwner;
 
 public class WSUtil {
 
-    public static ArrayList<WSPerson> getPersonList(UserDAO userDAO) throws OperationException {
-	ArrayList<WSPerson> persons = new ArrayList<WSPerson>();
+    public static ArrayList<WSOwner> getOwnersList(UserDAO userDAO) throws OperationException {
+	ArrayList<WSOwner> owners = new ArrayList<WSOwner>();
 	List<Group> groups = userDAO.getGroups();
 	List<User> users = userDAO.getAllUsers();
 	for (Group group : groups) {
-	    persons.add(new WSPerson(group));
+	    owners.add(new WSOwner(group));
 	}
 	for (User user : users) {
-	    persons.add(new WSPerson(user));
+	    owners.add(new WSOwner(user));
 	}
-	return persons;
+	return owners;
     }
 
-    public static Map<Long, WSPerson> getPersonMap(UserDAO userDAO) throws OperationException {
-	ArrayList<WSPerson> personList = getPersonList(userDAO);
-	Map<Long, WSPerson> personMap = new HashMap<Long, WSPerson>();
-	for (WSPerson person : personList) {
-	    personMap.put(person.getId(), person);
+    public static Map<Long, WSOwner> getOwnerMap(UserDAO userDAO) throws OperationException {
+	ArrayList<WSOwner> ownerList = getOwnersList(userDAO);
+	Map<Long, WSOwner> ownerMap = new HashMap<Long, WSOwner>();
+	for (WSOwner owner : ownerList) {
+	    ownerMap.put(owner.getId(), owner);
 	}
-	return personMap;
+	return ownerMap;
     }
 
     public static Set<PermissionEnum> createAllPermissionSet() {

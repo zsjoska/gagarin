@@ -11,15 +11,15 @@ import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.BaseJdbcDAO;
 import ro.gagarin.jdbc.SelectQuery;
-import ro.gagarin.jdbc.objects.DBPermPersonCEAssignment;
-import ro.gagarin.jdbc.objects.DBPerson;
+import ro.gagarin.jdbc.objects.DBOwner;
+import ro.gagarin.jdbc.objects.DBPermOwnerCEAssignment;
 import ro.gagarin.jdbc.objects.DBUserRole;
-import ro.gagarin.user.PermPersonCEAssignment;
+import ro.gagarin.user.PermOwnerCEAssignment;
 import ro.gagarin.utils.FieldValidator;
 
 public class GetPermissionAssignmentsForControlEntitySQL extends SelectQuery {
 
-    private List<PermPersonCEAssignment> assignments;
+    private List<PermOwnerCEAssignment> assignments;
     private final ControlEntity ce;
 
     public GetPermissionAssignmentsForControlEntitySQL(BaseJdbcDAO dao, ControlEntity ce) {
@@ -29,19 +29,19 @@ public class GetPermissionAssignmentsForControlEntitySQL extends SelectQuery {
 
     @Override
     protected void useResult(ResultSet rs) throws SQLException {
-	this.assignments = new ArrayList<PermPersonCEAssignment>();
+	this.assignments = new ArrayList<PermOwnerCEAssignment>();
 	while (rs.next()) {
 
-	    Long person_id = rs.getLong("person_id");
+	    Long owner_id = rs.getLong("owner_id");
 	    Long role_id = rs.getLong("id");
 	    String role_name = rs.getString("roleName");
-	    DBPermPersonCEAssignment assignment = new DBPermPersonCEAssignment();
+	    DBPermOwnerCEAssignment assignment = new DBPermOwnerCEAssignment();
 	    DBUserRole role = new DBUserRole();
 	    role.setRoleName(role_name);
 	    role.setId(role_id);
-	    DBPerson person = new DBPerson(person_id);
+	    DBOwner owner = new DBOwner(owner_id);
 	    assignment.setRole(role);
-	    assignment.setPerson(person);
+	    assignment.setOwner(owner);
 	    assignment.setControlEntity(this.ce);
 	    this.assignments.add(assignment);
 	}
@@ -60,11 +60,11 @@ public class GetPermissionAssignmentsForControlEntitySQL extends SelectQuery {
 
     @Override
     protected String getSQL() {
-	return "SELECT UserRoles.id, UserRoles.roleName, person_id "
-		+ "FROM RolePersonAssignment INNER JOIN UserRoles on role_id = UserRoles.id WHERE object_id = ?";
+	return "SELECT UserRoles.id, UserRoles.roleName, owner_id "
+		+ "FROM RoleOwnerAssignment INNER JOIN UserRoles on role_id = UserRoles.id WHERE object_id = ?";
     }
 
-    public static List<PermPersonCEAssignment> execute(BaseJdbcDAO dao, ControlEntity ce) throws OperationException {
+    public static List<PermOwnerCEAssignment> execute(BaseJdbcDAO dao, ControlEntity ce) throws OperationException {
 	GetPermissionAssignmentsForControlEntitySQL sql = new GetPermissionAssignmentsForControlEntitySQL(dao, ce);
 	sql.execute();
 	return sql.assignments;

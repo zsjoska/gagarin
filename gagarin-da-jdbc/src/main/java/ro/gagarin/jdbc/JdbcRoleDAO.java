@@ -11,7 +11,7 @@ import java.util.Set;
 import ro.gagarin.BaseControlEntity;
 import ro.gagarin.ControlEntity;
 import ro.gagarin.ControlEntityCategory;
-import ro.gagarin.Person;
+import ro.gagarin.Owner;
 import ro.gagarin.dao.RoleDAO;
 import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ErrorCodes;
@@ -20,17 +20,17 @@ import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.objects.DBUserPermission;
 import ro.gagarin.jdbc.objects.DBUserRole;
 import ro.gagarin.jdbc.role.AssignPermissionToRoleSQL;
-import ro.gagarin.jdbc.role.AssignRoleToPersonSQL;
+import ro.gagarin.jdbc.role.AssignRoleToOwnerSQL;
 import ro.gagarin.jdbc.role.CleanupPermissionRoleAssignments;
+import ro.gagarin.jdbc.role.CleanupRoleOwnerAssignments;
 import ro.gagarin.jdbc.role.CleanupRolePermissionAssignments;
-import ro.gagarin.jdbc.role.CleanupRolePersonAssignments;
 import ro.gagarin.jdbc.role.CreatePermissionSQL;
 import ro.gagarin.jdbc.role.CreateRoleSQL;
 import ro.gagarin.jdbc.role.DeletePermissionSQL;
 import ro.gagarin.jdbc.role.DeleteRoleSQL;
 import ro.gagarin.jdbc.role.GetControlEntityByIdAndCategorySQL;
 import ro.gagarin.jdbc.role.GetControlEntityListForCategorySQL;
-import ro.gagarin.jdbc.role.GetEffectivePermissionsObjectPersonSQL;
+import ro.gagarin.jdbc.role.GetEffectivePermissionsObjectOwnerSQL;
 import ro.gagarin.jdbc.role.GetEffectivePermissionsOnEntitySQL;
 import ro.gagarin.jdbc.role.GetEffectivePermissionsSQL;
 import ro.gagarin.jdbc.role.GetPermissionAssignmentsForControlEntitySQL;
@@ -42,12 +42,12 @@ import ro.gagarin.jdbc.role.SelectRoleByNameSQL;
 import ro.gagarin.jdbc.role.SelectRolesSQL;
 import ro.gagarin.jdbc.role.SubstractRolesPermissions;
 import ro.gagarin.jdbc.role.UnAssignPermissionFromRoleSQL;
-import ro.gagarin.jdbc.role.UnAssignRoleFromPersonSQL;
+import ro.gagarin.jdbc.role.UnAssignRoleFromOwnerSQL;
 import ro.gagarin.jdbc.role.UpdateRoleSQL;
 import ro.gagarin.log.AppLog;
 import ro.gagarin.log.AppLogAction;
 import ro.gagarin.session.Session;
-import ro.gagarin.user.PermPersonCEAssignment;
+import ro.gagarin.user.PermOwnerCEAssignment;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.user.UserRole;
@@ -146,7 +146,7 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 
 	    new DeleteRoleSQL(this, r).execute();
 	    new CleanupRolePermissionAssignments(this, r).execute();
-	    new CleanupRolePersonAssignments(this, r).execute();
+	    new CleanupRoleOwnerAssignments(this, r).execute();
 
 	    APPLOG.action(AppLogAction.DELETE, UserRole.class, r.getRoleName(), AppLog.SUCCESS);
 	    APPLOG.info("Role " + r.getRoleName() + " was deleted");
@@ -253,34 +253,33 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
     }
 
     @Override
-    public void assignRoleToPerson(UserRole role, Person person, ControlEntity object) throws OperationException,
+    public void assignRoleToOwner(UserRole role, Owner owner, ControlEntity object) throws OperationException,
 	    DataConstraintException, ItemNotFoundException {
 
 	UserRole completeRole = completeRoleId(role);
 
-	new AssignRoleToPersonSQL(this, completeRole, person, object).execute();
+	new AssignRoleToOwnerSQL(this, completeRole, owner, object).execute();
     }
 
     @Override
-    public void unAssignRoleFromPerson(UserRole role, Person person, ControlEntity ce) throws OperationException,
+    public void unAssignRoleFromOwner(UserRole role, Owner owner, ControlEntity ce) throws OperationException,
 	    DataConstraintException, ItemNotFoundException {
 	UserRole completeRole = completeRoleId(role);
 
-	new UnAssignRoleFromPersonSQL(this, completeRole, person, ce).execute();
+	new UnAssignRoleFromOwnerSQL(this, completeRole, owner, ce).execute();
     }
 
     @Override
-    public Set<UserPermission> getEffectivePermissionsOnEntity(ControlEntity entity, Person... persons)
+    public Set<UserPermission> getEffectivePermissionsOnEntity(ControlEntity entity, Owner... owners)
 	    throws OperationException {
-	GetEffectivePermissionsOnEntitySQL cmd = new GetEffectivePermissionsOnEntitySQL(this, entity, persons);
+	GetEffectivePermissionsOnEntitySQL cmd = new GetEffectivePermissionsOnEntitySQL(this, entity, owners);
 	cmd.execute();
 	return cmd.getPermissions();
     }
 
     @Override
-    public Map<ControlEntity, Set<UserPermission>> getEffectivePermissions(Person... persons) throws OperationException {
-	Map<ControlEntity, Set<UserPermission>> effectivePermissions = GetEffectivePermissionsSQL
-		.execute(this, persons);
+    public Map<ControlEntity, Set<UserPermission>> getEffectivePermissions(Owner... owners) throws OperationException {
+	Map<ControlEntity, Set<UserPermission>> effectivePermissions = GetEffectivePermissionsSQL.execute(this, owners);
 
 	// at this point, all control entities are missing the name field
 	// the only way to figure it out is to do additional queries
@@ -315,7 +314,7 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
     }
 
     @Override
-    public List<PermPersonCEAssignment> getPermissionAssignmentsForControlEntity(ControlEntity ce)
+    public List<PermOwnerCEAssignment> getPermissionAssignmentsForControlEntity(ControlEntity ce)
 	    throws OperationException {
 	return GetPermissionAssignmentsForControlEntitySQL.execute(this, ce);
     }
@@ -326,8 +325,8 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
     }
 
     @Override
-    public Set<PermissionEnum> getEffectivePermissionsObjectPerson(ControlEntity ce, Person person)
+    public Set<PermissionEnum> getEffectivePermissionsObjectOwner(ControlEntity ce, Owner owner)
 	    throws OperationException {
-	return GetEffectivePermissionsObjectPersonSQL.execute(this, ce, person);
+	return GetEffectivePermissionsObjectOwnerSQL.execute(this, ce, owner);
     }
 }

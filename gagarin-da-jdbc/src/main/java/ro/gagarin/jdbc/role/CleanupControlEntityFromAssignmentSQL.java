@@ -37,7 +37,7 @@ public class CleanupControlEntityFromAssignmentSQL extends UpdateQuery {
 
     @Override
     protected String getSQL() {
-	return "DELETE FROM RolePersonAssignment WHERE object_id = ?";
+	return "DELETE FROM RoleOwnerAssignment WHERE object_id = ?";
     }
 
 }

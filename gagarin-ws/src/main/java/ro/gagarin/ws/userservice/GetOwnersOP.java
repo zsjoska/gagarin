@@ -10,15 +10,15 @@ import ro.gagarin.manager.AuthorizationManager;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.ws.executor.WebserviceOperation;
-import ro.gagarin.ws.objects.WSPerson;
+import ro.gagarin.ws.objects.WSOwner;
 import ro.gagarin.ws.util.WSUtil;
 
-public class GetPersonsOP extends WebserviceOperation {
+public class GetOwnersOP extends WebserviceOperation {
 
     private UserDAO userDAO;
-    private ArrayList<WSPerson> persons;
+    private ArrayList<WSOwner> owners;
 
-    public GetPersonsOP(String sessionId) {
+    public GetOwnersOP(String sessionId) {
 	super(sessionId);
     }
 
@@ -38,11 +38,11 @@ public class GetPersonsOP extends WebserviceOperation {
 
     @Override
     protected void execute(Session session) throws ExceptionBase {
-	this.persons = WSUtil.getPersonList(userDAO);
-	getApplog().debug("Returning " + persons.size() + " persons");
+	this.owners = WSUtil.getOwnersList(userDAO);
+	getApplog().debug("Returning " + owners.size() + " owners");
     }
 
-    public List<WSPerson> getPersons() {
-	return persons;
+    public List<WSOwner> getOwners() {
+	return owners;
     }
 }

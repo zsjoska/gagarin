@@ -1,44 +1,44 @@
 package ro.gagarin.ws.objects;
 
 import ro.gagarin.BaseEntity;
-import ro.gagarin.Person;
-import ro.gagarin.PersonTypesEnum;
+import ro.gagarin.Owner;
+import ro.gagarin.OwnerTypesEnum;
 import ro.gagarin.user.User;
 import ro.gagarin.utils.ConversionUtils;
 
-public class WSPerson extends BaseEntity implements Person {
+public class WSOwner extends BaseEntity implements Owner {
 
-    private PersonTypesEnum type;
+    private OwnerTypesEnum type;
     private String title;
 
-    public WSPerson() {
+    public WSOwner() {
 
     }
 
-    public WSPerson(Person person) {
-	this.setId(person.getId());
-	this.setTitle(person.getTitle());
-	this.type = person.getType();
+    public WSOwner(Owner owner) {
+	this.setId(owner.getId());
+	this.setTitle(owner.getTitle());
+	this.type = owner.getType();
     }
 
-    public WSPerson(User user) {
+    public WSOwner(User user) {
 	this.setId(user.getId());
 	this.setTitle(user.getTitle());
 	this.type = user.getType();
     }
 
     @Override
-    public PersonTypesEnum getType() {
+    public OwnerTypesEnum getType() {
 	return this.type;
     }
 
-    public void setType(PersonTypesEnum type) {
+    public void setType(OwnerTypesEnum type) {
 	this.type = type;
     }
 
     @Override
     public String toString() {
-	return ConversionUtils.person2String(this);
+	return ConversionUtils.owner2String(this);
     }
 
     @Override

@@ -32,7 +32,7 @@ import ro.gagarin.ws.objects.WSControlEntity;
 import ro.gagarin.ws.objects.WSExportedSession;
 import ro.gagarin.ws.objects.WSGroup;
 import ro.gagarin.ws.objects.WSLogEntry;
-import ro.gagarin.ws.objects.WSPerson;
+import ro.gagarin.ws.objects.WSOwner;
 import ro.gagarin.ws.objects.WSStatistic;
 import ro.gagarin.ws.objects.WSUser;
 import ro.gagarin.ws.objects.WSUserPermission;
@@ -213,23 +213,23 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testgetPersons() throws Exception {
-	List<WSPerson> persons = adminService.getPersons(session);
+    public void testgetOwners() throws Exception {
+	List<WSOwner> owners = adminService.getOwners(session);
 	List<WSUser> users = adminService.getUsers(session);
 	List<WSGroup> groups = adminService.getGroups(session);
 
-	assertEquals(users.size() + groups.size(), persons.size());
-	HashMap<Long, Person> personsMap = new HashMap<Long, Person>();
+	assertEquals(users.size() + groups.size(), owners.size());
+	HashMap<Long, Owner> ownersMap = new HashMap<Long, Owner>();
 	for (User user : users) {
-	    personsMap.put(user.getId(), user);
+	    ownersMap.put(user.getId(), user);
 	}
 	for (Group group : groups) {
-	    personsMap.put(group.getId(), group);
+	    ownersMap.put(group.getId(), group);
 	}
-	for (WSPerson wsPerson : persons) {
-	    Person person = personsMap.get(wsPerson.getId());
-	    assertEquals(person.getType(), wsPerson.getType());
-	    assertEquals(person.getTitle(), wsPerson.getTitle());
+	for (WSOwner wsOwner : owners) {
+	    Owner owner = ownersMap.get(wsOwner.getId());
+	    assertEquals(owner.getType(), wsOwner.getType());
+	    assertEquals(owner.getTitle(), wsOwner.getTitle());
 	}
     }
 

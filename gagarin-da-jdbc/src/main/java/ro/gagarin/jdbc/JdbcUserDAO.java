@@ -23,7 +23,7 @@ import ro.gagarin.jdbc.group.UpdateGroupSQL;
 import ro.gagarin.jdbc.objects.DBGroup;
 import ro.gagarin.jdbc.objects.DBUser;
 import ro.gagarin.jdbc.role.CleanupControlEntityFromAssignmentSQL;
-import ro.gagarin.jdbc.role.CleanupPersonFromAssignmentSQL;
+import ro.gagarin.jdbc.role.CleanupOwnerFromAssignmentSQL;
 import ro.gagarin.jdbc.user.CleanupGroupUserAssignmentsSQL;
 import ro.gagarin.jdbc.user.CreateUserSQL;
 import ro.gagarin.jdbc.user.CleanupUserGroupAssignments;
@@ -130,7 +130,7 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 
 	    new DeleteUserSQL(this, usr).execute();
 	    new CleanupUserGroupAssignments(this, usr).execute();
-	    new CleanupPersonFromAssignmentSQL(this, usr);
+	    new CleanupOwnerFromAssignmentSQL(this, usr);
 
 	    APPLOG.action(AppLogAction.DELETE, User.class, usr.getUsername(), AppLog.SUCCESS);
 	    APPLOG.info("User " + usr.getUsername() + " was deleted");
@@ -184,7 +184,7 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 	new DeleteGroupSQL(this, gr).execute();
 	new CleanupGroupUserAssignmentsSQL(this, gr);
 	new CleanupControlEntityFromAssignmentSQL(this, gr);
-	new CleanupPersonFromAssignmentSQL(this, gr);
+	new CleanupOwnerFromAssignmentSQL(this, gr);
     }
 
     @Override

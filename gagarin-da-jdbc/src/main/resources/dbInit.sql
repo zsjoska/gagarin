@@ -112,14 +112,14 @@ CREATE TABLE Config
 )
 --END
 
---CHECK: RolePersonAssignment
-SELECT * FROM RolePersonAssignment
+--CHECK: RoleOwnerAssignment
+SELECT * FROM RoleOwnerAssignment
 --CREATE:
-CREATE TABLE RolePersonAssignment 
+CREATE TABLE RoleOwnerAssignment 
 (
 	role_id bigint  NOT NULL, 
-	person_id bigint  NOT NULL,
-	person_type varchar(50) NOT NULL,
+	owner_id bigint  NOT NULL,
+	owner_type varchar(50) NOT NULL,
 	object_id bigint  NOT NULL,
 	object_type varchar(50) NOT NULL
 )

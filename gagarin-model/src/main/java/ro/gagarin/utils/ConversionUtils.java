@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import ro.gagarin.ControlEntity;
-import ro.gagarin.Person;
+import ro.gagarin.Owner;
 import ro.gagarin.config.ConfigEntry;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.log.LogEntry;
@@ -85,9 +85,9 @@ public class ConversionUtils {
 		+ ce.getCategory() + "]";
     }
 
-    public static String person2String(Person person) {
-	return person.getClass().getSimpleName() + "[ id=" + person.getId() + ", title=" + person.getTitle()
-		+ ", type=" + person.getType() + "]";
+    public static String owner2String(Owner owner) {
+	return owner.getClass().getSimpleName() + "[ id=" + owner.getId() + ", title=" + owner.getTitle() + ", type="
+		+ owner.getType() + "]";
 
     }
 

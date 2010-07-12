@@ -8,29 +8,29 @@ import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.utils.FieldValidator;
 import ro.gagarin.ws.executor.WebserviceOperation;
 import ro.gagarin.ws.objects.WSControlEntity;
-import ro.gagarin.ws.objects.WSPerson;
+import ro.gagarin.ws.objects.WSOwner;
 import ro.gagarin.ws.objects.WSUserRole;
 
 public class AssignRoleToControlEntityOP extends WebserviceOperation {
 
     private final WSControlEntity ce;
     private final WSUserRole role;
-    private final WSPerson person;
+    private final WSOwner owner;
     private RoleDAO roleDAO;
 
-    public AssignRoleToControlEntityOP(String sessionId, WSControlEntity ce, WSUserRole role, WSPerson person) {
+    public AssignRoleToControlEntityOP(String sessionId, WSControlEntity ce, WSUserRole role, WSOwner owner) {
 	super(sessionId);
 	this.ce = ce;
 	this.role = role;
-	this.person = person;
+	this.owner = owner;
     }
 
     @Override
     public void checkInput(Session session) throws ExceptionBase {
 	FieldValidator.requireLongField("id", ce);
 	FieldValidator.requireLongField("id", role);
-	FieldValidator.requireLongField("id", person);
-	FieldValidator.requireField("type", this.person);
+	FieldValidator.requireLongField("id", owner);
+	FieldValidator.requireField("type", this.owner);
 	FieldValidator.requireField("category", this.ce);
     }
 
@@ -48,7 +48,7 @@ public class AssignRoleToControlEntityOP extends WebserviceOperation {
     @Override
     protected void execute(Session session) throws ExceptionBase {
 
-	roleDAO.assignRoleToPerson(role, person, ce);
+	roleDAO.assignRoleToOwner(role, owner, ce);
 
     }
 }

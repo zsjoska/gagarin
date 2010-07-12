@@ -8,7 +8,7 @@ import ro.gagarin.user.UserRole;
  * Base class for entities for which the access could be controlled by the
  * permission framework.<br>
  * The permission framework could assign a {@link UserRole} to this object for a
- * {@link Person}
+ * {@link Owner}
  * 
  * @author ZsJoska
  * 

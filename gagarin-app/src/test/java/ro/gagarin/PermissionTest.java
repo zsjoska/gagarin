@@ -50,11 +50,11 @@ public class PermissionTest {
     }
 
     @Test
-    public void assignRoleToPerson() throws Exception {
+    public void assignRoleToOwner() throws Exception {
 	UserRole role = TUtil.getAdminRole();
 	ATestGroup group = new ATestGroup();
 	group.setId(10L);
-	roleDAO.assignRoleToPerson(role, group, BaseControlEntity.getAdminEntity());
+	roleDAO.assignRoleToOwner(role, group, BaseControlEntity.getAdminEntity());
 	Set<UserPermission> perms = roleDAO.getEffectivePermissionsOnEntity(BaseControlEntity.getAdminEntity(), group);
 	Map<ControlEntity, Set<UserPermission>> allPerms = roleDAO.getEffectivePermissions(group);
 	Set<UserPermission> set = allPerms.get(BaseControlEntity.getAdminEntity());
@@ -66,7 +66,7 @@ public class PermissionTest {
 	UserRole role = TUtil.getAdminRole();
 	ATestGroup group = new ATestGroup();
 	group.setId(10L);
-	roleDAO.assignRoleToPerson(role, group, group);
+	roleDAO.assignRoleToOwner(role, group, group);
     }
 
     @Test

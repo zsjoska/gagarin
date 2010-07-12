@@ -1,7 +1,7 @@
 package ro.gagarin.ws.objects;
 
 import ro.gagarin.BaseEntity;
-import ro.gagarin.PersonTypesEnum;
+import ro.gagarin.OwnerTypesEnum;
 import ro.gagarin.user.AuthenticationType;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserStatus;
@@ -109,8 +109,8 @@ public class WSUser extends BaseEntity implements User {
     }
 
     @Override
-    public PersonTypesEnum getType() {
-	return PersonTypesEnum.USER;
+    public OwnerTypesEnum getType() {
+	return OwnerTypesEnum.USER;
     }
 
     @Override

@@ -99,7 +99,7 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
 
     @Override
     public void destroySession(Session session) {
-	LOG.info("Destroy session " + session.getId());
+	LOG.info("Destroy session " + session.getSessionString());
 	synchronized (session) {
 	    if (session.isBusy()) {
 		LOG.error("Unreleased session being destroyed:", session.getCreationStacktrace());

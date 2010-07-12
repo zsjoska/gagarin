@@ -2,12 +2,15 @@ package ro.gagarin.ws.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import ro.gagarin.dao.UserDAO;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.user.Group;
+import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.User;
 import ro.gagarin.ws.objects.WSPerson;
 
@@ -33,5 +36,13 @@ public class WSUtil {
 	    personMap.put(person.getId(), person);
 	}
 	return personMap;
+    }
+
+    public static Set<PermissionEnum> createAllPermissionSet() {
+	HashSet<PermissionEnum> perms = new HashSet<PermissionEnum>();
+	for (PermissionEnum perm : PermissionEnum.values()) {
+	    perms.add(perm);
+	}
+	return perms;
     }
 }

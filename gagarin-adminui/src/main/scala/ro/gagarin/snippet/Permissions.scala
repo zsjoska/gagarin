@@ -38,6 +38,7 @@ class Permissions {
         Text(cat name)
     }
     
+    // TODO: move this markup to html
     def existingAssignments(in: NodeSeq): NodeSeq  = {
         val cat = selectedCategory.is
         val div = "exAssignmentsDiv" + cat.name;
@@ -47,11 +48,12 @@ class Permissions {
 	</div>
     }
     
+    // TODO: move this markup to html
     def blankEffectivePermissions(in: NodeSeq): NodeSeq  = {
         val cat = selectedCategory.is
         val divOut = "effectivePermDivOuter" + cat.name;
         val divIn = "effectivePermDivInner" + cat.name;
-    	<div id={divOut} style="width: 100%; display:block"> __ { cat.name }
+    	<div id={divOut} style="width: 100%; display:none">
 	<div id={divIn}>Placeholder</div>
 	</div>
     }
@@ -99,6 +101,7 @@ class Permissions {
 
     def updatePage: JsCmd =  updateAssignmentTable & updateEffectivePerms
     
+    // TODO: move this markup to html
     def updateEffectivePerms : JsCmd = {
       val cat = selectedCategory.is
       val selCategory = selCId.is

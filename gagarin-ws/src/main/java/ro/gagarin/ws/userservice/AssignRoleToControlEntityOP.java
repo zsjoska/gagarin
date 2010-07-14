@@ -1,6 +1,9 @@
 package ro.gagarin.ws.userservice;
 
+import java.util.ArrayList;
+
 import ro.gagarin.dao.RoleDAO;
+import ro.gagarin.dao.UserDAO;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.manager.AuthorizationManager;
 import ro.gagarin.session.Session;
@@ -10,6 +13,7 @@ import ro.gagarin.ws.executor.WebserviceOperation;
 import ro.gagarin.ws.objects.WSControlEntity;
 import ro.gagarin.ws.objects.WSOwner;
 import ro.gagarin.ws.objects.WSUserRole;
+import ro.gagarin.ws.util.WSUtil;
 
 public class AssignRoleToControlEntityOP extends WebserviceOperation {
 
@@ -17,6 +21,7 @@ public class AssignRoleToControlEntityOP extends WebserviceOperation {
     private final WSUserRole role;
     private final WSOwner owner;
     private RoleDAO roleDAO;
+    private UserDAO userDAO;
 
     public AssignRoleToControlEntityOP(String sessionId, WSControlEntity ce, WSUserRole role, WSOwner owner) {
 	super(sessionId);
@@ -30,7 +35,10 @@ public class AssignRoleToControlEntityOP extends WebserviceOperation {
 	FieldValidator.requireLongField("id", ce);
 	FieldValidator.requireLongField("id", role);
 	FieldValidator.requireLongField("id", owner);
-	FieldValidator.requireField("type", this.owner);
+
+	// TODO:(4) the current AdminUI does not know the type so we look up it
+	// FieldValidator.requireField("type", this.owner);
+
 	FieldValidator.requireField("category", this.ce);
     }
 
@@ -43,10 +51,23 @@ public class AssignRoleToControlEntityOP extends WebserviceOperation {
     @Override
     public void prepareManagers(Session session) throws ExceptionBase {
 	roleDAO = session.getManagerFactory().getDAOManager().getRoleDAO(session);
+	userDAO = session.getManagerFactory().getDAOManager().getUserDAO(session);
     }
 
     @Override
     protected void execute(Session session) throws ExceptionBase {
+
+	// the type is required so we need to look up if it is missing
+	if (owner.getType() == null) {
+	    ArrayList<WSOwner> ownersList = WSUtil.getOwnersList(userDAO);
+	    for (WSOwner wsOwner : ownersList) {
+		if (wsOwner.getId().equals(owner.getId())) {
+		    owner.setType(wsOwner.getType());
+		    break;
+		}
+	    }
+	}
+	FieldValidator.requireField("type", this.owner);
 
 	roleDAO.assignRoleToOwner(role, owner, ce);
 

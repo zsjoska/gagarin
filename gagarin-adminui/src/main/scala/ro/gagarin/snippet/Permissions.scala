@@ -21,6 +21,7 @@ class Permissions {
     private object selectedCategory extends RequestVar[ControlEntityCategory](null)
     private object selCId extends RequestVar[String](null)
     private object selPId extends RequestVar[String](null)
+    private object selRId extends RequestVar[String](null)
 
     def listCategories(in: NodeSeq): NodeSeq  = {
 	val categories = adminService.getControlEntityCategories
@@ -96,7 +97,7 @@ class Permissions {
         }) % ("size" -> "10")
     }
 
-    def updatePage: JsCmd =  updateAssignmentTable & updateEffectivePerms
+    def updatePage: JsCmd =  updateAssignmentTable & updateEffectivePerms & updateAssignButton
     
     // TODO: move this markup to html
     def updateEffectivePerms : JsCmd = {
@@ -131,10 +132,36 @@ class Permissions {
           Noop
     }
     
+    def updateAssignButton : JsCmd = {
+      val disabled = selRId.is == null ||  selCId.is == null ||  selPId.is == null
+      val id = "assignButton"+selectedCategory.is.name
+      SetElemById(id, JsRaw(disabled.toString),"disabled")
+    }
+    
+    
     def listRoles(in: NodeSeq): NodeSeq  = {
         val roles = adminService.getRoleList
         val roleMap = (Map[String,String]()/: roles)( (x,y) =>  x + {y.getId().toString -> y.getRoleName() }).toSeq;
-        ajaxSelect( roleMap, Empty, x => Noop) % ("size" -> "10")
+        ajaxSelect( roleMap, Empty, x => {
+            selRId.set(x)
+            updatePage
+        }) % ("size" -> "10")
+    }
+    
+    def assign(in: NodeSeq): NodeSeq  = {
+      val id = "assignButton"+selectedCategory.is.name
+      ajaxButton(in, ()=> {
+        val ce = new WsControlEntity
+        val role = new WsUserRole
+        val owner = new WsOwner
+        //  == null ||   == null ||  
+        ce.setId( selCId.is.toLong )
+        ce.setCategory( selectedCategory.is )
+        role.setId( selRId.is.toLong )
+        owner.setId( selPId.is.toLong )
+        adminService.assignRoleToControlEntity(ce, role, owner);
+        updatePage
+      }) % ("disabled" -> "true") % ("id"-> id)
     }
 }
 

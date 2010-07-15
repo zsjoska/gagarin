@@ -65,11 +65,8 @@ class Permissions {
         <div id={"exAssignmentsTable" + cat.name}>
           {if(list.size==0) "No assignments"}
           <table border="1" cellspacing="0" cellpadding="4">
+          <tr><th>Owner</th><th>Role</th></tr>
           {list.flatMap( u => 
-            <tr>
-            <th>Owner</th>
-            <th>Role</th>
-            </tr>
             <tr>
             <td>{ Text(u.getOwner().getTitle())}</td>
             <td>{Text(u.getRole().getRoleName())}</td>
@@ -153,8 +150,7 @@ class Permissions {
       ajaxButton(in, ()=> {
         val ce = new WsControlEntity
         val role = new WsUserRole
-        val owner = new WsOwner
-        //  == null ||   == null ||  
+        val owner = new WsOwner  
         ce.setId( selCId.is.toLong )
         ce.setCategory( selectedCategory.is )
         role.setId( selRId.is.toLong )

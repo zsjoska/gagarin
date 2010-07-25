@@ -15,11 +15,11 @@ import _root_.net.liftweb.http.js.JsCmds.{Alert, Noop, Replace, SetElemById, Run
 import _root_.net.liftweb.http.js.JE.{JsRaw}
 import _root_.net.liftweb.http.js.JsCmd
 import _root_.net.liftweb.common.{Full, Empty}
+import _root_.ro.gagarin.view.TemplateStore
 
 class Groups {
   
   private object selectedGroup extends RequestVar[WsGroup](null)
-  private object dialogMarkup extends SessionVar[NodeSeq](null)
   private object assignedSelection extends RequestVar[String](null)
   private object allUsersSelection extends RequestVar[String](null)
   
@@ -67,7 +67,7 @@ class Groups {
     val idAssignedSelect = nextFuncName
     val idAllUsersSelect = nextFuncName
 
-    bind("groups", dialogMarkup.is, 
+    bind("groups", TemplateStore.getTemplate("dialog-form"), 
 	 "assignedUsers" -> ajaxSelect(groupUsersMap.toSeq, Empty,(x) => {
 	   assignedSelection.set(x)
 	   SetElemById(idUnassign, JsRaw("false"),"disabled")
@@ -135,16 +135,5 @@ class Groups {
 	      })
       )
   } 
-
-  /**
-   * We have to create multiple dialog boxes with this template, but we have the template only at the page load.
-   * We save here and will reuse every time when we need to open it.
-   */
-  def usersEdit(in: NodeSeq): NodeSeq  = {
-      dialogMarkup.set(in)
-      <div id="dialog-form" style="display:none">
-        Placeholder
-      </div>  
-  }
 }
 

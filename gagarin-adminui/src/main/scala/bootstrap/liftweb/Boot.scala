@@ -46,6 +46,7 @@ class Boot {
     
     // Build SiteMap
     val entries = SiteMap( 
+      Menu(Loc("test", List("test"), "Test", loggedIn)),
       Menu(Loc("Home", List("index"), "Home", requiresLogin)),
       Menu(Loc("login", List("login"), "Login", loggedIn)),
       Menu(Loc("users", List("users"), "Users", requiresLogin, rqPerm(LIST)),
@@ -61,7 +62,7 @@ class Boot {
 	      Menu(Loc("editGroup", List("editGroup"), "Edit Group", Hidden, requiresLogin, rqPerm(UPDATE)))
       ),
       Menu(Loc("permissions", List("permissions"), "Permissions", requiresLogin),
-	      Menu(Loc("permissionPage", List("permissionPage"), "permissionPage", Hidden, requiresLogin)),
+	      Menu(Loc("permissionPage", List("permissionPage"), "permissionPage", Hidden, requiresLogin))
       ),
       Menu(Loc("monitor", List("monitor"), "Monitor", requiresLogin, rqPerm(ADMIN)),
 	      Menu(Loc("sessions", List("sessions"), "Sessions", requiresLogin, rqPerm(ADMIN))),

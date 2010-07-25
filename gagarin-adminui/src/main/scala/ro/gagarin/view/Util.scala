@@ -7,12 +7,15 @@ object TemplateStore {
   
   val templateStore = new HashMap[String, Node]()
   
-  def storeReplace(template: NodeSeq): NodeSeq = {
-    val oldElem = template.first;
-    val id: String = (oldElem \ "@id").first text;
-    val x = templateStore.put(id, oldElem)
-    Elem(oldElem prefix, oldElem label, oldElem attributes, oldElem scope, Text("Placeholder"))
-  }
+  def storeReplace(template: NodeSeq): NodeSeq = 
+    template.flatMap{ x => x match {
+      case elem: Elem if ((elem \ "@id").size == 1 ) => {
+        templateStore.put((elem \ "@id").text, elem)
+        Elem(elem prefix, elem label, elem attributes, elem scope, Text("Placeholder"))
+      }
+      case text: Text => Seq.empty
+      case any => { println(any.getClass+":"+any); Seq.empty }
+    }}
 
   def getTemplate(id:String):NodeSeq = {
     templateStore.get(id).get 

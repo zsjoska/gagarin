@@ -2,10 +2,11 @@ package ro.gagarin.view
 
 import _root_.scala.xml.{NodeSeq, Text,Unparsed, Group, Node, Elem}
 import _root_.scala.collection.mutable.HashMap
+import _root_.net.liftweb.util.Helpers._
 
 object TemplateStore {
   
-  val templateStore = new HashMap[String, Node]()
+  val templateStore = new HashMap[String, Elem]()
   
   def storeReplace(template: NodeSeq): NodeSeq = 
     template.flatMap{ x => x match {
@@ -17,7 +18,12 @@ object TemplateStore {
       case any => { println(any.getClass+":"+any); Seq.empty }
     }}
 
-  def getTemplate(id:String):NodeSeq = {
+  def storeReplaceElem(template: NodeSeq): Elem = storeReplace(template).first.asInstanceOf[Elem]
+
+  def getTemplate(id:String):Elem = {
     templateStore.get(id).get 
+  }
+  def getTemplate(id:String,sufix:String):Elem = {
+    templateStore.get(id).get % ("id" -> (id+sufix))
   }
 }

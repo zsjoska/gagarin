@@ -19,7 +19,14 @@
 					Assign
 				</lift:permissions.assign>
 			</p>
-			<p><lift:permissions.existingAssignments /></p>
+			<p>
+				<lift:permissions.storeAndReplaceAssignments>
+    			<div id="existing-assignments" style="width: 100%; display:none;">
+    			Existing assignments for <assignments:object/><br/>
+    			<assignments:table />
+				</div>
+				</lift:permissions.storeAndReplaceAssignments>
+			</p>
 		</div>
 		<div class="right" style="padding: 15px; padding-left: 150px">Effective
 			Permissions<br />

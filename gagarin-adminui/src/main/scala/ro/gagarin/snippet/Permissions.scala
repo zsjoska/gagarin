@@ -16,6 +16,7 @@ import _root_.net.liftweb.http.js.JsCmd
 import _root_.net.liftweb.http.js.JsCmds.{Alert, Noop, Replace, SetElemById}
 import _root_.net.liftweb.http.js.JE.{JsRaw}
 
+import _root_.ro.gagarin.view.TemplateStore
 class Permissions {
   
     private object selectedCategory extends RequestVar[ControlEntityCategory](null)
@@ -36,14 +37,9 @@ class Permissions {
         Text(cat name)
     }
     
-    // TODO: move this markup to html
-    def existingAssignments(in: NodeSeq): NodeSeq  = {
-        val cat = selectedCategory.is
-        val div = "exAssignmentsDiv" + cat.name;
-        val table = "exAssignmentsTable" + cat.name;
-    	<div id={div} style="width: 100%; display:none">Existing assignments for { cat.name }<br/>
-	<div id={table}>Placeholder</div>
-	</div>
+    def storeAndReplaceAssignments(in: NodeSeq): NodeSeq  = {
+      val id:String = "existing-assignments"+selectedCategory.is
+      TemplateStore.storeReplaceElem(in) % ("id" -> id)
     }
     
     // TODO: move this markup to html
@@ -62,8 +58,9 @@ class Permissions {
         val ce = new WsControlEntity();
         ce.setId(catId.toLong);
         val list = adminService.getPermissionAssignmentsForControlEntity(ce)
-        <div id={"exAssignmentsTable" + cat.name}>
-          {if(list.size==0) "No assignments"}
+        bind("assignments", TemplateStore.getTemplate("existing-assignments", cat.name),
+          "object" -> "!Missing",
+          "table" ->
           <table border="1" cellspacing="0" cellpadding="4">
           <tr><th>Owner</th><th>Role</th></tr>
           {list.flatMap( u => 
@@ -72,7 +69,7 @@ class Permissions {
             <td>{Text(u.getRole().getRoleName())}</td>
             </tr>)}
           </table>
-        </div>
+          ) 
     }
 
     def listControlObjects(in: NodeSeq): NodeSeq  = {
@@ -123,8 +120,8 @@ class Permissions {
     def updateAssignmentTable : JsCmd = {
       val cat = selectedCategory.is
       if(selCId.is != null)
-          Replace("exAssignmentsTable" + cat.name, listObjectAssignments(selCId.is))&
-          SetElemById("exAssignmentsDiv" + cat.name, JsRaw("'block'"),"style", "display")
+          Replace("existing-assignments" + cat.name, listObjectAssignments(selCId.is))&
+          SetElemById("existing-assignments" + cat.name, JsRaw("'block'"),"style", "display")
       else 
           Noop
     }

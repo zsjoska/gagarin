@@ -1,9 +1,15 @@
 <lift:surround with="default" at="content">
+	<lift:test.link />
 	<lift:templateMgr.storeAndReplace>
-	<div id="dialog-form" title="Assign users to groups" style="min-width: 650px; width: 700px; visibility: hidden; ">
-	BUG: once a user was moved, could not be operated again until the dialog is reopened<br /><br />
+	<div id="test-table" title="Assign users to groups" style="min-width: 650px; width: 700px; ">
 	<div style="width: 45%; float: left">
 	Assigned Users <hr />
+		<table>
+		<tr><th>Head</th></tr>
+		<lift:test.table>
+			<tr><td><table:value /></td></tr>
+		</lift:test.table>
+		</table>
 	</div>
 	</div>
 	</lift:templateMgr.storeAndReplace>

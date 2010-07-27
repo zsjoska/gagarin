@@ -23,7 +23,15 @@
 				<lift:permissions.storeAndReplaceAssignments>
     			<div id="existing-assignments" style="width: 100%; display:none;">
     			Existing assignments for <assignments:object/><br/>
-    			<assignments:table />
+          		<table border="1" cellspacing="0" cellpadding="4">
+          		<tr><th>Owner</th><th>Role</th></tr>
+    			<lift:permissions.assignmentsTable>
+            	<tr>
+            	<td><assignment:owner /></td>
+            	<td><assignment:role /></td>
+            	</tr>
+            	</lift:permissions.assignmentsTable>
+          		</table>
 				</div>
 				</lift:permissions.storeAndReplaceAssignments>
 			</p>

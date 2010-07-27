@@ -53,23 +53,20 @@ class Permissions {
     }
 
     // TODO: move this markup to html
-    def listObjectAssignments(catId: String): NodeSeq  = {
+    def listObjectAssignments(): NodeSeq  = {
         val cat = selectedCategory.is
-        val ce = new WsControlEntity();
-        ce.setId(catId.toLong);
-        val list = adminService.getPermissionAssignmentsForControlEntity(ce)
         bind("assignments", TemplateStore.getTemplate("existing-assignments", cat.name),
-          "object" -> "!Missing",
-          "table" ->
-          <table border="1" cellspacing="0" cellpadding="4">
-          <tr><th>Owner</th><th>Role</th></tr>
-          {list.flatMap( u => 
-            <tr>
-            <td>{ Text(u.getOwner().getTitle())}</td>
-            <td>{Text(u.getRole().getRoleName())}</td>
-            </tr>)}
-          </table>
-          ) 
+          "object" -> "!Missing")
+    }
+    
+    def assignmentsTable(in: NodeSeq): NodeSeq  = {
+        val ce = new WsControlEntity();
+        ce.setId(selCId.is.toLong);
+        val list = adminService.getPermissionAssignmentsForControlEntity(ce)
+        list.flatMap( u =>  bind("assignment", in,
+             "owner" -> u.getOwner().getTitle(),
+             "role" -> u.getRole().getRoleName()
+        ))
     }
 
     def listControlObjects(in: NodeSeq): NodeSeq  = {
@@ -120,7 +117,7 @@ class Permissions {
     def updateAssignmentTable : JsCmd = {
       val cat = selectedCategory.is
       if(selCId.is != null)
-          Replace("existing-assignments" + cat.name, listObjectAssignments(selCId.is))&
+          Replace("existing-assignments" + cat.name, listObjectAssignments())&
           SetElemById("existing-assignments" + cat.name, JsRaw("'block'"),"style", "display")
       else 
           Noop

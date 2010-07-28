@@ -39,7 +39,13 @@
 		<div class="right" style="padding: 15px; padding-left: 150px">Effective
 			Permissions<br />
 			<hr />
-			<lift:permissions.blankEffectivePermissions />
+			<lift:permissions.storeAndReplaceEffPermissions>
+    			<div id="effective-permissions" style="width: 100%; display:none;">
+    			<lift:permissions.effectivePermList>
+    			<p><effectivePerms:permName /></p>
+    			</lift:permissions.effectivePermList>
+    			</div>
+			</lift:permissions.storeAndReplaceEffPermissions>
 		</div>
 	</div>
 </lift:surround>

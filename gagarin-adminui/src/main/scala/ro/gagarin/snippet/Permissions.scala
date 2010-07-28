@@ -20,6 +20,8 @@ import _root_.ro.gagarin.view.TemplateStore
 class Permissions {
   
   val EXISTING_ASSIGNMENTS = "existing-assignments"
+  val EFFECTIVE_PERMISSIONS = "effective-permissions"
+  val ASSIGN_BUTTON = "assign-button"
   
   private object selectedCategory extends RequestVar[ControlEntityCategory](null)
   private object selCId extends RequestVar[String](null)
@@ -28,8 +30,7 @@ class Permissions {
 
   def listCategories(in: NodeSeq): NodeSeq  = {
     val categories = adminService.getControlEntityCategories
-    categories.flatMap( u =>
-      bind("category", in,
+    categories.flatMap( u =>  bind("category", in,
            "name" -> link("permissionPage", () => {selectedCategory.set(u)}, <span>{u.name}</span>)
       ))
   }
@@ -49,26 +50,48 @@ class Permissions {
      val id:String = EXISTING_ASSIGNMENTS + selectedCategory.is
      TemplateStore.storeReplaceElem(in) % ("id" -> id)
    }
-    
-  // TODO: move this markup to html
-  def blankEffectivePermissions(in: NodeSeq): NodeSeq  = {
-      val cat = selectedCategory.is
-      val divOut = "effectivePermDivOuter" + cat.name;
-      val divIn = "effectivePermDivInner" + cat.name;
-      <div id={divOut} style="width: 100%; display:none">
-      <div id={divIn}>Placeholder</div>
-      </div>
-  }
+
+  /**
+   * Replaces the lift:permissions.storeAndReplaceEffPermissions tag 
+   * with a placeholder and stores it's content with the id key.
+   * This is a customization for the standard lift:templateMgr.storeAndReplace
+   * by adding a customized id value.
+   */
+   def storeAndReplaceEffPermissions(in: NodeSeq): NodeSeq  = {
+     val id:String = EFFECTIVE_PERMISSIONS + selectedCategory.is
+     TemplateStore.storeReplaceElem(in) % ("id" -> id)
+   }
 
   /**
    * Creates the markup to be returned by JS to display the existing assignments 
    */
    def listObjectAssignments(): NodeSeq  = {
      val cat = selectedCategory.is
-     bind("assignments", TemplateStore.getTemplate("existing-assignments", cat.name),
+     bind("assignments", TemplateStore.getTemplate(EXISTING_ASSIGNMENTS, cat.name),
           "object" -> "!Missing")
    }
-    
+
+  /**
+   * Generates a list of effective permissions an owner has over a ControlEntity
+   */
+   def effectivePermList(in: NodeSeq): NodeSeq  = {
+     val cat = selectedCategory.is
+     val selCategory = selCId.is
+     val selOwner = selPId.is
+     
+     val ce = new WsControlEntity();
+     ce.setId(selCategory.toLong)
+       
+     val pe = new WsOwner();
+     pe.setId(selOwner.toLong)
+        
+     val permissions = adminService.getEffectivePermissionsObjectOwner(ce, pe)
+     
+     permissions.flatMap( u =>  bind("effectivePerms", in,
+          "permName" -> u.name )
+     )
+   }
+   
   /**
    * Generates the list of existing permission assignments for the selected control entity 
    */
@@ -85,15 +108,15 @@ class Permissions {
   /**
    * Generates a SELECT box with the control entities for a category defined in the system  
    */
-   def listControlObjects(in: NodeSeq): NodeSeq  = {
-     val cat = selectedCategory.is
-     val objects = adminService.getControlEntityListForCategory(cat.name)
-     val ceMap = (Map[String,String]()/: objects)( (x,y) =>  x + {y.getId().toString -> y.getName() }).toSeq;
-     ajaxSelect( ceMap, Empty, x => {
-	 selCId.set(x)
-	 updatePage
-     }) % ("size" -> "10")
-   }
+  def listControlObjects(in: NodeSeq): NodeSeq  = {
+    val cat = selectedCategory.is
+    val objects = adminService.getControlEntityListForCategory(cat.name)
+    val ceMap = (Map[String,String]()/: objects)( (x,y) =>  x + {y.getId().toString -> y.getName() }).toSeq;
+    ajaxSelect( ceMap, Empty, x => {
+	selCId.set(x)
+	updatePage
+    }) % ("size" -> "10")
+  }
     
   /**
    * Generates a SELECT box with the existing owners in the system 
@@ -112,27 +135,18 @@ class Permissions {
    */
   def updatePage: JsCmd =  updateAssignmentTable & updateEffectivePerms & updateAssignButton
     
-   // TODO: move this markup to html
-   def updateEffectivePerms : JsCmd = {
-     val cat = selectedCategory.is
-     val selCategory = selCId.is
-     val selOwner = selPId.is
-     if(selCId.is != null && selPId.is != null){
-       val ce = new WsControlEntity();
-       ce.setId(selCategory.toLong)
-        
-       val pe = new WsOwner();
-       pe.setId(selOwner.toLong)
-        
-       val permissions = adminService.getEffectivePermissionsObjectOwner(ce, pe)
-       val display = ("" /: permissions )( (x,y) => x + "<p>"+ y.name +"</p>")
-       Replace("effectivePermDivInner" + cat.name, 
-	       <div id={"effectivePermDivInner" + cat.name}>
-       		{Unparsed(display)}
-       	       </div>)&
-       SetElemById("effectivePermDivOuter" + cat.name, JsRaw("'block'"),"style", "display")
-     } else 
-	 Noop
+  /**
+   * Creates a JS for updating the effective permissions on the page 
+   */
+  def updateEffectivePerms : JsCmd = {
+    val cat = selectedCategory.is
+    val selCategory = selCId.is
+    val selOwner = selPId.is
+    if(selCId.is != null && selPId.is != null){
+      Replace(EFFECTIVE_PERMISSIONS + cat.name, TemplateStore.getTemplate(EFFECTIVE_PERMISSIONS, cat.name) ) &
+      SetElemById(EFFECTIVE_PERMISSIONS + cat.name, JsRaw("'block'"),"style", "display")
+    } else
+      Noop
   }
     
   /**
@@ -152,7 +166,7 @@ class Permissions {
    */
   def updateAssignButton : JsCmd = {
     val disabled = selRId.is == null ||  selCId.is == null ||  selPId.is == null
-    val id = "assignButton"+selectedCategory.is.name
+    val id = ASSIGN_BUTTON + selectedCategory.is.name
     SetElemById(id, JsRaw(disabled.toString),"disabled")
   }
     
@@ -173,7 +187,7 @@ class Permissions {
    * Handles the event when the Assign button is clicked 
    */
   def assign(in: NodeSeq): NodeSeq  = {
-    val id = "assignButton"+selectedCategory.is.name
+    val id = ASSIGN_BUTTON + selectedCategory.is.name
     ajaxButton(in, ()=> {
       val ce = new WsControlEntity
       val role = new WsUserRole
@@ -187,3 +201,4 @@ class Permissions {
     }) % ("disabled" -> "true") % ("id"-> id)
   }
 }
+                                                                                                                                            

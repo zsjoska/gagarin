@@ -19,139 +19,171 @@ import _root_.net.liftweb.http.js.JE.{JsRaw}
 import _root_.ro.gagarin.view.TemplateStore
 class Permissions {
   
-    private object selectedCategory extends RequestVar[ControlEntityCategory](null)
-    private object selCId extends RequestVar[String](null)
-    private object selPId extends RequestVar[String](null)
-    private object selRId extends RequestVar[String](null)
+  val EXISTING_ASSIGNMENTS = "existing-assignments"
+  
+  private object selectedCategory extends RequestVar[ControlEntityCategory](null)
+  private object selCId extends RequestVar[String](null)
+  private object selPId extends RequestVar[String](null)
+  private object selRId extends RequestVar[String](null)
 
-    def listCategories(in: NodeSeq): NodeSeq  = {
-	val categories = adminService.getControlEntityCategories
-	categories.flatMap( u =>
-           bind("category", in,
-                 "name" -> link("permissionPage", () => {selectedCategory.set(u)}, <span>{u.name}</span>)
-            ))
-    }
+  def listCategories(in: NodeSeq): NodeSeq  = {
+    val categories = adminService.getControlEntityCategories
+    categories.flatMap( u =>
+      bind("category", in,
+           "name" -> link("permissionPage", () => {selectedCategory.set(u)}, <span>{u.name}</span>)
+      ))
+  }
       
-    def pageTitle(in: NodeSeq): NodeSeq  = {
-        val cat = selectedCategory.is
-        Text(cat name)
-    }
+  def pageTitle(in: NodeSeq): NodeSeq  = {
+    val cat = selectedCategory.is
+    Text(cat name)
+  }
     
-    def storeAndReplaceAssignments(in: NodeSeq): NodeSeq  = {
-      val id:String = "existing-assignments"+selectedCategory.is
-      TemplateStore.storeReplaceElem(in) % ("id" -> id)
-    }
+  /**
+   * Replaces the lift:permissions.storeAndReplaceAssignments tag 
+   * with a placeholder and stores it's content with the id key.
+   * This is a customization for the standard lift:templateMgr.storeAndReplace
+   * by adding a customized id value.
+   */
+   def storeAndReplaceAssignments(in: NodeSeq): NodeSeq  = {
+     val id:String = EXISTING_ASSIGNMENTS + selectedCategory.is
+     TemplateStore.storeReplaceElem(in) % ("id" -> id)
+   }
     
-    // TODO: move this markup to html
-    def blankEffectivePermissions(in: NodeSeq): NodeSeq  = {
-        val cat = selectedCategory.is
-        val divOut = "effectivePermDivOuter" + cat.name;
-        val divIn = "effectivePermDivInner" + cat.name;
-    	<div id={divOut} style="width: 100%; display:none">
-	<div id={divIn}>Placeholder</div>
-	</div>
-    }
+  // TODO: move this markup to html
+  def blankEffectivePermissions(in: NodeSeq): NodeSeq  = {
+      val cat = selectedCategory.is
+      val divOut = "effectivePermDivOuter" + cat.name;
+      val divIn = "effectivePermDivInner" + cat.name;
+      <div id={divOut} style="width: 100%; display:none">
+      <div id={divIn}>Placeholder</div>
+      </div>
+  }
 
-    // TODO: move this markup to html
-    def listObjectAssignments(): NodeSeq  = {
-        val cat = selectedCategory.is
-        bind("assignments", TemplateStore.getTemplate("existing-assignments", cat.name),
+  /**
+   * Creates the markup to be returned by JS to display the existing assignments 
+   */
+   def listObjectAssignments(): NodeSeq  = {
+     val cat = selectedCategory.is
+     bind("assignments", TemplateStore.getTemplate("existing-assignments", cat.name),
           "object" -> "!Missing")
-    }
+   }
     
-    def assignmentsTable(in: NodeSeq): NodeSeq  = {
-        val ce = new WsControlEntity();
-        ce.setId(selCId.is.toLong);
-        val list = adminService.getPermissionAssignmentsForControlEntity(ce)
-        list.flatMap( u =>  bind("assignment", in,
-             "owner" -> u.getOwner().getTitle(),
-             "role" -> u.getRole().getRoleName()
-        ))
-    }
+  /**
+   * Generates the list of existing permission assignments for the selected control entity 
+   */
+   def assignmentsTable(in: NodeSeq): NodeSeq  = {
+     val ce = new WsControlEntity();
+     ce.setId(selCId.is.toLong);
+     val list = adminService.getPermissionAssignmentsForControlEntity(ce)
+     list.flatMap( u =>  bind("assignment", in,
+	     "owner" -> u.getOwner().getTitle(),
+	     "role" -> u.getRole().getRoleName()
+     ))
+   }
 
-    def listControlObjects(in: NodeSeq): NodeSeq  = {
-        val cat = selectedCategory.is
-        val objects = adminService.getControlEntityListForCategory(cat.name)
-        val ceMap = (Map[String,String]()/: objects)( (x,y) =>  x + {y.getId().toString -> y.getName() }).toSeq;
-        ajaxSelect( ceMap, Empty, x => {
-          selCId.set(x)
-          updatePage
-        }) % ("size" -> "10")
-    }
+  /**
+   * Generates a SELECT box with the control entities for a category defined in the system  
+   */
+   def listControlObjects(in: NodeSeq): NodeSeq  = {
+     val cat = selectedCategory.is
+     val objects = adminService.getControlEntityListForCategory(cat.name)
+     val ceMap = (Map[String,String]()/: objects)( (x,y) =>  x + {y.getId().toString -> y.getName() }).toSeq;
+     ajaxSelect( ceMap, Empty, x => {
+	 selCId.set(x)
+	 updatePage
+     }) % ("size" -> "10")
+   }
     
-    def listOwners(in: NodeSeq): NodeSeq  = {
-        val owners = adminService.getOwners
-        val ownerMap = (Map[String,String]()/: owners)( (x,y) =>  x + {y.getId().toString -> y.getTitle() }).toSeq;
-        ajaxSelect( ownerMap, Empty, x => {
-          selPId.set(x)
-          updatePage
-        }) % ("size" -> "10")
-    }
+  /**
+   * Generates a SELECT box with the existing owners in the system 
+   */
+  def listOwners(in: NodeSeq): NodeSeq  = {
+    val owners = adminService.getOwners
+    val ownerMap = (Map[String,String]()/: owners)( (x,y) =>  x + {y.getId().toString -> y.getTitle() }).toSeq;
+    ajaxSelect( ownerMap, Empty, x => {
+      selPId.set(x)
+	updatePage
+    }) % ("size" -> "10")
+  }
 
-    def updatePage: JsCmd =  updateAssignmentTable & updateEffectivePerms & updateAssignButton
+  /**
+   * Page updating scrips 
+   */
+  def updatePage: JsCmd =  updateAssignmentTable & updateEffectivePerms & updateAssignButton
     
-    // TODO: move this markup to html
-    def updateEffectivePerms : JsCmd = {
-      val cat = selectedCategory.is
-      val selCategory = selCId.is
-      val selOwner = selPId.is
-      if(selCId.is != null && selPId.is != null){
+   // TODO: move this markup to html
+   def updateEffectivePerms : JsCmd = {
+     val cat = selectedCategory.is
+     val selCategory = selCId.is
+     val selOwner = selPId.is
+     if(selCId.is != null && selPId.is != null){
+       val ce = new WsControlEntity();
+       ce.setId(selCategory.toLong)
         
-        val ce = new WsControlEntity();
-        ce.setId(selCategory.toLong)
+       val pe = new WsOwner();
+       pe.setId(selOwner.toLong)
         
-      	val pe = new WsOwner();
-        pe.setId(selOwner.toLong)
-        
-        val permissions = adminService.getEffectivePermissionsObjectOwner(ce, pe)
-        val display = ("" /: permissions )( (x,y) => x + "<p>"+ y.name +"</p>")
-        Replace("effectivePermDivInner" + cat.name, 
-                <div id={"effectivePermDivInner" + cat.name}>
-                  {Unparsed(display)}
-                </div>)&
-        SetElemById("effectivePermDivOuter" + cat.name, JsRaw("'block'"),"style", "display")
-      } else 
-          Noop
-    }
+       val permissions = adminService.getEffectivePermissionsObjectOwner(ce, pe)
+       val display = ("" /: permissions )( (x,y) => x + "<p>"+ y.name +"</p>")
+       Replace("effectivePermDivInner" + cat.name, 
+	       <div id={"effectivePermDivInner" + cat.name}>
+       		{Unparsed(display)}
+       	       </div>)&
+       SetElemById("effectivePermDivOuter" + cat.name, JsRaw("'block'"),"style", "display")
+     } else 
+	 Noop
+  }
     
-    def updateAssignmentTable : JsCmd = {
-      val cat = selectedCategory.is
-      if(selCId.is != null)
-          Replace("existing-assignments" + cat.name, listObjectAssignments())&
-          SetElemById("existing-assignments" + cat.name, JsRaw("'block'"),"style", "display")
-      else 
-          Noop
-    }
+  /**
+   * Updates the existing assignments page section 
+   */
+  def updateAssignmentTable : JsCmd = {
+    val cat = selectedCategory.is
+    if(selCId.is != null)
+	Replace( EXISTING_ASSIGNMENTS + cat.name, listObjectAssignments())&
+	SetElemById(EXISTING_ASSIGNMENTS + cat.name, JsRaw("'block'"),"style", "display")
+    else
+      Noop
+  }
     
-    def updateAssignButton : JsCmd = {
-      val disabled = selRId.is == null ||  selCId.is == null ||  selPId.is == null
-      val id = "assignButton"+selectedCategory.is.name
-      SetElemById(id, JsRaw(disabled.toString),"disabled")
-    }
+  /**
+   * Updates the assign button availability 
+   */
+  def updateAssignButton : JsCmd = {
+    val disabled = selRId.is == null ||  selCId.is == null ||  selPId.is == null
+    val id = "assignButton"+selectedCategory.is.name
+    SetElemById(id, JsRaw(disabled.toString),"disabled")
+  }
     
     
-    def listRoles(in: NodeSeq): NodeSeq  = {
-        val roles = adminService.getRoleList
-        val roleMap = (Map[String,String]()/: roles)( (x,y) =>  x + {y.getId().toString -> y.getRoleName() }).toSeq;
-        ajaxSelect( roleMap, Empty, x => {
-            selRId.set(x)
-            updatePage
-        }) % ("size" -> "10")
-    }
-    
-    def assign(in: NodeSeq): NodeSeq  = {
-      val id = "assignButton"+selectedCategory.is.name
-      ajaxButton(in, ()=> {
-        val ce = new WsControlEntity
-        val role = new WsUserRole
-        val owner = new WsOwner  
-        ce.setId( selCId.is.toLong )
-        ce.setCategory( selectedCategory.is )
-        role.setId( selRId.is.toLong )
-        owner.setId( selPId.is.toLong )
-        adminService.assignRoleToControlEntity(ce, role, owner);
-        updatePage
-      }) % ("disabled" -> "true") % ("id"-> id)
-    }
+  /**
+   * Creates a SELECT box with the existing roles 
+   */
+  def listRoles(in: NodeSeq): NodeSeq  = {
+    val roles = adminService.getRoleList
+    val roleMap = (Map[String,String]()/: roles)( (x,y) =>  x + {y.getId().toString -> y.getRoleName() }).toSeq;
+      ajaxSelect( roleMap, Empty, x => {
+          selRId.set(x)
+          updatePage
+      }) % ("size" -> "10")
+  }
+
+  /**
+   * Handles the event when the Assign button is clicked 
+   */
+  def assign(in: NodeSeq): NodeSeq  = {
+    val id = "assignButton"+selectedCategory.is.name
+    ajaxButton(in, ()=> {
+      val ce = new WsControlEntity
+      val role = new WsUserRole
+      val owner = new WsOwner  
+      ce.setId( selCId.is.toLong )
+      ce.setCategory( selectedCategory.is )
+      role.setId( selRId.is.toLong )
+      owner.setId( selPId.is.toLong )
+      adminService.assignRoleToControlEntity(ce, role, owner);
+      updatePage
+    }) % ("disabled" -> "true") % ("id"-> id)
+  }
 }
-

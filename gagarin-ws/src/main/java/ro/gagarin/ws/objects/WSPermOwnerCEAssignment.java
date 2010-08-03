@@ -58,4 +58,9 @@ public class WSPermOwnerCEAssignment implements PermOwnerCEAssignment {
     public void setRole(WSUserRole role) {
 	this.role = role;
     }
+
+    @Override
+    public String toString() {
+	return this.controlEntity.toString() + this.owner + this.role;
+    }
 }

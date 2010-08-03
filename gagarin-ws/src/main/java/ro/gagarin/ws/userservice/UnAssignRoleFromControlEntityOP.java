@@ -49,4 +49,10 @@ public class UnAssignRoleFromControlEntityOP extends WebserviceOperation {
 	roleDAO.unAssignRoleFromOwner(role, owner, ce);
 
     }
+
+    @Override
+    public String toString() {
+	return "UnAssignRoleFromControlEntityOP [ce=" + ce + ", role=" + role + ", owner=" + owner + "]";
+    }
+
 }

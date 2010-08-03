@@ -21,9 +21,9 @@ class Roles {
       bind("role", in, 
 	      "name" -> link("editRole", () => {selectedRole.set(u)}, Text(u.getRoleName())),
 	      "permissions" -> {
-         val permissions = adminService.getRolePermissions(u)
-         Text(("" /: permissions)( (string, perm) => string + " " + perm.getPermissionName()))
-       }
+		  val permissions = adminService.getRolePermissions(u)
+		  Text(("" /: permissions)( (string, perm) => string + " " + perm.getPermissionName()))},
+	      "id" -> Text(u.getId().toString),
       ))
   }
     

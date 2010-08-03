@@ -24,11 +24,13 @@
     			<div id="existing-assignments" style="width: 100%; display:none;">
     			Existing assignments for <assignments:object/><br/>
           		<table border="1" cellspacing="0" cellpadding="4">
-          		<tr><th>Owner</th><th>Role</th></tr>
+          		<tr><th><assignments:category/></th><th>Owner</th><th>Role</th><th>&nbsp;</th></tr>
     			<lift:permissions.assignmentsTable>
             	<tr>
+            	<td><assignment:ce /></td>
             	<td><assignment:owner /></td>
             	<td><assignment:role /></td>
+            	<td><assignment:deleteLink /></td>
             	</tr>
             	</lift:permissions.assignmentsTable>
           		</table>

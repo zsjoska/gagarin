@@ -271,5 +271,14 @@ object adminService {
 	handleException(e)
     }}
   }
+
+  def unAssignRoleFromControlEntity(ce: WsControlEntity, role: WsUserRole,  owner: WsOwner) = {
+    try{
+	adminWSService.unAssignRoleFromControlEntity(wsSession.session, ce, role, owner)
+    } catch {
+    case e: WSException_Exception => {
+	handleException(e)
+    }}
+  }
 }
 

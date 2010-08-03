@@ -2,13 +2,9 @@ package ro.gagarin.snippet
 
 import _root_.scala.xml.{NodeSeq, Text,Unparsed, Group, Node}
 import _root_.scala.xml.NodeSeq._
-import _root_.net.liftweb.http._
-import _root_.net.liftweb.http.S
-import _root_.net.liftweb.mapper._
-import _root_.net.liftweb.http.S._
+import _root_.net.liftweb.http.{RequestVar, SessionVar}
 import _root_.net.liftweb.http.SHtml._
 import _root_.net.liftweb.util.Helpers._
-import _root_.net.liftweb.util._
 import _root_.ro.gagarin.model.{wsSession, SessionInfo}
 import _root_.ro.gagarin.model.adminService
 import _root_.net.liftweb.common.{Full, Empty}
@@ -17,6 +13,7 @@ import _root_.net.liftweb.http.js.JsCmds.{Alert, Noop, Replace, SetElemById}
 import _root_.net.liftweb.http.js.JE.{JsRaw}
 
 import _root_.ro.gagarin.view.TemplateStore
+
 class Permissions {
   
   val EXISTING_ASSIGNMENTS = "existing-assignments"
@@ -27,6 +24,7 @@ class Permissions {
   private object selCId extends RequestVar[String](null)
   private object selPId extends RequestVar[String](null)
   private object selRId extends RequestVar[String](null)
+  private object ceMap extends SessionVar[Map[String,String]](Map.empty)
 
   def listCategories(in: NodeSeq): NodeSeq  = {
     val categories = adminService.getControlEntityCategories
@@ -68,7 +66,9 @@ class Permissions {
    def listObjectAssignments(): NodeSeq  = {
      val cat = selectedCategory.is
      bind("assignments", TemplateStore.getTemplate(EXISTING_ASSIGNMENTS, cat.name),
-          "object" -> "!Missing")
+          "object" -> ceMap.get(selCId.is),
+          "category" -> selectedCategory.is.name(),
+     )
    }
 
   /**
@@ -100,8 +100,21 @@ class Permissions {
      ce.setId(selCId.is.toLong);
      val list = adminService.getPermissionAssignmentsForControlEntity(ce)
      list.flatMap( u =>  bind("assignment", in,
+	     "ce" -> ceMap.get(selCId.is),
 	     "owner" -> u.getOwner().getTitle(),
-	     "role" -> u.getRole().getRoleName()
+	     "role" -> u.getRole().getRoleName(),
+	     "deleteLink" -> a(() => {
+               val ce = new WsControlEntity
+               val role = new WsUserRole
+               val owner = new WsOwner  
+               ce.setId( selCId.is.toLong )
+               ce.setCategory( selectedCategory.is )
+               role.setId( u.getRole().getId )
+               owner.setId( u.getOwner().getId )
+               println("selCId.is.toLong=" + selCId.is + " u.getOwner().getId=" + u.getOwner().getId + " u.getRole().getId=" + u.getRole().getId)
+               adminService.unAssignRoleFromControlEntity(ce, role, owner);
+	       updatePage
+	     },Text("Delete")),
      ))
    }
 
@@ -111,8 +124,10 @@ class Permissions {
   def listControlObjects(in: NodeSeq): NodeSeq  = {
     val cat = selectedCategory.is
     val objects = adminService.getControlEntityListForCategory(cat.name)
-    val ceMap = (Map[String,String]()/: objects)( (x,y) =>  x + {y.getId().toString -> y.getName() }).toSeq;
-    ajaxSelect( ceMap, Empty, x => {
+    val ceObjMap = (Map[String,String]()/: objects)( (x,y) =>  x + {y.getId().toString -> y.getName() });
+    val ceSeq = ceObjMap.toSeq;
+    ceMap(ceObjMap);
+    ajaxSelect( ceSeq, Empty, x => {
 	selCId.set(x)
 	updatePage
     }) % ("size" -> "10")

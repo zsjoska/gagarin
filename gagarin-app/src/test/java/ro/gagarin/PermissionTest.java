@@ -54,10 +54,10 @@ public class PermissionTest {
 	UserRole role = TUtil.getAdminRole();
 	ATestGroup group = new ATestGroup();
 	group.setId(10L);
-	roleDAO.assignRoleToOwner(role, group, BaseControlEntity.getAdminEntity());
-	Set<UserPermission> perms = roleDAO.getEffectivePermissionsOnEntity(BaseControlEntity.getAdminEntity(), group);
+	roleDAO.assignRoleToOwner(role, group, CommonControlEntities.ADMIN_CE);
+	Set<UserPermission> perms = roleDAO.getEffectivePermissionsOnEntity(CommonControlEntities.ADMIN_CE, group);
 	Map<ControlEntity, Set<UserPermission>> allPerms = roleDAO.getEffectivePermissions(group);
-	Set<UserPermission> set = allPerms.get(BaseControlEntity.getAdminEntity());
+	Set<UserPermission> set = allPerms.get(CommonControlEntities.ADMIN_CE);
 	assertEquals("the two permission sets must have the same number of elements", perms.size(), set.size());
     }
 
@@ -72,8 +72,7 @@ public class PermissionTest {
     @Test
     public void testAdminGroupCEInitialization() throws Exception {
 	Group adminGroup = TUtil.getAdminGroup(session);
-	Set<UserPermission> perms = roleDAO.getEffectivePermissionsOnEntity(BaseControlEntity.getAdminEntity(),
-		adminGroup);
+	Set<UserPermission> perms = roleDAO.getEffectivePermissionsOnEntity(CommonControlEntities.ADMIN_CE, adminGroup);
 	assertTrue("We need all permissions to be assigned", PermissionEnum.values().length <= perms.size());
     }
 }

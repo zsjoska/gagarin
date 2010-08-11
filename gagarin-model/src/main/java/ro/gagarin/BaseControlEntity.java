@@ -15,18 +15,9 @@ import ro.gagarin.user.UserRole;
  */
 public class BaseControlEntity extends BaseEntity implements ControlEntity {
 
-    private static final Long ADMIN_CONTROL_ENTITY_ID = 1L;
-
     private static HashSet<ControlEntityCategory> ceHash = new HashSet<ControlEntityCategory>();
 
-    private static final BaseControlEntity ADMIN_ENTITY;
     private final ControlEntityCategory cat;
-
-    static {
-	ADMIN_ENTITY = new BaseControlEntity(ControlEntityCategory.ADMIN);
-	ADMIN_ENTITY.setId(ADMIN_CONTROL_ENTITY_ID);
-	ADMIN_ENTITY.setName("ADMIN");
-    }
 
     public BaseControlEntity(ControlEntityCategory cat) {
 	this.cat = cat;
@@ -46,16 +37,6 @@ public class BaseControlEntity extends BaseEntity implements ControlEntity {
     }
 
     private String name;
-
-    /**
-     * A special control entity is returned which is used for Adminitrator
-     * operations.
-     * 
-     * @return the admin control entity
-     */
-    public static ControlEntity getAdminEntity() {
-	return ADMIN_ENTITY;
-    }
 
     @Override
     public int hashCode() {

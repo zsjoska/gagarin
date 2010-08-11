@@ -3,7 +3,7 @@ package ro.gagarin.ws.userservice;
 import java.util.ArrayList;
 import java.util.List;
 
-import ro.gagarin.BaseControlEntity;
+import ro.gagarin.CommonControlEntities;
 import ro.gagarin.ControlEntity;
 import ro.gagarin.ControlEntityCategory;
 import ro.gagarin.dao.RoleDAO;
@@ -36,7 +36,7 @@ public class GetControlEntityListForCategoryOP extends WebserviceOperation {
 
     @Override
     protected void checkPermissions(Session session, AuthorizationManager authMgr) throws ExceptionBase {
-	authMgr.requiresPermission(session, BaseControlEntity.getAdminEntity(), PermissionEnum.LIST);
+	authMgr.requiresPermission(session, CommonControlEntities.PERMISSION_CE, PermissionEnum.LIST);
     }
 
     @Override
@@ -47,8 +47,10 @@ public class GetControlEntityListForCategoryOP extends WebserviceOperation {
     @Override
     protected void execute(Session session) throws ExceptionBase {
 	if (categoryEnum == ControlEntityCategory.ADMIN) {
-	    this.controlEntities = new ArrayList<WSControlEntity>(1);
-	    this.controlEntities.add(new WSControlEntity(BaseControlEntity.getAdminEntity()));
+	    this.controlEntities = new ArrayList<WSControlEntity>(CommonControlEntities.values().length);
+	    for (CommonControlEntities entity : CommonControlEntities.values()) {
+		this.controlEntities.add(new WSControlEntity(entity));
+	    }
 	    return;
 	}
 

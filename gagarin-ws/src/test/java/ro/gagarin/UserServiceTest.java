@@ -190,9 +190,9 @@ public class UserServiceTest {
 		"ADMIN");
 	assertEquals("We expect only one ADMIN entity", 1, controlEntityListForCategory.size());
 	WSControlEntity wsControlEntity = controlEntityListForCategory.get(0);
-	assertEquals(BaseControlEntity.getAdminEntity().getName(), wsControlEntity.getName());
-	assertEquals(BaseControlEntity.getAdminEntity().getId(), wsControlEntity.getId());
-	assertEquals(BaseControlEntity.getAdminEntity().getCategory(), wsControlEntity.getCategory());
+	assertEquals(CommonControlEntities.ADMIN_CE.getName(), wsControlEntity.getName());
+	assertEquals(CommonControlEntities.ADMIN_CE.getId(), wsControlEntity.getId());
+	assertEquals(CommonControlEntities.ADMIN_CE.getCategory(), wsControlEntity.getCategory());
     }
 
     @Test

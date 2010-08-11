@@ -2,7 +2,7 @@ package ro.gagarin.ws.userservice;
 
 import java.util.List;
 
-import ro.gagarin.BaseControlEntity;
+import ro.gagarin.CommonControlEntities;
 import ro.gagarin.config.ConfigEntry;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.manager.AuthorizationManager;
@@ -29,7 +29,7 @@ public class GetConfigEntriesOP extends WebserviceOperation {
 
     @Override
     protected void checkPermissions(Session session, AuthorizationManager authMgr) throws ExceptionBase {
-	authMgr.requiresPermission(session, BaseControlEntity.getAdminEntity(), PermissionEnum.LIST);
+	authMgr.requiresPermission(session, CommonControlEntities.ADMIN_CE, PermissionEnum.LIST);
     }
 
     @Override

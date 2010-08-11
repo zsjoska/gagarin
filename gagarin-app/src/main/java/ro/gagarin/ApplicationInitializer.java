@@ -150,12 +150,13 @@ public class ApplicationInitializer {
     }
 
     private void checkAssignAdminAdminRole() throws OperationException, DataConstraintException, ItemNotFoundException {
-	Set<UserPermission> perms = roleDAO.getEffectivePermissionsOnEntity(BaseControlEntity.getAdminEntity(),
-		adminGroup);
-	if (perms.size() < PermissionEnum.values().length) {
-	    LOG.info("There are missing permissions for admin group on Admin Control entity;"
-		    + " assigning again admin ROLE");
-	    roleDAO.assignRoleToOwner(adminRole, adminGroup, BaseControlEntity.getAdminEntity());
+	for (CommonControlEntities entity : CommonControlEntities.values()) {
+	    Set<UserPermission> perms = roleDAO.getEffectivePermissionsOnEntity(entity, adminGroup);
+	    if (perms.size() < PermissionEnum.values().length) {
+		LOG.info("There are missing permissions for admin group on " + entity + " Control entity;"
+			+ " assigning again admin ROLE");
+		roleDAO.assignRoleToOwner(adminRole, adminGroup, entity);
+	    }
 	}
 
     }

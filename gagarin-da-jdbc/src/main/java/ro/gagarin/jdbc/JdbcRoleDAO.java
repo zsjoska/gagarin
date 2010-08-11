@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import ro.gagarin.BaseControlEntity;
+import ro.gagarin.CommonControlEntities;
 import ro.gagarin.ControlEntity;
 import ro.gagarin.ControlEntityCategory;
 import ro.gagarin.Owner;
@@ -297,10 +297,16 @@ public class JdbcRoleDAO extends BaseJdbcDAO implements RoleDAO {
 		    newMap.put(completeCe, effectivePermissions.get(ce));
 		}
 	    } else {
-		if (ce.getId() == BaseControlEntity.getAdminEntity().getId()) {
-		    newMap.put(BaseControlEntity.getAdminEntity(), effectivePermissions.get(ce));
-		} else {
-		    APPLOG.error("Unknown control entity");
+		boolean found = false;
+		for (CommonControlEntities entity : CommonControlEntities.values()) {
+		    if (ce.getId() == entity.getId()) {
+			newMap.put(entity, effectivePermissions.get(ce));
+			found = true;
+			break;
+		    }
+		}
+		if (!found) {
+		    APPLOG.error("Unknown control entity: " + ce);
 		}
 	    }
 	}

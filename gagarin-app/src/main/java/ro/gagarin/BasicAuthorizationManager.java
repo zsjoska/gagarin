@@ -49,7 +49,7 @@ public class BasicAuthorizationManager implements AuthorizationManager {
 	}
 
 	// check if it has the permission for ADMIN_ENTITY
-	permSet = session.getEffectivePermissions().get(BaseControlEntity.getAdminEntity());
+	permSet = session.getEffectivePermissions().get(CommonControlEntities.ADMIN_CE);
 	for (PermissionEnum reqPerm : reqPermission) {
 	    if (permSet.contains(reqPerm)) {
 		LOG.debug("ADMIN " + reqPerm.name() + " was found for user " + user.getUsername());

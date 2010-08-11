@@ -3,7 +3,6 @@ package ro.gagarin.ws.userservice;
 import java.security.acl.Group;
 import java.util.List;
 
-import ro.gagarin.BaseControlEntity;
 import ro.gagarin.dao.UserDAO;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.exceptions.FieldRequiredException;
@@ -47,8 +46,8 @@ public class GetGroupUsersOP extends WebserviceOperation {
 
     @Override
     protected void checkPermissions(Session session, AuthorizationManager authMgr) throws ExceptionBase {
-	// the session user must have LIST permission
-	authMgr.requiresPermission(session, BaseControlEntity.getAdminEntity(), PermissionEnum.LIST);
+	// the session user must have LIST permission on group
+	authMgr.requiresPermission(session, this.group, PermissionEnum.LIST);
     }
 
     @Override

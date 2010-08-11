@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import ro.gagarin.BaseControlEntity;
+import ro.gagarin.CommonControlEntities;
 import ro.gagarin.dao.RoleDAO;
 import ro.gagarin.dao.UserDAO;
 import ro.gagarin.exceptions.ExceptionBase;
@@ -38,7 +38,7 @@ public class GetPermissionAssignmentsForControlEntityOP extends WebserviceOperat
 
     @Override
     protected void checkPermissions(Session session, AuthorizationManager authMgr) throws ExceptionBase {
-	authMgr.requiresPermission(session, BaseControlEntity.getAdminEntity(), PermissionEnum.ADMIN);
+	authMgr.requiresPermission(session, CommonControlEntities.PERMISSION_CE, PermissionEnum.LIST);
     }
 
     @Override

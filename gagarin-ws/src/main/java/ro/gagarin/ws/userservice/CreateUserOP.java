@@ -1,6 +1,6 @@
 package ro.gagarin.ws.userservice;
 
-import ro.gagarin.BaseControlEntity;
+import ro.gagarin.CommonControlEntities;
 import ro.gagarin.dao.UserDAO;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.manager.AuthorizationManager;
@@ -29,7 +29,7 @@ public class CreateUserOP extends WebserviceOperation {
     @Override
     protected void checkPermissions(Session session, AuthorizationManager authMgr) throws ExceptionBase {
 	// the session user must have CREATE_USER permission
-	authMgr.requiresPermission(session, BaseControlEntity.getAdminEntity(), PermissionEnum.CREATE);
+	authMgr.requiresPermission(session, CommonControlEntities.USER_CE, PermissionEnum.CREATE);
     }
 
     @Override

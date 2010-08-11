@@ -2,7 +2,7 @@ package ro.gagarin.ws.userservice;
 
 import java.util.List;
 
-import ro.gagarin.BaseControlEntity;
+import ro.gagarin.CommonControlEntities;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.log.AppLog;
 import ro.gagarin.log.LogEntry;
@@ -37,7 +37,7 @@ public class GetLogEntriesOP extends WebserviceOperation {
 
     @Override
     protected void checkPermissions(Session session, AuthorizationManager authMgr) throws ExceptionBase {
-	authMgr.requiresPermission(getSession(), BaseControlEntity.getAdminEntity(), PermissionEnum.AUDIT);
+	authMgr.requiresPermission(getSession(), CommonControlEntities.ADMIN_CE, PermissionEnum.AUDIT);
     }
 
     @Override

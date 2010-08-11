@@ -1,6 +1,6 @@
 package ro.gagarin.ws.userservice;
 
-import ro.gagarin.BaseControlEntity;
+import ro.gagarin.CommonControlEntities;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.manager.AuthorizationManager;
 import ro.gagarin.manager.SessionManager;
@@ -26,7 +26,7 @@ public class LogoutSessionOP extends WebserviceOperation {
 
     @Override
     protected void checkPermissions(Session session, AuthorizationManager authMgr) throws ExceptionBase {
-	authMgr.requiresPermission(session, BaseControlEntity.getAdminEntity(), PermissionEnum.ADMIN);
+	authMgr.requiresPermission(session, CommonControlEntities.ADMIN_CE, PermissionEnum.ADMIN);
     }
 
     @Override

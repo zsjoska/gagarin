@@ -10,7 +10,6 @@ import ro.gagarin.dao.RoleDAO;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.manager.AuthorizationManager;
 import ro.gagarin.session.Session;
-import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.utils.FieldValidator;
 import ro.gagarin.ws.executor.WebserviceOperation;
 import ro.gagarin.ws.objects.WSControlEntity;
@@ -36,7 +35,7 @@ public class GetControlEntityListForCategoryOP extends WebserviceOperation {
 
     @Override
     protected void checkPermissions(Session session, AuthorizationManager authMgr) throws ExceptionBase {
-	authMgr.requiresPermission(session, CommonControlEntities.PERMISSION_CE, PermissionEnum.LIST);
+	// no permission required; I see no risk giving to anyone
     }
 
     @Override

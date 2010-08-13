@@ -3,12 +3,14 @@ package ro.gagarin.ws.userservice;
 import java.util.List;
 import java.util.Set;
 
+import ro.gagarin.CommonControlEntities;
 import ro.gagarin.config.Config;
 import ro.gagarin.dao.RoleDAO;
 import ro.gagarin.dao.UserDAO;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.manager.AuthorizationManager;
 import ro.gagarin.manager.ConfigurationManager;
+import ro.gagarin.manager.PermissionTest;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.Group;
 import ro.gagarin.user.PermissionEnum;
@@ -48,7 +50,8 @@ public class GetEffectivePermissionsObjectOwnerOP extends WebserviceOperation {
 	// The intent of this operation is to show an unified list of all
 	// permission that a owner has on an object
 	// The requesting user must have LIST permission on the object
-	authMgr.requiresPermission(session, ce, PermissionEnum.LIST);
+	authMgr.requiresPermission(session, new PermissionTest(ce, PermissionEnum.ADMIN), new PermissionTest(
+		CommonControlEntities.PERMISSION_CE, PermissionEnum.LIST));
     }
 
     @Override

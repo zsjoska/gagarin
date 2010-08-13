@@ -15,6 +15,11 @@ public enum CommonControlEntities implements ControlEntity {
     /**
      * 
      */
+    ROLE_CE(ControlEntityCategory.ADMIN, 3, "ROLE"),
+
+    /**
+     * 
+     */
     GROUP_CE(ControlEntityCategory.ADMIN, 4, "GROUP"),
 
     /**

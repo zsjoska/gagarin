@@ -9,6 +9,7 @@ import ro.gagarin.dao.RoleDAO;
 import ro.gagarin.dao.UserDAO;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.manager.AuthorizationManager;
+import ro.gagarin.manager.PermissionTest;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermOwnerCEAssignment;
 import ro.gagarin.user.PermissionEnum;
@@ -38,7 +39,10 @@ public class GetPermissionAssignmentsForControlEntityOP extends WebserviceOperat
 
     @Override
     protected void checkPermissions(Session session, AuthorizationManager authMgr) throws ExceptionBase {
-	authMgr.requiresPermission(session, CommonControlEntities.PERMISSION_CE, PermissionEnum.LIST);
+	// TODO: OR admin on CE
+	authMgr.requiresPermission(session,
+		new PermissionTest(CommonControlEntities.PERMISSION_CE, PermissionEnum.LIST), new PermissionTest(ce,
+			PermissionEnum.ADMIN));
     }
 
     @Override

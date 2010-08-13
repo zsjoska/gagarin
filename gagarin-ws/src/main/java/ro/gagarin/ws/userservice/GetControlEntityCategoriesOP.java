@@ -3,10 +3,12 @@ package ro.gagarin.ws.userservice;
 import java.util.ArrayList;
 import java.util.List;
 
+import ro.gagarin.CommonControlEntities;
 import ro.gagarin.ControlEntityCategory;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.manager.AuthorizationManager;
 import ro.gagarin.session.Session;
+import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.ws.executor.WebserviceOperation;
 
 public class GetControlEntityCategoriesOP extends WebserviceOperation {
@@ -23,6 +25,7 @@ public class GetControlEntityCategoriesOP extends WebserviceOperation {
 
     @Override
     protected void checkPermissions(Session session, AuthorizationManager authMgr) throws ExceptionBase {
+	authMgr.requiresPermission(session, CommonControlEntities.PERMISSION_CE, PermissionEnum.LIST);
 	// no permission requirement
     }
 

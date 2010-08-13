@@ -1,8 +1,10 @@
 package ro.gagarin.ws.userservice;
 
+import ro.gagarin.CommonControlEntities;
 import ro.gagarin.dao.RoleDAO;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.manager.AuthorizationManager;
+import ro.gagarin.manager.PermissionTest;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.utils.FieldValidator;
@@ -34,8 +36,8 @@ public class UnAssignRoleFromControlEntityOP extends WebserviceOperation {
 
     @Override
     protected void checkPermissions(Session session, AuthorizationManager authMgr) throws ExceptionBase {
-	// TODO:(2) review if this is OK: Admin can un-assign any role
-	authMgr.requiresPermission(session, ce, PermissionEnum.ADMIN);
+	authMgr.requiresPermission(session, new PermissionTest(ce, PermissionEnum.ADMIN), new PermissionTest(
+		CommonControlEntities.PERMISSION_CE, PermissionEnum.ADMIN));
     }
 
     @Override

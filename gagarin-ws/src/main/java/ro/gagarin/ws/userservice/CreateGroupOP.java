@@ -1,9 +1,11 @@
 package ro.gagarin.ws.userservice;
 
+import ro.gagarin.CommonControlEntities;
 import ro.gagarin.dao.UserDAO;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.manager.AuthorizationManager;
 import ro.gagarin.session.Session;
+import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.utils.FieldValidator;
 import ro.gagarin.ws.executor.WebserviceOperation;
 import ro.gagarin.ws.objects.WSGroup;
@@ -28,9 +30,8 @@ public class CreateGroupOP extends WebserviceOperation {
 
     @Override
     protected void checkPermissions(Session session, AuthorizationManager authMgr) throws ExceptionBase {
-	// TODO:(3) review but no danger if one could create a group
-	// authManager.requiresPermission(getSession(), PermissionEnum.CREATE,
-	// BaseControlEntity.getAdminEntity());
+	getAuthorizationManager().requiresPermission(getSession(), CommonControlEntities.GROUP_CE,
+		PermissionEnum.CREATE);
     }
 
     @Override

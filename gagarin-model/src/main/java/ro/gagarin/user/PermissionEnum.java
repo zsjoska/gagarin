@@ -42,5 +42,10 @@ public enum PermissionEnum {
      * permission could control if a user could select an object in the
      * application and thus login in that specific area of the application.
      */
-    SELECT,
+    SELECT;
+
+    public String toString() {
+	return this.name();
+    };
+
 }

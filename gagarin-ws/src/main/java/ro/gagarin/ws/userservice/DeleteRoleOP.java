@@ -29,7 +29,7 @@ public class DeleteRoleOP extends WebserviceOperation {
 
     @Override
     protected void checkPermissions(Session session, AuthorizationManager authMgr) throws ExceptionBase {
-	authMgr.requiresPermission(getSession(), CommonControlEntities.ADMIN_CE, PermissionEnum.DELETE);
+	authMgr.requiresPermission(getSession(), CommonControlEntities.ROLE_CE, PermissionEnum.DELETE);
     }
 
     @Override

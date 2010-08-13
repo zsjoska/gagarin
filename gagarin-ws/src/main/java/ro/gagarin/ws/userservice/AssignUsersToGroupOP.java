@@ -1,9 +1,11 @@
 package ro.gagarin.ws.userservice;
 
+import ro.gagarin.CommonControlEntities;
 import ro.gagarin.dao.UserDAO;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.manager.AuthorizationManager;
+import ro.gagarin.manager.PermissionTest;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.Group;
 import ro.gagarin.user.PermissionEnum;
@@ -35,7 +37,8 @@ public class AssignUsersToGroupOP extends WebserviceOperation {
 
     @Override
     protected void checkPermissions(Session session, AuthorizationManager authMgr) throws ExceptionBase {
-	authMgr.requiresPermission(session, group, PermissionEnum.UPDATE);
+	authMgr.requiresPermission(session, new PermissionTest(group, PermissionEnum.ADMIN), new PermissionTest(
+		CommonControlEntities.GROUP_CE, PermissionEnum.ADMIN));
     }
 
     @Override

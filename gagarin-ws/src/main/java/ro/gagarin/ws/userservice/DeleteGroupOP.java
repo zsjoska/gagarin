@@ -1,8 +1,10 @@
 package ro.gagarin.ws.userservice;
 
+import ro.gagarin.CommonControlEntities;
 import ro.gagarin.dao.UserDAO;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.manager.AuthorizationManager;
+import ro.gagarin.manager.PermissionTest;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.utils.FieldValidator;
@@ -30,7 +32,8 @@ public class DeleteGroupOP extends WebserviceOperation {
 
     @Override
     protected void checkPermissions(Session session, AuthorizationManager authMgr) throws ExceptionBase {
-	authMgr.requiresPermission(session, group, PermissionEnum.DELETE);
+	authMgr.requiresPermission(session, new PermissionTest(group, PermissionEnum.DELETE), new PermissionTest(
+		CommonControlEntities.GROUP_CE, PermissionEnum.DELETE));
     }
 
     @Override

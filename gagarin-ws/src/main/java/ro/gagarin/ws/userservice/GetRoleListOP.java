@@ -30,7 +30,7 @@ public class GetRoleListOP extends WebserviceOperation {
     @Override
     protected void checkPermissions(Session session, AuthorizationManager authMgr) throws ExceptionBase {
 	// the session user must have LIST permission
-	authMgr.requiresPermission(session, CommonControlEntities.ADMIN_CE, PermissionEnum.LIST);
+	authMgr.requiresPermission(session, CommonControlEntities.ROLE_CE, PermissionEnum.LIST);
     }
 
     @Override

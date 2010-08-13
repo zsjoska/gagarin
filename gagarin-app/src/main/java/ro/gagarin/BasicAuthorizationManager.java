@@ -13,6 +13,7 @@ import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.exceptions.PermissionDeniedException;
 import ro.gagarin.manager.AuthorizationManager;
 import ro.gagarin.manager.ConfigurationManager;
+import ro.gagarin.manager.PermissionTest;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.User;
@@ -58,6 +59,34 @@ public class BasicAuthorizationManager implements AuthorizationManager {
 	}
 
 	throw new PermissionDeniedException(user.getUsername(), reqPermission, ce);
+    }
+
+    // @Override
+    public void requiresPermission(Session session, PermissionTest... tests) throws PermissionDeniedException,
+	    OperationException {
+
+	User user = null;
+	user = session.getUser();
+
+	// check if the session is admin session
+	if (session.isAdminSession()) {
+	    LOG.debug("Admin session, skipping permission check");
+	    return;
+	}
+
+	for (PermissionTest test : tests) {
+	    Set<PermissionEnum> permSet = session.getEffectivePermissions().get(test.getCe());
+	    if (permSet == null) {
+		continue;
+	    }
+	    if (permSet.contains(test.getPermission())) {
+		LOG.debug(test.getPermission().name() + " was found for user " + user.getUsername());
+		return;
+	    }
+	}
+
+	throw new PermissionDeniedException(user.getUsername(), new PermissionEnum[] { tests[0].getPermission() },
+		tests[0].getCe());
     }
 
     @Override

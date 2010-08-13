@@ -2,10 +2,13 @@ package ro.gagarin.ws.userservice;
 
 import java.util.List;
 
+import ro.gagarin.CommonControlEntities;
 import ro.gagarin.dao.RoleDAO;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.manager.AuthorizationManager;
+import ro.gagarin.manager.PermissionTest;
 import ro.gagarin.session.Session;
+import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.ws.executor.WebserviceOperation;
 import ro.gagarin.ws.objects.WSUserPermission;
@@ -27,7 +30,8 @@ public class GetAllPermissionListOP extends WebserviceOperation {
 
     @Override
     protected void checkPermissions(Session session, AuthorizationManager authMgr) throws ExceptionBase {
-	// no permission requirement
+	authMgr.requiresPermission(session, new PermissionTest(CommonControlEntities.ROLE_CE, PermissionEnum.LIST),
+		new PermissionTest(CommonControlEntities.PERMISSION_CE, PermissionEnum.LIST));
     }
 
     @Override

@@ -12,7 +12,13 @@ import _root_.net.liftweb.http.js.JsCmd
 import _root_.net.liftweb.http.js.JsCmds.{Alert, Noop, Replace, SetElemById}
 import _root_.net.liftweb.http.js.JE.{JsRaw}
 
-import _root_.ro.gagarin.view.TemplateStore
+import ro.gagarin.view.TemplateStore
+import ro.gagarin.model._
+import ro.gagarin.model.CE
+import ro.gagarin.model.CommonCe._
+import ro.gagarin.model.PermissionHelper._
+import _root_.ro.gagarin.PermissionEnum
+import _root_.ro.gagarin.PermissionEnum._
 
 class Permissions {
   
@@ -27,10 +33,14 @@ class Permissions {
   private object ceMap extends SessionVar[Map[String,String]](Map.empty)
 
   def listCategories(in: NodeSeq): NodeSeq  = {
-    val categories = adminService.getControlEntityCategories
-    categories.flatMap( u =>  bind("category", in,
-           "name" -> link("permissionPage", () => {selectedCategory.set(u)}, <span>{u.name}</span>)
-      ))
+    if(hasPermission(ROLE_CE, LIST)){
+        val categories = adminService.getControlEntityCategories
+        categories.flatMap( u =>  bind("category", in,
+               "name" -> link("permissionPage", () => {selectedCategory.set(u)}, <span>{u.name}</span>)
+          ))
+    } else {
+      Text("LIST permission is required on ROLE");
+    }
   }
       
   def pageTitle(in: NodeSeq): NodeSeq  = {
@@ -67,7 +77,7 @@ class Permissions {
      val cat = selectedCategory.is
      bind("assignments", TemplateStore.getTemplate(EXISTING_ASSIGNMENTS, cat.name),
           "object" -> ceMap.get(selCId.is),
-          "category" -> selectedCategory.is.name(),
+          "category" -> selectedCategory.is.name()
      )
    }
 
@@ -114,7 +124,7 @@ class Permissions {
                println("selCId.is.toLong=" + selCId.is + " u.getOwner().getId=" + u.getOwner().getId + " u.getRole().getId=" + u.getRole().getId)
                adminService.unAssignRoleFromControlEntity(ce, role, owner);
 	       updatePage
-	     },Text("Delete")),
+	     },Text("Delete"))
      ))
    }
 

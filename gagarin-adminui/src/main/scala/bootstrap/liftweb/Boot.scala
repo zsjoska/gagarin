@@ -7,12 +7,14 @@ import _root_.net.liftweb.sitemap.Loc._
 import Helpers._
 import _root_.net.liftweb.http.LiftServlet
 import _root_.ro.gagarin.model.{wsSession, SessionInfo}
+import ro.gagarin.model.PermissionHelper._
 import _root_.ro.gagarin.PermissionEnum
 import _root_.ro.gagarin.PermissionEnum._
 import _root_.net.liftweb.http.ResourceServer
 import _root_.net.liftweb.http.S._
-import ro.gagarin.model.CommonCE
-import ro.gagarin.model._
+import ro.gagarin.model.CommonCe._
+import ro.gagarin.model.CE
+
 /**
   * A class that's instantiated early and run.  It allows the application
   * to modify lift's environment
@@ -33,17 +35,7 @@ class Boot {
     // check for login on the pages
     def requiresLogin = If(()=>wsSession.is!=null, () => RedirectResponse("/login"))
     def loggedIn = If(()=>wsSession.is==null, () => RedirectResponse("/"))
-    def rqPerm(ce: CommonCE, p: PermissionEnum) = If(()=>{
-    	
-        // TODO: wrote in hurry; this needs a more complex implementation
-//    	if(wsSession.permMap.get(ce.id) == None){
-//    	    wsSession.set(null)
-//    	    error("Could not get the user permissions");
-//    	    redirectTo("/login")
-//    	}
-    	// wsSession.permMap.get(ce.id).get.contains(p)
-    	wsSession.permMap.get(ce.id).getOrElse(Set.empty).contains(p)
-     }, () => RedirectResponse("/"))
+    def rqPerm(ce: CE, p: PermissionEnum) = If(()=>{ hasPermission( ce, p)}, () => RedirectResponse("/"))
     
     // Build SiteMap
     val entries = SiteMap( 

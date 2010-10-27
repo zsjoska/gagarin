@@ -1,0 +1,59 @@
+== M1 ==
+Generic implementation.
+
+=== M1 Summary ===
+I have the base of the server, WS layer and a standard LiftWeb Admin UI.
+Weak permission management
+
+== M2 ==
+Generic implementation.
+
+=== M2 Summary ===
+ - Group support
+ - Input validation standardization
+ - Stronger owner based permission framework
+ - Admin UI improvements
+
+== M3 ==
+Generic implementation.
+
+=== M3 Summary ===
+
+== Feature Pool ==
+
+ 1. Authentication improvements
+ 
+  - allow multiple authenticators
+  - implement support for lazy account creation
+  - modify internal authentication to store only the hash of the password
+  
+ 2. Flexible custom fields with cleartext mapping
+ 
+  - have an extensible support for tables with custom fields
+  - store the custom fields in cleartext and BLOB
+  - have a mapping file which describes join between custom field and cleartext column
+
+ 3. Server properties support on WS layer
+ 
+  - Define a WS data structure to allow generic name-value pair retrieval
+  - create WS method to retrieve the server properties
+  - implement module version definition
+
+ 4. Improve Executor
+ 
+  - allow instant async execution
+  - add progress estimation support
+  - add WS method and required data structures to export the current jobs
+  
+ 5. Don't generate WSDL files
+ 
+   - create by hand the WSDL files
+   - modify the WS layer to extend the interfaces generated from the WSDL files
+   - document the WSDL
+   
+ 6. Improve the configuration handling
+ 
+  - registration to be scoped for config entry
+  - create a set of cache fields and update through reflection
+
+ 7. Add support for quota

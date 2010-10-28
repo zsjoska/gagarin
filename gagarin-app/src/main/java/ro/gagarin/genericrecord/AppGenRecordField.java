@@ -3,7 +3,7 @@ package ro.gagarin.genericrecord;
 public class AppGenRecordField implements GenericRecordField {
     private String fieldName;
     private String fieldValue;
-    private Long updateTimestamp;
+    private Long updateTimestamp = System.currentTimeMillis();
 
     @Override
     public String getFieldName() {

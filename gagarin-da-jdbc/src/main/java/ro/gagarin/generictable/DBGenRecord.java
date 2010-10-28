@@ -6,6 +6,7 @@ import java.util.Iterator;
 import ro.gagarin.BaseEntity;
 import ro.gagarin.genericrecord.GenericRecord;
 import ro.gagarin.genericrecord.GenericRecordField;
+import ro.gagarin.utils.ConversionUtils;
 
 public class DBGenRecord extends BaseEntity implements GenericRecord {
 
@@ -49,22 +50,6 @@ public class DBGenRecord extends BaseEntity implements GenericRecord {
 
     @Override
     public String toString() {
-	StringBuilder sb = new StringBuilder();
-	sb.append(this.getClass().getSimpleName());
-	sb.append(" id = ");
-	sb.append(this.getId());
-	sb.append(" ts = ");
-	sb.append(this.getTimestamp());
-	sb.append(" {\n");
-	for (GenericRecordField field : this) {
-	    sb.append(field.getFieldName());
-	    sb.append(" = ");
-	    sb.append(field.getFieldValue());
-	    sb.append("@");
-	    sb.append(field.getUpdateTimestamp());
-	    sb.append("\n");
-	}
-	sb.append("}");
-	return sb.toString();
+	return ConversionUtils.genericRecord2String(this);
     }
 }

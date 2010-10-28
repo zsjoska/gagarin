@@ -4,11 +4,19 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import ro.gagarin.BaseEntity;
+import ro.gagarin.utils.ConversionUtils;
 
 public class AppGenRecord extends BaseEntity implements GenericRecord {
 
     private ArrayList<GenericRecordField> list = new ArrayList<GenericRecordField>();
     private long timestamp;
+
+    public AppGenRecord(long recordId) {
+	this.setId(recordId);
+    }
+
+    public AppGenRecord() {
+    }
 
     @Override
     public Iterator<GenericRecordField> iterator() {
@@ -39,4 +47,10 @@ public class AppGenRecord extends BaseEntity implements GenericRecord {
     public Long getTimestamp() {
 	return this.timestamp;
     }
+
+    @Override
+    public String toString() {
+	return ConversionUtils.genericRecord2String(this);
+    }
+
 }

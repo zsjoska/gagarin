@@ -9,6 +9,8 @@ import ro.gagarin.ControlEntity;
 import ro.gagarin.Owner;
 import ro.gagarin.config.ConfigEntry;
 import ro.gagarin.exceptions.ItemNotFoundException;
+import ro.gagarin.genericrecord.GenericRecord;
+import ro.gagarin.genericrecord.GenericRecordField;
 import ro.gagarin.log.LogEntry;
 import ro.gagarin.user.Group;
 import ro.gagarin.user.User;
@@ -91,6 +93,26 @@ public class ConversionUtils {
 
     }
 
+    public static String genericRecord2String(GenericRecord record) {
+	StringBuilder sb = new StringBuilder();
+	sb.append(record.getClass().getSimpleName());
+	sb.append(" id = ");
+	sb.append(record.getId());
+	sb.append(" ts = ");
+	sb.append(record.getTimestamp());
+	sb.append(" {\n");
+	for (GenericRecordField field : record) {
+	    sb.append(field.getFieldName());
+	    sb.append(" = ");
+	    sb.append(field.getFieldValue());
+	    sb.append("@");
+	    sb.append(field.getUpdateTimestamp());
+	    sb.append("\n");
+	}
+	sb.append("}");
+	return sb.toString();
+    }
+
     public static UserPermission findPermission(UserPermission perm, Collection<UserPermission> permissions) {
 	for (UserPermission userPermission : permissions) {
 	    if (userPermission.getId() != null && perm.getId() != null) {
@@ -106,4 +128,5 @@ public class ConversionUtils {
 	}
 	return null;
     }
+
 }

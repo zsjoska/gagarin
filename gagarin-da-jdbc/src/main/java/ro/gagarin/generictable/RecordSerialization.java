@@ -16,9 +16,11 @@ public class RecordSerialization {
 	DataOutputStream dos = new DataOutputStream(os);
 	try {
 	    for (GenericRecordField field : record) {
-		dos.writeUTF(field.getFieldName());
-		dos.writeUTF(field.getFieldValue());
-		dos.writeLong(field.getUpdateTimestamp());
+		if (field.getFieldName() != null && field.getFieldValue() != null && field.getUpdateTimestamp() != null) {
+		    dos.writeUTF(field.getFieldName());
+		    dos.writeUTF(field.getFieldValue());
+		    dos.writeLong(field.getUpdateTimestamp());
+		}
 	    }
 	    dos.flush();
 	} catch (IOException e) {

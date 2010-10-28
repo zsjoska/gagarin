@@ -25,6 +25,7 @@ public class RecordSerialization {
 	    dos.flush();
 	} catch (IOException e) {
 	}
+	// TODO:(5) verify data size
 	return os.toByteArray();
     }
 

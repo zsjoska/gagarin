@@ -19,52 +19,52 @@ Generic implementation.
 
 === M3 Summary ===
 
+ F002: Flexible custom fields with cleartext mapping
+ 
+  F002A: have an extensible support for tables with custom fields
+  F002B: store the custom fields in cleartext and BLOB
+  F002C: have a mapping file which describes join between custom field and cleartext column
+
 == Feature Pool ==
 
- 1. Authentication improvements
+ F001: Authentication improvements
  
-  - allow multiple authenticators
-  - implement support for lazy account creation
-  - modify internal authentication to store only the hash of the password
+  F001A: allow multiple authenticators
+  F001B: implement support for lazy account creation
+  F001C: modify internal authentication to store only the hash of the password
   
- 2. Flexible custom fields with cleartext mapping
+ F003: Server properties support on WS layer
  
-  - have an extensible support for tables with custom fields
-  - store the custom fields in cleartext and BLOB
-  - have a mapping file which describes join between custom field and cleartext column
+  F003A: Define a WS data structure to allow generic name-value pair retrieval
+  F003B: create WS method to retrieve the server properties
+  F003C: implement module version definition
 
- 3. Server properties support on WS layer
+ F004: Improve Executor
  
-  - Define a WS data structure to allow generic name-value pair retrieval
-  - create WS method to retrieve the server properties
-  - implement module version definition
-
- 4. Improve Executor
- 
-  - allow instant async execution
-  - add progress estimation support
-  - add WS method and required data structures to export the current jobs
+  F004A: allow instant async execution
+  F004B: add progress estimation support
+  F004C: add WS method and required data structures to export the current jobs
   
- 5. Don't generate WSDL files
+ F005: Don't generate WSDL files
  
-   - create by hand the WSDL files
-   - modify the WS layer to extend the interfaces generated from the WSDL files
-   - document the WSDL
+   F005A: create by hand the WSDL files
+   F005B: modify the WS layer to extend the interfaces generated from the WSDL files
+   F005C: document the WSDL
    
- 6. Improve the configuration handling
+ F006: Improve the configuration handling
  
-  - registration to be scoped for config entry
-  - create a set of cache fields and update through reflection
+  F006A: registration to be scoped for config entry
+  F006B: create a set of cache fields and update through reflection
 
- 7. Improve logging
+ F007: Improve logging
   
-  - review and fix logging to DB (log levels, caching, etc)
-  - implement support for detail logging for a user
+  F007A: review and fix logging to DB (log levels, caching, etc)
+  F007B: implement support for detail logging for a user
  
- 8. Add support for quota
+ F008: Add support for quota
  
-  - storage quota
-  - action quota
+  F008A: storage quota
+  F008B: action quota
 
  
  

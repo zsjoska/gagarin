@@ -6,8 +6,9 @@ public class BaseEntity implements Entity {
 
     private Long id = null; // BaseEntity.getNextId();
 
-    public void setId(Long id) {
+    public BaseEntity setId(Long id) {
 	this.id = id;
+	return this;
     }
 
     public Long getId() {

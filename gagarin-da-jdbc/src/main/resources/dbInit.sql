@@ -125,3 +125,16 @@ CREATE TABLE RoleOwnerAssignment
 )
 --END
 
+--CHECK: UsersExtra
+SELECT * FROM UsersExtra
+--CREATE:
+CREATE TABLE UsersExtra 
+(
+	id bigint,
+	timestamp bigint,
+	data blob(1M),	
+	name varchar(50),
+
+	CONSTRAINT PK_USERSEXTRA_id PRIMARY KEY (id)
+)
+--END

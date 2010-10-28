@@ -56,4 +56,20 @@ Generic implementation.
   - registration to be scoped for config entry
   - create a set of cache fields and update through reflection
 
- 7. Add support for quota
+ 7. Improve logging
+  
+  - review and fix logging to DB (log levels, caching, etc)
+  - implement support for detail logging for a user
+ 
+ 8. Add support for quota
+ 
+  - storage quota
+  - action quota
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 

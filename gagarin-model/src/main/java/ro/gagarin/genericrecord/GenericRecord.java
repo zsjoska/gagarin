@@ -1,14 +1,14 @@
 package ro.gagarin.genericrecord;
 
+import java.util.List;
+
 import ro.gagarin.Entity;
 
 public interface GenericRecord extends Iterable<GenericRecordField>, Entity {
 
     Long getTimestamp();
 
-    void addField(GenericRecordField field);
-
     GenericRecordField getField(String fieldName);
 
-    void replaceField(GenericRecordField field);
+    List<GenericRecordField> getFieldList();
 }

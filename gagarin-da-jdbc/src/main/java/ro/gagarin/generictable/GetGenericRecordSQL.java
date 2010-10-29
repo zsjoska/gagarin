@@ -4,7 +4,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.jdbc.BaseJdbcDAO;
@@ -38,8 +37,7 @@ public class GetGenericRecordSQL extends SelectQuery {
 
     }
 
-    public static DBGenRecord execute(long id, BaseJdbcDAO dao, String tableName) throws OperationException,
-	    DataConstraintException {
+    public static DBGenRecord execute(long id, BaseJdbcDAO dao, String tableName) throws OperationException {
 	GetGenericRecordSQL sql = new GetGenericRecordSQL(id, dao, tableName);
 	sql.execute();
 	return sql.record;

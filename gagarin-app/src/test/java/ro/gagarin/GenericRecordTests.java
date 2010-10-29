@@ -11,7 +11,7 @@ import ro.gagarin.genericrecord.AppGenRecord;
 import ro.gagarin.genericrecord.AppGenRecordField;
 import ro.gagarin.genericrecord.GenericRecord;
 import ro.gagarin.genericrecord.GenericRecordField;
-import ro.gagarin.generictable.GenericTableDAO;
+import ro.gagarin.generictable.JdbcGenericTableDAO;
 import ro.gagarin.manager.ManagerFactory;
 import ro.gagarin.session.Session;
 import ro.gagarin.testutil.TUtil;
@@ -50,7 +50,7 @@ public class GenericRecordTests {
 	AppGenRecordField field1 = new AppGenRecordField().setFieldName("name").setFieldValue("me");
 	record.addField(field1);
 
-	GenericTableDAO genericTableDAO = new GenericTableDAO(session, "UsersExtra");
+	JdbcGenericTableDAO genericTableDAO = new JdbcGenericTableDAO(session, "UsersExtra");
 	genericTableDAO.updateRecord(record);
 	GenericRecord record2 = genericTableDAO.getRecord(record.getId());
 
@@ -61,7 +61,7 @@ public class GenericRecordTests {
     @Test
     public void testGenericRecordUpdate() throws Exception {
 
-	GenericTableDAO genericTableDAO = new GenericTableDAO(session, "UsersExtra");
+	JdbcGenericTableDAO genericTableDAO = new JdbcGenericTableDAO(session, "UsersExtra");
 
 	AppGenRecord record = new AppGenRecord();
 	long recordId = AppGenRecord.getNextId();
@@ -115,7 +115,7 @@ public class GenericRecordTests {
 	AppGenRecordField field1 = new AppGenRecordField().setFieldName("name").setFieldValue("me");
 	record.addField(field1);
 
-	GenericTableDAO genericTableDAO = new GenericTableDAO(session, "UsersExtra");
+	JdbcGenericTableDAO genericTableDAO = new JdbcGenericTableDAO(session, "UsersExtra");
 	genericTableDAO.updateRecord(record);
 	GenericRecord record2 = genericTableDAO.getRecord(record.getId());
 

@@ -18,6 +18,7 @@ import ro.gagarin.dao.BaseDAO;
 import ro.gagarin.dao.DAOManager;
 import ro.gagarin.dao.RoleDAO;
 import ro.gagarin.dao.UserDAO;
+import ro.gagarin.dao.UserExtraDAO;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.exceptions.SessionNotFoundException;
@@ -29,6 +30,7 @@ import ro.gagarin.manager.SessionManager;
 import ro.gagarin.user.Group;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.User;
+import ro.gagarin.user.UserExtraRecord;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.util.Utils;
 
@@ -193,6 +195,7 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
 	DAOManager daoManager = managerFactory.getDAOManager();
 	RoleDAO roleDAO = daoManager.getRoleDAO(session);
 	UserDAO userDAO = daoManager.getUserDAO(session);
+	UserExtraDAO userExtraDAO = daoManager.getUserExtraDAO(session);
 	LogManager logManager = managerFactory.getLogManager();
 	AppLog appLog = logManager.getLoggingSession(session, getClass());
 	ConfigurationManager cfgManager = managerFactory.getConfigurationManager();
@@ -218,7 +221,9 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
 	Map<ControlEntity, Set<PermissionEnum>> permMap = Utils
 		.convertUserPermissionSetToPermissionEnumSet(effectivePermissions);
 
-	session.assignUser(user, permMap);
+	UserExtraRecord record = userExtraDAO.getRecord(user.getId());
+
+	session.assignUser(user, permMap, record);
 	appLog.info("User " + user.getId() + ":" + user.getUsername() + " was bound to session "
 		+ session.getSessionString());
     }

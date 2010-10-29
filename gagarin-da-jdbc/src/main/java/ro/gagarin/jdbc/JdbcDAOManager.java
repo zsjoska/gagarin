@@ -4,6 +4,7 @@ import ro.gagarin.dao.ConfigDAO;
 import ro.gagarin.dao.DAOManager;
 import ro.gagarin.dao.RoleDAO;
 import ro.gagarin.dao.UserDAO;
+import ro.gagarin.dao.UserExtraDAO;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.session.Session;
 
@@ -34,5 +35,10 @@ public class JdbcDAOManager implements DAOManager {
     @Override
     public void initializeManager() {
 	// nothing to initialize here
+    }
+
+    @Override
+    public UserExtraDAO getUserExtraDAO(Session session) throws OperationException {
+	return new JdbcUserExtraDAO(session);
     }
 }

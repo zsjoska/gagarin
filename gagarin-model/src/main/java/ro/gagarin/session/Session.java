@@ -1,5 +1,6 @@
 package ro.gagarin.session;
 
+import java.lang.ref.SoftReference;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -10,6 +11,7 @@ import ro.gagarin.dao.BaseDAO;
 import ro.gagarin.manager.ManagerFactory;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.user.User;
+import ro.gagarin.user.UserExtraRecord;
 
 public class Session extends BaseEntity {
 
@@ -28,6 +30,7 @@ public class Session extends BaseEntity {
     private ManagerFactory managerFactory;
     private Throwable t;
     private Map<ControlEntity, Set<PermissionEnum>> effectivePermissions;
+    private SoftReference<UserExtraRecord> userExtra;
 
     public Session() {
 	// TODO:(3) make the reason mandatory
@@ -135,7 +138,8 @@ public class Session extends BaseEntity {
 	return this.t;
     }
 
-    public void assignUser(User user, Map<ControlEntity, Set<PermissionEnum>> permMap) {
+    public void assignUser(User user, Map<ControlEntity, Set<PermissionEnum>> permMap, UserExtraRecord record) {
+	this.userExtra = new SoftReference<UserExtraRecord>(record);
 	this.effectivePermissions = permMap;
 	setUser(user);
     }
@@ -150,5 +154,12 @@ public class Session extends BaseEntity {
 
     public boolean isAdminSession() {
 	return adminSession;
+    }
+
+    public UserExtraRecord getUserExtra() {
+	if (this.userExtra != null) {
+	    return userExtra.get();
+	}
+	return null;
     }
 }

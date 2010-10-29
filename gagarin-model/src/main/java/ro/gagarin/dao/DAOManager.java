@@ -12,4 +12,6 @@ public interface DAOManager extends BaseManager {
 
     ConfigDAO getConfigDAO(Session session) throws OperationException;
 
+    UserExtraDAO getUserExtraDAO(Session session) throws OperationException;
+
 }

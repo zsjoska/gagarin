@@ -7,19 +7,30 @@ import ro.gagarin.genericrecord.GenericRecordField;
 import ro.gagarin.jdbc.BaseJdbcDAO;
 import ro.gagarin.session.Session;
 
-public class GenericTableDAO extends BaseJdbcDAO {
+public class JdbcGenericTableDAO extends BaseJdbcDAO {
 
     private final String tableName;
 
-    public GenericTableDAO(Session session, String tableName) throws OperationException {
+    public JdbcGenericTableDAO(Session session, String tableName) throws OperationException {
 	super(session);
 	this.tableName = tableName;
     }
 
     public void updateRecord(GenericRecord record) throws OperationException, DataConstraintException {
 	// TODO:(5) This could go to cache
-	DBGenRecord reference = GetGenericRecordSQL.execute(record.getId(), this, tableName);
 	int result = 0;
+
+	if (record.getTimestamp() != null) {
+	    // if we have a timestamp, we consider originating from the DB and
+	    // ready merged
+	    result = new UpdateGenericRecordSQL(record, this, tableName).execute();
+	    if (result != 0) {
+		return;
+	    }
+	}
+
+	// otherwise, the record has a problem: inexistent or modified meanwhile
+	DBGenRecord reference = GetGenericRecordSQL.execute(record.getId(), this, tableName);
 	if (reference == null) {
 	    try {
 		result = new InsertGenericRecordSQL(record, this, tableName).execute();
@@ -56,7 +67,7 @@ public class GenericTableDAO extends BaseJdbcDAO {
 	return reference;
     }
 
-    public GenericRecord getRecord(long id) throws OperationException, DataConstraintException {
+    public GenericRecord getRecord(long id) throws OperationException {
 	return GetGenericRecordSQL.execute(id, this, tableName);
     }
 

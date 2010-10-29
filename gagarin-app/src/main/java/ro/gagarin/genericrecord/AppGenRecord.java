@@ -2,6 +2,7 @@ package ro.gagarin.genericrecord;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import ro.gagarin.BaseEntity;
 import ro.gagarin.utils.ConversionUtils;
@@ -23,7 +24,6 @@ public class AppGenRecord extends BaseEntity implements GenericRecord {
 	return list.iterator();
     }
 
-    @Override
     public void addField(GenericRecordField field) {
 	this.list.add(field);
     }
@@ -39,11 +39,6 @@ public class AppGenRecord extends BaseEntity implements GenericRecord {
     }
 
     @Override
-    public void replaceField(GenericRecordField field) {
-	throw new RuntimeException("not implemented");
-    }
-
-    @Override
     public Long getTimestamp() {
 	return this.timestamp;
     }
@@ -51,6 +46,11 @@ public class AppGenRecord extends BaseEntity implements GenericRecord {
     @Override
     public String toString() {
 	return ConversionUtils.genericRecord2String(this);
+    }
+
+    @Override
+    public List<GenericRecordField> getFieldList() {
+	return this.list;
     }
 
 }

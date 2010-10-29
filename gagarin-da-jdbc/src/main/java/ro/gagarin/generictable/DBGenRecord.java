@@ -2,6 +2,7 @@ package ro.gagarin.generictable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import ro.gagarin.BaseEntity;
 import ro.gagarin.genericrecord.GenericRecord;
@@ -11,14 +12,20 @@ import ro.gagarin.utils.ConversionUtils;
 public class DBGenRecord extends BaseEntity implements GenericRecord {
 
     private ArrayList<GenericRecordField> list = new ArrayList<GenericRecordField>();
-    private long timestamp;
+    private Long timestamp;
+
+    public DBGenRecord() {
+    }
+
+    public DBGenRecord(GenericRecord record) {
+	this.list = new ArrayList<GenericRecordField>(record.getFieldList());
+    }
 
     @Override
     public Iterator<GenericRecordField> iterator() {
 	return list.iterator();
     }
 
-    @Override
     public void addField(GenericRecordField field) {
 	this.list.add(field);
     }
@@ -31,11 +38,6 @@ public class DBGenRecord extends BaseEntity implements GenericRecord {
 	    }
 	}
 	return null;
-    }
-
-    @Override
-    public void replaceField(GenericRecordField field) {
-	throw new RuntimeException("not implemented");
     }
 
     public DBGenRecord setTimestamp(long timestamp) {
@@ -51,5 +53,10 @@ public class DBGenRecord extends BaseEntity implements GenericRecord {
     @Override
     public String toString() {
 	return ConversionUtils.genericRecord2String(this);
+    }
+
+    @Override
+    public List<GenericRecordField> getFieldList() {
+	return this.getFieldList();
     }
 }

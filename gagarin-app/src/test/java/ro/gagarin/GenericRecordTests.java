@@ -1,6 +1,7 @@
 package ro.gagarin;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import org.junit.After;
 import org.junit.Before;
@@ -105,5 +106,25 @@ public class GenericRecordTests {
 	record2 = genericTableDAO.getRecord(recordId);
 	assertEquals("you", record2.getField("name").getFieldValue());
 	assertEquals(null, record2.getField("address"));
+    }
+
+    @Test
+    public void testGenericRecordDelete() throws Exception {
+	AppGenRecord record = new AppGenRecord();
+	record.setId(AppGenRecord.getNextId());
+	AppGenRecordField field1 = new AppGenRecordField().setFieldName("name").setFieldValue("me");
+	record.addField(field1);
+
+	GenericTableDAO genericTableDAO = new GenericTableDAO(session, "UsersExtra");
+	genericTableDAO.updateRecord(record);
+	GenericRecord record2 = genericTableDAO.getRecord(record.getId());
+
+	assertEquals(record.getId(), record2.getId());
+	assertEquals(record.getField("name").getFieldValue(), record2.getField("name").getFieldValue());
+
+	genericTableDAO.deleteRecord(record.getId());
+	record2 = genericTableDAO.getRecord(record.getId());
+
+	assertNull(record2);
     }
 }

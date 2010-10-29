@@ -59,4 +59,8 @@ public class GenericTableDAO extends BaseJdbcDAO {
     public GenericRecord getRecord(long id) throws OperationException, DataConstraintException {
 	return GetGenericRecordSQL.execute(id, this, tableName);
     }
+
+    public void deleteRecord(Long id) throws OperationException, DataConstraintException {
+	new DeleteGenericRecordSQL(id, this, tableName).execute();
+    }
 }

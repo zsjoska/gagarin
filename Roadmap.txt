@@ -23,7 +23,12 @@ Generic implementation.
  
   F002A: have an extensible support for tables with custom fields
   F002B: store the custom fields in cleartext and BLOB
-  F002C: have a mapping file which describes join between custom field and cleartext column
+
+ F009: Extra user information
+ 
+  F009A: Implement storage of extra user information
+  F009B: Implement caching of extra info at login
+  F009C: Implement adminUI for extra User info
 
 == Feature Pool ==
 
@@ -32,6 +37,10 @@ Generic implementation.
   F001A: allow multiple authenticators
   F001B: implement support for lazy account creation
   F001C: modify internal authentication to store only the hash of the password
+
+ F002: Flexible custom fields with cleartext mapping
+ 
+  F002C: have a mapping file which describes join between custom field and cleartext column
   
  F003: Server properties support on WS layer
  

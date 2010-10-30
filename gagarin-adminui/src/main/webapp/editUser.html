@@ -1,4 +1,19 @@
 <lift:surround with="default" at="content">
+
+	<lift:templateMgr.storeAndReplace>
+		<div id="userExtra-form" title="User Properties"
+			style="min-width: 650px; width: 700px; display: none;"><br />
+		<br />
+		<div style="width: 45%; float: left">Properties
+		<hr />
+		<userProps:test /><br />
+		</div>
+		<div style="width: 45%; float: left">Values
+		<hr />
+		</div>
+		</div>
+	</lift:templateMgr.storeAndReplace>
+
 	<p><lift:users.editUser form="POST">
 		<table>
 			<tr>
@@ -32,6 +47,9 @@
 		</table>
 		<br />
 		<user:submit />
+		<br />
+		<br />
+		<user:properties />
 		<br />
 	</lift:users.editUser></p>
 </lift:surround>

@@ -280,5 +280,23 @@ object adminService {
 	handleException(e)
     }}
   }
+
+  def setUserExtra(userExtra: WsPropertySet) = {
+    try{
+	adminWSService.setUserExtra(wsSession.session, userExtra)
+    } catch {
+    case e: WSException_Exception => {
+	handleException(e)
+    }}
+  }
+  
+  def getUserExtra(user: WsUser):WsPropertySet = {
+    try{
+	adminWSService.getUserExtra(wsSession.session, user)
+    } catch {
+    case e: WSException_Exception => {
+	handleException(e)
+    }}
+  }
 }
 

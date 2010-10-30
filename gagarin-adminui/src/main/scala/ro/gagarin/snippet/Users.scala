@@ -12,6 +12,9 @@ import _root_.ro.gagarin.model.{wsSession, SessionInfo}
 import _root_.ro.gagarin.model.adminService
 import _root_.ro.gagarin.UserStatus
 import _root_.ro.gagarin.AuthenticationType
+import _root_.net.liftweb.http.js.JsCmd
+import _root_.net.liftweb.http.js.JsCmds.{Alert, Noop, Replace, SetElemById, Run,ReplaceOptions}
+import _root_.ro.gagarin.view.TemplateStore
 
 class Users {
   
@@ -64,11 +67,50 @@ class Users {
          "phone" -> text( if(user.getPhone() != null) user.getPhone() else "", (x) => user.setPhone(x)),
          "status" -> select( statusMap, Full(user.getStatus.name), x => user.setStatus(UserStatus.valueOf(x))),
          "authentication" -> select(authMap, Full(user.getAuthentication.name), x => user.setAuthentication(AuthenticationType.valueOf(x))),
+         "properties" -> a( () => initDisplayDialog(user), Text("Properties") ),
          "submit" -> submit("Update", () => {
              adminService.updateUser(user);
              redirectTo("/users") 
          })
     	)
-  } 
+  }
+  
+  /**
+   * Creates a javascript command which prepares the dialog box for edit user-group assignments.
+   * We have to generate the dialog box content and then invoke the dialog command on it.
+   * NOTE: bad thing: we had to hard-code here the width of the dialog
+   */
+  def initDisplayDialog(u: WsUser): JsCmd = {
+    Replace("userExtra-form", createEditPropertiesDialog(u))&
+    Run("$('#userExtra-form').dialog({modal: true, width: 700});")
+  }
+
+  /**
+   * Create the assignments dialog by re-using the saved template
+   */
+  def createEditPropertiesDialog (u: WsUser): NodeSeq  = {
+    var properties = adminService.getUserExtra(u);
+    if(properties==null){
+      properties = new WsPropertySet
+      properties.setId(u.getId);
+    }
+    
+    val field=new WsProperty()
+    field.setFieldName("name");
+    field.setFieldValue("value");
+    properties.getFields.add(field);
+    adminService.setUserExtra(properties);
+    
+    val idAssign = nextFuncName
+    val idUnassign = nextFuncName
+    
+    val idAssignedSelect = nextFuncName
+    val idAllUsersSelect = nextFuncName
+
+    bind("userProps", TemplateStore.getTemplate("userExtra-form"), 
+	 "test" -> Text("Hello")
+    )
+  }
+  
 }
 

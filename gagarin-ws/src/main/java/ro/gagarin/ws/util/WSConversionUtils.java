@@ -120,6 +120,9 @@ public class WSConversionUtils {
     }
 
     public static WSPropertySet convertToWSPropertySet(GenericRecord record) {
+	if (record == null) {
+	    return null;
+	}
 	WSPropertySet propertySet = new WSPropertySet();
 	propertySet.setId(record.getId());
 	propertySet.setTimestamp(record.getTimestamp());

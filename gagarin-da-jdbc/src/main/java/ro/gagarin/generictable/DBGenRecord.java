@@ -19,6 +19,8 @@ public class DBGenRecord extends BaseEntity implements GenericRecord {
 
     public DBGenRecord(GenericRecord record) {
 	this.list = new ArrayList<GenericRecordField>(record.getFieldList());
+	this.timestamp = record.getTimestamp();
+	this.setId(record.getId());
     }
 
     @Override
@@ -57,6 +59,6 @@ public class DBGenRecord extends BaseEntity implements GenericRecord {
 
     @Override
     public List<GenericRecordField> getFieldList() {
-	return this.getFieldList();
+	return this.list;
     }
 }

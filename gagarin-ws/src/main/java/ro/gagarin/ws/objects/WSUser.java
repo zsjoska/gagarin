@@ -48,32 +48,37 @@ public class WSUser extends BaseEntity implements User {
 	return this.username;
     }
 
-    public void setUsername(String username) {
+    public WSUser setUsername(String username) {
 	this.username = username;
+	return this;
     }
 
-    public void setName(String name) {
+    public WSUser setName(String name) {
 	this.name = name;
+	return this;
     }
 
-    public void setPassword(String password) {
+    public WSUser setPassword(String password) {
 	this.password = password;
+	return this;
     }
 
     public String getEmail() {
 	return email;
     }
 
-    public void setEmail(String email) {
+    public WSUser setEmail(String email) {
 	this.email = email;
+	return this;
     }
 
     public String getPhone() {
 	return phone;
     }
 
-    public void setPhone(String phone) {
+    public WSUser setPhone(String phone) {
 	this.phone = phone;
+	return this;
     }
 
     @Override
@@ -91,12 +96,14 @@ public class WSUser extends BaseEntity implements User {
 	return this.status;
     }
 
-    public void setAuthentication(AuthenticationType authentication) {
+    public WSUser setAuthentication(AuthenticationType authentication) {
 	this.authentication = authentication;
+	return this;
     }
 
-    public void setStatus(UserStatus status) {
+    public WSUser setStatus(UserStatus status) {
 	this.status = status;
+	return this;
     }
 
     @Override
@@ -104,8 +111,9 @@ public class WSUser extends BaseEntity implements User {
 	return this.created;
     }
 
-    public void setCreated(Long created) {
+    public WSUser setCreated(Long created) {
 	this.created = created;
+	return this;
     }
 
     @Override
@@ -116,5 +124,11 @@ public class WSUser extends BaseEntity implements User {
     @Override
     public String getTitle() {
 	return getUsername();
+    }
+
+    @Override
+    public WSUser setId(Long id) {
+	super.setId(id);
+	return this;
     }
 }

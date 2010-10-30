@@ -9,6 +9,8 @@ import java.util.Set;
 
 import ro.gagarin.ControlEntity;
 import ro.gagarin.config.ConfigEntry;
+import ro.gagarin.genericrecord.GenericRecord;
+import ro.gagarin.genericrecord.GenericRecordField;
 import ro.gagarin.log.LogEntry;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.Group;
@@ -22,6 +24,8 @@ import ro.gagarin.ws.objects.WSEffectivePermission;
 import ro.gagarin.ws.objects.WSExportedSession;
 import ro.gagarin.ws.objects.WSGroup;
 import ro.gagarin.ws.objects.WSLogEntry;
+import ro.gagarin.ws.objects.WSProperty;
+import ro.gagarin.ws.objects.WSPropertySet;
 import ro.gagarin.ws.objects.WSStatistic;
 import ro.gagarin.ws.objects.WSUser;
 import ro.gagarin.ws.objects.WSUserPermission;
@@ -108,11 +112,23 @@ public class WSConversionUtils {
     }
 
     public static List<WSControlEntity> convertEntityList(List<ControlEntity> ceList) {
-	List<WSControlEntity> aa = new ArrayList<WSControlEntity>(ceList.size());
+	List<WSControlEntity> list = new ArrayList<WSControlEntity>(ceList.size());
 	for (ControlEntity controlEntity : ceList) {
-	    aa.add(new WSControlEntity(controlEntity));
+	    list.add(new WSControlEntity(controlEntity));
 	}
-	return aa;
+	return list;
+    }
+
+    public static WSPropertySet convertToWSPropertySet(GenericRecord record) {
+	WSPropertySet propertySet = new WSPropertySet();
+	propertySet.setId(record.getId());
+	propertySet.setTimestamp(record.getTimestamp());
+	ArrayList<WSProperty> propList = new ArrayList<WSProperty>();
+	for (GenericRecordField field : record) {
+	    propList.add(WSProperty.createFromGenericRecordField(field));
+	}
+	propertySet.setFields(propList);
+	return propertySet;
     }
 
 }

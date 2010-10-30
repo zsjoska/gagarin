@@ -33,6 +33,8 @@ import ro.gagarin.ws.objects.WSExportedSession;
 import ro.gagarin.ws.objects.WSGroup;
 import ro.gagarin.ws.objects.WSLogEntry;
 import ro.gagarin.ws.objects.WSOwner;
+import ro.gagarin.ws.objects.WSProperty;
+import ro.gagarin.ws.objects.WSPropertySet;
 import ro.gagarin.ws.objects.WSStatistic;
 import ro.gagarin.ws.objects.WSUser;
 import ro.gagarin.ws.objects.WSUserPermission;
@@ -277,5 +279,22 @@ public class UserServiceTest {
 	assertEquals(2, rolePermissions.size());
 	assertEquals(PermissionEnum.LIST.name(), rolePermissions.get(0).getPermissionName());
 	assertEquals(PermissionEnum.UPDATE.name(), rolePermissions.get(1).getPermissionName());
+    }
+
+    @Test
+    public void testCreateUpdateUserExtra() throws Exception {
+
+	WSPropertySet props = new WSPropertySet();
+	props.setId(WSPropertySet.getNextId());
+	props.addField(new WSProperty().setFieldName("name").setFieldValue("me"));
+	props.addField(new WSProperty().setFieldName("CNP").setFieldValue("123456789"));
+	adminService.setUserExtra(session, props);
+
+	WSPropertySet userExtra = adminService.getUserExtra(session, new WSUser().setId(props.getId()));
+
+	System.out.println(userExtra);
+
+	assertEquals(props.getId(), userExtra.getId());
+	assertNotNull(userExtra.getTimestamp());
     }
 }

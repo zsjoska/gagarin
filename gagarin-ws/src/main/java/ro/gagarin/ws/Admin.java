@@ -15,8 +15,9 @@ import ro.gagarin.ws.objects.WSControlEntity;
 import ro.gagarin.ws.objects.WSExportedSession;
 import ro.gagarin.ws.objects.WSGroup;
 import ro.gagarin.ws.objects.WSLogEntry;
-import ro.gagarin.ws.objects.WSPermOwnerCEAssignment;
 import ro.gagarin.ws.objects.WSOwner;
+import ro.gagarin.ws.objects.WSPermOwnerCEAssignment;
+import ro.gagarin.ws.objects.WSPropertySet;
 import ro.gagarin.ws.objects.WSStatistic;
 import ro.gagarin.ws.objects.WSUser;
 import ro.gagarin.ws.objects.WSUserPermission;
@@ -37,16 +38,18 @@ import ro.gagarin.ws.userservice.GetEffectivePermissionsObjectOwnerOP;
 import ro.gagarin.ws.userservice.GetGroupUsersOP;
 import ro.gagarin.ws.userservice.GetGroupsOP;
 import ro.gagarin.ws.userservice.GetLogEntriesOP;
-import ro.gagarin.ws.userservice.GetPermissionAssignmentsForControlEntityOP;
 import ro.gagarin.ws.userservice.GetOwnersOP;
+import ro.gagarin.ws.userservice.GetPermissionAssignmentsForControlEntityOP;
 import ro.gagarin.ws.userservice.GetRoleListOP;
 import ro.gagarin.ws.userservice.GetRolePermissionsOP;
 import ro.gagarin.ws.userservice.GetSessionListOP;
 import ro.gagarin.ws.userservice.GetStatisticsOP;
+import ro.gagarin.ws.userservice.GetUserExtraOP;
 import ro.gagarin.ws.userservice.GetUserGroupsOP;
 import ro.gagarin.ws.userservice.GetUsersOP;
 import ro.gagarin.ws.userservice.LogoutSessionOP;
 import ro.gagarin.ws.userservice.SetConfigEntryOP;
+import ro.gagarin.ws.userservice.SetUserExtraOP;
 import ro.gagarin.ws.userservice.UnAssignRoleFromControlEntityOP;
 import ro.gagarin.ws.userservice.UnassignUsersFromGroupOP;
 import ro.gagarin.ws.userservice.UpdateGroupOP;
@@ -292,5 +295,18 @@ public class Admin {
 	GetEffectivePermissionsObjectOwnerOP op = new GetEffectivePermissionsObjectOwnerOP(sessionId, ce, owner);
 	WebserviceExecutor.execute(op);
 	return op.getPermissions();
+    }
+
+    @WebMethod
+    public WSPropertySet getUserExtra(String sessionId, WSUser user) throws WSException {
+	GetUserExtraOP op = new GetUserExtraOP(sessionId, user);
+	WebserviceExecutor.execute(op);
+	return op.getUserExtra();
+    }
+
+    @WebMethod
+    public void setUserExtra(String sessionId, WSPropertySet userExtra) throws WSException {
+	SetUserExtraOP op = new SetUserExtraOP(sessionId, userExtra);
+	WebserviceExecutor.execute(op);
     }
 }

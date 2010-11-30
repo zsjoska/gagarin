@@ -3,14 +3,26 @@
 	<lift:templateMgr.storeAndReplace>
 		<div id="userExtra-form" title="User Properties"
 			style="min-width: 650px; width: 700px; display: none;"><br />
-		<br />
-		<div style="width: 45%; float: left">Properties
-		<hr />
-		<userProps:test /><br />
-		</div>
-		<div style="width: 45%; float: left">Values
-		<hr />
-		</div>
+		BUG: Afer adding a property, the dialog must be reopened
+		<table border="1" cellspacing="0">
+			<tr>
+				<th>Name</th>
+				<th>Value</th>
+				<th>&nbsp;</th>
+			</tr>
+			<lift:users.showProperties>
+				<tr property:rowid="">
+					<td><property:name /></td>
+					<td><property:value /></td>
+					<td><property:delete /></td>
+				</tr>
+			</lift:users.showProperties>
+			<tr>
+				<td><userProps:newName /></td>
+				<td><userProps:newValue /></td>
+				<td><userProps:newAdd /></td>
+			</tr>
+		</table>
 		</div>
 	</lift:templateMgr.storeAndReplace>
 

@@ -15,10 +15,12 @@ import _root_.ro.gagarin.AuthenticationType
 import _root_.net.liftweb.http.js.JsCmd
 import _root_.net.liftweb.http.js.JsCmds.{Alert, Noop, Replace, SetElemById, Run,ReplaceOptions}
 import _root_.ro.gagarin.view.TemplateStore
+import _root_.scala.collection.jcl.Buffer
 
 class Users {
   
   private object selectedUser extends RequestVar[WsUser](null)
+  private object userProperties extends RequestVar[WsPropertySet](null)
 
   lazy val statusMap = (Map[String,String]()/: UserStatus.values)( (x,y) =>  x + {y.name->y.name}).toSeq;
   lazy val authMap = (Map[String,String]()/: AuthenticationType.values)( (x,y) =>  x + {y.name->y.name}).toSeq;
@@ -94,23 +96,48 @@ class Users {
       properties = new WsPropertySet
       properties.setId(u.getId);
     }
+    userProperties.set(properties);
     
-    val field=new WsProperty()
-    field.setFieldName("name");
-    field.setFieldValue("value");
-    properties.getFields.add(field);
-    adminService.setUserExtra(properties);
-    
-    val idAssign = nextFuncName
-    val idUnassign = nextFuncName
-    
-    val idAssignedSelect = nextFuncName
-    val idAllUsersSelect = nextFuncName
+    val newField=new WsProperty()
 
     bind("userProps", TemplateStore.getTemplate("userExtra-form"), 
-	 "test" -> Text("Hello")
+	 "newName" -> ajaxText("New name", (x) => {
+	   newField.setFieldName(x);
+	   Noop;
+	 }),
+	 "newValue" -> ajaxText("New value", (x) => {
+	   newField.setFieldValue(x);
+	   Noop;
+         }),
+	 "newAdd" -> ajaxButton("Add", () => {
+           properties.getFields.add(newField);
+           adminService.setUserExtra(properties);
+	   Noop;
+	 })
     )
   }
   
+  
+  def showProperties (in: NodeSeq): NodeSeq  = {
+    val properties = userProperties.is
+    val fields = Buffer(properties.getFields());
+    
+    fields.flatMap( f => {
+      val rowid = nextFuncName
+      bind("property", in,
+         AttrBindParam("rowid",rowid,"id"),
+         "name" -> Text(f.getFieldName),
+         "value" -> Text(f.getFieldValue),
+	 "delete" -> a( () => {
+	   fields.find( (x) => f.getFieldName().equals(x.getFieldName)).foreach( (fieldToRemove) => {
+	       fieldToRemove.setFieldValue(null);
+	   })
+           adminService.setUserExtra(properties);
+           
+           // $('#myTableRow').remove(); // this could be written somehow with direct jQuery object
+           Run("$('#"+rowid+"').remove()")
+         }, Text("Delete"))
+    	)})
+  }
 }
 

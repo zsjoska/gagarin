@@ -10,8 +10,10 @@ import ro.gagarin.user.UserExtraRecord;
 
 public class JdbcUserExtraDAO extends JdbcGenericTableDAO implements UserExtraDAO {
 
+    private static final String USERS_EXTRA_TABLE_NAME = "UsersExtra";
+
     public JdbcUserExtraDAO(Session session) throws OperationException {
-	super(session, "UsersExtra");
+	super(session, USERS_EXTRA_TABLE_NAME);
     }
 
     public UserExtraRecord getRecord(long id) throws OperationException {

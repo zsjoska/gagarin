@@ -1,5 +1,7 @@
 package ro.gagarin.generictable;
 
+import java.util.HashMap;
+
 import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.genericrecord.GenericRecord;
@@ -8,6 +10,12 @@ import ro.gagarin.jdbc.BaseJdbcDAO;
 import ro.gagarin.session.Session;
 
 public class JdbcGenericTableDAO extends BaseJdbcDAO {
+
+    private static final HashMap<String, String[]> GENERIC_TABLE_MAPPINGS = new HashMap<String, String[]>();
+
+    static {
+	GENERIC_TABLE_MAPPINGS.put("UsersExtra", new String[] { "name" });
+    }
 
     private final String tableName;
 
@@ -40,6 +48,11 @@ public class JdbcGenericTableDAO extends BaseJdbcDAO {
 	    }
 	}
 	while (result == 0) {
+
+	    // TODO:(2) We have to implement a delay here. One guess would be to
+	    // implement a delay with random and generate the random based on
+	    // the iteration count
+
 	    GenericRecord merge = mergeRecord(reference, record);
 	    result = new UpdateGenericRecordSQL(merge, this, tableName).execute();
 	    if (result == 0) {
@@ -76,4 +89,14 @@ public class JdbcGenericTableDAO extends BaseJdbcDAO {
     public void deleteRecord(Long id) throws OperationException, DataConstraintException {
 	new DeleteGenericRecordSQL(id, this, tableName).execute();
     }
+
+    public String[] getMappingsForTable(String tableName) {
+	String[] mappings = GENERIC_TABLE_MAPPINGS.get(tableName);
+	if (mappings == null) {
+	    APPLOG.warn("Mapping definition was not found for " + tableName);
+	    mappings = new String[0];
+	}
+	return mappings;
+    }
+
 }

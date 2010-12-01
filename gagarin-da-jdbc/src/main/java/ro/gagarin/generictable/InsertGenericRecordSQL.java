@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.genericrecord.GenericRecord;
 import ro.gagarin.genericrecord.GenericRecordField;
-import ro.gagarin.jdbc.BaseJdbcDAO;
 import ro.gagarin.jdbc.UpdateQuery;
 
 public class InsertGenericRecordSQL extends UpdateQuery {
@@ -15,11 +14,12 @@ public class InsertGenericRecordSQL extends UpdateQuery {
     private final String tableName;
     private String[] clearColumns;
 
-    public InsertGenericRecordSQL(GenericRecord record, BaseJdbcDAO dao, String tableName) {
+    public InsertGenericRecordSQL(GenericRecord record, JdbcGenericTableDAO dao, String tableName) {
 	super(dao);
 	this.record = record;
 	this.tableName = tableName;
-	this.clearColumns = new String[] { "name" };
+	// this.clearColumns = new String[] { "name" };
+	this.clearColumns = dao.getMappingsForTable(tableName);
     }
 
     @Override

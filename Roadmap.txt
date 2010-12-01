@@ -80,3 +80,10 @@ Generic implementation.
   F010A: Create CacheManager
   F010B: Create generic cache class base and cache implementations. The cache should be able to query the value if not found in cache
   F010C: Add method to Session to retrieve registered cached values
+
+ F011: Implement database connection pool
+
+  F011A: Need to have a custom caching pool for database connections
+  F011B: The connection count should be configurable
+  F011C: The pool should allow sharing a connection for query operation
+  F011D: The pool should allow exclusive get for update queries

@@ -1,6 +1,5 @@
 package ro.gagarin.session;
 
-import java.lang.ref.SoftReference;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -30,7 +29,9 @@ public class Session extends BaseEntity {
     private ManagerFactory managerFactory;
     private Throwable t;
     private Map<ControlEntity, Set<PermissionEnum>> effectivePermissions;
-    private SoftReference<UserExtraRecord> userExtra;
+
+    // TODO:(5) add as cached value
+    private UserExtraRecord userExtra;
 
     public Session() {
 	// TODO:(3) make the reason mandatory
@@ -139,7 +140,7 @@ public class Session extends BaseEntity {
     }
 
     public void assignUser(User user, Map<ControlEntity, Set<PermissionEnum>> permMap, UserExtraRecord record) {
-	this.userExtra = new SoftReference<UserExtraRecord>(record);
+	this.userExtra = record;
 	this.effectivePermissions = permMap;
 	setUser(user);
     }
@@ -158,7 +159,7 @@ public class Session extends BaseEntity {
 
     public UserExtraRecord getUserExtra() {
 	if (this.userExtra != null) {
-	    return userExtra.get();
+	    return userExtra;
 	}
 	return null;
     }

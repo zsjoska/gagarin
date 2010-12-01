@@ -30,13 +30,14 @@ Generic implementation.
   F009B: Implement caching of extra info at login
   F009C: Implement adminUI for extra User info
 
-== Feature Pool ==
-
  F001: Authentication improvements
  
   F001A: allow multiple authenticators
   F001B: implement support for lazy account creation
   F001C: modify internal authentication to store only the hash of the password
+
+=== Feature Pool ===
+
 
  F002: Flexible custom fields with cleartext mapping
  

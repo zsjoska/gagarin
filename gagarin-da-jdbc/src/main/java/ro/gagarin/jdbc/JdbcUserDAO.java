@@ -34,6 +34,7 @@ import ro.gagarin.jdbc.user.SelectUsersSQL;
 import ro.gagarin.jdbc.user.UpdateUserSQL;
 import ro.gagarin.log.AppLog;
 import ro.gagarin.log.AppLogAction;
+import ro.gagarin.manager.AuthenticationManager;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.Group;
 import ro.gagarin.user.User;
@@ -97,6 +98,10 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 	    DBUser dbUser = new DBUser(user);
 	    dbUser.setId(DBUser.getNextId());
 	    dbUser.setCreated(System.currentTimeMillis());
+
+	    // before we save, the password must be hashed
+	    AuthenticationManager authManager = getSession().getManagerFactory().getAuthenticationManager();
+	    dbUser.setPassword(authManager.encryptPasswordForStorage(user.getAuthentication(), user.getPassword()));
 
 	    new CreateUserSQL(this, dbUser).execute();
 

@@ -21,4 +21,17 @@ public interface Authenticator {
      * @return
      */
     User fillUserDetails(String username, String password, String[] extra);
+
+    /**
+     * Encrypts the password for storing in the database. Usually calculating a
+     * hash.<br>
+     * Authenticators with external authentication source may use this method to
+     * return empty value to not store the password locally.
+     * 
+     * @param password
+     *            unencrypted password
+     * @return encrypted (hashed) password
+     * @throws OperationException
+     */
+    String encryptPassword(String password) throws OperationException;
 }

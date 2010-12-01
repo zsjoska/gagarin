@@ -1,8 +1,13 @@
 package ro.gagarin;
 
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import org.apache.commons.codec.binary.Hex;
 
 import ro.gagarin.application.objects.AppUser;
 import ro.gagarin.auth.Authenticator;
@@ -10,6 +15,7 @@ import ro.gagarin.auth.AuthenticatorPool;
 import ro.gagarin.auth.BaseAuthenticator;
 import ro.gagarin.dao.UserDAO;
 import ro.gagarin.exceptions.DataConstraintException;
+import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.log.AppLog;
@@ -34,6 +40,9 @@ public class BasicAuthenticationManager implements AuthenticationManager {
 	if (foundUser != null) {
 	    String userAuthType = foundUser.getAuthentication();
 	    Authenticator authenticator = AuthenticatorPool.getAuthenticatorForName(userAuthType);
+	    if (authenticator == null) {
+		throw new OperationException(ErrorCodes.AUTHENTICATOR_NOT_FOUND, userAuthType);
+	    }
 
 	    boolean pass = authenticator.verifyCredentials(session, username, password, extra);
 	    if (!pass) {
@@ -111,7 +120,7 @@ public class BasicAuthenticationManager implements AuthenticationManager {
 		throws OperationException {
 	    UserDAO userDAO = session.getManagerFactory().getDAOManager().getUserDAO(session);
 	    try {
-		userDAO.userLogin(username, password);
+		userDAO.userLogin(username, encryptPassword(password));
 	    } catch (ItemNotFoundException e) {
 		return false;
 	    }
@@ -122,6 +131,30 @@ public class BasicAuthenticationManager implements AuthenticationManager {
 	public User fillUserDetails(String username, String password, String[] extra) {
 	    throw new RuntimeException("Authenticator " + getName() + " does not support lazy creation");
 	}
+
+	@Override
+	public String encryptPassword(String password) throws OperationException {
+	    MessageDigest md;
+	    try {
+		md = MessageDigest.getInstance("SHA-1");
+		md.update(password.getBytes("UTF-8"));
+		byte[] digest = md.digest();
+		return Hex.encodeHexString(digest);
+	    } catch (NoSuchAlgorithmException e) {
+		throw new OperationException(ErrorCodes.INTERNAL_ERROR, e);
+	    } catch (UnsupportedEncodingException e) {
+		throw new OperationException(ErrorCodes.INTERNAL_ERROR, e);
+	    }
+	}
+    }
+
+    @Override
+    public String encryptPasswordForStorage(String authentication, String password) throws OperationException {
+	Authenticator authenticator = AuthenticatorPool.getAuthenticatorForName(authentication);
+	if (authenticator == null) {
+	    throw new OperationException(ErrorCodes.AUTHENTICATOR_NOT_FOUND, authentication);
+	}
+	return authenticator.encryptPassword(password);
     }
 
 }

@@ -77,4 +77,11 @@ public enum ErrorCodes {
      * This feature is disabled by the current configuration.
      */
     FEATURE_DISABLED,
+
+    /**
+     * The referenced authenticator was not found.<br>
+     * A reason could be that the use had this authenticator in the DB but was
+     * removed from the application.
+     */
+    AUTHENTICATOR_NOT_FOUND,
 }

@@ -29,4 +29,18 @@ public interface AuthenticationManager extends BaseManager {
 
     List<String> getAuthenticatorNames();
 
+    /**
+     * Encrypts the password to be stored in the database.<br>
+     * The password encryption method depends on the implementation of the given
+     * authentication type.
+     * 
+     * @param authentication
+     *            authentication type string
+     * @param password
+     *            the original cleartext password
+     * @return the encrypted password
+     * @throws OperationException
+     */
+    String encryptPasswordForStorage(String authentication, String password) throws OperationException;
+
 }

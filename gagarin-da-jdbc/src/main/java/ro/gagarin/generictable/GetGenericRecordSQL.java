@@ -49,7 +49,7 @@ public class GetGenericRecordSQL extends SelectQuery {
 	    record = new DBGenRecord();
 	    record.setId(rs.getLong("id"));
 	    record.setTimestamp(rs.getLong("timestamp"));
-	    RecordSerialization.parseRecordData(rs.getBytes("data"), record);
+	    RecordSerialization.parseRecordData(this.getDAO(), rs.getBytes("data"), record);
 	}
     }
 

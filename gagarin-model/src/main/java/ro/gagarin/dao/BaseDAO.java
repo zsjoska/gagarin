@@ -1,6 +1,7 @@
 package ro.gagarin.dao;
 
 import ro.gagarin.exceptions.OperationException;
+import ro.gagarin.log.AppLog;
 import ro.gagarin.manager.ConfigurationManager;
 
 public interface BaseDAO {
@@ -10,4 +11,7 @@ public interface BaseDAO {
     void markRollback();
 
     void release() throws OperationException;
+
+    AppLog getLogger();
+
 }

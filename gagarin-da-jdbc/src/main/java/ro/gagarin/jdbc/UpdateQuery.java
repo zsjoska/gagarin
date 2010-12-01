@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import ro.gagarin.dao.BaseDAO;
 import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.FieldRequiredException;
@@ -88,5 +89,9 @@ public abstract class UpdateQuery {
 
     protected Connection getConnection() throws OperationException {
 	return dao.getConnection();
+    }
+
+    public BaseDAO getDAO() {
+	return this.dao;
     }
 }

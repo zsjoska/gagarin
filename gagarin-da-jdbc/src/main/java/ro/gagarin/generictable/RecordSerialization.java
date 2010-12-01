@@ -6,15 +6,19 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+import ro.gagarin.dao.BaseDAO;
 import ro.gagarin.genericrecord.GenericRecord;
 import ro.gagarin.genericrecord.GenericRecordField;
 
 public class RecordSerialization {
 
+    private static final short CURRENT_RECORD_VERSION = 0;
+
     public static byte[] serializeRecord(GenericRecord record) {
 	ByteArrayOutputStream os = new ByteArrayOutputStream();
 	DataOutputStream dos = new DataOutputStream(os);
 	try {
+	    dos.writeShort(CURRENT_RECORD_VERSION);
 	    for (GenericRecordField field : record) {
 		if (field.getFieldName() != null && field.getFieldValue() != null && field.getUpdateTimestamp() != null) {
 		    dos.writeUTF(field.getFieldName());
@@ -29,9 +33,16 @@ public class RecordSerialization {
 	return os.toByteArray();
     }
 
-    public static void parseRecordData(byte[] bytes, DBGenRecord record) {
+    public static void parseRecordData(BaseDAO dao, byte[] bytes, DBGenRecord record) {
 	DataInputStream dis = new DataInputStream(new ByteArrayInputStream(bytes));
 	try {
+	    short recordVersion = dis.readShort();
+	    if (recordVersion != CURRENT_RECORD_VERSION) {
+		// older read should be invoked
+		dao.getLogger().error(
+			"Mismatching record version: Actual: " + CURRENT_RECORD_VERSION + " read:" + recordVersion);
+		return;
+	    }
 	    while (true) {
 
 		DBGenRecordField field = new DBGenRecordField();
@@ -44,5 +55,4 @@ public class RecordSerialization {
 	    // end of values
 	}
     }
-
 }

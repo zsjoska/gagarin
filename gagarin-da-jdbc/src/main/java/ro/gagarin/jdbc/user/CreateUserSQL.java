@@ -35,7 +35,7 @@ public class CreateUserSQL extends UpdateQuery {
 	stmnt.setString(6, user.getPassword());
 	stmnt.setLong(7, user.getStatus().ordinal());
 	stmnt.setLong(8, user.getCreated());
-	stmnt.setString(9, user.getAuthentication().name());
+	stmnt.setString(9, user.getAuthentication());
     }
 
     @Override

@@ -46,7 +46,7 @@ public class UpdateUserSQL extends UpdateQuery {
 	    stmnt.setString(index++, user.getPhone());
 	}
 	if (user.getAuthentication() != null) {
-	    stmnt.setString(index++, user.getAuthentication().name());
+	    stmnt.setString(index++, user.getAuthentication());
 	}
 	if (user.getStatus() != null) {
 	    stmnt.setInt(index++, user.getStatus().ordinal());

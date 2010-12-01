@@ -2,7 +2,6 @@ package ro.gagarin.jdbc.objects;
 
 import ro.gagarin.BaseEntity;
 import ro.gagarin.OwnerTypesEnum;
-import ro.gagarin.user.AuthenticationType;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserStatus;
 import ro.gagarin.utils.ConversionUtils;
@@ -14,7 +13,7 @@ public class DBUser extends BaseEntity implements User {
     private String name;
     private String email;
     private String phone;
-    private AuthenticationType authentication;
+    private String authentication;
     private UserStatus status;
     private Long created;
 
@@ -83,7 +82,7 @@ public class DBUser extends BaseEntity implements User {
     }
 
     @Override
-    public AuthenticationType getAuthentication() {
+    public String getAuthentication() {
 	return this.authentication;
     }
 
@@ -92,7 +91,7 @@ public class DBUser extends BaseEntity implements User {
 	return this.status;
     }
 
-    public void setAuthentication(AuthenticationType authentication) {
+    public void setAuthentication(String authentication) {
 	this.authentication = authentication;
     }
 

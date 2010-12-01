@@ -298,5 +298,14 @@ object adminService {
 	handleException(e)
     }}
   }
+
+  def getAuthenticationTypes = {
+    try{
+        Buffer(adminWSService.getAuthenticationTypes(wsSession.session))
+    } catch {
+    case e: WSException_Exception => {
+	handleException(e)
+    }}
+    }
 }
 

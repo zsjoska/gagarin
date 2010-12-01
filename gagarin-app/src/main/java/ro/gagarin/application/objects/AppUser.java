@@ -2,7 +2,6 @@ package ro.gagarin.application.objects;
 
 import ro.gagarin.BaseEntity;
 import ro.gagarin.OwnerTypesEnum;
-import ro.gagarin.user.AuthenticationType;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserStatus;
 import ro.gagarin.utils.ConversionUtils;
@@ -15,11 +14,25 @@ public class AppUser extends BaseEntity implements User {
     private String phone;
     private String password;
     private String username;
-    private AuthenticationType authentication;
+    private String authentication;
     private UserStatus status;
     private Long created;
 
-    public void setAuthentication(AuthenticationType authentication) {
+    public AppUser() {
+    }
+
+    public AppUser(User user) {
+	this.name = user.getName();
+	this.username = user.getUsername();
+	this.email = user.getEmail();
+	this.phone = user.getPhone();
+	this.password = user.getPassword();
+	this.authentication = user.getAuthentication();
+	this.status = user.getStatus();
+	this.created = user.getCreated();
+    }
+
+    public void setAuthentication(String authentication) {
 	this.authentication = authentication;
     }
 
@@ -78,7 +91,7 @@ public class AppUser extends BaseEntity implements User {
     }
 
     @Override
-    public AuthenticationType getAuthentication() {
+    public String getAuthentication() {
 	return this.authentication;
     }
 

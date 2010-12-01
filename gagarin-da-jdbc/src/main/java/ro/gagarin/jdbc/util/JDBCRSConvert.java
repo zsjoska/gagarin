@@ -4,7 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import ro.gagarin.jdbc.objects.DBUser;
-import ro.gagarin.user.AuthenticationType;
 import ro.gagarin.user.UserStatus;
 
 public class JDBCRSConvert {
@@ -17,7 +16,7 @@ public class JDBCRSConvert {
 	user.setEmail(rs.getString("email"));
 	user.setPhone(rs.getString("phone"));
 	user.setCreated(rs.getLong("created"));
-	user.setAuthentication(convertToAuthenticationType(rs.getString("authentication")));
+	user.setAuthentication(rs.getString("authentication"));
 	user.setStatus(convertToStatus(rs.getInt("status")));
 	user.setPhone(rs.getString("phone"));
 	return user;
@@ -27,7 +26,4 @@ public class JDBCRSConvert {
 	return UserStatus.values()[ordinal];
     }
 
-    private static AuthenticationType convertToAuthenticationType(String string) {
-	return AuthenticationType.valueOf(string);
-    }
 }

@@ -11,7 +11,6 @@ import _root_.net.liftweb.common.{Full, Empty}
 import _root_.ro.gagarin.model.{wsSession, SessionInfo}
 import _root_.ro.gagarin.model.adminService
 import _root_.ro.gagarin.UserStatus
-import _root_.ro.gagarin.AuthenticationType
 import _root_.net.liftweb.http.js.JsCmd
 import _root_.net.liftweb.http.js.JsCmds.{Alert, Noop, Replace, SetElemById, Run,ReplaceOptions}
 import _root_.ro.gagarin.view.TemplateStore
@@ -23,7 +22,7 @@ class Users {
   private object userProperties extends RequestVar[WsPropertySet](null)
 
   lazy val statusMap = (Map[String,String]()/: UserStatus.values)( (x,y) =>  x + {y.name->y.name}).toSeq;
-  lazy val authMap = (Map[String,String]()/: AuthenticationType.values)( (x,y) =>  x + {y.name->y.name}).toSeq;
+  lazy val authMap = (Map[String,String]()/: adminService.getAuthenticationTypes)( (x,y) =>  x + {y -> y}).toSeq;
   
     // TODO: put this in a utility
     def __(text: String) = if(text == null) "" else text
@@ -50,7 +49,7 @@ class Users {
          "email" -> text("", (x) => user.setEmail(x)),
          "phone" -> text("", (x) => user.setPhone(x)),
          "status" -> select( statusMap, Empty, x => user.setStatus(UserStatus.valueOf(x))),
-         "authentication" -> select(authMap, Empty, x => user.setAuthentication(AuthenticationType.valueOf(x))),
+         "authentication" -> select(authMap, Empty, x => user.setAuthentication(x)),
          "submit" -> submit("Create", () => {
              adminService.createUser(user)
              redirectTo("/users") 
@@ -68,7 +67,7 @@ class Users {
          "email" -> text( if(user.getEmail()!=null) user.getEmail else "", (x) => user.setEmail(x)),
          "phone" -> text( if(user.getPhone() != null) user.getPhone() else "", (x) => user.setPhone(x)),
          "status" -> select( statusMap, Full(user.getStatus.name), x => user.setStatus(UserStatus.valueOf(x))),
-         "authentication" -> select(authMap, Full(user.getAuthentication.name), x => user.setAuthentication(AuthenticationType.valueOf(x))),
+         "authentication" -> select(authMap, Full(user.getAuthentication.name), x => user.setAuthentication(x)),
          "properties" -> a( () => initDisplayDialog(user), Text("Properties") ),
          "submit" -> submit("Update", () => {
              adminService.updateUser(user);

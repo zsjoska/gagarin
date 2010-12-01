@@ -24,7 +24,6 @@ import ro.gagarin.manager.ManagerFactory;
 import ro.gagarin.session.Session;
 import ro.gagarin.testobjects.ATestUser;
 import ro.gagarin.testutil.TUtil;
-import ro.gagarin.user.AuthenticationType;
 import ro.gagarin.user.User;
 import ro.gagarin.user.UserRole;
 import ro.gagarin.user.UserStatus;
@@ -83,7 +82,7 @@ public class UserTest {
 	assertEquals("email does not match", user.getEmail(), user2.getEmail());
 	assertEquals("phone does not match", user.getPhone(), user2.getPhone());
 	assertEquals("username does not match", user.getUsername(), user2.getUsername());
-	assertEquals("authentication should be filled", user2.getAuthentication(), AuthenticationType.INTERNAL);
+	assertEquals("authentication should be filled", user2.getAuthentication(), "INTERNAL");
 	assertEquals("status does not match", user.getStatus(), user2.getStatus());
 	assertNotNull("created should be filled", user2.getCreated());
 
@@ -226,7 +225,7 @@ public class UserTest {
 	AppUser user2 = new AppUser();
 	user2.setId(userId);
 
-	user2.setAuthentication(AuthenticationType.INTERNAL);
+	user2.setAuthentication("INTERNAL");
 	user2.setEmail(username + "_2@gagarin.ro");
 	user2.setName("another name");
 	user2.setPassword("test");

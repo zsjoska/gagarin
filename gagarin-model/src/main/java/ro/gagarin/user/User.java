@@ -18,7 +18,7 @@ public interface User extends Owner {
 
     public abstract UserStatus getStatus();
 
-    public abstract AuthenticationType getAuthentication();
+    public abstract String getAuthentication();
 
     public abstract Long getCreated();
 

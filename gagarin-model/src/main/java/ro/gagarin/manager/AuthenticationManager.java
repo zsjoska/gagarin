@@ -1,5 +1,7 @@
 package ro.gagarin.manager;
 
+import java.util.List;
+
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.session.Session;
@@ -24,5 +26,7 @@ public interface AuthenticationManager extends BaseManager {
      */
     User userLogin(Session session, String username, String password, String[] extra) throws ItemNotFoundException,
 	    OperationException;
+
+    List<String> getAuthenticatorNames();
 
 }

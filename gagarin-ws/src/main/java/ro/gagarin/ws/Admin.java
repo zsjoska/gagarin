@@ -31,6 +31,7 @@ import ro.gagarin.ws.userservice.DeleteGroupOP;
 import ro.gagarin.ws.userservice.DeleteRoleOP;
 import ro.gagarin.ws.userservice.DeleteUserOP;
 import ro.gagarin.ws.userservice.GetAllPermissionListOP;
+import ro.gagarin.ws.userservice.GetAuthenticationTypes;
 import ro.gagarin.ws.userservice.GetConfigEntriesOP;
 import ro.gagarin.ws.userservice.GetControlEntityCategoriesOP;
 import ro.gagarin.ws.userservice.GetControlEntityListForCategoryOP;
@@ -308,5 +309,12 @@ public class Admin {
     public void setUserExtra(String sessionId, WSPropertySet userExtra) throws WSException {
 	SetUserExtraOP op = new SetUserExtraOP(sessionId, userExtra);
 	WebserviceExecutor.execute(op);
+    }
+
+    @WebMethod
+    public List<String> getAuthenticationTypes(String sessionId) throws WSException {
+	GetAuthenticationTypes op = new GetAuthenticationTypes(sessionId);
+	WebserviceExecutor.execute(op);
+	return op.getAuthenticationTypes();
     }
 }

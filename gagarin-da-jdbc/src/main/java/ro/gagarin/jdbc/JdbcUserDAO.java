@@ -25,8 +25,8 @@ import ro.gagarin.jdbc.objects.DBUser;
 import ro.gagarin.jdbc.role.CleanupControlEntityFromAssignmentSQL;
 import ro.gagarin.jdbc.role.CleanupOwnerFromAssignmentSQL;
 import ro.gagarin.jdbc.user.CleanupGroupUserAssignmentsSQL;
-import ro.gagarin.jdbc.user.CreateUserSQL;
 import ro.gagarin.jdbc.user.CleanupUserGroupAssignments;
+import ro.gagarin.jdbc.user.CreateUserSQL;
 import ro.gagarin.jdbc.user.DeleteUserSQL;
 import ro.gagarin.jdbc.user.SelectUserByUsernamePasswordSQL;
 import ro.gagarin.jdbc.user.SelectUserByUsernameSQL;
@@ -35,7 +35,6 @@ import ro.gagarin.jdbc.user.UpdateUserSQL;
 import ro.gagarin.log.AppLog;
 import ro.gagarin.log.AppLogAction;
 import ro.gagarin.session.Session;
-import ro.gagarin.user.AuthenticationType;
 import ro.gagarin.user.Group;
 import ro.gagarin.user.User;
 
@@ -98,10 +97,6 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 	    DBUser dbUser = new DBUser(user);
 	    dbUser.setId(DBUser.getNextId());
 	    dbUser.setCreated(System.currentTimeMillis());
-
-	    if (dbUser.getAuthentication() == null) {
-		dbUser.setAuthentication(AuthenticationType.INTERNAL);
-	    }
 
 	    new CreateUserSQL(this, dbUser).execute();
 

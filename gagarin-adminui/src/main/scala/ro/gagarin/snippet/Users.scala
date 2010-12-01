@@ -110,8 +110,10 @@ class Users {
 	   Noop;
          }),
 	 "newAdd" -> ajaxButton("Add", () => {
-           properties.getFields.add(newField);
-           adminService.setUserExtra(properties);
+	   val p = new WsPropertySet
+	   p.setId(properties.getId)
+	   p.getFields.add(newField);
+           adminService.setUserExtra(p);
 	   Noop;
 	 })
     )
@@ -129,10 +131,14 @@ class Users {
          "name" -> Text(f.getFieldName),
          "value" -> Text(f.getFieldValue),
 	 "delete" -> a( () => {
-	   fields.find( (x) => f.getFieldName().equals(x.getFieldName)).foreach( (fieldToRemove) => {
-	       fieldToRemove.setFieldValue(null);
-	   })
-           adminService.setUserExtra(properties);
+	   
+	   val p = new WsPropertySet
+	   p.setId(properties.getId)
+	   val field = new WsProperty
+	   field.setFieldName(f.getFieldName())
+	   field.setFieldValue(null);
+	   p.getFields().add(field);
+           adminService.setUserExtra(p);
            
            // $('#myTableRow').remove(); // this could be written somehow with direct jQuery object
            Run("$('#"+rowid+"').remove()")

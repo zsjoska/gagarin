@@ -75,10 +75,8 @@ Generic implementation.
   F008A: storage quota
   F008B: action quota
 
+ F010: Implement caching
  
- 
- 
- 
- 
- 
- 
+  F010A: Create CacheManager
+  F010B: Create generic cache class base and cache implementations. The cache should be able to query the value if not found in cache
+  F010C: Add method to Session to retrieve registered cached values

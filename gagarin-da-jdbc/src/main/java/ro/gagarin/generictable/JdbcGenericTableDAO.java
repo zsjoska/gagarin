@@ -51,6 +51,8 @@ public class JdbcGenericTableDAO extends BaseJdbcDAO {
     private DBGenRecord mergeRecord(DBGenRecord reference, GenericRecord record) {
 	for (GenericRecordField field : record) {
 
+	    // TODO:(1) Class cast exception was seen here; the class originated
+	    // from WS
 	    // safe to cast since the reference always comes from DB
 	    DBGenRecordField refField = (DBGenRecordField) reference.getField(field.getFieldName());
 

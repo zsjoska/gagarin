@@ -1,21 +1,24 @@
 package ro.gagarin.snippet
 
-import _root_.scala.collection.mutable.Map
-import _root_.scala.xml.{NodeSeq, Text, Group, Node}
-import _root_.net.liftweb.http._
-import _root_.net.liftweb.http.S
-import _root_.net.liftweb.mapper._
-import _root_.net.liftweb.http.S._
-import _root_.net.liftweb.http.SHtml._
-import _root_.net.liftweb.util.Helpers._
-import _root_.net.liftweb.util._
-import _root_.ro.gagarin.model.{wsSession, SessionInfo}
-import _root_.ro.gagarin.model.adminService
-import _root_.net.liftweb.http.js.JsCmds.{Alert, Noop, Replace, SetElemById, Run,ReplaceOptions}
-import _root_.net.liftweb.http.js.JE.{JsRaw}
-import _root_.net.liftweb.http.js.JsCmd
-import _root_.net.liftweb.common.{Full, Empty}
-import _root_.ro.gagarin.view.TemplateStore
+import scala.collection.mutable.Map
+import scala.xml.{NodeSeq, Text, Group, Node}
+import net.liftweb.http._
+import net.liftweb.http.S
+import net.liftweb.http.S._
+import net.liftweb.http.SHtml._
+import net.liftweb.util.Helpers._
+import net.liftweb.util._
+import net.liftweb.http.js.JsCmds.{Alert, Noop, Replace, SetElemById, Run,ReplaceOptions}
+import net.liftweb.http.js.JE.{JsRaw}
+import net.liftweb.http.js.JsCmd
+import net.liftweb.common.{Full, Empty}
+
+import ro.gagarin.model.{wsSession, SessionInfo}
+import ro.gagarin.model.adminService
+import ro.gagarin.view.TemplateStore
+
+import ro.gagarin.WsGroup
+import ro.gagarin.WsUser
 
 class Groups {
   

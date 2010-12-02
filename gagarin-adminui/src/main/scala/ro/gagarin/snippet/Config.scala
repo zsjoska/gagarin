@@ -1,12 +1,13 @@
 package ro.gagarin.snippet
 
 import java.util.{Date, Locale}
-import _root_.ro.gagarin.model.wsSession
-import _root_.scala.collection.jcl.Buffer
-import _root_.ro.gagarin.model.adminService
-import _root_.net.liftweb.http.SHtml._
-import _root_.scala.xml.{NodeSeq, Text, Group, Node}
-import _root_.net.liftweb.util.Helpers._
+import scala.xml.{NodeSeq, Text, Group, Node}
+import net.liftweb.http.SHtml._
+import net.liftweb.util.Helpers._
+import ro.gagarin.model.wsSession
+import ro.gagarin.model.adminService
+import ro.gagarin.WsConfig
+import ro.gagarin.ConfigScope
 
 class Config {
 	

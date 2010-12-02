@@ -1,15 +1,16 @@
 package ro.gagarin.snippet
 
-import _root_.scala.xml.{NodeSeq, Text, Group, Node}
-import _root_.scala.collection.mutable.ListBuffer
-import _root_.net.liftweb.http._
-import _root_.net.liftweb.http.S
-import _root_.net.liftweb.mapper._
-import _root_.net.liftweb.http.S._
-import _root_.net.liftweb.http.SHtml._
-import _root_.net.liftweb.util.Helpers._
-import _root_.net.liftweb.util._
-import _root_.ro.gagarin.model.adminService
+import scala.xml.{NodeSeq, Text, Group, Node}
+import scala.collection.mutable.ListBuffer
+import net.liftweb.http._
+import net.liftweb.http.S
+import net.liftweb.http.S._
+import net.liftweb.http.SHtml._
+import net.liftweb.util.Helpers._
+import net.liftweb.util._
+import ro.gagarin.model.adminService
+import ro.gagarin.WsUserRole
+import ro.gagarin.WsUserPermission
 
 class Roles {
   
@@ -23,7 +24,7 @@ class Roles {
 	      "permissions" -> {
 		  val permissions = adminService.getRolePermissions(u)
 		  Text(("" /: permissions)( (string, perm) => string + " " + perm.getPermissionName()))},
-	      "id" -> Text(u.getId().toString),
+	      "id" -> Text(u.getId().toString)
       ))
   }
     

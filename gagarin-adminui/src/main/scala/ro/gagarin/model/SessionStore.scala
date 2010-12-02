@@ -1,7 +1,8 @@
 package ro.gagarin.model
 
-import _root_.net.liftweb.http.SessionVar
-import _root_.ro.gagarin.PermissionEnum
+import net.liftweb.http.SessionVar
+import ro.gagarin.PermissionEnum
+import ro.gagarin.WsUser
 
 case class SessionInfo(session: String, user: WsUser, permMap: Map[Long,Set[PermissionEnum]]) 
 

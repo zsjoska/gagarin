@@ -1,11 +1,16 @@
 
 package ro.gagarin.model
 
-import _root_.scala.collection.jcl.Buffer
-import _root_.ro.gagarin.wsclient.WSClient
-import _root_.net.liftweb.http.S._
-import _root_.ro.gagarin.model.webServiceUtils._
-import _root_.scala.collection.mutable.ListBuffer
+import scala.collection.JavaConversions._
+import scala.collection.mutable.ListBuffer
+import scala.collection.mutable.Buffer
+
+import net.liftweb.http.S._
+
+import ro.gagarin.wsclient.WSClient
+import ro.gagarin.model.webServiceUtils._
+
+import ro.gagarin._
 
 object adminService {
 
@@ -15,18 +20,18 @@ object adminService {
   implicit def convertScalaListToJavaList(aList:ListBuffer[WsUserPermission]) = java.util.Arrays.asList(aList.toArray: _*)
   implicit def convertScalaListToJavaList(aList:List[WsUserPermission]) = java.util.Arrays.asList(aList.toArray: _*)
 
-    def getStatistics(filter: String) = { 
+    def getStatistics(filter: String):Buffer[WsStatistic] = { 
 	  try{
-	      Buffer(adminWSService.getStatistics(wsSession.session, filter))
+	      adminWSService.getStatistics(wsSession.session, filter)
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)
 	  }}
   }
 
-    def getSessionList = { 
+    def getSessionList: Buffer[WsExportedSession] = { 
 	  try{
-	      Buffer(adminWSService.getSessionList(wsSession.session))
+	      adminWSService.getSessionList(wsSession.session)
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)
@@ -42,27 +47,27 @@ object adminService {
 	  }}
   }
 
-  def getLogEntries(user: String) = {
+  def getLogEntries(user: String): Buffer[WsLogEntry] = {
 	  try{
-	      Buffer(adminWSService.getLogEntries(wsSession.session, null))
+	      adminWSService.getLogEntries(wsSession.session, null)
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)
 	  }}
   }
 
-  def getRolePermissions(role: WsUserRole) = {
+  def getRolePermissions(role: WsUserRole): Buffer[WsUserPermission] = {
 	  try{
-	      Buffer(adminWSService.getRolePermissions(wsSession.session, role))
+	      adminWSService.getRolePermissions(wsSession.session, role)
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)
 	  }}
   }
 
-  def getConfigEntries = {
+  def getConfigEntries: Buffer[WsConfig] = {
 	  try{
-	      Buffer(adminWSService.getConfigEntries(wsSession.session))
+	      adminWSService.getConfigEntries(wsSession.session)
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)
@@ -78,90 +83,90 @@ object adminService {
 	  }}
   }
 
-  def getUsers = {
+  def getUsers: Buffer[WsUser] = {
 	  try{
-	      Buffer(adminWSService.getUsers(wsSession.session))
+	      adminWSService.getUsers(wsSession.session)
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)
 	  }}
   }
 
-  def getGroups = {
+  def getGroups: Buffer[WsGroup] = {
 	  try{
-	      Buffer(adminWSService.getGroups(wsSession.session))
+	      adminWSService.getGroups(wsSession.session)
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)
 	  }}
   }
 
-  def getGroupUsers(group: WsGroup) = {
+  def getGroupUsers(group: WsGroup): Buffer[WsUser] = {
 	  try{
-	      Buffer(adminWSService.getGroupUsers(wsSession.session, group))
+	      adminWSService.getGroupUsers(wsSession.session, group)
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)
 	  }}
   }
 
-  def getRoleList = {
+  def getRoleList: Buffer[WsUserRole] = {
 	  try{
-	      Buffer(adminWSService.getRoleList(wsSession.session))
+	      adminWSService.getRoleList(wsSession.session)
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)
 	  }}
   }
 
-  def getAllPermissionList = {
+  def getAllPermissionList: Buffer[WsUserPermission] = {
 	  try{
-	      Buffer(adminWSService.getAllPermissionList(wsSession.session))
+	      adminWSService.getAllPermissionList(wsSession.session)
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)
 	  }}
   }
 
-  def getControlEntityCategories = {
+  def getControlEntityCategories: Buffer[ControlEntityCategory] = {
 	  try{
-	      Buffer(adminWSService.getControlEntityCategories(wsSession.session))
+	      adminWSService.getControlEntityCategories(wsSession.session)
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)
 	  }}
   }
 
-    def getControlEntityListForCategory(ceCategory: String) = {
+    def getControlEntityListForCategory(ceCategory: String):Buffer[WsControlEntity] = {
 	  try{
-	      Buffer(adminWSService.getControlEntityListForCategory(wsSession.session,ceCategory))
+	      adminWSService.getControlEntityListForCategory(wsSession.session,ceCategory)
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)
 	  }}
   }
 
-    def getOwners = {
+    def getOwners: Buffer[WsOwner] = {
 	  try{
-	      Buffer(adminWSService.getOwners(wsSession.session))
+	      adminWSService.getOwners(wsSession.session)
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)
 	  }}
     }
 
-    def getPermissionAssignmentsForControlEntity(ce : WsControlEntity ) = {
+    def getPermissionAssignmentsForControlEntity(ce : WsControlEntity ):Buffer[WsPermOwnerCEAssignment] = {
 	  try{
-	      Buffer(adminWSService.getPermissionAssignmentsForControlEntity(wsSession.session, ce))
+	      adminWSService.getPermissionAssignmentsForControlEntity(wsSession.session, ce)
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)
 	  }}
     }
 
-    def getEffectivePermissionsObjectOwner(ce : WsControlEntity, owner: WsOwner ) = {
+    def getEffectivePermissionsObjectOwner(ce : WsControlEntity, owner: WsOwner ): Buffer[PermissionEnum] = {
 	  try{
-	      Buffer(adminWSService.getEffectivePermissionsObjectOwner(wsSession.session, ce, owner))
+	      adminWSService.getEffectivePermissionsObjectOwner(wsSession.session, ce, owner)
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)
@@ -299,9 +304,9 @@ object adminService {
     }}
   }
 
-  def getAuthenticationTypes = {
+  def getAuthenticationTypes: Buffer[String] = {
     try{
-        Buffer(adminWSService.getAuthenticationTypes(wsSession.session))
+        adminWSService.getAuthenticationTypes(wsSession.session)
     } catch {
     case e: WSException_Exception => {
 	handleException(e)

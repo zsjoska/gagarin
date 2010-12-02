@@ -1,11 +1,11 @@
 
 package ro.gagarin.model
 
-import _root_.ro.gagarin.wsclient.WSClient
-import _root_.net.liftweb.http.S._
-import _root_.ro.gagarin.model.webServiceUtils._
-import _root_.ro.gagarin.PermissionEnum
-import _root_.scala.collection.jcl.Buffer
+import scala.collection.JavaConversions._
+import net.liftweb.http.S._
+import ro.gagarin.wsclient.WSClient
+import ro.gagarin.model.webServiceUtils._
+import ro.gagarin._
 
 object authService {
   
@@ -37,7 +37,7 @@ object authService {
 	      println("from WS:" + perm);
 	      val permMap = (Map[Long,Set[PermissionEnum]]()/:perm)((x,y) => x + 
 	    		  			{y.getId.longValue -> 
-                            (Set[PermissionEnum]()/:Buffer(y.getPermissions))((a,b) => a + b)})
+                            (Set[PermissionEnum]()/:y.getPermissions)((a,b) => a + b)})
 	      wsSession.set(SessionInfo(session, user, permMap))
 	  } catch {
 	  case e: WSException_Exception => {
@@ -47,7 +47,7 @@ object authService {
 
   def getCurrentUserPermissions(session: String) = {
 	  try{
-	      Buffer(authWSService.getCurrentUserPermissions(session))
+	      authWSService.getCurrentUserPermissions(session)
 	  } catch {
 	  case e: WSException_Exception => {
 	    handleException(e)

@@ -1,24 +1,29 @@
 package ro.gagarin.snippet
 
-import _root_.scala.xml.{NodeSeq, Text,Unparsed, Group, Node}
-import _root_.scala.xml.NodeSeq._
-import _root_.net.liftweb.http.{RequestVar, SessionVar}
-import _root_.net.liftweb.http.SHtml._
-import _root_.net.liftweb.util.Helpers._
-import _root_.ro.gagarin.model.{wsSession, SessionInfo}
-import _root_.ro.gagarin.model.adminService
-import _root_.net.liftweb.common.{Full, Empty}
-import _root_.net.liftweb.http.js.JsCmd
-import _root_.net.liftweb.http.js.JsCmds.{Alert, Noop, Replace, SetElemById}
-import _root_.net.liftweb.http.js.JE.{JsRaw}
+import scala.xml.{NodeSeq, Text,Unparsed, Group, Node}
+import scala.xml.NodeSeq._
+import net.liftweb.http.{RequestVar, SessionVar}
+import net.liftweb.http.SHtml._
+import net.liftweb.util.Helpers._
+import net.liftweb.common.{Full, Empty}
+import net.liftweb.http.js.JsCmd
+import net.liftweb.http.js.JsCmds.{Alert, Noop, Replace, SetElemById}
+import net.liftweb.http.js.JE.{JsRaw}
+
+import ro.gagarin.model.{wsSession, SessionInfo}
+import ro.gagarin.model.adminService
 
 import ro.gagarin.view.TemplateStore
 import ro.gagarin.model._
 import ro.gagarin.model.CE
 import ro.gagarin.model.CommonCe._
 import ro.gagarin.model.PermissionHelper._
-import _root_.ro.gagarin.PermissionEnum
-import _root_.ro.gagarin.PermissionEnum._
+import ro.gagarin.ControlEntityCategory
+import ro.gagarin.PermissionEnum
+import ro.gagarin.WsOwner
+import ro.gagarin.WsControlEntity
+import ro.gagarin.PermissionEnum._
+import ro.gagarin.WsUserRole
 
 class Permissions {
   
@@ -45,7 +50,7 @@ class Permissions {
       
   def pageTitle(in: NodeSeq): NodeSeq  = {
     val cat = selectedCategory.is
-    Text(cat name)
+    Text(cat.name)
   }
     
   /**

@@ -1,20 +1,22 @@
 package ro.gagarin.snippet
 
-import _root_.scala.xml.{NodeSeq, Text, Group, Node}
-import _root_.net.liftweb.http._
-import _root_.net.liftweb.http.S
-import _root_.net.liftweb.mapper._
-import _root_.net.liftweb.http.S._
-import _root_.net.liftweb.http.SHtml._
-import _root_.net.liftweb.util.Helpers._
-import _root_.net.liftweb.common.{Full, Empty}
-import _root_.ro.gagarin.model.{wsSession, SessionInfo}
-import _root_.ro.gagarin.model.adminService
-import _root_.ro.gagarin.UserStatus
-import _root_.net.liftweb.http.js.JsCmd
-import _root_.net.liftweb.http.js.JsCmds.{Alert, Noop, Replace, SetElemById, Run,ReplaceOptions}
-import _root_.ro.gagarin.view.TemplateStore
-import _root_.scala.collection.jcl.Buffer
+import scala.xml.{NodeSeq, Text, Group, Node}
+import net.liftweb.http._
+import net.liftweb.http.S
+import net.liftweb.http.S._
+import net.liftweb.http.SHtml._
+import net.liftweb.util.Helpers._
+import net.liftweb.common.{Full, Empty}
+import ro.gagarin.model.{wsSession, SessionInfo}
+import ro.gagarin.model.adminService
+import ro.gagarin.UserStatus
+import net.liftweb.http.js.JsCmd
+import net.liftweb.http.js.JsCmds.{Alert, Noop, Replace, SetElemById, Run,ReplaceOptions}
+import ro.gagarin.view.TemplateStore
+import scala.collection.JavaConversions._
+import ro.gagarin.WsUser
+import ro.gagarin.WsPropertySet
+import ro.gagarin.WsProperty
 
 class Users {
   
@@ -121,14 +123,14 @@ class Users {
   
   def showProperties (in: NodeSeq): NodeSeq  = {
     val properties = userProperties.is
-    val fields = Buffer(properties.getFields());
+    val fields = properties.getFields();
     
     fields.flatMap( f => {
       val rowid = nextFuncName
       bind("property", in,
          AttrBindParam("rowid",rowid,"id"),
-         "name" -> Text(f.getFieldName),
-         "value" -> Text(f.getFieldValue),
+         "name" -> Text(f.getFieldName()),
+         "value" -> Text(f.getFieldValue()),
 	 "delete" -> a( () => {
 	   
 	   val p = new WsPropertySet

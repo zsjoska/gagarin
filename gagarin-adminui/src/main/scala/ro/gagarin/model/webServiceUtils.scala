@@ -1,7 +1,9 @@
 package ro.gagarin.model
 
-import _root_.ro.gagarin.wsclient.WSClient
-import _root_.net.liftweb.http.S._
+import ro.gagarin.wsclient.WSClient
+import net.liftweb.http.S._
+import ro.gagarin.WSException_Exception
+import ro.gagarin.ErrorCodes
 
 
 object webServiceUtils {

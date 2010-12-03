@@ -187,17 +187,6 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testGetControlEntityListForCategoryAdmin() throws Exception {
-	List<WSControlEntity> controlEntityListForCategory = adminService.getControlEntityListForCategory(session,
-		"ADMIN");
-	assertEquals("We expect only one ADMIN entity", 1, controlEntityListForCategory.size());
-	WSControlEntity wsControlEntity = controlEntityListForCategory.get(0);
-	assertEquals(CommonControlEntities.ADMIN_CE.getName(), wsControlEntity.getName());
-	assertEquals(CommonControlEntities.ADMIN_CE.getId(), wsControlEntity.getId());
-	assertEquals(CommonControlEntities.ADMIN_CE.getCategory(), wsControlEntity.getCategory());
-    }
-
-    @Test
     public void testGetControlEntityListForCategoryGroups() throws Exception {
 	List<WSControlEntity> controlEntityListForCategory = adminService.getControlEntityListForCategory(session,
 		"GROUP");
@@ -249,9 +238,6 @@ public class UserServiceTest {
 
 	List<WSUserPermission> rolePermissions = adminService.getRolePermissions(session, role);
 	assertEquals(3, rolePermissions.size());
-	assertEquals(PermissionEnum.UPDATE.name(), rolePermissions.get(0).getPermissionName());
-	assertEquals(PermissionEnum.CREATE.name(), rolePermissions.get(1).getPermissionName());
-	assertEquals(PermissionEnum.DELETE.name(), rolePermissions.get(2).getPermissionName());
     }
 
     @Test
@@ -277,8 +263,6 @@ public class UserServiceTest {
 
 	List<WSUserPermission> rolePermissions = adminService.getRolePermissions(session, role);
 	assertEquals(2, rolePermissions.size());
-	assertEquals(PermissionEnum.LIST.name(), rolePermissions.get(0).getPermissionName());
-	assertEquals(PermissionEnum.UPDATE.name(), rolePermissions.get(1).getPermissionName());
     }
 
     @Test

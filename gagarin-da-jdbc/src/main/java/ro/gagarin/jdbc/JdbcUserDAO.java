@@ -101,7 +101,10 @@ public class JdbcUserDAO extends BaseJdbcDAO implements UserDAO {
 
 	    // before we save, the password must be hashed
 	    AuthenticationManager authManager = getSession().getManagerFactory().getAuthenticationManager();
-	    dbUser.setPassword(authManager.encryptPasswordForStorage(user.getAuthentication(), user.getPassword()));
+	    if (dbUser.getAuthentication() == null) {
+		dbUser.setAuthentication(authManager.getDefaultAuthenticatorName());
+	    }
+	    dbUser.setPassword(authManager.encryptPasswordForStorage(dbUser.getAuthentication(), dbUser.getPassword()));
 
 	    new CreateUserSQL(this, dbUser).execute();
 

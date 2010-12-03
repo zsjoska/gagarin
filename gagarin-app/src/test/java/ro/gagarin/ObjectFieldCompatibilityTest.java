@@ -21,6 +21,7 @@ public class ObjectFieldCompatibilityTest {
 	user.setEmail("a");
 	user.setPhone("a");
 	user.setPassword("a");
+	user.setAuthentication("INTERNAL");
 	user.setCreated(System.currentTimeMillis());
 	FieldValidator.checkAllFields(user);
     }

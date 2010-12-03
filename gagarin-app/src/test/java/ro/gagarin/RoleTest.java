@@ -194,7 +194,6 @@ public class RoleTest {
 	    fail("The role name is the same thus this item must not be created");
 	} catch (ItemExistsException e) {
 	    assertEquals("Wrong field info", "ROLENAME", e.getFieldName());
-	    assertEquals("Wrong class info", "UserRole", e.getClassName());
 	} finally {
 	    FACTORY.releaseSession(brokenSession);
 	}
@@ -223,7 +222,6 @@ public class RoleTest {
 	    fail("The permission name is the same thus this item must not be created");
 	} catch (ItemExistsException e) {
 	    assertEquals("Wrong field info", "PERMISSIONNAME", e.getFieldName());
-	    assertEquals("Wrong class info", "UserPermission", e.getClassName());
 	} finally {
 	    FACTORY.releaseSession(brokenSession);
 	}
@@ -269,48 +267,4 @@ public class RoleTest {
 	}
 
     }
-
-    @Test
-    public void testNullPermissionAssignment() throws DataConstraintException, OperationException {
-	Session brokenSession = TUtil.createTestSession();
-
-	RoleDAO roleManager = FACTORY.getDAOManager().getRoleDAO(brokenSession);
-
-	ATestUserRole role = new ATestUserRole();
-	role.setRoleName("testNullPermissionAssignment");
-	roleManager.createRole(role);
-	assertNotNull(roleManager.getRoleByName("testNullPermissionAssignment"));
-
-	try {
-	    roleManager.assignPermissionToRole(role, null);
-	    fail("the permission was null; thus this item must not be assigned");
-	} catch (ItemNotFoundException e) {
-	    assertEquals("wrong class info", "UserPermission", e.getClassName());
-	} finally {
-	    FACTORY.getSessionManager().releaseSession(brokenSession);
-	}
-    }
-
-    @Test
-    public void testNullRoleAssignment() throws DataConstraintException, OperationException {
-	Session brokenSession = TUtil.createTestSession();
-
-	RoleDAO roleDAO = FACTORY.getDAOManager().getRoleDAO(brokenSession);
-
-	ATestUserPermission perm = new ATestUserPermission();
-	perm.setPermissionName("testNullRoleAssignment");
-	roleDAO.createPermission(perm);
-	assertNotNull(roleDAO.getPermissionByName("testNullRoleAssignment"));
-
-	try {
-	    roleDAO.assignPermissionToRole(null, perm);
-	    fail("the permission was null; thus this item must not be assigned");
-	} catch (ItemNotFoundException e) {
-	    assertEquals("wrong class info", "UserRole", e.getClassName());
-	} finally {
-	    FACTORY.getSessionManager().releaseSession(brokenSession);
-	}
-    }
-
-    // TODO:(4) create test for assign null and to null
 }

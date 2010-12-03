@@ -72,6 +72,7 @@ public class UserTest {
 	user.setEmail(username + "@gagarin.ro");
 	user.setPhone("any kind of phone");
 	user.setStatus(UserStatus.ACTIVE);
+	user.setAuthentication("INTERNAL");
 	user.setId(usrDAO.createUser(user));
 
 	User user2 = usrDAO.getUserByUsername(username);
@@ -102,6 +103,7 @@ public class UserTest {
 	    user.setUsername("");
 	    user.setPassword("");
 	    user.setEmail("");
+	    user.setAuthentication("INTERNAL");
 	    user.setPhone("");
 	    long userid = usrDAO.createUser(user);
 	    user.setId(userid);
@@ -179,7 +181,6 @@ public class UserTest {
 	    fail("the username is the same; thus this item must not be created");
 	} catch (ItemExistsException e) {
 	    assertEquals("Wrong field info", "USERNAME", e.getFieldName());
-	    assertEquals("Wrong class info", "User", e.getClassName());
 	} finally {
 	    FACTORY.releaseSession(session);
 	}
@@ -199,6 +200,7 @@ public class UserTest {
 
 	ATestUser user1 = new ATestUser();
 	user1.setPassword("password");
+	user1.setAuthentication("INTERNAL");
 
 	try {
 	    usrDAO.createUser(user1);

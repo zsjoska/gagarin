@@ -43,4 +43,6 @@ public interface AuthenticationManager extends BaseManager {
      */
     String encryptPasswordForStorage(String authentication, String password) throws OperationException;
 
+    String getDefaultAuthenticatorName();
+
 }

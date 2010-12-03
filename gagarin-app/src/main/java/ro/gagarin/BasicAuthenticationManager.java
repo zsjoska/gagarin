@@ -134,6 +134,9 @@ public class BasicAuthenticationManager implements AuthenticationManager {
 
 	@Override
 	public String encryptPassword(String password) throws OperationException {
+	    if (password == null) {
+		return null;
+	    }
 	    MessageDigest md;
 	    try {
 		md = MessageDigest.getInstance("SHA-1");
@@ -155,6 +158,11 @@ public class BasicAuthenticationManager implements AuthenticationManager {
 	    throw new OperationException(ErrorCodes.AUTHENTICATOR_NOT_FOUND, authentication);
 	}
 	return authenticator.encryptPassword(password);
+    }
+
+    @Override
+    public String getDefaultAuthenticatorName() {
+	return AuthenticatorPool.getDefaultAuthenticator().getName();
     }
 
 }

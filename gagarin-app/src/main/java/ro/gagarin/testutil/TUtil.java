@@ -49,7 +49,7 @@ public class TUtil {
     public static void setDBImportRate(int i) {
 	DBConfigManager dbCfgMgr = DBConfigManager.getInstance();
 	// trigger a config change to increase the DB check rate
-	dbCfgMgr.configChanged(Config.DB_CONFIG_CHECK_PERIOD, String.valueOf(i));
+	dbCfgMgr.configChanged("DB_CONFIG_CHECK_PERIOD", String.valueOf(i));
     }
 
     public static void resetDBImportRate() {

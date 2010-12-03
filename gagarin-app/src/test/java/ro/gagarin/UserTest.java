@@ -10,7 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ro.gagarin.application.objects.AppUser;
-import ro.gagarin.config.Config;
+import ro.gagarin.config.Configuration;
 import ro.gagarin.dao.RoleDAO;
 import ro.gagarin.dao.UserDAO;
 import ro.gagarin.exceptions.DataConstraintException;
@@ -19,7 +19,6 @@ import ro.gagarin.exceptions.FieldRequiredException;
 import ro.gagarin.exceptions.ItemExistsException;
 import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.OperationException;
-import ro.gagarin.manager.ConfigurationManager;
 import ro.gagarin.manager.ManagerFactory;
 import ro.gagarin.session.Session;
 import ro.gagarin.testobjects.ATestUser;
@@ -53,8 +52,6 @@ public class UserTest {
     public void close() {
 	FACTORY.releaseSession(session);
     }
-
-    private ConfigurationManager configManager = FACTORY.getConfigurationManager();
 
     @Test
     public void getUserByNameInexistent() throws OperationException {
@@ -94,7 +91,7 @@ public class UserTest {
     @Test
     public void createUserNegative() throws Exception {
 
-	UserRole adminRole = roleDAO.getRoleByName(configManager.getString(Config.ADMIN_ROLE_NAME));
+	UserRole adminRole = roleDAO.getRoleByName(Configuration.ADMIN_ROLE_NAME);
 	assertNotNull("this test requires application setup", adminRole);
 
 	try {

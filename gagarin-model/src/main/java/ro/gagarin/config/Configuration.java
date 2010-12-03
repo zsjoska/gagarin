@@ -3,10 +3,14 @@ package ro.gagarin.config;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 
+import org.apache.log4j.Logger;
+
 import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.OperationException;
 
 public class Configuration {
+    private static final transient Logger LOG = Logger.getLogger(Configuration.class);
+
     private static final HashMap<String, String> CUSTOM_ENTRIES = new HashMap<String, String>();
 
     public static volatile Long USER_SESSION_TIMEOUT = 0l;
@@ -81,23 +85,36 @@ public class Configuration {
 	CUSTOM_ENTRIES.put(key, value);
     }
 
-    public static void setConfig(String key, String value) throws OperationException {
+    public static boolean setConfig(String key, String value) throws OperationException {
+	if (key == null || value == null) {
+	    throw new OperationException(ErrorCodes.INVALID_CONFIG_VALUE, key + "=" + value);
+	}
 	try {
 	    Field field = Configuration.class.getField(key);
 	    Object oldValue = field.get(null);
-
+	    Object newValue = oldValue;
 	    if (oldValue instanceof Long) {
-		field.set(null, Long.valueOf(value));
+		newValue = Long.valueOf(value);
 	    } else if (oldValue instanceof String) {
-		field.set(null, value);
+		newValue = value;
 	    } else if (oldValue instanceof Boolean) {
-		field.set(null, Boolean.valueOf(value));
+		newValue = Boolean.valueOf(value);
 	    } else {
 		throw new OperationException(ErrorCodes.INTERNAL_ERROR, "No conversion method defined for " + key + "="
 			+ value);
 	    }
+	    if (oldValue.equals(newValue)) {
+		return false;
+	    }
+	    field.set(null, newValue);
+	    return true;
 	} catch (NoSuchFieldException e) {
+	    String customConfig = getCustomConfig(key);
+	    if (value.equals(customConfig)) {
+		return false;
+	    }
 	    setCustomEntry(key, value);
+	    return true;
 	} catch (NumberFormatException e) {
 	    throw new OperationException(ErrorCodes.INVALID_CONFIG_VALUE, key + "=" + value);
 	} catch (SecurityException e) {
@@ -107,5 +124,19 @@ public class Configuration {
 	} catch (IllegalAccessException e) {
 	    throw new OperationException(ErrorCodes.INTERNAL_ERROR, e);
 	}
+    }
+
+    public static String getAsString(String key) {
+	Field field;
+	try {
+	    field = Configuration.class.getField(key);
+	    Object value = field.get(null);
+	    return value.toString();
+	} catch (NoSuchFieldException e) {
+	    return getCustomConfig(key);
+	} catch (Exception e) {
+	    LOG.error("Could not get the value of" + key, e);
+	}
+	return null;
     }
 }

@@ -19,15 +19,6 @@ import ro.gagarin.session.Session;
 public interface ConfigurationManager extends BaseManager {
 
     /**
-     * Returns a configuration value converted to long
-     * 
-     * @param config
-     *            the requested configuration
-     * @return the value of configuration
-     */
-    long getLong(Config config);
-
-    /**
      * An object implementing {@link SettingsChangeObserver} interface could
      * register with this method for change notification when a configuration
      * entry is modified. When a configuration entry changes, the configuration
@@ -51,24 +42,16 @@ public interface ConfigurationManager extends BaseManager {
      *            configuration value
      * @throws OperationException
      */
-    void setConfigValue(Session session, Config config, String value) throws OperationException;
-
-    String getString(Config config);
-
-    InputStream getConfigFileStream(Config file) throws OperationException;
+    void setConfigValue(Session session, String config, String value) throws OperationException;
 
     InputStream getConfigFileStream(String file) throws OperationException;
 
-    boolean isDefined(Config config);
-
-    String[] exportConfig();
+    boolean isDefined(String config);
 
     List<ConfigEntry> getConfigValues();
 
     void setConfigValue(Session session, ConfigEntry config) throws OperationException;
 
     void loadConfiguration(Object param);
-
-    boolean getBoolean(Config cfg);
 
 }

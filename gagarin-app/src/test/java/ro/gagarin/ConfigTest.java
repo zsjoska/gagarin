@@ -107,7 +107,7 @@ public class ConfigTest {
 	dbCfgMgr.registerForChange(new SettingsChangeObserver() {
 
 	    @Override
-	    public boolean configChanged(Config config, String value) {
+	    public boolean configChanged(String config, String value) {
 		if (config == Config._TEST_DB_AND_FILE_) {
 		    values.add(value);
 		    return true;

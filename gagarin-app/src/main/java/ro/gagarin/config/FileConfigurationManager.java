@@ -58,16 +58,6 @@ public class FileConfigurationManager extends ConfigHolder implements Configurat
 	this.cfgFile = new MonitoredFile(new File(cfgDir + File.separator + "config.properties"), this);
 	fileChanged(this.cfgFile.getFile());
 
-	// for test import this config
-	String[] newCfg = new String[Config.values().length];
-	newCfg[Config._TEST_LOCAL_ONLY_.ordinal()] = Config._TEST_LOCAL_ONLY_.getDefaultValue();
-	super.importConfig(newCfg);
-    }
-
-    @Override
-    public InputStream getConfigFileStream(Config fileConfig) throws OperationException {
-	String filename = getString(fileConfig);
-	return getConfigFileStream(filename);
     }
 
     @Override

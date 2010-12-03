@@ -3,6 +3,7 @@ package ro.gagarin.config;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
@@ -30,8 +31,7 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
     private ConfigImportJob configImportJob;
 
     static {
-	ConfigurationManager cfgManager = FACTORY.getConfigurationManager();
-	long period = cfgManager.getLong(Config.DB_CONFIG_CHECK_PERIOD);
+	long period = Configuration.DB_CONFIG_CHECK_PERIOD;
 
 	INSTANCE.registerForChange(INSTANCE);
 	INSTANCE.configImportJob = new DBConfigManager.ConfigImportJob("DB_CONFIG_IMPORT", 0, period);
@@ -72,20 +72,12 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
     }
 
     private void importConfigMap(ArrayList<ConfigEntry> cfgValues, AppLog log) {
-	String cfgs[] = new String[Config.values().length];
 
+	Properties cfgs = new Properties();
 	for (ConfigEntry configEntry : cfgValues) {
-
-	    try {
-		Config cfg = Config.valueOf(configEntry.getConfigName());
-
-		// don't import entries defined locally
-		if (!localConfig.isDefined(cfg)) {
-		    cfgs[cfg.ordinal()] = configEntry.getConfigValue();
-		}
-	    } catch (Exception e) {
-		log.error("Could not interpret config " + configEntry.getConfigName() + "="
-			+ configEntry.getConfigValue(), e);
+	    // don't import entries defined locally
+	    if (!localConfig.isDefined(configEntry.getConfigName())) {
+		cfgs.put(configEntry.getConfigName(), configEntry.getConfigValue());
 	    }
 	}
 	importConfig(cfgs);
@@ -101,25 +93,6 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
     }
 
     @Override
-    public String getString(Config config) {
-	// local config has precedence
-	if (localConfig.isDefined(config)) {
-	    return localConfig.getString(config);
-	}
-	if (super.isDefined(config)) {
-	    return super.getString(config);
-	}
-
-	// this will return the default value
-	return localConfig.getString(config);
-    }
-
-    @Override
-    public InputStream getConfigFileStream(Config file) throws OperationException {
-	return localConfig.getConfigFileStream(file);
-    }
-
-    @Override
     public InputStream getConfigFileStream(String file) throws OperationException {
 	return localConfig.getConfigFileStream(file);
     }
@@ -129,13 +102,13 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
     }
 
     @Override
-    public synchronized void setConfigValue(Session session, Config config, String value) throws OperationException {
+    public synchronized void setConfigValue(Session session, String config, String value) throws OperationException {
 
 	AppLog log = session.getManagerFactory().getLogManager().getLoggingSession(session, DBConfigManager.class);
-	log.info("Config change requested: " + config + "=" + value + "(" + getString(config) + ")");
+	log.info("Config change requested: " + config + "=" + value + "(" + Configuration.getAsString(config) + ")");
 	// local config has precedence...
 	if (localConfig.isDefined(config)) {
-	    log.error("Changing the local config will not be persisted! " + config.name() + "=" + value);
+	    log.error("Changing the local config will not be persisted! " + config + "=" + value);
 	    localConfig.setConfigValue(session, config, value);
 	    return;
 	}
@@ -147,7 +120,7 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
 
 	ConfigDAO configDAO = FACTORY.getDAOManager().getConfigDAO(session);
 	DBConfig cfg = new DBConfig();
-	cfg.setConfigName(config.name());
+	cfg.setConfigName(config);
 	cfg.setConfigValue(value);
 	try {
 	    configDAO.setConfigValue(cfg);
@@ -159,13 +132,10 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
     }
 
     @Override
-    public boolean configChanged(Config config, String value) {
-	switch (config) {
-	case DB_CONFIG_CHECK_PERIOD:
+    public boolean configChanged(String config, String value) {
+	if ("DB_CONFIG_CHECK_PERIOD".equalsIgnoreCase(config)) {
 	    FACTORY.getScheduleManager().updateJobRate(configImportJob.getId(), Long.valueOf(value));
 	    return true;
-	default:
-	    break;
 	}
 	return false;
     }

@@ -109,8 +109,8 @@ public class MonitoredFile implements SettingsChangeObserver {
     }
 
     @Override
-    public boolean configChanged(Config config, String value) {
-	if (config == Config.FILE_CHECK_INTERVAL) {
+    public boolean configChanged(String config, String value) {
+	if ("FILE_CHECK_INTERVAL".equals(config)) {
 	    BasicManagerFactory.getInstance().getScheduleManager().updateJobRate(job.getId(), Long.valueOf(value));
 	    return true;
 	}

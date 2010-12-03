@@ -12,7 +12,7 @@ import org.apache.log4j.Logger;
 import ro.gagarin.BasicManagerFactory;
 import ro.gagarin.ControlEntity;
 import ro.gagarin.Owner;
-import ro.gagarin.config.Config;
+import ro.gagarin.config.Configuration;
 import ro.gagarin.config.SettingsChangeObserver;
 import ro.gagarin.dao.BaseDAO;
 import ro.gagarin.dao.DAOManager;
@@ -52,8 +52,8 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
 	ConfigurationManager cfgManager;
 	cfgManager = BasicManagerFactory.getInstance().getConfigurationManager();
 	cfgManager.registerForChange(this);
-	USER_SESSION_TIMEOUT = cfgManager.getLong(Config.USER_SESSION_TIMEOUT);
-	SESSION_CHECK_PERIOD = cfgManager.getLong(Config.SESSION_CHECK_PERIOD);
+	USER_SESSION_TIMEOUT = Configuration.USER_SESSION_TIMEOUT;
+	SESSION_CHECK_PERIOD = Configuration.SESSION_CHECK_PERIOD;
 	chkSession = new SessionCheckerThread(this);
 	chkSession.start();
 
@@ -112,7 +112,7 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
     }
 
     @Override
-    public boolean configChanged(Config config, String value) {
+    public boolean configChanged(String config, String value) {
 	switch (config) {
 	case USER_SESSION_TIMEOUT:
 	    USER_SESSION_TIMEOUT = Long.valueOf(value);
@@ -198,8 +198,7 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
 	UserExtraDAO userExtraDAO = daoManager.getUserExtraDAO(session);
 	LogManager logManager = managerFactory.getLogManager();
 	AppLog appLog = logManager.getLoggingSession(session, getClass());
-	ConfigurationManager cfgManager = managerFactory.getConfigurationManager();
-	String adminGroupName = cfgManager.getString(Config.ADMIN_GROUP_NAME);
+	String adminGroupName = Configuration.ADMIN_GROUP_NAME;
 
 	session.setAdminSession(false);
 	// get the user groups

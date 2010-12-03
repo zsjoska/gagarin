@@ -11,7 +11,8 @@
 	<packaging>war</packaging>
 	<name>gagarin-adminui</name>
 	<properties>
-		<scala.version>2.8.0</scala.version>
+		<scala.version>2.8.1</scala.version>
+		<scala.version.lift>2.8.0</scala.version.lift>
 	</properties>
 	<repositories>
 		<repository>
@@ -41,12 +42,12 @@
 		</dependency>
 		<dependency>
 			<groupId>net.liftweb</groupId>
-			<artifactId>lift-util_${scala.version}</artifactId>
+			<artifactId>lift-util_${scala.version.lift}</artifactId>
 			<version>2.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>net.liftweb</groupId>
-			<artifactId>lift-webkit_${scala.version}</artifactId>
+			<artifactId>lift-webkit_${scala.version.lift}</artifactId>
 			<version>2.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>

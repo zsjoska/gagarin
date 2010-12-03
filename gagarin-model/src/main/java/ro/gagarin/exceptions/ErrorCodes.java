@@ -84,4 +84,9 @@ public enum ErrorCodes {
      * removed from the application.
      */
     AUTHENTICATOR_NOT_FOUND,
+
+    /**
+     * The given configuration entry could not be stored
+     */
+    INVALID_CONFIG_VALUE,
 }

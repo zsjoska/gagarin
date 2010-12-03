@@ -36,7 +36,13 @@ Generic implementation.
   F001B: implement support for lazy account creation
   F001C: modify internal authentication to store only the hash of the password
 
-=== Feature Pool ===
+ F006: Improve the configuration handling
+ 
+  F006A: registration to be scoped for config entry
+  F006B: create a set of cache fields and update through reflection
+  F007C: fix the scope of the config on the adminui
+
+  === Feature Pool ===
 
 
  F002: Flexible custom fields with cleartext mapping
@@ -61,11 +67,6 @@ Generic implementation.
    F005B: modify the WS layer to extend the interfaces generated from the WSDL files
    F005C: document the WSDL
    
- F006: Improve the configuration handling
- 
-  F006A: registration to be scoped for config entry
-  F006B: create a set of cache fields and update through reflection
-
  F007: Improve logging
   
   F007A: review and fix logging to DB (log levels, caching, etc)

@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import org.junit.Test;
@@ -12,9 +13,11 @@ import ro.gagarin.config.Configuration;
 import ro.gagarin.log.AppLog;
 import ro.gagarin.manager.ManagerFactory;
 import ro.gagarin.manager.ScheduleManager;
+import ro.gagarin.scheduler.GenericJob;
 import ro.gagarin.scheduler.JobController;
 import ro.gagarin.scheduler.ScheduledJob;
 import ro.gagarin.scheduler.Scheduler;
+import ro.gagarin.scheduler.SchedulerThread;
 import ro.gagarin.session.Session;
 import ro.gagarin.testutil.TUtil;
 
@@ -184,5 +187,24 @@ public class SchedulerTest {
 	    System.out.println(name);
 	}
 	assertEquals(newCount, threadsTouched.size());
+    }
+
+    @Test
+    public void testExportedThreads() throws Exception {
+	ScheduleManager scheduleManager = FACTORY.getScheduleManager();
+	List<SchedulerThread> exportThreads = scheduleManager.exportThreads();
+	assertEquals(Configuration.SCHEDULER_THREADS, exportThreads.size());
+	for (SchedulerThread thread : exportThreads) {
+	    System.out.println(thread.getName() + " executing task " + thread.getActiveJob());
+	}
+    }
+
+    @Test
+    public void testExportedJobs() throws Exception {
+	ScheduleManager scheduleManager = FACTORY.getScheduleManager();
+	List<GenericJob> exportedJobs = scheduleManager.exportJobs();
+	for (GenericJob job : exportedJobs) {
+	    System.out.println(job);
+	}
     }
 }

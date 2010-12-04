@@ -1,11 +1,12 @@
 package ro.gagarin.scheduler;
 
-public class SchedulerThread extends Thread {
+public class SchedulerThreadImpl extends Thread implements SchedulerThread {
 
     private final Scheduler parent;
     private boolean shutDown = false;
+    private SimpleJob activeJob = null;
 
-    public SchedulerThread(Scheduler parent, int index) {
+    public SchedulerThreadImpl(Scheduler parent, int index) {
 	super("SCHEDULER" + index);
 	this.parent = parent;
 	setDaemon(false);
@@ -19,13 +20,22 @@ public class SchedulerThread extends Thread {
 		if (nextJob == null) {
 		    continue;
 		}
+		this.activeJob = nextJob;
 		nextJob.run();
 		parent.releaseJob(nextJob);
+		this.activeJob = null;
 	    }
 	} catch (InterruptedException e) {
 	    // TODO:(3) handle exception
 	}
 
+    }
+
+    public GenericJob getActiveJob() {
+	if (activeJob != null) {
+	    return this.activeJob.getJob();
+	}
+	return null;
     }
 
     public void shutdown() {

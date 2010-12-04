@@ -1,0 +1,22 @@
+<lift:surround with="default" at="content">
+	<h1>Statistics</h1>
+	<table border="1" cellspacing="0">
+		<tr>
+			<th>Name</th>
+			<th>Last execution</th>
+			<th>Next Execution</th>
+			<th>Percent Complete</th>
+			<th>Period</th>
+		</tr>
+		<lift:jobs.show>
+			<tr>
+				<td><job:name/></td>
+				<td><job:lastExec/></td>
+				<td><job:nextExec/></td>
+				<td><job:percent/></td>
+				<td><job:period/></td>
+			</tr>
+		</lift:jobs.show>
+	</table>
+</lift:surround>
+

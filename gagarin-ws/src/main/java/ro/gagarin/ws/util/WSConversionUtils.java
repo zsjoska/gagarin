@@ -12,6 +12,7 @@ import ro.gagarin.config.ConfigEntry;
 import ro.gagarin.genericrecord.GenericRecord;
 import ro.gagarin.genericrecord.GenericRecordField;
 import ro.gagarin.log.LogEntry;
+import ro.gagarin.scheduler.GenericJob;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.Group;
 import ro.gagarin.user.PermissionEnum;
@@ -23,6 +24,7 @@ import ro.gagarin.ws.objects.WSControlEntity;
 import ro.gagarin.ws.objects.WSEffectivePermission;
 import ro.gagarin.ws.objects.WSExportedSession;
 import ro.gagarin.ws.objects.WSGroup;
+import ro.gagarin.ws.objects.WSJob;
 import ro.gagarin.ws.objects.WSLogEntry;
 import ro.gagarin.ws.objects.WSProperty;
 import ro.gagarin.ws.objects.WSPropertySet;
@@ -132,6 +134,14 @@ public class WSConversionUtils {
 	}
 	propertySet.setFields(propList);
 	return propertySet;
+    }
+
+    public static List<WSJob> convertToWSJobs(List<GenericJob> exportJobs) {
+	ArrayList<WSJob> jobs = new ArrayList<WSJob>();
+	for (GenericJob job : exportJobs) {
+	    jobs.add(new WSJob(job));
+	}
+	return jobs;
     }
 
 }

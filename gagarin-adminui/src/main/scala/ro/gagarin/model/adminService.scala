@@ -312,5 +312,13 @@ object adminService {
 	handleException(e)
     }}
     }
+
+  def getJobs: Buffer[WsJob] = {
+    try{
+        adminWSService.getServerJobs(wsSession.session)
+    } catch {
+    case e: WSException_Exception => {
+	handleException(e)
+    }}}
 }
 

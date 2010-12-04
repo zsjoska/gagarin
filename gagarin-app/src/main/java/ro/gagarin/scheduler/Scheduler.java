@@ -1,7 +1,9 @@
 package ro.gagarin.scheduler;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.log4j.Logger;
@@ -13,7 +15,7 @@ import ro.gagarin.config.SettingsChangeObserver;
 public class Scheduler implements SettingsChangeObserver {
 
     private static final transient Logger LOG = Logger.getLogger(Scheduler.class);
-    private ArrayList<SchedulerThread> threads = new ArrayList<SchedulerThread>();
+    private ArrayList<SchedulerThreadImpl> threads = new ArrayList<SchedulerThreadImpl>();
     private int threadCount;
     private HashMap<Long, SimpleJob> pendingJobStore = new HashMap<Long, SimpleJob>();
     private HashMap<Long, SimpleJob> allJobStore = new HashMap<Long, SimpleJob>();
@@ -34,7 +36,7 @@ public class Scheduler implements SettingsChangeObserver {
 
     public void createNewThreads(int count) {
 	for (int i = 0; i < count; i++) {
-	    SchedulerThread thread = new SchedulerThread(this, threadId.getAndIncrement());
+	    SchedulerThreadImpl thread = new SchedulerThreadImpl(this, threadId.getAndIncrement());
 	    thread.start();
 	    threads.add(thread);
 	}
@@ -173,8 +175,23 @@ public class Scheduler implements SettingsChangeObserver {
 
     private void destroyThreads(int delta) {
 	for (int i = 0; i < delta; i++) {
-	    SchedulerThread remove = threads.remove(0);
+	    SchedulerThreadImpl remove = threads.remove(0);
 	    remove.shutdown();
 	}
+    }
+
+    public List<GenericJob> exportJobs() {
+	ArrayList<GenericJob> jobs = new ArrayList<GenericJob>();
+	Collection<SimpleJob> values = this.allJobStore.values();
+	for (SimpleJob job : values) {
+	    jobs.add(job.getJob());
+	}
+	return jobs;
+    }
+
+    public List<SchedulerThread> exportThreads() {
+	ArrayList<SchedulerThread> threads = new ArrayList<SchedulerThread>();
+	threads.addAll(this.threads);
+	return threads;
     }
 }

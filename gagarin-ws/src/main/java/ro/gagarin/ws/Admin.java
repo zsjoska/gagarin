@@ -14,6 +14,7 @@ import ro.gagarin.ws.objects.WSConfig;
 import ro.gagarin.ws.objects.WSControlEntity;
 import ro.gagarin.ws.objects.WSExportedSession;
 import ro.gagarin.ws.objects.WSGroup;
+import ro.gagarin.ws.objects.WSJob;
 import ro.gagarin.ws.objects.WSLogEntry;
 import ro.gagarin.ws.objects.WSOwner;
 import ro.gagarin.ws.objects.WSPermOwnerCEAssignment;
@@ -43,6 +44,7 @@ import ro.gagarin.ws.userservice.GetOwnersOP;
 import ro.gagarin.ws.userservice.GetPermissionAssignmentsForControlEntityOP;
 import ro.gagarin.ws.userservice.GetRoleListOP;
 import ro.gagarin.ws.userservice.GetRolePermissionsOP;
+import ro.gagarin.ws.userservice.GetServerJobs;
 import ro.gagarin.ws.userservice.GetSessionListOP;
 import ro.gagarin.ws.userservice.GetStatisticsOP;
 import ro.gagarin.ws.userservice.GetUserExtraOP;
@@ -316,5 +318,12 @@ public class Admin {
 	GetAuthenticationTypes op = new GetAuthenticationTypes(sessionId);
 	WebserviceExecutor.execute(op);
 	return op.getAuthenticationTypes();
+    }
+
+    @WebMethod
+    public List<WSJob> getServerJobs(String sessionId) throws WSException {
+	GetServerJobs op = new GetServerJobs(sessionId);
+	WebserviceExecutor.execute(op);
+	return op.getServerJobs();
     }
 }

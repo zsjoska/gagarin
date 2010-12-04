@@ -54,4 +54,24 @@ public class DefaultScheduleManager implements ScheduleManager {
 	this.earlyJobs.clear();
 	this.earlyJobs = null;
     }
+
+    @Override
+    public List<GenericJob> exportJobs() {
+	if (defaultScheduler != null) {
+	    return defaultScheduler.exportJobs();
+	} else {
+	    ArrayList<GenericJob> jobs = new ArrayList<GenericJob>();
+	    return jobs;
+	}
+    }
+
+    @Override
+    public List<SchedulerThread> exportThreads() {
+	if (defaultScheduler != null) {
+	    return defaultScheduler.exportThreads();
+	} else {
+	    ArrayList<SchedulerThread> threads = new ArrayList<SchedulerThread>();
+	    return threads;
+	}
+    }
 }

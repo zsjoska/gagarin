@@ -1,17 +1,17 @@
 package bootstrap.liftweb
 
-import _root_.net.liftweb.util._
-import _root_.net.liftweb.http._
-import _root_.net.liftweb.sitemap._
-import _root_.net.liftweb.sitemap.Loc._
+import net.liftweb.util._
+import net.liftweb.http._
+import net.liftweb.sitemap._
+import net.liftweb.sitemap.Loc._
 import Helpers._
-import _root_.net.liftweb.http.LiftServlet
-import _root_.ro.gagarin.model.{wsSession, SessionInfo}
+import net.liftweb.http.LiftServlet
+import ro.gagarin.model.{wsSession, SessionInfo}
 import ro.gagarin.model.PermissionHelper._
-import _root_.ro.gagarin.PermissionEnum
-import _root_.ro.gagarin.PermissionEnum._
-import _root_.net.liftweb.http.ResourceServer
-import _root_.net.liftweb.http.S._
+import ro.gagarin.PermissionEnum
+import ro.gagarin.PermissionEnum._
+import net.liftweb.http.ResourceServer
+import net.liftweb.http.S._
 import ro.gagarin.model.CommonCe._
 import ro.gagarin.model.CE
 
@@ -60,6 +60,8 @@ class Boot {
       Menu(Loc("monitor", List("monitor"), "Monitor", requiresLogin, rqPerm(ADMIN_CE, ADMIN)),
 	      Menu(Loc("sessions", List("sessions"), "Sessions", requiresLogin, rqPerm(ADMIN_CE, ADMIN))),
 	      Menu(Loc("statistics", List("statistics"), "Statistics", requiresLogin, rqPerm(ADMIN_CE, ADMIN))),
+	      Menu(Loc("threads", List("threads"), "Threads", requiresLogin, rqPerm(ADMIN_CE, ADMIN))),
+	      Menu(Loc("jobs", List("jobs"), "Jobs", requiresLogin, rqPerm(ADMIN_CE, ADMIN))),
 	      Menu(Loc("logs", List("logs"), "Logs", requiresLogin, rqPerm(ADMIN_CE, ADMIN)))
       ),
       Menu(Loc("config", List("config"), "Config", requiresLogin, rqPerm(ADMIN_CE, ADMIN)))

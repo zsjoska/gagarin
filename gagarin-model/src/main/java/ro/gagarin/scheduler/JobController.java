@@ -1,12 +1,10 @@
 package ro.gagarin.scheduler;
 
-public interface JobController {
-
-    long getNextRun();
-
-    void setPeriod(long period);
-
-    long getPeriod();
+/**
+ * A job with basic controls given to the executing code.<br>
+ * A job this way has a limited control over itself.
+ */
+public interface JobController extends GenericJob {
 
     void markToExecuteNow();
 

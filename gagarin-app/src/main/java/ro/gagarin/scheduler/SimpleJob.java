@@ -54,7 +54,11 @@ class SimpleJob implements JobController {
 
 	    long jobStart = System.currentTimeMillis();
 
-	    getJob().execute(null, null, this);
+	    ScheduledJob theJob = getJob();
+	    theJob.setPercentComplete(-1.0);
+	    theJob.execute(null, null, this);
+	    theJob.setPercentComplete(100.0);
+	    theJob.setLastExecution(System.currentTimeMillis());
 
 	    Statistic.getByName("job.simple.effective." + getJob().getName()).add(jobStart);
 
@@ -75,11 +79,6 @@ class SimpleJob implements JobController {
     public void destroyJob() {
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see ro.gagarin.scheduler.JobController#getNextRun()
-     */
     public long getNextRun() {
 	// negative is infinite, positive is to be executed
 	if (toExecute < 0 || toExecute > 0) {
@@ -98,29 +97,14 @@ class SimpleJob implements JobController {
 	    this.toExecute--;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see ro.gagarin.scheduler.JobController#setPeriod(long)
-     */
     public void setPeriod(long period) {
 	this.period = period;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see ro.gagarin.scheduler.JobController#getPeriod()
-     */
     public long getPeriod() {
 	return period;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see ro.gagarin.scheduler.JobController#markToExecuteNow()
-     */
     public void markToExecuteNow() {
 	this.lastRun = System.currentTimeMillis() - period;
     }
@@ -129,12 +113,30 @@ class SimpleJob implements JobController {
 	return job;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see ro.gagarin.scheduler.JobController#markDone()
-     */
     public void markDone() {
 	this.toExecute = 0;
+    }
+
+    @Override
+    public Long getLastExecution() {
+	return lastRun;
+    }
+
+    @Override
+    public String getName() {
+	return getJob().getName();
+    }
+
+    @Override
+    public Long getNextExecution() {
+	if (getNextRun() != 0) {
+	    return getNextRun();
+	}
+	return null;
+    }
+
+    @Override
+    public Double getPercentComplete() {
+	return getJob().getPercentComplete();
     }
 }

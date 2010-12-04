@@ -1,0 +1,19 @@
+<lift:surround with="default" at="content">
+	<h1>Current sessions</h1>
+	<table border="1" cellspacing="0">
+		<tr>
+			<th>Thread Name</th>
+			<th>Active Job</th>
+		</tr>
+		<lift:threads.show>
+			<tr>
+				<td><session:sessionid /></td>
+				<td><session:username /></td>
+				<td><session:reason /></td>
+				<td><session:date /></td>
+				<td><session:logout /></td>
+			</tr>
+		</lift:threads.show>
+	</table>
+</lift:surround>
+

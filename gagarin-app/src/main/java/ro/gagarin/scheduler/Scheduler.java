@@ -2,22 +2,26 @@ package ro.gagarin.scheduler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.log4j.Logger;
 
-public class Scheduler {
+import ro.gagarin.BasicManagerFactory;
+import ro.gagarin.config.Configuration;
+import ro.gagarin.config.SettingsChangeObserver;
+
+public class Scheduler implements SettingsChangeObserver {
 
     private static final transient Logger LOG = Logger.getLogger(Scheduler.class);
     private ArrayList<SchedulerThread> threads = new ArrayList<SchedulerThread>();
-    private final int threadCount;
+    private int threadCount;
     private HashMap<Long, SimpleJob> pendingJobStore = new HashMap<Long, SimpleJob>();
     private HashMap<Long, SimpleJob> allJobStore = new HashMap<Long, SimpleJob>();
+    private AtomicInteger threadId = new AtomicInteger();
 
     public Scheduler() {
-	// TODO:(2) make this value configurable
-	// but could be tricky since the scheduler is required for ConfigFile
-	// init
-	this(10);
+	this(Configuration.SCHEDULER_THREADS);
+	BasicManagerFactory.getInstance().getConfigurationManager().registerForChange("SCHEDULER_THREADS", this);
     }
 
     public Scheduler(int threadCount) {
@@ -25,8 +29,12 @@ public class Scheduler {
     }
 
     public void start() {
-	for (int i = 0; i < threadCount; i++) {
-	    SchedulerThread thread = new SchedulerThread(this, i);
+	createNewThreads(this.threadCount);
+    }
+
+    public void createNewThreads(int count) {
+	for (int i = 0; i < count; i++) {
+	    SchedulerThread thread = new SchedulerThread(this, threadId.getAndIncrement());
 	    thread.start();
 	    threads.add(thread);
 	}
@@ -139,5 +147,34 @@ public class Scheduler {
 	    this.notify();
 	} else
 	    LOG.error("Job was not found in job store:" + id);
+    }
+
+    @Override
+    public boolean configChanged(String config, String value) {
+	if (Configuration.SCHEDULER_THREADS.equals(this.threadCount)) {
+	    return true;
+	}
+	if (Configuration.SCHEDULER_THREADS > threadCount) {
+	    synchronized (this) {
+		int delta = Configuration.SCHEDULER_THREADS - threadCount;
+		createNewThreads(delta);
+		this.threadCount = Configuration.SCHEDULER_THREADS;
+	    }
+	} else {
+	    synchronized (this) {
+		int delta = threadCount - Configuration.SCHEDULER_THREADS;
+		destroyThreads(delta);
+		this.threadCount = Configuration.SCHEDULER_THREADS;
+		this.notifyAll();
+	    }
+	}
+	return false;
+    }
+
+    private void destroyThreads(int delta) {
+	for (int i = 0; i < delta; i++) {
+	    SchedulerThread remove = threads.remove(0);
+	    remove.shutdown();
+	}
     }
 }

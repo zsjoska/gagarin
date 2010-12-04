@@ -16,6 +16,8 @@ public class Configuration {
 
     private static final HashMap<String, String> CUSTOM_ENTRIES = new HashMap<String, String>();
 
+    public static volatile Integer SCHEDULER_THREADS = 2;
+
     public static volatile Long USER_SESSION_TIMEOUT = 1000 * 60 * 5l;
 
     public static volatile String ADMIN_ROLE_NAME = "ADMIN_ROLE";
@@ -97,11 +99,21 @@ public class Configuration {
 	    Object oldValue = field.get(null);
 	    Object newValue = oldValue;
 	    if (oldValue instanceof Long) {
+
 		newValue = Long.valueOf(value);
+
 	    } else if (oldValue instanceof String) {
+
 		newValue = value;
+
 	    } else if (oldValue instanceof Boolean) {
+
 		newValue = Boolean.valueOf(value);
+
+	    } else if (oldValue instanceof Integer) {
+
+		newValue = Integer.valueOf(value);
+
 	    } else {
 		throw new OperationException(ErrorCodes.INTERNAL_ERROR, "No conversion method defined for " + key + "="
 			+ value);

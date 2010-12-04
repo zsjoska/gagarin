@@ -3,9 +3,12 @@ package ro.gagarin;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import org.junit.Test;
 
+import ro.gagarin.config.Configuration;
 import ro.gagarin.log.AppLog;
 import ro.gagarin.manager.ManagerFactory;
 import ro.gagarin.manager.ScheduleManager;
@@ -13,6 +16,7 @@ import ro.gagarin.scheduler.JobController;
 import ro.gagarin.scheduler.ScheduledJob;
 import ro.gagarin.scheduler.Scheduler;
 import ro.gagarin.session.Session;
+import ro.gagarin.testutil.TUtil;
 
 public class SchedulerTest {
 
@@ -115,5 +119,70 @@ public class SchedulerTest {
 		throw new RuntimeException("Test Exception");
 	    }
 	}, false);
+    }
+
+    @Test
+    public void testIncreaseDecreaseThreadCount() throws Exception {
+	Integer schedulerThreads = Configuration.SCHEDULER_THREADS;
+	int newCount = schedulerThreads + 2;
+	Session session = TUtil.createTestSession();
+	try {
+	    FACTORY.getConfigurationManager().setConfigValue(session, "SCHEDULER_THREADS", "" + (newCount));
+	} finally {
+	    FACTORY.releaseSession(session);
+	}
+
+	final HashSet<String> threadsTouched = new HashSet<String>();
+	final LinkedBlockingQueue<String> step = new LinkedBlockingQueue<String>();
+	int jobsToExecute = 100;
+	int executeCount = 2;
+	ScheduleManager scheduleManager = FACTORY.getScheduleManager();
+	for (int i = 0; i < jobsToExecute; i++) {
+	    scheduleManager.scheduleJob(new ScheduledJob("testIncreasedThreads", 0, 1, executeCount) {
+		@Override
+		public void execute(Session session, AppLog log, JobController jc) {
+		    threadsTouched.add(Thread.currentThread().getName());
+		    step.offer(Thread.currentThread().getName() + ":" + getName());
+		}
+	    }, false);
+	}
+	for (int i = 0; i < jobsToExecute * executeCount; i++) {
+	    System.out.println(step.take());
+	}
+	for (String name : threadsTouched) {
+	    System.out.println(name);
+	}
+	assertEquals(newCount, threadsTouched.size());
+
+	// now to decrease
+
+	newCount = newCount - 2;
+	session = TUtil.createTestSession();
+	try {
+	    FACTORY.getConfigurationManager().setConfigValue(session, "SCHEDULER_THREADS", "" + (newCount));
+	} finally {
+	    FACTORY.releaseSession(session);
+	}
+
+	Thread.sleep(2000);
+
+	threadsTouched.clear();
+	step.clear();
+	for (int i = 0; i < jobsToExecute; i++) {
+	    scheduleManager.scheduleJob(new ScheduledJob("testIncreasedThreads", 0, 1, executeCount) {
+		@Override
+		public void execute(Session session, AppLog log, JobController jc) {
+		    threadsTouched.add(Thread.currentThread().getName());
+		    step.offer(Thread.currentThread().getName() + ":" + getName());
+		}
+	    }, false);
+	}
+	for (int i = 0; i < jobsToExecute * executeCount; i++) {
+	    System.out.println(step.take());
+	}
+	for (String name : threadsTouched) {
+	    System.out.println(name);
+	}
+	assertEquals(newCount, threadsTouched.size());
     }
 }

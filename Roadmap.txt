@@ -42,8 +42,18 @@ Generic implementation.
   F006B: create a set of cache fields and update through reflection
   F007C: fix the scope of the config on the adminui
 
+ F004: Improve Executor
+ 
+  F004E: implement runtime thread count configuration
+
   === Feature Pool ===
 
+ F004: Improve Executor
+ 
+  F004A: allow instant async execution
+  F004B: add progress estimation support
+  F004C: add WS method and required data structures to export the current jobs
+  F004D: add WS method and required data structures to export the current threads
 
  F002: Flexible custom fields with cleartext mapping
  
@@ -54,12 +64,6 @@ Generic implementation.
   F003A: Define a WS data structure to allow generic name-value pair retrieval
   F003B: create WS method to retrieve the server properties
   F003C: implement module version definition
-
- F004: Improve Executor
- 
-  F004A: allow instant async execution
-  F004B: add progress estimation support
-  F004C: add WS method and required data structures to export the current jobs
   
  F005: Don't generate WSDL files
  

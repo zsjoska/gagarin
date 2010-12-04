@@ -9,7 +9,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
 
-import ro.gagarin.BasicManagerFactory;
 import ro.gagarin.ControlEntity;
 import ro.gagarin.Owner;
 import ro.gagarin.config.Configuration;
@@ -22,7 +21,6 @@ import ro.gagarin.exceptions.ItemNotFoundException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.log.AppLog;
-import ro.gagarin.manager.ConfigurationManager;
 import ro.gagarin.manager.LogManager;
 import ro.gagarin.manager.ManagerFactory;
 import ro.gagarin.manager.SessionManager;
@@ -45,8 +43,6 @@ public class BasicSessionManager implements SessionManager {
     public BasicSessionManager() {
 	LOG.debug("Creating BasicSessionManager");
 
-	ConfigurationManager cfgManager;
-	cfgManager = BasicManagerFactory.getInstance().getConfigurationManager();
 	chkSession = new SessionCheckerThread(this);
 	chkSession.start();
 

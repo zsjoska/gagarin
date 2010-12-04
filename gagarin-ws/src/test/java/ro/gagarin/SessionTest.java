@@ -145,7 +145,7 @@ public class SessionTest {
     @Test
     public void testSessionExpiration() throws InterruptedException, SessionNotFoundException, OperationException {
 
-	TUtil.setDBImportRate(100);
+	long oldDBImportRate = TUtil.setDBImportRate(100);
 
 	session = FACTORY.getSessionManager().createSession(null, null, FACTORY);
 	FACTORY.getSessionManager().acquireSession(session.getSessionString());
@@ -185,7 +185,7 @@ public class SessionTest {
 	    TUtil.waitDBImportToHappen();
 	}
 
-	TUtil.resetDBImportRate();
+	TUtil.setDBImportRate(oldDBImportRate);
     }
 
     @Test

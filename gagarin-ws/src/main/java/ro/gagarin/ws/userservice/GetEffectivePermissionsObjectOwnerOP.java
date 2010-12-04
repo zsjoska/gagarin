@@ -9,7 +9,6 @@ import ro.gagarin.dao.RoleDAO;
 import ro.gagarin.dao.UserDAO;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.manager.AuthorizationManager;
-import ro.gagarin.manager.ConfigurationManager;
 import ro.gagarin.manager.PermissionTest;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.Group;
@@ -27,7 +26,6 @@ public class GetEffectivePermissionsObjectOwnerOP extends WebserviceOperation {
     private final WSOwner owner;
     private RoleDAO roleDAO;
     private Set<PermissionEnum> permissions;
-    private ConfigurationManager cfgMgr;
     private UserDAO userDAO;
 
     public GetEffectivePermissionsObjectOwnerOP(String sessionId, WSControlEntity ce, WSOwner owner) {
@@ -58,7 +56,6 @@ public class GetEffectivePermissionsObjectOwnerOP extends WebserviceOperation {
     protected void prepareManagers(Session session) throws ExceptionBase {
 	roleDAO = session.getManagerFactory().getDAOManager().getRoleDAO(session);
 	userDAO = session.getManagerFactory().getDAOManager().getUserDAO(session);
-	cfgMgr = session.getManagerFactory().getConfigurationManager();
     }
 
     @Override

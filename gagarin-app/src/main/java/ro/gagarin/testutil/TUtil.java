@@ -20,7 +20,6 @@ import ro.gagarin.user.UserRole;
 
 public class TUtil {
     private static final ManagerFactory FACTORY = BasicManagerFactory.getInstance();
-    private static final ConfigurationManager CFG_MANAGER = FACTORY.getConfigurationManager();
 
     private static volatile long sequencence = System.currentTimeMillis();
 
@@ -52,12 +51,6 @@ public class TUtil {
 	// trigger a config change to increase the DB check rate
 	dbCfgMgr.configChanged("DB_CONFIG_CHECK_PERIOD", String.valueOf(i));
 	return oldRate;
-    }
-
-    public static void resetDBImportRate() {
-	DBConfigManager dbCfgMgr = DBConfigManager.getInstance();
-	long chk = Configuration.DB_CONFIG_CHECK_PERIOD;
-	// dbCfgMgr.configChanged(Config.DB_CONFIG_CHECK_PERIOD, "" + chk);
     }
 
     public static UserRole getAdminRole() throws ExceptionBase {

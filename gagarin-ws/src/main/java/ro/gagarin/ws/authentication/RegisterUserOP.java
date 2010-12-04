@@ -7,7 +7,6 @@ import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.exceptions.ItemExistsException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.manager.AuthorizationManager;
-import ro.gagarin.manager.ConfigurationManager;
 import ro.gagarin.manager.SessionManager;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.Group;
@@ -24,7 +23,6 @@ public class RegisterUserOP extends WebserviceOperation {
     private UserDAO userDAO;
     private SessionManager sessionManager;
     private String confirmationKey;
-    private ConfigurationManager cfgManager;
     private final String defGroupname;
 
     public RegisterUserOP(String sessionId, WSUser user, String defGroupname) {
@@ -35,7 +33,6 @@ public class RegisterUserOP extends WebserviceOperation {
 
     @Override
     protected void checkInput(Session session) throws ExceptionBase {
-	cfgManager = FACTORY.getConfigurationManager();
 	boolean registration = Configuration.ALLOW_USER_REGISTRATION;
 	if (!registration) {
 	    throw new OperationException(ErrorCodes.FEATURE_DISABLED, "User registration is not allowed");

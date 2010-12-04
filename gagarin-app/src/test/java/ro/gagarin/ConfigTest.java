@@ -4,12 +4,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import ro.gagarin.config.ConfigEntry;
 import ro.gagarin.config.Configuration;
 import ro.gagarin.config.DBConfigManager;
 import ro.gagarin.config.FileConfigurationManager;
@@ -27,7 +29,7 @@ public class ConfigTest {
 
     @BeforeClass
     public static void startup() {
-	// oldDBImportRate = TUtil.setDBImportRate(100);
+	oldDBImportRate = TUtil.setDBImportRate(100);
     }
 
     @AfterClass
@@ -136,5 +138,37 @@ public class ConfigTest {
 	assertEquals("We had to be notified", 2, values.size());
 	assertEquals("Wrong value notified", configValue2, values.get(1));
 
+    }
+
+    @Test
+    public void testConfigurationScope() throws Exception {
+	Session session = TUtil.createTestSession();
+	ConfigurationManager localCfgMgr = FileConfigurationManager.getInstance();
+	DBConfigManager dbCfgMgr = DBConfigManager.getInstance();
+	try {
+	    localCfgMgr.setConfigValue(session, "REGISTRATION_VALIDITY", "123");
+	    localCfgMgr.setConfigValue(session, "LOCAL_CUSTOM", "123");
+
+	    dbCfgMgr.setConfigValue(session, "ALLOW_USER_REGISTRATION", "true");
+	    dbCfgMgr.setConfigValue(session, "DB_CUSTOM", "true");
+	} finally {
+	    FACTORY.releaseSession(session);
+	}
+	dbCfgMgr.waitForDBImport();
+
+	List<ConfigEntry> configValues = dbCfgMgr.getConfigValues();
+	for (ConfigEntry entry : configValues) {
+	    if (entry.getConfigName().equals("REGISTRATION_VALIDITY")) {
+		assertEquals("LOCAL", entry.getConfigScope().name());
+	    } else if (entry.getConfigName().equals("LOCAL_CUSTOM")) {
+		assertEquals("LOCAL", entry.getConfigScope().name());
+	    } else if (entry.getConfigName().equals("ALLOW_USER_REGISTRATION")) {
+		assertEquals("DB", entry.getConfigScope().name());
+	    } else if (entry.getConfigName().equals("DB_CUSTOM")) {
+		assertEquals("DB", entry.getConfigScope().name());
+	    } else if (entry.getConfigName().equals("ADMIN_PASSWORD")) {
+		assertEquals("DEFAULT", entry.getConfigScope().name());
+	    }
+	}
     }
 }

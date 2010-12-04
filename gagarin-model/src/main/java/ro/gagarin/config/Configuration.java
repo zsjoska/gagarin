@@ -76,7 +76,7 @@ public class Configuration {
      * registration is valid.<br>
      * 172800000 = 2 days
      */
-    public static volatile Long REGISTRATION_VALIDITY = (long) 1000 * 60 * 60 * 48;
+    public static volatile Long REGISTRATION_VALIDITY = 1000 * 60 * 60 * 48L;
 
     public static volatile String ADMIN_GROUP_NAME = "Admin Group";
 

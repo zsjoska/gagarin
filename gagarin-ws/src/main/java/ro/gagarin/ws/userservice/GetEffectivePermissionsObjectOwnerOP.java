@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import ro.gagarin.CommonControlEntities;
-import ro.gagarin.config.Config;
+import ro.gagarin.config.Configuration;
 import ro.gagarin.dao.RoleDAO;
 import ro.gagarin.dao.UserDAO;
 import ro.gagarin.exceptions.ExceptionBase;
@@ -68,7 +68,7 @@ public class GetEffectivePermissionsObjectOwnerOP extends WebserviceOperation {
 	// if the owner is admin or admin group
 	// or is a member of the admin group, we have to return all permissions
 
-	String adminGroupName = cfgMgr.getString(Config.ADMIN_GROUP_NAME);
+	String adminGroupName = Configuration.ADMIN_GROUP_NAME;
 	// TODO:(5) Subject for cache
 	Group adminGroup = userDAO.getGroupByName(adminGroupName);
 	if (adminGroup.getId().equals(owner.getId())) {

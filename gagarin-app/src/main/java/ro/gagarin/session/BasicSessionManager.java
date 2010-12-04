@@ -38,9 +38,6 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
 
     private static final transient Logger LOG = Logger.getLogger(BasicSessionManager.class);
 
-    private long USER_SESSION_TIMEOUT;
-    private long SESSION_CHECK_PERIOD;
-
     private final ConcurrentHashMap<String, Session> sessions = new ConcurrentHashMap<String, Session>(
 	    new HashMap<String, Session>());
 
@@ -52,8 +49,6 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
 	ConfigurationManager cfgManager;
 	cfgManager = BasicManagerFactory.getInstance().getConfigurationManager();
 	cfgManager.registerForChange(this);
-	USER_SESSION_TIMEOUT = Configuration.USER_SESSION_TIMEOUT;
-	SESSION_CHECK_PERIOD = Configuration.SESSION_CHECK_PERIOD;
 	chkSession = new SessionCheckerThread(this);
 	chkSession.start();
 
@@ -62,7 +57,7 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
     @Override
     public Session createSession(String language, String reason, ManagerFactory factory) {
 	Session session = new Session();
-	session.setSessiontimeout(USER_SESSION_TIMEOUT);
+	session.setSessiontimeout(Configuration.USER_SESSION_TIMEOUT);
 	session.setLanguage(language);
 	session.setReason(reason);
 	session.setExpires(System.currentTimeMillis() + session.getSessionTimeout());
@@ -113,19 +108,11 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
 
     @Override
     public boolean configChanged(String config, String value) {
-	switch (config) {
-	case USER_SESSION_TIMEOUT:
-	    USER_SESSION_TIMEOUT = Long.valueOf(value);
-	    return true;
-	case SESSION_CHECK_PERIOD:
-	    SESSION_CHECK_PERIOD = Long.valueOf(value);
-	    return true;
-	}
 	return false;
     }
 
     public long getSessionCheckPeriod() {
-	return SESSION_CHECK_PERIOD;
+	return Configuration.SESSION_CHECK_PERIOD;
     }
 
     @Override

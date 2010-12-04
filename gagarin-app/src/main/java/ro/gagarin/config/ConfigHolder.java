@@ -1,6 +1,7 @@
 package ro.gagarin.config;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 import java.util.Map.Entry;
@@ -13,6 +14,7 @@ import ro.gagarin.session.Session;
 public class ConfigHolder {
 
     private static final transient Logger LOG = Logger.getLogger(ConfigHolder.class);
+    private final HashSet<String> definedConfig = new HashSet<String>();
 
     /**
      * The change observers, a single static instance
@@ -25,13 +27,12 @@ public class ConfigHolder {
 
     public void setConfigValue(Session session, String key, String value) throws OperationException {
 	Configuration.setConfig(key, value);
+	definedConfig.add(key);
 	notifyConfigChange(key, value);
     }
 
     public boolean isDefined(String config) {
-	// TODO: find a way to implement
-	// return configuration.get(config.ordinal()) != null;
-	return true;
+	return definedConfig.contains(config);
     }
 
     private void notifyConfigChange(String config, String value) {
@@ -55,17 +56,21 @@ public class ConfigHolder {
     }
 
     public void importConfig(Properties prop) {
+	definedConfig.clear();
 	Set<Entry<Object, Object>> entrySet = prop.entrySet();
 	for (Entry<Object, Object> entry : entrySet) {
+	    String key = entry.getKey().toString();
+	    String value = entry.getValue().toString();
 	    try {
-		boolean changed = Configuration.setConfig(entry.getKey().toString(), entry.getValue().toString());
+		definedConfig.add(key);
+		boolean changed = Configuration.setConfig(key, value);
 		if (changed) {
-		    notifyConfigChange(entry.getKey().toString(), entry.getValue().toString());
+		    notifyConfigChange(key, value);
 		}
 	    } catch (IllegalArgumentException e) {
-		LOG.error("Could not load config " + entry.getKey().toString() + "=" + entry.getValue().toString());
+		LOG.error("Could not load config " + key + "=" + value);
 	    } catch (OperationException e) {
-		LOG.error("Could not load config " + entry.getKey().toString() + "=" + entry.getValue().toString());
+		LOG.error("Could not load config " + key + "=" + value);
 	    }
 	}
     }

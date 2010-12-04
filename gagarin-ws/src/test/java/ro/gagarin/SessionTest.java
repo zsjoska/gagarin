@@ -10,7 +10,7 @@ import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import ro.gagarin.application.objects.AppUser;
-import ro.gagarin.config.Config;
+import ro.gagarin.config.Configuration;
 import ro.gagarin.dao.RoleDAO;
 import ro.gagarin.dao.UserDAO;
 import ro.gagarin.exceptions.DataConstraintException;
@@ -151,10 +151,10 @@ public class SessionTest {
 	FACTORY.getSessionManager().acquireSession(session.getSessionString());
 	ConfigurationManager cfgManager = FACTORY.getConfigurationManager();
 
-	String oldSessionTimeout = cfgManager.getString(Config.USER_SESSION_TIMEOUT);
+	Long oldSessionTimeout = Configuration.USER_SESSION_TIMEOUT;
 
 	try {
-	    cfgManager.setConfigValue(session, Config.USER_SESSION_TIMEOUT, "100");
+	    cfgManager.setConfigValue(session, "USER_SESSION_TIMEOUT", "100");
 	    FACTORY.releaseSession(session);
 
 	    TUtil.waitDBImportToHappen();
@@ -180,7 +180,7 @@ public class SessionTest {
 	    }
 	} finally {
 	    FACTORY.getSessionManager().acquireSession(session.getSessionString());
-	    cfgManager.setConfigValue(session, Config.USER_SESSION_TIMEOUT, oldSessionTimeout);
+	    cfgManager.setConfigValue(session, "USER_SESSION_TIMEOUT", "" + oldSessionTimeout);
 	    FACTORY.releaseSession(session);
 	    TUtil.waitDBImportToHappen();
 	}

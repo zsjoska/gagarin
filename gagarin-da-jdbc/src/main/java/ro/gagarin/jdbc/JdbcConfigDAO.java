@@ -2,7 +2,6 @@ package ro.gagarin.jdbc;
 
 import java.util.ArrayList;
 
-import ro.gagarin.config.Config;
 import ro.gagarin.config.ConfigEntry;
 import ro.gagarin.config.GetConfigValueSQL;
 import ro.gagarin.config.GetConfigsSQL;
@@ -17,18 +16,20 @@ import ro.gagarin.session.Session;
 
 public class JdbcConfigDAO extends BaseJdbcDAO implements ConfigDAO {
 
+    private static final String LAST_UPDATE_TIME = "_LAST_UPDATE_TIME_";
+
     public JdbcConfigDAO(Session session) throws OperationException {
 	super(session);
     }
 
     @Override
     public long getLastUpdateTime() throws OperationException, DataConstraintException {
-	String value = GetConfigValueSQL.execute(this, Config._LAST_UPDATE_TIME_.name());
+	String value = GetConfigValueSQL.execute(this, LAST_UPDATE_TIME);
 	if (value == null) {
 	    long updateTime = System.currentTimeMillis();
 	    DBConfig config = new DBConfig();
 	    config.setId(DBConfig.getNextId());
-	    config.setConfigName(Config._LAST_UPDATE_TIME_.name());
+	    config.setConfigName(LAST_UPDATE_TIME);
 	    config.setConfigValue("" + updateTime);
 	    new InsertConfigValueSQL(this, config).execute();
 	    return updateTime;
@@ -59,7 +60,7 @@ public class JdbcConfigDAO extends BaseJdbcDAO implements ConfigDAO {
 	    new UpdateConfigValueSQL(this, config).execute();
 	}
 	config = new DBConfig();
-	config.setConfigName(Config._LAST_UPDATE_TIME_.name());
+	config.setConfigName(LAST_UPDATE_TIME);
 	config.setConfigValue("" + System.currentTimeMillis());
 	config.setId(DBConfig.getNextId());
 	new UpdateConfigValueSQL(this, config).execute();

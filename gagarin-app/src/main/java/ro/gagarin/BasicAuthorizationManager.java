@@ -4,7 +4,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import ro.gagarin.config.Config;
+import ro.gagarin.config.Configuration;
 import ro.gagarin.dao.RoleDAO;
 import ro.gagarin.exceptions.DataConstraintException;
 import ro.gagarin.exceptions.ItemNotFoundException;
@@ -12,7 +12,6 @@ import ro.gagarin.exceptions.LoginRequiredException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.exceptions.PermissionDeniedException;
 import ro.gagarin.manager.AuthorizationManager;
-import ro.gagarin.manager.ConfigurationManager;
 import ro.gagarin.manager.PermissionTest;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
@@ -111,9 +110,8 @@ public class BasicAuthorizationManager implements AuthorizationManager {
     public void addCreatorPermission(ControlEntity ce, Session session) throws OperationException,
 	    DataConstraintException, ItemNotFoundException {
 	// TODO:(2) some optimization could help here
-	ConfigurationManager cfgMgr = session.getManagerFactory().getConfigurationManager();
 	RoleDAO roleDAO = session.getManagerFactory().getDAOManager().getRoleDAO(session);
-	String adminRoleName = cfgMgr.getString(Config.ADMIN_ROLE_NAME);
+	String adminRoleName = Configuration.ADMIN_ROLE_NAME;
 	UserRole adminRole = roleDAO.getRoleByName(adminRoleName);
 	roleDAO.assignRoleToOwner(adminRole, session.getUser(), ce);
 	Set<UserPermission> permissions = roleDAO.getRolePermissions(adminRole);

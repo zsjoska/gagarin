@@ -1,6 +1,6 @@
 package ro.gagarin.ws.authentication;
 
-import ro.gagarin.config.Config;
+import ro.gagarin.config.Configuration;
 import ro.gagarin.dao.UserDAO;
 import ro.gagarin.exceptions.ErrorCodes;
 import ro.gagarin.exceptions.ExceptionBase;
@@ -36,7 +36,7 @@ public class RegisterUserOP extends WebserviceOperation {
     @Override
     protected void checkInput(Session session) throws ExceptionBase {
 	cfgManager = FACTORY.getConfigurationManager();
-	boolean registration = cfgManager.getBoolean(Config.ALLOW_USER_REGISTRATION);
+	boolean registration = Configuration.ALLOW_USER_REGISTRATION;
 	if (!registration) {
 	    throw new OperationException(ErrorCodes.FEATURE_DISABLED, "User registration is not allowed");
 	}
@@ -60,7 +60,7 @@ public class RegisterUserOP extends WebserviceOperation {
     @Override
     protected void execute(Session session) throws ExceptionBase {
 	User sessionUser = this.user;
-	long valid = cfgManager.getLong(Config.REGISTRATION_VALIDITY);
+	long valid = Configuration.REGISTRATION_VALIDITY;
 
 	User userByUsername = userDAO.getUserByUsername(user.getUsername());
 	if (userByUsername != null && userByUsername.getStatus() != UserStatus.INIT) {

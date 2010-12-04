@@ -10,7 +10,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import ro.gagarin.config.Config;
+import ro.gagarin.config.Configuration;
 import ro.gagarin.config.DBConfigManager;
 import ro.gagarin.config.FileConfigurationManager;
 import ro.gagarin.config.SettingsChangeObserver;
@@ -23,15 +23,16 @@ public class ConfigTest {
 
     private static final ManagerFactory FACTORY = BasicManagerFactory.getInstance();
     private static final transient Logger LOG = Logger.getLogger(ConfigTest.class);
+    private static long oldDBImportRate;
 
     @BeforeClass
     public static void startup() {
-	TUtil.setDBImportRate(100);
+	// oldDBImportRate = TUtil.setDBImportRate(100);
     }
 
     @AfterClass
     public static void shutdown() {
-	TUtil.resetDBImportRate();
+	TUtil.setDBImportRate(oldDBImportRate);
     }
 
     /**
@@ -48,21 +49,15 @@ public class ConfigTest {
 	Session session = TUtil.createTestSession();
 
 	ConfigurationManager localCfgMgr = FileConfigurationManager.getInstance();
-	localCfgMgr.setConfigValue(session, Config._TEST_LOCAL_ONLY_, "A_LOCAL_VALUE");
+	localCfgMgr.setConfigValue(session, "_TEST_LOCAL_ONLY_", "A_LOCAL_VALUE");
 
 	DBConfigManager dbCfgMgr = DBConfigManager.getInstance();
 	try {
-	    dbCfgMgr.setConfigValue(session, Config._TEST_LOCAL_ONLY_, "1000");
+	    dbCfgMgr.setConfigValue(session, "_TEST_LOCAL_ONLY_", "1000");
 	} finally {
 	    FACTORY.releaseSession(session);
 	}
-	assertEquals("The config should not change", FileConfigurationManager.getInstance().getString(
-		Config._TEST_LOCAL_ONLY_), dbCfgMgr.getString(Config._TEST_LOCAL_ONLY_));
-	long sleeptime = 150; // dbCfgMgr.getLong(Config.DB_CONFIG_CHECK_PERIOD);
-	LOG.info("Waiting for DB Import " + sleeptime);
-	Thread.sleep(sleeptime);
-	assertEquals("The config should not change because this config is defined locally", FileConfigurationManager
-		.getInstance().getString(Config._TEST_LOCAL_ONLY_), dbCfgMgr.getString(Config._TEST_LOCAL_ONLY_));
+	assertEquals("The config should not change", "A_LOCAL_VALUE", Configuration._TEST_LOCAL_ONLY_);
     }
 
     @Test
@@ -72,16 +67,15 @@ public class ConfigTest {
 	DBConfigManager dbCfgMgr = DBConfigManager.getInstance();
 
 	String aNewValue = String.valueOf(System.nanoTime());
-	dbCfgMgr.getString(Config._TEST_DB_ONLY_);
 	try {
 
-	    dbCfgMgr.setConfigValue(session, Config._TEST_DB_ONLY_, aNewValue);
+	    dbCfgMgr.setConfigValue(session, "_TEST_DB_ONLY_", aNewValue);
 	} finally {
 	    FACTORY.releaseSession(session);
 	}
 
 	dbCfgMgr.waitForDBImport();
-	assertEquals("The config should change", aNewValue, dbCfgMgr.getString(Config._TEST_DB_ONLY_));
+	assertEquals("The config should change", aNewValue, Configuration._TEST_DB_ONLY_);
     }
 
     /**
@@ -108,7 +102,7 @@ public class ConfigTest {
 
 	    @Override
 	    public boolean configChanged(String config, String value) {
-		if (config == Config._TEST_DB_AND_FILE_) {
+		if ("_TEST_DB_AND_FILE_".equalsIgnoreCase(config)) {
 		    values.add(value);
 		    return true;
 		}
@@ -117,7 +111,7 @@ public class ConfigTest {
 	});
 
 	try {
-	    dbCfgMgr.setConfigValue(session, Config._TEST_DB_AND_FILE_, configValue1);
+	    dbCfgMgr.setConfigValue(session, "_TEST_DB_AND_FILE_", configValue1);
 
 	} finally {
 	    FACTORY.releaseSession(session);
@@ -125,21 +119,20 @@ public class ConfigTest {
 	dbCfgMgr.waitForDBImport();
 	assertEquals("We had to be notified", 1, values.size());
 	assertEquals("Wrong value in config", configValue1, values.get(0));
-	assertEquals("The config should change", configValue1, dbCfgMgr.getString(Config._TEST_DB_AND_FILE_));
+	assertEquals("The config should change", configValue1, Configuration._TEST_DB_AND_FILE_);
 
 	// now we change the file config and we expect that DB config listeners
 	// will also be notified
 	session = TUtil.createTestSession();
 	ConfigurationManager cfgManager = FileConfigurationManager.getInstance();
 	try {
-	    cfgManager.setConfigValue(session, Config._TEST_DB_AND_FILE_, configValue2);
+	    cfgManager.setConfigValue(session, "_TEST_DB_AND_FILE_", configValue2);
 	} finally {
 	    FACTORY.releaseSession(session);
 	}
 
-	assertEquals("The config should change", configValue2, cfgManager.getString(Config._TEST_DB_AND_FILE_));
-	assertEquals("The config should change also for DB", configValue2, dbCfgMgr
-		.getString(Config._TEST_DB_AND_FILE_));
+	assertEquals("The config should change", configValue2, Configuration._TEST_DB_AND_FILE_);
+	assertEquals("The config should change also for DB", configValue2, Configuration._TEST_DB_AND_FILE_);
 	assertEquals("We had to be notified", 2, values.size());
 	assertEquals("Wrong value notified", configValue2, values.get(1));
 

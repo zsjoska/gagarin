@@ -76,7 +76,7 @@ public class MonitoredFile implements SettingsChangeObserver {
 	// the file configuration manager calls this first which is
 	// uninitialized
 	// we have to be careful here
-	long fileCheckInterval = Long.valueOf(Config.FILE_CHECK_INTERVAL.getDefaultValue());
+	long fileCheckInterval = Configuration.FILE_CHECK_INTERVAL;
 	DefaultScheduleManager mgr = new DefaultScheduleManager();
 
 	ScheduledJob statupjob = new MonitoredFile.StartupJob("FILE_MONITOR_STARTUP:" + file.getName(), this,

@@ -2,7 +2,7 @@ package ro.gagarin.testutil;
 
 import ro.gagarin.BasicManagerFactory;
 import ro.gagarin.application.objects.AppUser;
-import ro.gagarin.config.Config;
+import ro.gagarin.config.Configuration;
 import ro.gagarin.config.DBConfigManager;
 import ro.gagarin.dao.RoleDAO;
 import ro.gagarin.dao.UserDAO;
@@ -46,22 +46,24 @@ public class TUtil {
 	}
     }
 
-    public static void setDBImportRate(int i) {
+    public static long setDBImportRate(long i) {
 	DBConfigManager dbCfgMgr = DBConfigManager.getInstance();
+	Long oldRate = Configuration.DB_CONFIG_CHECK_PERIOD;
 	// trigger a config change to increase the DB check rate
 	dbCfgMgr.configChanged("DB_CONFIG_CHECK_PERIOD", String.valueOf(i));
+	return oldRate;
     }
 
     public static void resetDBImportRate() {
 	DBConfigManager dbCfgMgr = DBConfigManager.getInstance();
-	long chk = dbCfgMgr.getLong(Config.DB_CONFIG_CHECK_PERIOD);
-	dbCfgMgr.configChanged(Config.DB_CONFIG_CHECK_PERIOD, "" + chk);
+	long chk = Configuration.DB_CONFIG_CHECK_PERIOD;
+	// dbCfgMgr.configChanged(Config.DB_CONFIG_CHECK_PERIOD, "" + chk);
     }
 
     public static UserRole getAdminRole() throws ExceptionBase {
 	Session session = createTestSession();
 	RoleDAO roleDAO = FACTORY.getDAOManager().getRoleDAO(session);
-	UserRole role = roleDAO.getRoleByName(CFG_MANAGER.getString(Config.ADMIN_ROLE_NAME));
+	UserRole role = roleDAO.getRoleByName(Configuration.ADMIN_ROLE_NAME);
 	FACTORY.releaseSession(session);
 	return role;
     }
@@ -73,7 +75,7 @@ public class TUtil {
     public static User getAdminUser() throws OperationException {
 	Session session = createTestSession();
 	UserDAO userDAO = FACTORY.getDAOManager().getUserDAO(session);
-	User user = userDAO.getUserByUsername(CFG_MANAGER.getString(Config.ADMIN_USER_NAME));
+	User user = userDAO.getUserByUsername(Configuration.ADMIN_USER_NAME);
 	FACTORY.releaseSession(session);
 	return user;
     }
@@ -83,7 +85,7 @@ public class TUtil {
 	Session session = FACTORY.getSessionManager().createSession(null, "TEST", FACTORY);
 	FACTORY.getSessionManager().acquireSession(session.getSessionString());
 	UserDAO userDAO = FACTORY.getDAOManager().getUserDAO(session);
-	User adminUser = userDAO.getUserByUsername(CFG_MANAGER.getString(Config.ADMIN_USER_NAME));
+	User adminUser = userDAO.getUserByUsername(Configuration.ADMIN_USER_NAME);
 	SessionManager sessionManager = FACTORY.getSessionManager();
 	sessionManager.assignUserToSession(adminUser, session);
 	sessionManager.releaseSession(session);
@@ -91,7 +93,7 @@ public class TUtil {
     }
 
     public static Group getAdminGroup(Session session) throws ExceptionBase {
-	String adminGroupName = FACTORY.getConfigurationManager().getString(Config.ADMIN_GROUP_NAME);
+	String adminGroupName = Configuration.ADMIN_GROUP_NAME;
 	return FACTORY.getDAOManager().getUserDAO(session).getGroupByName(adminGroupName);
 
     }

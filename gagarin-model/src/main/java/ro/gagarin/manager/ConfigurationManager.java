@@ -3,11 +3,11 @@ package ro.gagarin.manager;
 import java.io.InputStream;
 import java.util.List;
 
-import ro.gagarin.config.Config;
 import ro.gagarin.config.ConfigEntry;
 import ro.gagarin.config.SettingsChangeObserver;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.session.Session;
+import sun.security.krb5.Config;
 
 /**
  * Base interface for the application to interact with the application

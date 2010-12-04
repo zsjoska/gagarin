@@ -10,7 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import ro.gagarin.config.Config;
+import ro.gagarin.config.Configuration;
 import ro.gagarin.dao.BaseDAO;
 import ro.gagarin.dao.DAOManager;
 import ro.gagarin.exceptions.ErrorCodes;
@@ -80,9 +80,9 @@ public class BaseJdbcDAO implements BaseDAO {
     }
 
     private Connection createConnection(ConfigurationManager cfgManager) {
-	String url = cfgManager.getString(Config.JDBC_CONNECTION_URL);
-	String user = cfgManager.getString(Config.JDBC_DB_USER);
-	String password = cfgManager.getString(Config.JDBC_DB_PASSWORD);
+	String url = Configuration.JDBC_CONNECTION_URL;
+	String user = Configuration.JDBC_DB_USER;
+	String password = Configuration.JDBC_DB_PASSWORD;
 	try {
 	    // TODO:(3) use a connection pool for the DB
 	    Connection connection = DriverManager.getConnection(url, user, password);
@@ -110,7 +110,7 @@ public class BaseJdbcDAO implements BaseDAO {
 	    return;
 	try {
 	    // Load the JDBC driver
-	    String driverName = cfgManager.getString(Config.JDBC_DB_DRIVER);
+	    String driverName = Configuration.JDBC_DB_DRIVER;
 	    APPLOG.info("Loading DB driver " + driverName);
 	    Class.forName(driverName);
 	    BaseJdbcDAO.DRIVER_LOADED = true;
@@ -191,7 +191,7 @@ public class BaseJdbcDAO implements BaseDAO {
 
 	try {
 	    ArrayList<Triple<String, String, String>> parseDBSQLFile = parseDBSQLFile(cfgManager,
-		    Config.DB_INIT_SQL_FILE);
+		    Configuration.DB_INIT_SQL_FILE);
 	    // for (Triple<String, String, String> tuple : parseDBSQLFile) {
 	    // APPLOG.debug("CHECK:" + tuple.s1);
 	    // APPLOG.debug("CREATE:" + tuple.s2);
@@ -222,12 +222,12 @@ public class BaseJdbcDAO implements BaseDAO {
 	}
     }
 
-    private ArrayList<Triple<String, String, String>> parseDBSQLFile(ConfigurationManager cfgManager, Config config)
+    private ArrayList<Triple<String, String, String>> parseDBSQLFile(ConfigurationManager cfgManager, String filename)
 	    throws OperationException {
 
 	ArrayList<Triple<String, String, String>> list = new ArrayList<Triple<String, String, String>>();
 
-	InputStream is = cfgManager.getConfigFileStream(Config.DB_INIT_SQL_FILE);
+	InputStream is = cfgManager.getConfigFileStream(filename);
 
 	BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 
@@ -277,7 +277,7 @@ public class BaseJdbcDAO implements BaseDAO {
 		is.close();
 	    } catch (IOException e) {
 		// log, and ignore
-		APPLOG.error("Exception on closing file stream for " + config.name(), e);
+		APPLOG.error("Exception on closing file stream for " + filename, e);
 	    }
 	}
 

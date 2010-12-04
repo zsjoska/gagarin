@@ -12,7 +12,7 @@ import ro.gagarin.application.objects.AppUser;
 import ro.gagarin.application.objects.AppUserPermission;
 import ro.gagarin.application.objects.AppUserRole;
 import ro.gagarin.auth.AuthenticatorPool;
-import ro.gagarin.config.Config;
+import ro.gagarin.config.Configuration;
 import ro.gagarin.config.DBConfigManager;
 import ro.gagarin.config.FileConfigurationManager;
 import ro.gagarin.dao.RoleDAO;
@@ -119,7 +119,7 @@ public class ApplicationInitializer {
 	checkCreateDBTables();
 
 	this.setTask("GET_CFG_ADMIN_ROLE");
-	this.adminRoleName = cfgManager.getString(Config.ADMIN_ROLE_NAME);
+	this.adminRoleName = Configuration.ADMIN_ROLE_NAME;
 
 	this.setTask("CHK_CREATE_PERMISSIONLIST");
 	checkCreatePermissionList();
@@ -163,7 +163,7 @@ public class ApplicationInitializer {
 
     private void checkAssignAdminAdminGroup() throws ItemNotFoundException, OperationException, DataConstraintException {
 	List<Group> userGroups = userDAO.getUserGroups(adminUser);
-	this.adminGroupName = cfgManager.getString(Config.ADMIN_GROUP_NAME);
+	this.adminGroupName = Configuration.ADMIN_GROUP_NAME;
 	for (Group group : userGroups) {
 	    if (adminGroupName.equals(group.getName())) {
 		// the admin user belongs already to the admin group
@@ -176,7 +176,7 @@ public class ApplicationInitializer {
     }
 
     private void checkAdminGroup() throws OperationException, DataConstraintException {
-	String adminGroupName = cfgManager.getString(Config.ADMIN_GROUP_NAME);
+	String adminGroupName = Configuration.ADMIN_GROUP_NAME;
 	Group groupByName = userDAO.getGroupByName(adminGroupName);
 	if (groupByName == null) {
 	    LOG.info("admin group was not found; creating...");
@@ -247,8 +247,8 @@ public class ApplicationInitializer {
 
     private void checkAdminUser() throws ItemNotFoundException, DataConstraintException, OperationException {
 	LOG.info("Checking admin user");
-	final String adminUserName = cfgManager.getString(Config.ADMIN_USER_NAME);
-	final String adminPassword = cfgManager.getString(Config.ADMIN_PASSWORD);
+	final String adminUserName = Configuration.ADMIN_USER_NAME;
+	final String adminPassword = Configuration.ADMIN_PASSWORD;
 	User admin = userDAO.getUserByUsername(adminUserName);
 	if (admin == null) {
 	    LOG.info("admin user was not found; creating...");

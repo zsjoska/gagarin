@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 
@@ -108,8 +109,8 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
 	log.info("Config change requested: " + config + "=" + value + "(" + Configuration.getAsString(config) + ")");
 	// local config has precedence...
 	if (localConfig.isDefined(config)) {
-	    log.error("Changing the local config will not be persisted! " + config + "=" + value);
-	    localConfig.setConfigValue(session, config, value);
+	    // TODO: review if exception should be thrown
+	    log.error("This is a local config. Modify the file instead" + config + "=" + value);
 	    return;
 	}
 
@@ -141,22 +142,26 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
     }
 
     public List<ConfigEntry> getConfigValues() {
+	Properties props = Configuration.exportProperies();
 	ArrayList<ConfigEntry> cfgList = new ArrayList<ConfigEntry>();
-	for (Config cfg : Config.values()) {
+	for (Entry<Object, Object> cfg : props.entrySet()) {
 	    // do not export internal config controls
-	    if (cfg.name().startsWith("_"))
+	    String key = cfg.getKey().toString();
+	    String value = cfg.getValue().toString();
+	    if (key.startsWith("_")) {
 		continue;
+	    }
+
 	    AppConfig cfgObj = new AppConfig();
-	    cfgObj.setConfigName(cfg.name());
-	    cfgObj.setConfigValue(getString(cfg));
-	    if (isDefined(cfg)) {
+	    cfgObj.setConfigName(key);
+	    cfgObj.setConfigValue(value);
+	    if (isDefined(key)) {
 		cfgObj.setConfigScope(ConfigScope.DB);
-	    } else if (localConfig.isDefined(cfg)) {
+	    } else if (localConfig.isDefined(key)) {
 		cfgObj.setConfigScope(ConfigScope.LOCAL);
 	    } else {
 		cfgObj.setConfigScope(ConfigScope.DEFAULT);
 	    }
-
 	    cfgList.add(cfgObj);
 	}
 	return cfgList;

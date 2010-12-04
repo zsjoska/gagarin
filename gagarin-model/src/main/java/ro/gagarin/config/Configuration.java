@@ -1,7 +1,10 @@
 package ro.gagarin.config;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
+import java.util.Properties;
+import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 
@@ -13,7 +16,7 @@ public class Configuration {
 
     private static final HashMap<String, String> CUSTOM_ENTRIES = new HashMap<String, String>();
 
-    public static volatile Long USER_SESSION_TIMEOUT = 0l;
+    public static volatile Long USER_SESSION_TIMEOUT = 1000 * 60 * 5l;
 
     public static volatile String ADMIN_ROLE_NAME = "ADMIN_ROLE";
 
@@ -138,5 +141,25 @@ public class Configuration {
 	    LOG.error("Could not get the value of" + key, e);
 	}
 	return null;
+    }
+
+    public static Properties exportProperies() {
+	Properties properties = new Properties();
+	for (Entry<String, String> entry : CUSTOM_ENTRIES.entrySet()) {
+	    properties.put(entry.getKey(), entry.getValue());
+	}
+	Field[] fields = Configuration.class.getFields();
+	for (Field field : fields) {
+	    if (Modifier.isPublic(field.getModifiers())) {
+		try {
+		    properties.put(field.getName(), field.get(null));
+		} catch (IllegalArgumentException e) {
+		    LOG.error("Could not export the value of" + field.getName(), e);
+		} catch (IllegalAccessException e) {
+		    LOG.error("Could not export the value of" + field.getName(), e);
+		}
+	    }
+	}
+	return properties;
     }
 }

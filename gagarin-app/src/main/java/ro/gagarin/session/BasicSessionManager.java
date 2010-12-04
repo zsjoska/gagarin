@@ -13,7 +13,6 @@ import ro.gagarin.BasicManagerFactory;
 import ro.gagarin.ControlEntity;
 import ro.gagarin.Owner;
 import ro.gagarin.config.Configuration;
-import ro.gagarin.config.SettingsChangeObserver;
 import ro.gagarin.dao.BaseDAO;
 import ro.gagarin.dao.DAOManager;
 import ro.gagarin.dao.RoleDAO;
@@ -34,7 +33,7 @@ import ro.gagarin.user.UserExtraRecord;
 import ro.gagarin.user.UserPermission;
 import ro.gagarin.util.Utils;
 
-public class BasicSessionManager implements SessionManager, SettingsChangeObserver {
+public class BasicSessionManager implements SessionManager {
 
     private static final transient Logger LOG = Logger.getLogger(BasicSessionManager.class);
 
@@ -48,7 +47,6 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
 
 	ConfigurationManager cfgManager;
 	cfgManager = BasicManagerFactory.getInstance().getConfigurationManager();
-	cfgManager.registerForChange(this);
 	chkSession = new SessionCheckerThread(this);
 	chkSession.start();
 
@@ -104,11 +102,6 @@ public class BasicSessionManager implements SessionManager, SettingsChangeObserv
 	    session.getManagerFactory().releaseSession(session);
 	    this.sessions.remove(session.getSessionString());
 	}
-    }
-
-    @Override
-    public boolean configChanged(String config, String value) {
-	return false;
     }
 
     public long getSessionCheckPeriod() {

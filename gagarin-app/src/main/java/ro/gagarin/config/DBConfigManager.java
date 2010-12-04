@@ -34,7 +34,7 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
     static {
 	long period = Configuration.DB_CONFIG_CHECK_PERIOD;
 
-	INSTANCE.registerForChange(INSTANCE);
+	INSTANCE.registerForChange("DB_CONFIG_CHECK_PERIOD", INSTANCE);
 	INSTANCE.configImportJob = new DBConfigManager.ConfigImportJob("DB_CONFIG_IMPORT", 0, period);
 	FACTORY.getScheduleManager().scheduleJob(INSTANCE.configImportJob, true);
     }
@@ -134,11 +134,8 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
 
     @Override
     public boolean configChanged(String config, String value) {
-	if ("DB_CONFIG_CHECK_PERIOD".equalsIgnoreCase(config)) {
-	    FACTORY.getScheduleManager().updateJobRate(configImportJob.getId(), Long.valueOf(value));
-	    return true;
-	}
-	return false;
+	FACTORY.getScheduleManager().updateJobRate(configImportJob.getId(), Long.valueOf(value));
+	return true;
     }
 
     public List<ConfigEntry> getConfigValues() {

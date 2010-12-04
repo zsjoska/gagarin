@@ -100,7 +100,7 @@ public class ConfigTest {
 	final ArrayList<String> values = new ArrayList<String>();
 	Session session = TUtil.createTestSession();
 	DBConfigManager dbCfgMgr = DBConfigManager.getInstance();
-	dbCfgMgr.registerForChange(new SettingsChangeObserver() {
+	dbCfgMgr.registerForChange("_TEST_DB_AND_FILE_", new SettingsChangeObserver() {
 
 	    @Override
 	    public boolean configChanged(String config, String value) {

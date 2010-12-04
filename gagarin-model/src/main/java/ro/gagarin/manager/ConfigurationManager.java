@@ -29,7 +29,7 @@ public interface ConfigurationManager extends BaseManager {
      * @param observer
      *            the object requesting change notification
      */
-    void registerForChange(SettingsChangeObserver observer);
+    void registerForChange(String config, SettingsChangeObserver observer);
 
     /**
      * Modifies a configuration value and notifies the change observers.

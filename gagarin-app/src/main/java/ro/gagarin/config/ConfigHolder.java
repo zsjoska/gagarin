@@ -2,9 +2,11 @@ package ro.gagarin.config;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
 
@@ -19,10 +21,10 @@ public class ConfigHolder {
     /**
      * The change observers, a single static instance
      */
-    private static ArrayList<SettingsChangeObserver> changeObservers = new ArrayList<SettingsChangeObserver>();
+    private static ConcurrentHashMap<String, List<SettingsChangeObserver>> changeObservers = new ConcurrentHashMap<String, List<SettingsChangeObserver>>();
 
-    public void registerForChange(SettingsChangeObserver observer) {
-	getChangeObservers().add(observer);
+    public void registerForChange(String config, SettingsChangeObserver observer) {
+	getChangeObservers(config).add(observer);
     }
 
     public void setConfigValue(Session session, String key, String value) throws OperationException {
@@ -37,7 +39,7 @@ public class ConfigHolder {
 
     private void notifyConfigChange(String config, String value) {
 	LOG.info("Config Change:" + config + "=" + value + "; propagating...");
-	for (SettingsChangeObserver observer : getChangeObservers()) {
+	for (SettingsChangeObserver observer : getChangeObservers(config)) {
 	    try {
 		observer.configChanged(config, value);
 	    } catch (Exception e) {
@@ -47,8 +49,13 @@ public class ConfigHolder {
 	}
     }
 
-    protected static ArrayList<SettingsChangeObserver> getChangeObservers() {
-	return changeObservers;
+    protected static List<SettingsChangeObserver> getChangeObservers(String config) {
+	List<SettingsChangeObserver> list = changeObservers.get(config);
+	if (list == null) {
+	    list = new ArrayList<SettingsChangeObserver>();
+	    changeObservers.put(config, list);
+	}
+	return list;
     }
 
     public void setConfigValue(Session session, ConfigEntry config) throws OperationException {

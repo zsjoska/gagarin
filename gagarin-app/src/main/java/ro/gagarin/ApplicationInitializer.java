@@ -204,6 +204,7 @@ public class ApplicationInitializer {
 
     private void loadFileConfiguration() {
 	this.cfgManager = FileConfigurationManager.getInstance();
+	this.cfgManager.loadConfiguration(null);
     }
 
     private void initManagers(Session session) throws OperationException {

@@ -7,7 +7,6 @@ import ro.gagarin.config.ConfigEntry;
 import ro.gagarin.config.SettingsChangeObserver;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.session.Session;
-import sun.security.krb5.Config;
 
 /**
  * Base interface for the application to interact with the application
@@ -23,7 +22,7 @@ public interface ConfigurationManager extends BaseManager {
      * register with this method for change notification when a configuration
      * entry is modified. When a configuration entry changes, the configuration
      * manager will call the
-     * {@link SettingsChangeObserver#configChanged(Config, String)} method for
+     * {@link SettingsChangeObserver#configChanged(String, String)} method for
      * all observers.
      * 
      * @param observer

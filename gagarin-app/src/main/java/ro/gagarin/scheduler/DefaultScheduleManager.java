@@ -1,5 +1,8 @@
 package ro.gagarin.scheduler;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 
 import ro.gagarin.manager.ScheduleManager;
@@ -7,15 +10,19 @@ import ro.gagarin.manager.ScheduleManager;
 public class DefaultScheduleManager implements ScheduleManager {
 
     private static final transient Logger LOG = Logger.getLogger(DefaultScheduleManager.class);
-    private Scheduler defaultScheduler;
+    private Scheduler defaultScheduler = null;
+    private List<ScheduledJob> earlyJobs = new ArrayList<ScheduledJob>();
 
     @Override
     public long scheduleJob(ScheduledJob job, boolean createSession) {
-	if (defaultScheduler == null) {
-	    throw new NullPointerException("Scheduler not initialized");
-	}
 	job.setId(ScheduledJob.getNextId());
 	LOG.info("Schedule Job:" + job.toString());
+
+	if (defaultScheduler == null) {
+	    earlyJobs.add(job);
+	    return job.getId();
+	}
+
 	return defaultScheduler.scheduleJob(job, createSession);
     }
 
@@ -41,5 +48,10 @@ public class DefaultScheduleManager implements ScheduleManager {
     public void initializeManager() {
 	defaultScheduler = new Scheduler();
 	defaultScheduler.start();
+	for (ScheduledJob job : this.earlyJobs) {
+	    defaultScheduler.scheduleJob(job, false);
+	}
+	this.earlyJobs.clear();
+	this.earlyJobs = null;
     }
 }

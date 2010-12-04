@@ -9,7 +9,6 @@ import ro.gagarin.log.AppLog;
 import ro.gagarin.manager.ConfigurationManager;
 import ro.gagarin.manager.ManagerFactory;
 import ro.gagarin.manager.ScheduleManager;
-import ro.gagarin.scheduler.DefaultScheduleManager;
 import ro.gagarin.scheduler.JobController;
 import ro.gagarin.scheduler.ScheduledJob;
 import ro.gagarin.session.Session;
@@ -77,7 +76,7 @@ public class MonitoredFile implements SettingsChangeObserver {
 	// uninitialized
 	// we have to be careful here
 	long fileCheckInterval = Configuration.FILE_CHECK_INTERVAL;
-	DefaultScheduleManager mgr = new DefaultScheduleManager();
+	ScheduleManager mgr = BasicManagerFactory.getInstance().getScheduleManager();
 
 	ScheduledJob statupjob = new MonitoredFile.StartupJob("FILE_MONITOR_STARTUP:" + file.getName(), this,
 		fileCheckInterval);

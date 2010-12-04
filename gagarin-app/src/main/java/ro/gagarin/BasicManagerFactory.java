@@ -31,7 +31,7 @@ public class BasicManagerFactory implements ManagerFactory {
     private ApplicationState state = ApplicationState.INIT;
 
     private ConfigurationManager configurationManager;
-    private ScheduleManager scheduleManager;
+    private ScheduleManager scheduleManager = new DefaultScheduleManager();
     private LogManager logManager;
     private DAOManager daoManager;
     private SessionManager sessionManager;
@@ -107,7 +107,6 @@ public class BasicManagerFactory implements ManagerFactory {
     public void initializeManagers() {
 	this.configurationManager = FileConfigurationManager.getInstance();
 	this.daoManager = new JdbcDAOManager();
-	this.scheduleManager = new DefaultScheduleManager();
 	this.logManager = new BasicLogManager();
 	this.sessionManager = new BasicSessionManager();
 	this.authenticationManager = new BasicAuthenticationManager();

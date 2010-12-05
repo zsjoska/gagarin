@@ -45,14 +45,14 @@ Generic implementation.
  F004: Improve Executor
  
   F004E: implement runtime thread count configuration
+  F004B: add progress estimation support
+  F004C: add WS method and required data structures to export the current jobs
 
   === Feature Pool ===
 
  F004: Improve Executor
  
   F004A: allow instant async execution
-  F004B: add progress estimation support
-  F004C: add WS method and required data structures to export the current jobs
   F004D: add WS method and required data structures to export the current threads
 
  F002: Flexible custom fields with cleartext mapping

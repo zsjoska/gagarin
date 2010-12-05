@@ -11,6 +11,11 @@ public class WSJob implements GenericJob {
     private long period;
 
     public WSJob(GenericJob job) {
+	this.lastExecution = job.getLastExecution();
+	this.name = job.getName();
+	this.nextExecution = job.getNextExecution();
+	this.percentComplete = job.getPercentComplete();
+	this.period = job.getPeriod();
     }
 
     public WSJob() {

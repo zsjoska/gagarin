@@ -8,16 +8,18 @@ import scala.xml.{NodeSeq, Text, Group, Node}
 import net.liftweb.util.Helpers._
 
 class Jobs {
+    def __(text: String) = if(text == null) "" else text
+    def __(text: Any) = if(text == null) "" else text.toString
 	
   def show(in: NodeSeq): NodeSeq  = {
     val logs = adminService.getJobs
     logs.flatMap( s => 
     	bind("job", in,
-          "name" -> Text(s.getName()),
-          "lastExec" -> Text(s.getLastExecution().toString),
-          "nextExec" -> Text(s.getNextExecution().toString),
-          "percent" -> Text(s.getPercentComplete().toString),
-          "period" -> Text(s.getPeriod().toString)
+          "name" -> Text(__(s.getName())),
+          "lastExec" -> Text(__(s.getLastExecution())),
+          "nextExec" -> Text(__(s.getNextExecution())),
+          "percent" -> Text(__(s.getPercentComplete())),
+          "period" -> Text(__(s.getPeriod()))
       ))
     }
   

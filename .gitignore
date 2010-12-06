@@ -6,3 +6,4 @@ target/*
 derby.log
 *.bak
 .manager
+.scala_dependencies

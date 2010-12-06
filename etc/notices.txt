@@ -1,0 +1,1 @@
+set MAVEN_OPTS=-noverify -javaagent:"C:\Program Files (x86)\ZeroTurnaround\JRebel\jrebel.jar"

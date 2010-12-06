@@ -7,21 +7,28 @@ import net.liftweb.http.SHtml._
 import scala.xml.{NodeSeq, Text, Group, Node}
 import net.liftweb.util.Helpers._
 
-class Jobs {
+class Threads {
     def __(text: String) = if(text == null) "" else text
     def __(text: Any) = if(text == null) "" else text.toString
 	
   def show(in: NodeSeq): NodeSeq  = {
-    val jobs = adminService.getJobs
+    val jobs = adminService.getThreads
     jobs.flatMap( s => 
-    	bind("job", in,
+    	bind("thread", in,
           "name" -> Text(__(s.getName())),
-          "lastExec" -> Text(__(s.getLastExecution())),
-          "nextExec" -> Text(__(s.getNextExecution())),
-          "percent" -> Text(__(s.getPercentComplete())),
-          "period" -> Text(__(s.getPeriod()))
+          "jobname" -> {
+              if(s.getActiveJob()!=null)
+        	  Text(__(s.getActiveJob().getName()))
+              else 
+        	  Text("")
+          },
+          "jobpercent" -> {
+              if(s.getActiveJob()!=null)
+        	  Text(__(s.getActiveJob().getPercentComplete()))
+              else 
+        	  Text("")
+          }
       ))
     }
-  
 }
 

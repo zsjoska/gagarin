@@ -1,17 +1,16 @@
 <lift:surround with="default" at="content">
-	<h1>Current sessions</h1>
+	<h1>Worker Threads</h1>
 	<table border="1" cellspacing="0">
 		<tr>
 			<th>Thread Name</th>
 			<th>Active Job</th>
+			<th>Percent Completed</th>
 		</tr>
 		<lift:threads.show>
 			<tr>
-				<td><session:sessionid /></td>
-				<td><session:username /></td>
-				<td><session:reason /></td>
-				<td><session:date /></td>
-				<td><session:logout /></td>
+				<td><thread:name /></td>
+				<td><thread:jobname/></td>
+				<td><thread:jobpercent/></td>
 			</tr>
 		</lift:threads.show>
 	</table>

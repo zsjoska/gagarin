@@ -20,6 +20,7 @@ import ro.gagarin.ws.objects.WSOwner;
 import ro.gagarin.ws.objects.WSPermOwnerCEAssignment;
 import ro.gagarin.ws.objects.WSPropertySet;
 import ro.gagarin.ws.objects.WSStatistic;
+import ro.gagarin.ws.objects.WSThread;
 import ro.gagarin.ws.objects.WSUser;
 import ro.gagarin.ws.objects.WSUserPermission;
 import ro.gagarin.ws.objects.WSUserRole;
@@ -45,6 +46,7 @@ import ro.gagarin.ws.userservice.GetPermissionAssignmentsForControlEntityOP;
 import ro.gagarin.ws.userservice.GetRoleListOP;
 import ro.gagarin.ws.userservice.GetRolePermissionsOP;
 import ro.gagarin.ws.userservice.GetServerJobs;
+import ro.gagarin.ws.userservice.GetServerThreads;
 import ro.gagarin.ws.userservice.GetSessionListOP;
 import ro.gagarin.ws.userservice.GetStatisticsOP;
 import ro.gagarin.ws.userservice.GetUserExtraOP;
@@ -325,5 +327,12 @@ public class Admin {
 	GetServerJobs op = new GetServerJobs(sessionId);
 	WebserviceExecutor.execute(op);
 	return op.getServerJobs();
+    }
+
+    @WebMethod
+    public List<WSThread> getServerThreads(String sessionId) throws WSException {
+	GetServerThreads op = new GetServerThreads(sessionId);
+	WebserviceExecutor.execute(op);
+	return op.getServerThreads();
     }
 }

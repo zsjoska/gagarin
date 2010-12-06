@@ -17,6 +17,11 @@ import ro.gagarin.exceptions.LoginRequiredException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.exceptions.PermissionDeniedException;
 import ro.gagarin.exceptions.SessionNotFoundException;
+import ro.gagarin.log.AppLog;
+import ro.gagarin.manager.ScheduleManager;
+import ro.gagarin.scheduler.JobController;
+import ro.gagarin.scheduler.ScheduledJob;
+import ro.gagarin.session.Session;
 import ro.gagarin.testutil.TUtil;
 import ro.gagarin.user.Group;
 import ro.gagarin.user.PermissionEnum;
@@ -31,11 +36,13 @@ import ro.gagarin.ws.objects.WSConfig;
 import ro.gagarin.ws.objects.WSControlEntity;
 import ro.gagarin.ws.objects.WSExportedSession;
 import ro.gagarin.ws.objects.WSGroup;
+import ro.gagarin.ws.objects.WSJob;
 import ro.gagarin.ws.objects.WSLogEntry;
 import ro.gagarin.ws.objects.WSOwner;
 import ro.gagarin.ws.objects.WSProperty;
 import ro.gagarin.ws.objects.WSPropertySet;
 import ro.gagarin.ws.objects.WSStatistic;
+import ro.gagarin.ws.objects.WSThread;
 import ro.gagarin.ws.objects.WSUser;
 import ro.gagarin.ws.objects.WSUserPermission;
 import ro.gagarin.ws.objects.WSUserRole;
@@ -280,5 +287,35 @@ public class UserServiceTest {
 
 	assertEquals(props.getId(), userExtra.getId());
 	assertNotNull(userExtra.getTimestamp());
+    }
+
+    @Test
+    public void testGetServerThreads() throws Exception {
+	final StringBuffer sb = new StringBuffer();
+	ScheduleManager scheduleMgr = BasicManagerFactory.getInstance().getScheduleManager();
+	scheduleMgr.scheduleJob(new ScheduledJob("AJob", 0) {
+
+	    @Override
+	    public void execute(Session session, AppLog log, JobController jobController) throws Exception {
+		synchronized (sb) {
+		    while (sb.length() == 0)
+			sb.wait();
+		}
+	    }
+	}, false);
+	WSJob aJob = null;
+	List<WSThread> serverThread = adminService.getServerThreads(session);
+	for (WSThread thread : serverThread) {
+	    assertTrue(thread.getName().startsWith("SCHEDULER"));
+	    System.out.println(thread);
+	    if (thread.getActiveJob() != null) {
+		aJob = thread.getActiveJob();
+	    }
+	}
+	synchronized (sb) {
+	    sb.append("done");
+	    sb.notify();
+	}
+	assertNotNull(aJob);
     }
 }

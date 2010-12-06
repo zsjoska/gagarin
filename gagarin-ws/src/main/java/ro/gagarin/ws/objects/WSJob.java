@@ -1,8 +1,9 @@
 package ro.gagarin.ws.objects;
 
+import ro.gagarin.BaseEntity;
 import ro.gagarin.scheduler.GenericJob;
 
-public class WSJob implements GenericJob {
+public class WSJob extends BaseEntity implements GenericJob {
 
     private Long lastExecution;
     private String name;

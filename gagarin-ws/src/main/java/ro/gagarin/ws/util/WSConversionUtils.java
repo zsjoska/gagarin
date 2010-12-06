@@ -13,6 +13,7 @@ import ro.gagarin.genericrecord.GenericRecord;
 import ro.gagarin.genericrecord.GenericRecordField;
 import ro.gagarin.log.LogEntry;
 import ro.gagarin.scheduler.GenericJob;
+import ro.gagarin.scheduler.SchedulerThread;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.Group;
 import ro.gagarin.user.PermissionEnum;
@@ -29,6 +30,7 @@ import ro.gagarin.ws.objects.WSLogEntry;
 import ro.gagarin.ws.objects.WSProperty;
 import ro.gagarin.ws.objects.WSPropertySet;
 import ro.gagarin.ws.objects.WSStatistic;
+import ro.gagarin.ws.objects.WSThread;
 import ro.gagarin.ws.objects.WSUser;
 import ro.gagarin.ws.objects.WSUserPermission;
 
@@ -144,4 +146,11 @@ public class WSConversionUtils {
 	return jobs;
     }
 
+    public static List<WSThread> convertToWSThreads(List<SchedulerThread> exportThreads) {
+	ArrayList<WSThread> threads = new ArrayList<WSThread>();
+	for (SchedulerThread thread : exportThreads) {
+	    threads.add(new WSThread(thread));
+	}
+	return threads;
+    }
 }

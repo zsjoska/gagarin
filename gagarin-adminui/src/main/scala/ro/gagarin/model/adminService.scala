@@ -320,5 +320,13 @@ object adminService {
     case e: WSException_Exception => {
 	handleException(e)
     }}}
+
+  def getThreads: Buffer[WsThread] = {
+    try{
+        adminWSService.getServerThreads(wsSession.session)
+    } catch {
+    case e: WSException_Exception => {
+	handleException(e)
+    }}}
 }
 

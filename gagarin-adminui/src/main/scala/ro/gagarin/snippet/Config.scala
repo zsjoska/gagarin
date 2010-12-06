@@ -30,11 +30,13 @@ class Config {
               else 
 			  text(c.getConfigValue(), (x)=> {
 			  name=c.getConfigName(); value=x
+			   println(name+"=" +value)
 			}) %
 				("onkeypress" -> ("showSet('#" + id + "')" )) %
 				("onchange" -> ("showSet('#" + id + "')" ))
 			}</td>
-			<td style="width: 50px;">{submit("Set", () => {
+			<td style="width: 50px;">{
+			    submit("Set", () => {
 				val config = new WsConfig()
 				config.setConfigName(name)
 				config.setConfigValue(value)

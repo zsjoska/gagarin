@@ -83,10 +83,10 @@
 			<plugin>
 				<groupId>org.scala-tools</groupId>
 				<artifactId>maven-scala-plugin</artifactId>
-				<version>2.11</version>
 				<executions>
 					<execution>
 						<goals>
+							<goal>add-source</goal>
 							<goal>compile</goal>
 							<goal>testCompile</goal>
 						</goals>
@@ -158,22 +158,28 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-eclipse-plugin</artifactId>
-				<version>2.7</version>
 				<configuration>
 					<downloadSources>true</downloadSources>
-					<excludes>
-						<exclude>org.scala-lang:scala-library</exclude>
-					</excludes>
-					<classpathContainers>
-						<classpathContainer>ch.epfl.lamp.sdt.launching.SCALA_CONTAINER</classpathContainer>
-					</classpathContainers>
+					<downloadJavadocs>true</downloadJavadocs>
 					<projectnatures>
 						<java.lang.String>ch.epfl.lamp.sdt.core.scalanature</java.lang.String>
 						<java.lang.String>org.eclipse.jdt.core.javanature</java.lang.String>
 					</projectnatures>
 					<buildcommands>
-						<java.lang.String>ch.epfl.lamp.sdt.core.scalabuilder</java.lang.String>
+						<buildcommand>ch.epfl.lamp.sdt.core.scalabuilder</buildcommand>
 					</buildcommands>
+					<classpathContainers>
+						<classpathContainer>ch.epfl.lamp.sdt.launching.SCALA_CONTAINER</classpathContainer>
+						<classpathContainer>org.eclipse.jdt.launching.JRE_CONTAINER</classpathContainer>
+					</classpathContainers>
+					<excludes>
+						<exclude>org.scala-lang:scala-library</exclude>
+						<exclude>org.scala-lang:scala-compiler</exclude>
+					</excludes>
+					<sourceIncludes>
+						<sourceInclude>**/*.scala</sourceInclude>
+						<sourceInclude>**/*.java</sourceInclude>
+					</sourceIncludes>
 				</configuration>
 			</plugin>
 		</plugins>

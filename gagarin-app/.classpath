@@ -4,6 +4,7 @@
   <classpathentry kind="src" path="src/main/java" including="**/*.java"/>
   <classpathentry kind="output" path="target/classes"/>
   <classpathentry kind="var" path="M2_REPO/javax/activation/activation/1.1/activation-1.1.jar" sourcepath="M2_REPO/javax/activation/activation/1.1/activation-1.1-sources.jar"/>
+  <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
   <classpathentry kind="var" path="M2_REPO/commons-codec/commons-codec/1.4/commons-codec-1.4.jar" sourcepath="M2_REPO/commons-codec/commons-codec/1.4/commons-codec-1.4-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/apache/derby/derby/10.6.2.1/derby-10.6.2.1.jar"/>
   <classpathentry kind="src" path="/gagarin-da-jdbc"/>
@@ -11,5 +12,4 @@
   <classpathentry kind="var" path="M2_REPO/junit/junit/4.3/junit-4.3.jar"/>
   <classpathentry kind="var" path="M2_REPO/log4j/log4j/1.2.12/log4j-1.2.12.jar"/>
   <classpathentry kind="var" path="M2_REPO/mysql/mysql-connector-java/5.0.5/mysql-connector-java-5.0.5.jar"/>
-  <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 </classpath>

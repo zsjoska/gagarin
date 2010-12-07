@@ -4,6 +4,7 @@ import java.util.{Date, Locale}
 import scala.xml.{NodeSeq, Text, Group, Node}
 import net.liftweb.http.SHtml._
 import net.liftweb.util.Helpers._
+import net.liftweb.http.js.JsCmds.{Alert, Noop, Replace, SetElemById, Run,ReplaceOptions}
 import ro.gagarin.model.wsSession
 import ro.gagarin.model.adminService
 import ro.gagarin.WsConfig
@@ -11,40 +12,31 @@ import ro.gagarin.ConfigScope
 
 class Config {
 	
-  def show = {
-	val config = adminService.getConfigEntries
-	var name:String = null
-	var value:String = null
-    <table border="1" cellspacing="0">
-    <script type="text/javascript">
-    {"function showSet(x){ $(x).show();}"}
-    </script>
-      {config.flatMap( c => {
-        val id = nextFuncName
-		<tr> 
-			<td>{Text(c.getConfigScope().name())}</td>
-			<td>{Text(c.getConfigName())}</td>
-			<td>{
-			  if(ConfigScope.LOCAL.equals(c.getConfigScope()))
-				  Text(c.getConfigValue())
-              else 
-			  text(c.getConfigValue(), (x)=> {
-			  name=c.getConfigName(); value=x
-			   println(name+"=" +value)
-			}) %
-				("onkeypress" -> ("showSet('#" + id + "')" )) %
-				("onchange" -> ("showSet('#" + id + "')" ))
-			}</td>
-			<td style="width: 50px;">{
-			    submit("Set", () => {
-				val config = new WsConfig()
-				config.setConfigName(name)
-				config.setConfigValue(value)
-				adminService.setConfigEntry(config)
-            })% ("style" -> "display: none;") % ("id" -> id )}</td>
-		</tr>})}
-    </table>
-    }
-  
+  def show(in: NodeSeq): NodeSeq  = {
+      val config = adminService.getConfigEntries
+      config.flatMap( c => {
+        bind("config", in,
+           "scope" -> Text(c.getConfigScope().name()),
+           "name" -> Text(c.getConfigName()),
+           "value" -> {
+		if(ConfigScope.LOCAL.equals(c.getConfigScope()))
+		  Text(c.getConfigValue())
+		else 
+		  ajaxText(c.getConfigValue(), (x)=> {
+		    c.setConfigValue(x)
+		    println("new value:" + x)
+		    Noop;
+		  }) 
+           },
+           "set" -> {
+		if(ConfigScope.LOCAL.equals(c.getConfigScope()))
+		    Text("")
+		else
+		    ajaxButton("Set", () => {
+			adminService.setConfigEntry(c)
+			Alert(c.getConfigName() + " changed to " + c.getConfigValue);
+	})})
+      })
+  }
 }
 

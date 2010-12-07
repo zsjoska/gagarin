@@ -1,8 +1,18 @@
 <lift:surround with="default" at="content">
 	<h1>Configuration</h1>
-	TODO: rewrite to remove html markup from the code<br/>
-	TODO: FIX displaying the scope
-	<lift:config.show form="POST">
-	</lift:config.show>
+	<table border="1" cellspacing="0">
+		<th>Scope</th>
+		<th>Name</th>
+		<th>Value</th>
+		<th>Set</th>
+		<lift:config.show>
+			<tr>
+				<td><config:scope /></td>
+				<td><config:name /></td>
+				<td><config:value /></td>
+				<td><config:set /></td>
+			</tr>
+		</lift:config.show>
+	</table>
 </lift:surround>
 

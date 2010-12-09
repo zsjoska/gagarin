@@ -6,7 +6,7 @@ import ro.gagarin.CommonControlEntities;
 import ro.gagarin.exceptions.ExceptionBase;
 import ro.gagarin.manager.AuthorizationManager;
 import ro.gagarin.manager.ScheduleManager;
-import ro.gagarin.scheduler.GenericJob;
+import ro.gagarin.scheduler.JobController;
 import ro.gagarin.session.Session;
 import ro.gagarin.user.PermissionEnum;
 import ro.gagarin.ws.executor.WebserviceOperation;
@@ -33,7 +33,7 @@ public class GetServerJobs extends WebserviceOperation {
 
     @Override
     protected void execute(Session session) throws ExceptionBase {
-	List<GenericJob> exportJobs = scheduleManager.exportJobs();
+	List<JobController> exportJobs = scheduleManager.exportJobs();
 	this.jobs = WSConversionUtils.convertToWSJobs(exportJobs);
     }
 

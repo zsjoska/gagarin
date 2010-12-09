@@ -2,7 +2,7 @@ package ro.gagarin.manager;
 
 import java.util.List;
 
-import ro.gagarin.scheduler.GenericJob;
+import ro.gagarin.scheduler.JobController;
 import ro.gagarin.scheduler.ScheduledJob;
 import ro.gagarin.scheduler.SchedulerThread;
 
@@ -14,7 +14,7 @@ public interface ScheduleManager extends BaseManager {
 
     void triggerExecution(ScheduledJob configImportJob);
 
-    List<GenericJob> exportJobs();
+    List<JobController> exportJobs();
 
     List<SchedulerThread> exportThreads();
 

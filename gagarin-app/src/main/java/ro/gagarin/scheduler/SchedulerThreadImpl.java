@@ -32,10 +32,7 @@ public class SchedulerThreadImpl extends Thread implements SchedulerThread {
     }
 
     public GenericJob getActiveJob() {
-	if (activeJob != null) {
-	    return this.activeJob.getJob();
-	}
-	return null;
+	return this.activeJob;
     }
 
     public void shutdown() {

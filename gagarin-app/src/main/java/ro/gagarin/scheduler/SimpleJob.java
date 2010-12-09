@@ -16,6 +16,8 @@ class SimpleJob implements JobController {
 
     private long period;
 
+    private Double percentComplete = -1.0;
+
     public SimpleJob(ScheduledJob job) {
 	this.job = job;
 	this.period = job.getPeriod();
@@ -55,10 +57,9 @@ class SimpleJob implements JobController {
 	    long jobStart = System.currentTimeMillis();
 
 	    ScheduledJob theJob = getJob();
-	    theJob.setPercentComplete(-1.0);
+	    percentComplete = -1.0;
 	    theJob.execute(null, null, this);
-	    theJob.setPercentComplete(100.0);
-	    theJob.setLastExecution(System.currentTimeMillis());
+	    percentComplete = 100.0;
 
 	    Statistic.getByName("job.simple.effective." + getJob().getName()).add(jobStart);
 
@@ -137,6 +138,10 @@ class SimpleJob implements JobController {
 
     @Override
     public Double getPercentComplete() {
-	return getJob().getPercentComplete();
+	return percentComplete;
+    }
+
+    public void setPercentComplete(Double percentComplete) {
+	this.percentComplete = percentComplete;
     }
 }

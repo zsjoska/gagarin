@@ -202,7 +202,7 @@ public class SchedulerTest {
     @Test
     public void testExportedJobs() throws Exception {
 	ScheduleManager scheduleManager = FACTORY.getScheduleManager();
-	List<GenericJob> exportedJobs = scheduleManager.exportJobs();
+	List<JobController> exportedJobs = scheduleManager.exportJobs();
 	for (GenericJob job : exportedJobs) {
 	    System.out.println(job);
 	}

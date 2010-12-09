@@ -4,7 +4,14 @@ import ro.gagarin.BaseEntity;
 import ro.gagarin.log.AppLog;
 import ro.gagarin.session.Session;
 
-public abstract class ScheduledJob extends BaseEntity implements GenericJob {
+/**
+ * A publicly available job base for use through the entire application as a
+ * base for creating Scheduled jobs. Provides no control over the job.
+ * 
+ * @author ZsJoska
+ * 
+ */
+public abstract class ScheduledJob extends BaseEntity {
 
     private final String name;
     private final long initialWait;
@@ -14,9 +21,6 @@ public abstract class ScheduledJob extends BaseEntity implements GenericJob {
      * The number of time to execute this job. <code>-1</code> means infinite.
      */
     private int count;
-
-    private Double percentComplete = -1.0;
-    private Long lastExecution;
 
     public ScheduledJob(String name, long initialWait, long period) {
 	this.name = name;
@@ -65,27 +69,5 @@ public abstract class ScheduledJob extends BaseEntity implements GenericJob {
 
     public int getCount() {
 	return count;
-    }
-
-    public Double getPercentComplete() {
-	return this.percentComplete;
-    }
-
-    public void setPercentComplete(double d) {
-	this.percentComplete = d;
-    }
-
-    @Override
-    public Long getLastExecution() {
-	return lastExecution;
-    }
-
-    @Override
-    public Long getNextExecution() {
-	return null;
-    }
-
-    public void setLastExecution(Long lastExecution) {
-	this.lastExecution = lastExecution;
     }
 }

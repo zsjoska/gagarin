@@ -180,11 +180,11 @@ public class Scheduler implements SettingsChangeObserver {
 	}
     }
 
-    public List<GenericJob> exportJobs() {
-	ArrayList<GenericJob> jobs = new ArrayList<GenericJob>();
+    public List<JobController> exportJobs() {
+	ArrayList<JobController> jobs = new ArrayList<JobController>();
 	Collection<SimpleJob> values = this.allJobStore.values();
 	for (SimpleJob job : values) {
-	    jobs.add(job.getJob());
+	    jobs.add(job);
 	}
 	return jobs;
     }

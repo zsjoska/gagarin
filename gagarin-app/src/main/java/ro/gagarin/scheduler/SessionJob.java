@@ -58,10 +58,9 @@ class SessionJob extends SimpleJob {
 	    long jobStart = System.currentTimeMillis();
 
 	    ScheduledJob theJob = getJob();
-	    theJob.setPercentComplete(-1.0);
+	    setPercentComplete(-1.0);
 	    theJob.execute(session, log, this);
-	    theJob.setPercentComplete(100.0);
-	    theJob.setLastExecution(System.currentTimeMillis());
+	    setPercentComplete(100.0);
 
 	    Statistic.getByName("job.session.effective." + getJob().getName()).add(jobStart);
 

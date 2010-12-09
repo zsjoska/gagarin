@@ -138,7 +138,7 @@ public class WSConversionUtils {
 	return propertySet;
     }
 
-    public static List<WSJob> convertToWSJobs(List<GenericJob> exportJobs) {
+    public static List<WSJob> convertToWSJobs(List<? extends GenericJob> exportJobs) {
 	ArrayList<WSJob> jobs = new ArrayList<WSJob>();
 	for (GenericJob job : exportJobs) {
 	    jobs.add(new WSJob(job));

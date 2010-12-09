@@ -56,11 +56,11 @@ public class DefaultScheduleManager implements ScheduleManager {
     }
 
     @Override
-    public List<GenericJob> exportJobs() {
+    public List<JobController> exportJobs() {
 	if (defaultScheduler != null) {
 	    return defaultScheduler.exportJobs();
 	} else {
-	    ArrayList<GenericJob> jobs = new ArrayList<GenericJob>();
+	    ArrayList<JobController> jobs = new ArrayList<JobController>();
 	    return jobs;
 	}
     }

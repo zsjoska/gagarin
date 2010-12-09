@@ -45,7 +45,7 @@ public class MonitoredFile implements SettingsChangeObserver {
 
 	    job = new MonitoredFile.MonitorJob("FILE_MONITOR:" + file.getName(), this.monitoredFile, fileCheckInterval);
 	    scheduleManager.scheduleJob(job, false);
-
+	    cfgMgr.registerForChange("FILE_CHECK_INTERVAL", MonitoredFile.this);
 	    // no more execution
 	    jobController.markDone();
 	}
@@ -90,7 +90,6 @@ public class MonitoredFile implements SettingsChangeObserver {
 	public MonitorJob(String name, MonitoredFile monitoredFile, long fileCheckInterval) {
 	    super(name, 10, fileCheckInterval);
 	    this.monitoredFile = monitoredFile;
-
 	}
 
 	@Override

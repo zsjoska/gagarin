@@ -1,6 +1,7 @@
 package ro.gagarin;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -13,7 +14,6 @@ import ro.gagarin.config.Configuration;
 import ro.gagarin.log.AppLog;
 import ro.gagarin.manager.ManagerFactory;
 import ro.gagarin.manager.ScheduleManager;
-import ro.gagarin.scheduler.GenericJob;
 import ro.gagarin.scheduler.JobController;
 import ro.gagarin.scheduler.ScheduledJob;
 import ro.gagarin.scheduler.Scheduler;
@@ -202,9 +202,32 @@ public class SchedulerTest {
     @Test
     public void testExportedJobs() throws Exception {
 	ScheduleManager scheduleManager = FACTORY.getScheduleManager();
+	long jobId = scheduleManager.scheduleJob(new ScheduledJob("aTestJob", 0, 100) {
+	    public void execute(Session session, AppLog log, JobController jobController) throws Exception {
+	    }
+	}, false);
 	List<JobController> exportedJobs = scheduleManager.exportJobs();
-	for (GenericJob job : exportedJobs) {
-	    System.out.println(job);
+	for (JobController job : exportedJobs) {
+	    System.out.println(job.getName());
+	    if ("aTestJob".equalsIgnoreCase(job.getName())) {
+		assertEquals(100, job.getPeriod());
+	    }
 	}
+
+	scheduleManager.updateJobRate(jobId, 101L);
+
+	JobController jc = null;
+
+	exportedJobs = scheduleManager.exportJobs();
+	for (JobController job : exportedJobs) {
+	    System.out.println(job.getName() + " period:" + job.getPeriod());
+	    if ("aTestJob".equalsIgnoreCase(job.getName())) {
+		jc = job;
+		assertEquals(101, job.getPeriod());
+	    }
+	}
+
+	assertNotNull(jc);
+	jc.markDone();
     }
 }

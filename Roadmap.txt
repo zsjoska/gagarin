@@ -47,15 +47,14 @@ Generic implementation.
   F004B: add progress estimation support
   F004C: add WS method and required data structures to export the current jobs
   F004D: add WS method and required data structures to export the current threads
+  F004A: allow instant async execution with the clone of the current session
+  F004G: -CANCEL- unify the SimpleJob and SessionJob
 
   
   === Feature Pool ===
   
  F004: Improve Executor
-  F004A: allow instant async execution with the clone of the current session
   F004F: add cleanup method for jobs
-  F004G: unify the SimpleJob and SessionJob
-
   
  F002: Flexible custom fields with cleartext mapping
   F002C: have a mapping file which describes join between custom field and cleartext column

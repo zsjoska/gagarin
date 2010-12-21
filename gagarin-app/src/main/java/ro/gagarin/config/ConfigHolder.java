@@ -38,7 +38,13 @@ public class ConfigHolder {
     }
 
     private void notifyConfigChange(String config, String value) {
-	LOG.info("Config Change:" + config + "=" + value + "; propagating...");
+	if (config.startsWith("_")) {
+	    // the configs starting with _ are internal values, info logging is
+	    // not needed
+	    LOG.debug("Config Change:" + config + "=" + value + "; propagating...");
+	} else {
+	    LOG.info("Config Change:" + config + "=" + value + "; propagating...");
+	}
 	for (SettingsChangeObserver observer : getChangeObservers(config)) {
 	    try {
 		observer.configChanged(config, value);

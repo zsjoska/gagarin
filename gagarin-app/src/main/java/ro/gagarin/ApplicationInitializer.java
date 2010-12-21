@@ -72,7 +72,7 @@ public class ApplicationInitializer {
 	    return false;
 	initRun = true;
 
-	LOG.info("---------------------------- Application initializer started ------------------------");
+	LOG.info("\n\n---------------------------- Application initializer started ------------------------\n");
 
 	ApplicationInitializer initializer = new ApplicationInitializer(instance);
 	try {

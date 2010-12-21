@@ -106,6 +106,14 @@ public abstract class ScheduledJob extends BaseEntity {
     abstract public void execute(JobController jobController) throws Exception;
 
     /**
+     * Cleanup method for the job. This method is before the job will be
+     * destroyed.
+     */
+    public void cleanup() {
+
+    }
+
+    /**
      * Returns the name of the job <br>
      * <b>Note: read only, reflects the construction value</b>
      * 

@@ -92,6 +92,7 @@ class SimpleJob implements JobController {
     }
 
     public void destroyJob() {
+	getJob().cleanup();
     }
 
     public long getNextRun() {

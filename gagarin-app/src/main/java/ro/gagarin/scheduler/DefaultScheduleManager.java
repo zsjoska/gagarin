@@ -5,13 +5,17 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import ro.gagarin.BasicManagerFactory;
+import ro.gagarin.manager.ManagerFactory;
 import ro.gagarin.manager.ScheduleManager;
+import ro.gagarin.session.Session;
 
 public class DefaultScheduleManager implements ScheduleManager {
 
     private static final transient Logger LOG = Logger.getLogger(DefaultScheduleManager.class);
     private Scheduler defaultScheduler = null;
     private List<ScheduledJob> earlyJobs = new ArrayList<ScheduledJob>();
+    private static ManagerFactory FACTORY = BasicManagerFactory.getInstance();
 
     @Override
     public long scheduleJob(ScheduledJob job, boolean createSession) {
@@ -24,6 +28,21 @@ public class DefaultScheduleManager implements ScheduleManager {
 	}
 
 	return defaultScheduler.scheduleJob(job, createSession);
+    }
+
+    @Override
+    public long scheduleJob(ScheduledJob job, Session session) {
+	job.setId(ScheduledJob.getNextId());
+	LOG.info("Schedule Job:" + job.toString());
+
+	if (defaultScheduler == null) {
+	    earlyJobs.add(job);
+	    return job.getId();
+	}
+
+	Session clone = FACTORY.getSessionManager().cloneSession(session);
+
+	return defaultScheduler.scheduleJob(job, session);
     }
 
     @Override

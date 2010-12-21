@@ -17,11 +17,9 @@ import ro.gagarin.exceptions.LoginRequiredException;
 import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.exceptions.PermissionDeniedException;
 import ro.gagarin.exceptions.SessionNotFoundException;
-import ro.gagarin.log.AppLog;
 import ro.gagarin.manager.ScheduleManager;
 import ro.gagarin.scheduler.JobController;
 import ro.gagarin.scheduler.ScheduledJob;
-import ro.gagarin.session.Session;
 import ro.gagarin.testutil.TUtil;
 import ro.gagarin.user.Group;
 import ro.gagarin.user.PermissionEnum;
@@ -296,7 +294,7 @@ public class UserServiceTest {
 	scheduleMgr.scheduleJob(new ScheduledJob("AJob", 0) {
 
 	    @Override
-	    public void execute(Session session, AppLog log, JobController jobController) throws Exception {
+	    public void execute(JobController jobController) throws Exception {
 		synchronized (sb) {
 		    while (sb.length() == 0)
 			sb.wait();

@@ -45,9 +45,10 @@ public class DBConfigManager extends ConfigHolder implements ConfigurationManage
 	}
 
 	@Override
-	public void execute(Session session, AppLog log, JobController jc) throws Exception {
-	    ConfigDAO configDAO = FACTORY.getDAOManager().getConfigDAO(session);
+	public void execute(JobController jc) throws Exception {
+	    ConfigDAO configDAO = FACTORY.getDAOManager().getConfigDAO(jc.getSession());
 	    long lastUpdateTime = configDAO.getLastUpdateTime();
+	    AppLog log = jc.getLogger();
 	    log.debug("DBLUT = " + lastUpdateTime + " CacheLUT=" + INSTANCE.getLastUpdateTime());
 	    if (lastUpdateTime > INSTANCE.getLastUpdateTime()) {
 

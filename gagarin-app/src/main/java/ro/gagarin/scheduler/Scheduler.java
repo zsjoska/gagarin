@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 import ro.gagarin.BasicManagerFactory;
 import ro.gagarin.config.Configuration;
 import ro.gagarin.config.SettingsChangeObserver;
+import ro.gagarin.session.Session;
 
 public class Scheduler implements SettingsChangeObserver {
 
@@ -115,17 +116,31 @@ public class Scheduler implements SettingsChangeObserver {
 	return null;
     }
 
-    public long scheduleJob(ScheduledJob job, boolean createDBConnecton) {
+    public long scheduleJob(ScheduledJob job, boolean createSession) {
 	if (job.getId() == null) {
 	    job.setId(ScheduledJob.getNextId());
 	}
 	synchronized (this) {
 	    SimpleJob runableJob = null;
-	    if (createDBConnecton) {
+	    if (createSession) {
 		runableJob = new SessionJob(job);
 	    } else {
 		runableJob = new SimpleJob(job);
 	    }
+	    this.pendingJobStore.put(job.getId(), runableJob);
+	    this.allJobStore.put(job.getId(), runableJob);
+	    this.notify();
+	}
+	return job.getId();
+    }
+
+    public long scheduleJob(ScheduledJob job, Session session) {
+	if (job.getId() == null) {
+	    job.setId(ScheduledJob.getNextId());
+	}
+	synchronized (this) {
+	    SimpleJob runableJob = null;
+	    runableJob = new SessionJob(job, session);
 	    this.pendingJobStore.put(job.getId(), runableJob);
 	    this.allJobStore.put(job.getId(), runableJob);
 	    this.notify();

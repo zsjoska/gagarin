@@ -2,6 +2,10 @@ package ro.gagarin.scheduler;
 
 import org.apache.log4j.Logger;
 
+import ro.gagarin.exceptions.ErrorCodes;
+import ro.gagarin.exceptions.OperationException;
+import ro.gagarin.log.AppLog;
+import ro.gagarin.session.Session;
 import ro.gagarin.utils.Statistic;
 
 class SimpleJob implements JobController {
@@ -18,7 +22,10 @@ class SimpleJob implements JobController {
 
     private Double percentComplete = -1.0;
 
+    private final OperationException creationStack;
+
     public SimpleJob(ScheduledJob job) {
+	this.creationStack = new OperationException(ErrorCodes.INTERNAL_ERROR, "Simple job creation");
 	this.job = job;
 	this.period = job.getPeriod();
 	this.lastRun = (System.currentTimeMillis() + job.getInitialWait()) - job.getPeriod();
@@ -58,7 +65,7 @@ class SimpleJob implements JobController {
 
 	    ScheduledJob theJob = getJob();
 	    percentComplete = -1.0;
-	    theJob.execute(null, null, this);
+	    theJob.execute(this);
 	    percentComplete = 100.0;
 
 	    Statistic.getByName("job.simple.effective." + getJob().getName()).add(jobStart);
@@ -69,12 +76,19 @@ class SimpleJob implements JobController {
 	    LOG.error("Exception executing job " + getJob().getName() + "#" + getJob().getId(), e);
 	}
 
-	long end = System.currentTimeMillis();
-	if (end - start > this.getPeriod()) {
-	    LOG.error("Job #" + this.getId() + " execution takes longer than the period:" + this.getPeriod()
-		    + "; duration:" + (end - start));
-	}
+	reportPeriodOverrun(start);
+
 	Statistic.getByName("job.simple.overall." + getJob().getName()).add(start);
+    }
+
+    protected void reportPeriodOverrun(long start) {
+	long end = System.currentTimeMillis();
+	if (this.getPeriod() > 0 && end - start > this.getPeriod()) {
+	    // for jobs that are executed once this is always true: period = 0
+	    // so we have to exclude it to not log the false error
+	    LOG.error("Job " + this.getName() + "#" + this.getId() + " execution takes longer than the period:"
+		    + this.getPeriod() + "; duration:" + (end - start));
+	}
     }
 
     public void destroyJob() {
@@ -143,5 +157,15 @@ class SimpleJob implements JobController {
 
     public void setPercentComplete(Double percentComplete) {
 	this.percentComplete = percentComplete;
+    }
+
+    @Override
+    public Session getSession() throws OperationException {
+	throw new OperationException(ErrorCodes.SESSION_NOT_FOUND, this.creationStack);
+    }
+
+    @Override
+    public AppLog getLogger() throws OperationException {
+	throw new OperationException(ErrorCodes.SESSION_NOT_FOUND, this.creationStack);
     }
 }

@@ -37,6 +37,21 @@ public class Session extends BaseEntity {
 	// TODO:(3) make the reason mandatory
     }
 
+    public Session(Session clone) {
+	this.sessionTimeout = clone.getSessionTimeout();
+	this.expires = clone.getExpires();
+	this.language = clone.getLanguage();
+	this.reason = clone.getReason();
+	this.user = clone.getUser();
+	this.sessionString = clone.getSessionString();
+	this.busy = clone.isBusy();
+	this.adminSession = clone.isAdminSession();
+	this.properties = (HashMap<String, Object>) clone.properties.clone();
+	this.managerFactory = clone.getManagerFactory();
+	this.t = clone.t; // will be set when marking busy
+	this.effectivePermissions = clone.getEffectivePermissions();
+    }
+
     public Session(ManagerFactory managerFactory) {
 	this.managerFactory = managerFactory;
     }

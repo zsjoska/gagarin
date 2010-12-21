@@ -11,7 +11,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 import org.junit.Test;
 
 import ro.gagarin.config.Configuration;
-import ro.gagarin.log.AppLog;
 import ro.gagarin.manager.ManagerFactory;
 import ro.gagarin.manager.ScheduleManager;
 import ro.gagarin.scheduler.JobController;
@@ -31,7 +30,7 @@ public class SchedulerTest {
 	final ArrayList<Long> xTimes = new ArrayList<Long>();
 
 	ScheduledJob job = new ScheduledJob("testSingleRunScheduler", 10) {
-	    public void execute(Session session, AppLog log, JobController jc) throws Exception {
+	    public void execute(JobController jc) throws Exception {
 		xTimes.add(System.currentTimeMillis());
 	    }
 	};
@@ -57,7 +56,7 @@ public class SchedulerTest {
 	final long rate = 30;
 
 	ScheduledJob job = new ScheduledJob("testMultiRunScheduler", 0, rate, count) {
-	    public void execute(Session session, AppLog log, JobController jc) throws Exception {
+	    public void execute(JobController jc) throws Exception {
 		xTimes.add(System.currentTimeMillis());
 	    }
 	};
@@ -90,7 +89,7 @@ public class SchedulerTest {
 	final ArrayList<Long> xTimes = new ArrayList<Long>();
 	scheduleManager.scheduleJob(new ScheduledJob("testSingleExecutionManager", 10) {
 	    @Override
-	    public void execute(Session session, AppLog log, JobController jc) {
+	    public void execute(JobController jc) {
 		xTimes.add(System.currentTimeMillis());
 	    }
 	}, false);
@@ -105,7 +104,7 @@ public class SchedulerTest {
 	long start = System.currentTimeMillis();
 	scheduleManager.scheduleJob(new ScheduledJob("testMultipleExecutionManager", 10, 55) {
 	    @Override
-	    public void execute(Session session, AppLog log, JobController jc) {
+	    public void execute(JobController jc) {
 		xTimes.add(System.currentTimeMillis());
 	    }
 	}, false);
@@ -118,7 +117,7 @@ public class SchedulerTest {
 	ScheduleManager scheduleManager = FACTORY.getScheduleManager();
 	scheduleManager.scheduleJob(new ScheduledJob("testExceptionExecution", 10) {
 	    @Override
-	    public void execute(Session session, AppLog log, JobController jc) {
+	    public void execute(JobController jc) {
 		throw new RuntimeException("Test Exception");
 	    }
 	}, false);
@@ -143,7 +142,7 @@ public class SchedulerTest {
 	for (int i = 0; i < jobsToExecute; i++) {
 	    scheduleManager.scheduleJob(new ScheduledJob("testIncreasedThreads", 0, 1, executeCount) {
 		@Override
-		public void execute(Session session, AppLog log, JobController jc) {
+		public void execute(JobController jc) {
 		    threadsTouched.add(Thread.currentThread().getName());
 		    step.offer(Thread.currentThread().getName() + ":" + getName());
 		}
@@ -174,7 +173,7 @@ public class SchedulerTest {
 	for (int i = 0; i < jobsToExecute; i++) {
 	    scheduleManager.scheduleJob(new ScheduledJob("testIncreasedThreads", 0, 1, executeCount) {
 		@Override
-		public void execute(Session session, AppLog log, JobController jc) {
+		public void execute(JobController jc) {
 		    threadsTouched.add(Thread.currentThread().getName());
 		    step.offer(Thread.currentThread().getName() + ":" + getName());
 		}
@@ -203,7 +202,7 @@ public class SchedulerTest {
     public void testExportedJobs() throws Exception {
 	ScheduleManager scheduleManager = FACTORY.getScheduleManager();
 	long jobId = scheduleManager.scheduleJob(new ScheduledJob("aTestJob", 0, 100) {
-	    public void execute(Session session, AppLog log, JobController jobController) throws Exception {
+	    public void execute(JobController jobController) throws Exception {
 	    }
 	}, false);
 	List<JobController> exportedJobs = scheduleManager.exportJobs();
@@ -229,5 +228,31 @@ public class SchedulerTest {
 
 	assertNotNull(jc);
 	jc.markDone();
+    }
+
+    @Test
+    public void testScheduleWithSession() throws Exception {
+	final ArrayList<Long> xTimes = new ArrayList<Long>();
+
+	ScheduledJob job = new ScheduledJob("testScheduleWithSession", 10) {
+	    public void execute(JobController jc) throws Exception {
+		jc.getLogger().info("Say Hi from session " + jc.getSession().getSessionString());
+		xTimes.add(System.currentTimeMillis());
+	    }
+	};
+
+	Session testSession = TUtil.createTestSession();
+	Session cloneSession = FACTORY.getSessionManager().cloneSession(testSession);
+
+	Scheduler scheduler = new Scheduler();
+	scheduler.start();
+
+	long schedTime = System.currentTimeMillis();
+	scheduler.scheduleJob(job, cloneSession);
+
+	Thread.sleep(200);
+
+	assertEquals("We expect one run only", 1, xTimes.size());
+	assertEquals("The expected run time is wrong", schedTime + 10, xTimes.get(0), 50);
     }
 }

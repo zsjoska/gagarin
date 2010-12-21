@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 
 import ro.gagarin.BasicManagerFactory;
 import ro.gagarin.application.objects.AppUser;
+import ro.gagarin.exceptions.OperationException;
 import ro.gagarin.exceptions.SessionNotFoundException;
 import ro.gagarin.log.AppLog;
 import ro.gagarin.manager.ManagerFactory;
@@ -17,10 +18,18 @@ class SessionJob extends SimpleJob {
     private static final ManagerFactory FACTORY = BasicManagerFactory.getInstance();
 
     private Session session;
+    private AppLog log;
 
     public SessionJob(ScheduledJob job) {
 	super(job);
 	session = createSession();
+	if (session.getSessionTimeout() < job.getPeriod() * 2)
+	    session.setSessiontimeout(job.getPeriod() * 2);
+    }
+
+    public SessionJob(ScheduledJob job, Session session) {
+	super(job);
+	this.session = session;
 	if (session.getSessionTimeout() < job.getPeriod() * 2)
 	    session.setSessiontimeout(job.getPeriod() * 2);
     }
@@ -51,7 +60,7 @@ class SessionJob extends SimpleJob {
 	    return;
 	}
 
-	AppLog log = FACTORY.getLogManager().getLoggingSession(session, SessionJob.class);
+	this.log = FACTORY.getLogManager().getLoggingSession(session, SessionJob.class);
 	try {
 	    log.debug("Executing job " + getJob().getName() + "#" + getJob().getId());
 
@@ -59,7 +68,7 @@ class SessionJob extends SimpleJob {
 
 	    ScheduledJob theJob = getJob();
 	    setPercentComplete(-1.0);
-	    theJob.execute(session, log, this);
+	    theJob.execute(this);
 	    setPercentComplete(100.0);
 
 	    Statistic.getByName("job.session.effective." + getJob().getName()).add(jobStart);
@@ -70,11 +79,8 @@ class SessionJob extends SimpleJob {
 	}
 	FACTORY.releaseSession(session);
 
-	long end = System.currentTimeMillis();
-	if (end - start > this.getPeriod()) {
-	    LOG.error("Job #" + this.getId() + " execution takes longer than the period:" + this.getPeriod()
-		    + "; duration:" + (end - start));
-	}
+	reportPeriodOverrun(start);
+
 	Statistic.getByName("job.session.overall." + getJob().getName()).add(start);
     }
 
@@ -89,5 +95,15 @@ class SessionJob extends SimpleJob {
 	user.setUsername("SCHEDULER");
 	session.setUser(user);
 	return session;
+    }
+
+    @Override
+    public Session getSession() throws OperationException {
+	return this.session;
+    }
+
+    @Override
+    public AppLog getLogger() throws OperationException {
+	return this.log;
     }
 }

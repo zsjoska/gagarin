@@ -13,8 +13,6 @@ import ro.gagarin.user.User;
  * Base interface for session management. Provides methods for session creation,
  * deletion retrieval, etc.<br>
  * 
- * @author zsjoska
- * 
  */
 public interface SessionManager extends BaseManager {
 
@@ -89,4 +87,24 @@ public interface SessionManager extends BaseManager {
      * @throws ItemNotFoundException
      */
     void assignUserToSession(User user, Session session) throws OperationException, ItemNotFoundException;
+
+    /**
+     * Creates a clone of the session which will have the properties of the
+     * given session.<br>
+     * The new session will be created in released state but should maintain the
+     * logged-in state of the given session.
+     * 
+     * @param session
+     *            the session to be cloned
+     * @return a clone of the given session.
+     */
+    Session cloneSession(Session session);
+
+    /**
+     * Generates a unique session identifier.
+     * 
+     * @return
+     */
+    public String generateSessionIdentifier();
+
 }

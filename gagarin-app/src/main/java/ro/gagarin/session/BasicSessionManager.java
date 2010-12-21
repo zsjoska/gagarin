@@ -55,11 +55,22 @@ public class BasicSessionManager implements SessionManager {
 	session.setLanguage(language);
 	session.setReason(reason);
 	session.setExpires(System.currentTimeMillis() + session.getSessionTimeout());
-	session.setSessionString(System.currentTimeMillis() + "-" + System.nanoTime());
+	session.setSessionString(generateSessionIdentifier());
 	session.setManagerFactory(factory);
 	this.sessions.put(session.getSessionString(), session);
 	LOG.info("Created " + reason + " session " + session.getSessionString());
 	return session;
+    }
+
+    @Override
+    public Session cloneSession(Session session) {
+	Session clone = new Session(session);
+	clone.setSessionString(generateSessionIdentifier());
+	clone.setBusy(false, null);
+	this.sessions.put(clone.getSessionString(), clone);
+	LOG.info("Created " + clone.getReason() + " session " + clone.getSessionString() + " from "
+		+ session.getSessionString());
+	return clone;
     }
 
     @Override
@@ -131,18 +142,20 @@ public class BasicSessionManager implements SessionManager {
 
     @Override
     public void releaseSession(Session session) {
-	synchronized (session) {
-	    Class<?> key = BaseDAO.class;
-	    Object property = session.getProperty(key);
-	    session.setProperty(key, null);
-	    if (property instanceof BaseDAO) {
-		try {
-		    ((BaseDAO) property).release();
-		} catch (OperationException e) {
-		    LOG.error("Exception releasing the session", e);
+	if (session.isBusy()) {
+	    synchronized (session) {
+		Class<?> key = BaseDAO.class;
+		Object property = session.getProperty(key);
+		session.setProperty(key, null);
+		if (property instanceof BaseDAO) {
+		    try {
+			((BaseDAO) property).release();
+		    } catch (OperationException e) {
+			LOG.error("Exception releasing the session", e);
+		    }
 		}
+		session.setBusy(false, null);
 	    }
-	    session.setBusy(false, null);
 	}
     }
 
@@ -201,5 +214,9 @@ public class BasicSessionManager implements SessionManager {
 	session.assignUser(user, permMap, record);
 	appLog.info("User " + user.getId() + ":" + user.getUsername() + " was bound to session "
 		+ session.getSessionString());
+    }
+
+    public String generateSessionIdentifier() {
+	return System.currentTimeMillis() + "-" + System.nanoTime();
     }
 }

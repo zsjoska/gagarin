@@ -11,7 +11,7 @@
 	<packaging>war</packaging>
 	<name>gagarin-adminui</name>
 	<properties>
-		<scala.version>2.7.3</scala.version>
+		<scala.version>2.13.1</scala.version>
 	</properties>
 	<repositories>
 		<repository>
